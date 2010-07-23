@@ -1,0 +1,12 @@
+{
+  "ikmc-dcc": {
+    "type":    "Biomart",
+    "url":     "http://www.i-dcc.org/biomart",
+    "dataset": "dcc"
+  },
+  "ikmc-kermits": {
+    "type":    "Biomart",
+    "url":     "http://www.i-dcc.org/biomart",
+    "dataset": "kermits"
+  }
+}
