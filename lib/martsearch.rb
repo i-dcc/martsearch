@@ -19,6 +19,7 @@ require "#{MARTSEARCH_PATH}/martsearch/utils"
 # Now load classes
 require "#{MARTSEARCH_PATH}/martsearch/config"
 require "#{MARTSEARCH_PATH}/martsearch/data_source"
+require "#{MARTSEARCH_PATH}/martsearch/index_builder"
 
 module MartSearch
   @martsearch_config = MartSearch::Config.instance()
