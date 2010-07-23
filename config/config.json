@@ -1,9 +1,0 @@
-{
-  "portal_name":  "MartSearch",
-  "portal_url":   "http://localhost:9393/",
-  "debug":        false,
-  "email": {
-    "to":   "...@example.com",
-    "from": "...@example.com"
-  }
-}
