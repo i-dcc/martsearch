@@ -5,9 +5,8 @@ require 'singleton'
 
 require 'rubygems'
 require 'json'
-
-gem 'biomart', '>=0.1.5'
 require 'biomart'
+require 'parallel'
 
 require 'ap'
 
