@@ -10,4 +10,13 @@ class MartSearchUtilsTest < Test::Unit::TestCase
     end
   end
   
+  def test_convert_array_to_hash
+    headers = ['one','two','three']
+    data    = [1,2,3]
+    
+    hash = convert_array_to_hash( headers, data )
+    assert_equal( 1, hash['one'] )
+    assert_equal( 2, hash['two'] )
+    assert_equal( 3, hash['three'] )
+  end
 end
