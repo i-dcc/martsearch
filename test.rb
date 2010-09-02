@@ -2,3 +2,5 @@
 
 require 'lib/martsearch'
 
+builder = MartSearch::IndexBuilder.new()
+builder.build_index()
