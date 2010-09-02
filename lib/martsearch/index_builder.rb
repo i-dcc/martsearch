@@ -1,14 +1,16 @@
 module MartSearch
   class IndexBuilder
-    attr_reader :config
-    
     include MartSearch
     include MartSearch::Utils
     include MartSearch::IndexBuilderUtils
     
+    attr_reader :config
+    
     def initialize()
-      @config = MartSearch::ConfigBuilder.instance().config[:index_builder]
-      @docs   = {}
+      @ms_config            = MartSearch::ConfigBuilder.instance().config
+      @config               = @ms_config[:index_builder]
+      @datasources_config   = @ms_config[:datasources]
+      @docs                 = {}
     end
     
     def build_index()
@@ -29,7 +31,7 @@ module MartSearch
         puts "   - #{results[:data].size} rows of data returned"
         puts "   - processing data"
         
-        process_results( ds,results )
+        process_results( ds, results )
       end
       
       puts ""
@@ -47,7 +49,7 @@ module MartSearch
         puts " - #{ds}: #{results[:data].size} rows of data returned"
         puts " - #{ds}: processing data"
         
-        process_results( ds,results )
+        process_results( ds, results )
         
         puts " - #{ds}: data processing complete"
       end
@@ -55,24 +57,28 @@ module MartSearch
     end
     
     def fetch_datasource( ds )
-      conf       = @config[:datasources][ds.to_sym]
-      datasource = conf[:datasource]
-      index_conf = conf[:indexing]
+      ds_conf    = @config[:datasources][ds.to_sym]
+      datasource = @datasources_config[ ds_conf[:datasource] ]
       
-      datasource.fetch_all_terms_for_indexing( index_conf['filters'], all_attributes_to_fetch( index_conf['attribute_map'] ) )
-      # ds_to_index = flatten_primary_secondary_datasources( @config[:datasources_to_index] )
-      # 
-      # Parallel.each( ds_to_index, :in_threads => 10 ) do |ds|
-      #   conf       = @config[:datasources][ds.to_sym]
-      #   datasource = conf[:datasource]
-      #   index_conf = conf[:indexing]
-      #   
-      #   datasource.fetch_all_terms_for_indexing( index_conf['filters'], all_attributes_to_fetch( index_conf['attribute_map'] ) )
-      # end
+      datasource.fetch_all_terms_for_indexing( ds_conf[:indexing] )
     end
     
     def process_results( ds, results )
+      ds_index_conf = @config[:datasources][ds.to_sym][:indexing]
       
+      # Extract all of the needed index mapping data from "attribute_map"
+      map_data = process_attribute_map( ds_index_conf['attribute_map'] )
+      
+      # Now loop through the result data...
+      results[:data].each do |data_row|
+        # First, create a hash out of the data_row and get the primary_attr_value
+        data_row_obj       = convert_array_to_hash( results[:headers], data_row )
+        primary_attr_value = data_row_obj[ map_data[:primary_attribute] ]
+        
+        
+        
+        
+      end
     end
     
     

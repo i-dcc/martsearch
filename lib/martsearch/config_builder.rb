@@ -48,9 +48,7 @@ module MartSearch
       index_builder_conf = symbolise_hash_keys( JSON.load( File.new( "#{config_dir}/index_builder.json", 'r' ) ) )
       ['primary','secondary'].each do |pri_sec|
         index_builder_conf[:datasources_to_index][pri_sec].each do |index_dataset|
-          datasource_conf              = symbolise_hash_keys( JSON.load( File.new( "#{config_dir}/datasources/#{index_dataset}.json", 'r' ) ) )
-          datasource_conf[:datasource] = build_datasource( datasource_conf[:datasource] )
-          
+          datasource_conf = symbolise_hash_keys( JSON.load( File.new( "#{config_dir}/datasources/#{index_dataset}.json", 'r' ) ) )
           index_builder_conf[:datasources][index_dataset.to_sym] = datasource_conf
         end
       end

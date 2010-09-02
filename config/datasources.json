@@ -8,5 +8,10 @@
     "type":    "Biomart",
     "url":     "http://www.i-dcc.org/biomart",
     "dataset": "kermits"
+  },
+  "ikmc-omim": {
+    "type":    "Biomart",
+    "url":     "http://www.i-dcc.org/biomart",
+    "dataset": "omim"
   }
 }

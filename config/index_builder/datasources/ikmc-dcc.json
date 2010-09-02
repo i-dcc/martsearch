@@ -1,9 +1,5 @@
 {
-  "datasource": {
-    "type":    "Biomart",
-    "url":     "http://www.i-dcc.org/biomart",
-    "dataset": "dcc"
-  },
+  "datasource": "ikmc-dcc",
   "indexing": {
     "allow_document_creation": true,
     "days_between_downlads": 1,
