@@ -19,7 +19,7 @@ require "#{MARTSEARCH_PATH}/lib/martsearch/utils"
 require "#{MARTSEARCH_PATH}/lib/martsearch/index_builder_utils"
 
 # Now load classes
-require "#{MARTSEARCH_PATH}/lib/martsearch/config"
+require "#{MARTSEARCH_PATH}/lib/martsearch/config_builder"
 require "#{MARTSEARCH_PATH}/lib/martsearch/data_source"
 require "#{MARTSEARCH_PATH}/lib/martsearch/index_builder"
 

@@ -1,10 +1,12 @@
 module MartSearch
   class IndexBuilder
+    attr_reader :config
+    
     include MartSearch
     include MartSearch::IndexBuilderUtils
     
     def initialize()
-      @config = MartSearch::Config.instance().config[:index_builder]
+      @config = MartSearch::ConfigBuilder.instance().config[:index_builder]
     end
     
     def fetch_data_for_indexing

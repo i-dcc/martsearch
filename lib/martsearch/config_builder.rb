@@ -1,8 +1,8 @@
 module MartSearch
   
-  class InvalidConfigError < Exception; end
+  class InvalidConfigBuilderError < Exception; end
   
-  class Config
+  class ConfigBuilder
     include Singleton
     include MartSearch::Utils
     

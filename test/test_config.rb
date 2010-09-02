@@ -1,20 +1,20 @@
 require File.dirname(__FILE__) + '/test_helper.rb'
 
-class MartSearchConfigTest < Test::Unit::TestCase
+class MartSearchConfigBuilderTest < Test::Unit::TestCase
   def setup
-    @conf_obj = MartSearch::Config.instance()
+    @conf_obj = MartSearch::ConfigBuilder.instance()
   end
   
-  context "A MartSearch::Config object" do
+  context "A MartSearch::ConfigBuilder object" do
     should "initialize correctly" do
-      assert( @conf_obj.is_a?(MartSearch::Config), "@conf_obj is not a MartSearch::Config object." )
+      assert( @conf_obj.is_a?(MartSearch::ConfigBuilder), "@conf_obj is not a MartSearch::ConfigBuilder object." )
       assert( @conf_obj.config != nil, "@conf_obj.config is nil." )
     end
     
     should "be a singleton class" do
-      assert_raise(NoMethodError) { obj = MartSearch::Config.new() }
-      @second_obj = MartSearch::Config.instance()
-      assert_equal( @conf_obj.object_id, @second_obj.object_id, "MartSearch::Config is not a singleton - we've created a second instance!" )
+      assert_raise(NoMethodError) { obj = MartSearch::ConfigBuilder.new() }
+      @second_obj = MartSearch::ConfigBuilder.instance()
+      assert_equal( @conf_obj.object_id, @second_obj.object_id, "MartSearch::ConfigBuilder is not a singleton - we've created a second instance!" )
     end
     
     should "have built many DataSources" do
@@ -26,5 +26,8 @@ class MartSearchConfigTest < Test::Unit::TestCase
         assert( ds.is_a?(MartSearch::DataSource), "The values of @conf_obj.config[:datasources] are not MartSearch::DataSource objects." )
       end
     end
+    
+    
+    
   end
 end
