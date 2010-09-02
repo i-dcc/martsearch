@@ -17,6 +17,16 @@ module MartSearch
       @ds = Biomart::Dataset.new( @url, { :name => conf[:dataset] } )
     end
     
+    def fetch_all_terms_for_indexing( filters={}, attributes=[] )
+      sleep 15
+      
+      puts "filters:"
+      ap filters
+      puts "attributes:"
+      ap attributes
+      
+      
+    end
     
   end
   

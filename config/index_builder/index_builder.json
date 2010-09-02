@@ -1,6 +1,12 @@
 {
-  "dataset_conf":      {},
-  "datasets_to_index": [
-    "ikmc-dcc"
-  ]
+  "datasources": {},
+  "datasources_to_index": {
+    "primary": [
+      "ikmc-dcc",
+      "ikmc-kermits"
+    ],
+    "secondary": [
+      "ikmc-omim"
+    ]
+  }
 }

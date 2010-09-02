@@ -1,5 +1,7 @@
 module MartSearch
   
+  class InvalidConfigError < Exception; end
+  
   class Config
     include Singleton
     include MartSearch::Utils
@@ -7,32 +9,54 @@ module MartSearch
     attr_reader :config
     
     def initialize()
-      config_dir =  "#{MARTSEARCH_PATH}/../config" 
+      config_dir =  "#{MARTSEARCH_PATH}/config"
+      puts  "config_dir = #{config_dir}"
       
       @config = {
-        :datasources   => {},
-        :index_builder => nil
+        :http_client   => build_http_client(),
+        :datasources   => build_datasource_conf( config_dir ),
+        :index_builder => build_index_builder_conf( "#{config_dir}/index_builder/" )
       }
-      
-      # Load the datasource config files...
-      datasource_conf = JSON.load( File.new( "#{config_dir}/datasources.json", 'r' ) )
-      datasource_conf.each do |ds_name,ds_conf|
-        @config[:datasources][ ds_name.to_sym ] = MartSearch.const_get("#{ds_conf['type']}DataSource").new( ds_conf )
-      end
-      
-      # Load the index building config files...
-      index_builder_conf_dir = "#{config_dir}/index_builder/"
-      index_builder_conf     = symbolise_hash_keys( JSON.load( File.new( "#{index_builder_conf_dir}/index_builder.json", 'r' ) ) )
-      index_builder_conf[:datasets_to_index].each do |ds_name|
-        index_builder_conf[:dataset_conf][ds_name.to_sym] = symbolise_hash_keys( 
-          JSON.load( File.new( "#{index_builder_conf_dir}/datasets/#{ds_name}.json", 'r' ) ) 
-        )
-      end
-      
     end
     
+    private
     
+    def build_http_client
+      http_client = Net::HTTP
+      if ENV['http_proxy'] or ENV['HTTP_PROXY']
+        proxy       = URI.parse( ENV['http_proxy'] ) || URI.parse( ENV['HTTP_PROXY'] )
+        http_client = Net::HTTP::Proxy( proxy.host, proxy.port )
+      end
+      return http_client
+    end
     
+    def build_datasource( conf )
+      MartSearch.const_get("#{conf['type']}DataSource").new( conf )
+    end
+    
+    def build_datasource_conf( config_dir )
+      datasources     = {}
+      datasource_conf = JSON.load( File.new( "#{config_dir}/datasources.json", 'r' ) )
+      datasource_conf.each do |ds_name,ds_conf|
+        datasources[ ds_name.to_sym ] = build_datasource( ds_conf )
+      end
+      
+      return datasources
+    end
+    
+    def build_index_builder_conf( config_dir )
+      index_builder_conf = symbolise_hash_keys( JSON.load( File.new( "#{config_dir}/index_builder.json", 'r' ) ) )
+      ['primary','secondary'].each do |pri_sec|
+        index_builder_conf[:datasources_to_index][pri_sec].each do |index_dataset|
+          datasource_conf              = symbolise_hash_keys( JSON.load( File.new( "#{config_dir}/datasources/#{index_dataset}.json", 'r' ) ) )
+          datasource_conf[:datasource] = build_datasource( datasource_conf[:datasource] )
+          
+          index_builder_conf[:datasources][index_dataset.to_sym] = datasource_conf
+        end
+      end
+      
+      return index_builder_conf
+    end
     
   end
   
