@@ -154,25 +154,6 @@ module MartSearch
     private
     
     ##
-    ## Utility functions for building the XML to prime a Solr index
-    ##
-    
-    # Utility function to create a new document construct.
-    def new_document()
-      # Work out fields to ignore - these will be auto populated by Solr
-      copy_fields = []
-      @config[:schema]['copy_fields'].each do |copy_field|
-        copy_fields.push( copy_field['dest'] )
-      end
-
-      doc = {}
-      @config[:schema]['fields'].each do |key,detail|
-        doc[ key.to_sym ] = [] unless copy_fields.include?(key)
-      end
-      return doc
-    end
-    
-    ##
     ## Cache handling functions...
     ##
 

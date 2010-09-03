@@ -9,6 +9,23 @@ module MartSearch
       
     end
     
+    # Utility function to create a new Lucene/Solr document construct.
+    def new_document()
+      index_builder_config = MartSearch::ConfigBuilder.instance().config[:index_builder]
+      
+      # Work out fields to ignore - these will be auto populated by Solr
+      copy_fields = []
+      index_builder_config[:schema]['copy_fields'].each do |copy_field|
+        copy_fields.push( copy_field['dest'] )
+      end
+
+      doc = {}
+      index_builder_config[:schema]['fields'].each do |key,detail|
+        doc[ key.to_sym ] = [] unless copy_fields.include?(key)
+      end
+      return doc
+    end
+    
     # Utility function to process the attribute_map configuration into 
     # something we can use to map biomart results to our index configuration.
     def process_attribute_map( attribute_map )
