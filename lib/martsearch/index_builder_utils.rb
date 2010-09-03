@@ -45,5 +45,149 @@ module MartSearch
       }
     end
     
+    # Utility function to determine what data values we need to 
+    # add to the index given the dataset configuration.
+    def extract_value_to_index( attr_name, attr_value, attr_options, mart_data, mart_ds=nil )
+      options         = attr_options[attr_name]
+      value_to_index  = attr_value
+
+      if options["if_attr_equals"]
+        unless options["if_attr_equals"].include?( attr_value )
+          value_to_index = nil
+        end
+      end
+
+      if options["index_attr_name"] and mart_ds != nil
+        if value_to_index
+          mart_attributes = mart_ds.attributes()
+          if options["index_attr_display_name_only"]
+            value_to_index  = mart_attributes[attr_name].display_name
+          else
+            value_to_index  = [ attr_name, mart_attributes[attr_name].display_name ]
+          end
+        end
+      end
+
+      if options["if_other_attr_indexed"]
+        other_attr       = options["if_other_attr_indexed"]
+        other_attr_value = mart_data[ other_attr ]
+
+        unless extract_value_to_index( other_attr, other_attr_value, attr_options, mart_data )
+          value_to_index = nil
+        end
+      end
+
+      unless value_to_index.nil?
+        if options["attr_prepend"]
+          value_to_index = "#{options["attr_prepend"]}#{value_to_index}"
+        end
+        if options["attr_append"]
+          value_to_index = "#{value_to_index}#{options["attr_append"]}"
+        end
+      end
+
+      return value_to_index
+    end
+    
+    # Utility function to handle the extraction of metadata from indexed values,
+    # (i.e. MP terms in comments)
+    def index_extracted_attributes( extract_conf, doc, value_to_index )
+      regexp  = Regexp.new( extract_conf["regexp"] )
+      matches = false
+
+      if value_to_index.is_a?(Array)
+        value_to_index.each do |value|
+          matches = regexp.match( value )
+          if matches then doc[ extract_conf["idx"].to_sym ].push( matches[0] ) end
+        end
+      else
+        matches = regexp.match( value_to_index )
+        if matches then doc[ extract_conf["idx"].to_sym ].push( matches[0] ) end
+      end
+    end
+    
+    # Utility function to handle the indexing of grouped attributes
+    def index_grouped_attributes( grouped_attr_conf, doc, data_row_obj, map_data )
+      grouped_attr_conf.each do |group|
+        attrs = []
+        group["attrs"].each do |attribute|
+          value_to_index = extract_value_to_index( attribute, data_row_obj[attribute], map_data[:attribute_map], { attribute => data_row_obj[attribute] } )
+
+          # When we have an attribute that we're indexing the attribute NAME 
+          # of, we get an array returned...  We can only pick one, so let's pick 
+          # the biomart display name...
+          if value_to_index.is_a?(Array) then value_to_index = value_to_index.pop() end
+
+          if value_to_index and !value_to_index.gsub(" ","").empty?
+            attrs.push(value_to_index)
+          end
+        end
+
+        # Only index when we have values for ALL the grouped attributes
+        if !attrs.empty? and ( attrs.size() === group["attrs"].size() )
+          join_str = group["using"] ? group["using"] : "||"
+          doc[ group["idx"].to_sym ].push( attrs.join(join_str) )
+        end
+      end
+    end
+    
+    # Utility function to handle the indexing of ontology terms
+    def index_ontology_terms( ontology_term_conf, doc, data_row_obj, map_data )
+      ontology_term_conf.each do |term_conf|
+        attribute      = term_conf["attr"]
+        value_to_index = extract_value_to_index( attribute, data_row_obj[attribute], map_data[:attribute_map], { attribute => data_row_obj[attribute] } )
+
+        if value_to_index and !value_to_index.gsub(" ","").empty?
+          cached_data = @ontology_cache[value_to_index]
+          if cached_data != nil
+            index_ontology_terms_from_cache( doc, term_conf, cached_data )
+          else
+            index_ontology_terms_from_fresh( doc, term_conf, value_to_index )
+          end
+        end
+      end
+    end
+
+    # Helper function for indexing ontology terms we haven't seen before
+    def index_ontology_terms_from_fresh( doc, term_conf, value_to_index )
+      begin
+        ontolo_term  = OntologyTerm.new( value_to_index )
+        parent_terms = ontolo_term.parentage
+
+        terms_to_index = [ ontolo_term.term ]
+        names_to_index = [ ontolo_term.term_name ]
+
+        unless parent_terms.nil?
+          parent_terms.each do |term|
+            terms_to_index.unshift( term.term )
+            names_to_index.unshift( term.term_name )
+          end
+        end
+
+        # Remove the "top-level" ontology name - there's no need to have this 
+        # in the search index...
+        names_to_index.shift
+
+        # Store these terms to the cache for future use...
+        data_to_cache                   = { :term => terms_to_index, :term_name => names_to_index }
+        @ontology_cache[value_to_index] = data_to_cache
+
+        # Write the data to the doc...
+        index_ontology_terms_from_cache( doc, term_conf, data_to_cache )
+      rescue OntologyTermNotFoundError => error
+        # The ontology term couldn't be found - no worries, just move on...
+      end
+    end
+
+    # Helper function for indexing ontology terms we have in the cache
+    def index_ontology_terms_from_cache( doc, term_conf, cached_data )
+      [:term,:term_name].each do |term_or_name|
+        cached_data[term_or_name].each do |target|
+          doc[ term_conf["idx"][term_or_name.to_s].to_sym ].push( target )
+        end
+        doc[ term_conf["idx"]["breadcrumb"].to_sym ].push( cached_data[term_or_name].join(" | ") )
+      end
+    end
+
   end
 end
