@@ -4,7 +4,7 @@ module MartSearch
     include MartSearch::Utils
     include MartSearch::IndexBuilderUtils
     
-    attr_reader :config
+    attr_reader :config, :document_cache
     
     def initialize()
       ms_config           = MartSearch::ConfigBuilder.instance().config
@@ -73,7 +73,7 @@ module MartSearch
     
     def fetch_datasource( ds )
       ds_conf    = @config[:datasources][ds.to_sym]
-      datasource = @datasources_config[ ds_conf[:datasource] ]
+      datasource = @datasources_config[ ds_conf[:datasource].to_sym ]
       
       datasource.fetch_all_terms_for_indexing( ds_conf[:indexing] )
     end
