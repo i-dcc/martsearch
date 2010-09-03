@@ -10,7 +10,6 @@ module MartSearch
     
     def initialize()
       config_dir =  "#{MARTSEARCH_PATH}/config"
-      puts  "config_dir = #{config_dir}"
       
       @config = {
         :http_client   => build_http_client(),

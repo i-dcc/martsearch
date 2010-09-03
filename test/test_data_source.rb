@@ -2,8 +2,15 @@ require File.dirname(__FILE__) + '/test_helper.rb'
 
 class MartSearchDataSourceTest < Test::Unit::TestCase
   def setup
+    @conf_obj         = MartSearch::ConfigBuilder.instance()
     @datasource       = MartSearch::DataSource.new( :url => "http://www.google.com" )
     @ikmc_dcc_biomart = MartSearch::BiomartDataSource.new( :url => "http://www.i-dcc.org/biomart", :dataset => "dcc" )
+    
+    VCR.insert_cassette('test_data_source')
+  end
+  
+  def teardown
+    VCR.eject_cassette
   end
   
   context "A MartSearch::DataSource object" do

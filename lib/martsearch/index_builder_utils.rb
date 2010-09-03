@@ -40,7 +40,7 @@ module MartSearch
       attribute_map.each do |mapping_obj|
         if mapping_obj["use_to_map"]
           if primary_attribute
-            raise StandardError "You have defined more than one attribute to map to the index with! Please check your config..."
+            raise "You have defined more than one attribute to map to the index with! Please check your config..."
           else
             primary_attribute  = mapping_obj["attr"]
             map_to_index_field = mapping_obj["idx"].to_sym
@@ -52,7 +52,7 @@ module MartSearch
       end
 
       unless primary_attribute
-        raise StandardError "You have not specified an attribute to map to the index with in #{dataset_conf["internal_name"]}!"
+        raise "You have not specified an attribute to map to the index with! Please check your config..."
       end
 
       return {
@@ -64,12 +64,12 @@ module MartSearch
     
     # Utility function to determine what data values we need to 
     # add to the index given the dataset configuration.
-    def extract_value_to_index( attr_name, attr_value, attr_options, mart_data, mart_ds=nil )
-      options         = attr_options[attr_name]
-      value_to_index  = attr_value
+    def extract_value_to_index( attr_name, attribute_map, mart_data, mart_ds=nil )
+      options         = attribute_map[attr_name]
+      value_to_index  = mart_data[attr_name]
 
       if options["if_attr_equals"]
-        unless options["if_attr_equals"].include?( attr_value )
+        unless options["if_attr_equals"].include?( value_to_index )
           value_to_index = nil
         end
       end
@@ -89,7 +89,7 @@ module MartSearch
         other_attr       = options["if_other_attr_indexed"]
         other_attr_value = mart_data[ other_attr ]
 
-        unless extract_value_to_index( other_attr, other_attr_value, attr_options, mart_data )
+        unless extract_value_to_index( other_attr, attribute_map, mart_data )
           value_to_index = nil
         end
       end
@@ -128,7 +128,7 @@ module MartSearch
       grouped_attr_conf.each do |group|
         attrs = []
         group["attrs"].each do |attribute|
-          value_to_index = extract_value_to_index( attribute, data_row_obj[attribute], map_data[:attribute_map], { attribute => data_row_obj[attribute] } )
+          value_to_index = extract_value_to_index( attribute, map_data[:attribute_map], { attribute => data_row_obj[attribute] } )
 
           # When we have an attribute that we're indexing the attribute NAME 
           # of, we get an array returned...  We can only pick one, so let's pick 

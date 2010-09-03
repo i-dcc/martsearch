@@ -100,7 +100,7 @@ module MartSearch
         # First check we have something to map back to the index with - if not, move along...
         if primary_attr_value
           # Find us a doc object to map to...
-          value_to_look_up_doc_on = extract_value_to_index( map_data[:primary_attribute], primary_attr_value, map_data[:attribute_map], data_row_obj, datasource )
+          value_to_look_up_doc_on = extract_value_to_index( map_data[:primary_attribute], map_data[:attribute_map], data_row_obj, datasource )
           doc                     = find_document( map_data[:map_to_index_field], value_to_look_up_doc_on )
           
           # If we can't find one - see if we're allowed to create one
@@ -115,7 +115,7 @@ module MartSearch
           if doc
             data_row_obj.each do |attr_name,attr_value|
               # Extract and index our initial data return
-              value_to_index = extract_value_to_index( attr_name, attr_value, map_data[:attribute_map], data_row_obj, datasource )
+              value_to_index = extract_value_to_index( attr_name, map_data[:attribute_map], data_row_obj, datasource )
 
               if value_to_index and doc[ map_data[:attribute_map][attr_name]["idx"] ]
                 if value_to_index.is_a?(Array)

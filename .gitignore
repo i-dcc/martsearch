@@ -1,3 +1,4 @@
 log*
 coverage/*
 coverage.info
+test/vcr_cassettes/*
