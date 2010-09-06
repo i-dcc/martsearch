@@ -11,7 +11,6 @@ class MartSearchIndexBuilderUtilsTest < Test::Unit::TestCase
     VCR.eject_cassette
   end
   
-  
   def test_flatten_primary_secondary_datasources
     hash  = { 'primary' => [1,2], 'secondary' => [3,4,5] }
     array = flatten_primary_secondary_datasources( hash )
@@ -171,7 +170,59 @@ class MartSearchIndexBuilderUtilsTest < Test::Unit::TestCase
   end
   
   def test_index_ontology_terms
+    ontology_cache = {}
+    doc = new_document()
+    attr_map = [
+      { "attr" => "mgi_accession_id", "idx" => "mgi_accession_id_key", "use_to_map" => true },
+      { "attr" => "mp_term",          "idx" => "mp_id" }
+    ]
+    ontology_term_conf = [
+      {
+        "attr" => "mp_term",
+        "idx"  => { "term" => "mp_id", "term_name" => "mp_term", "breadcrumb" => "mp_ontology" }
+      }
+    ]
+    data_row_obj = {
+      'mgi_accession_id' => 'MGI:2444584',
+      'mp_term'          => 'EMAP:3018',
+    }
     
+    # Perform the search from fresh...
+    index_ontology_terms( ontology_term_conf, doc, data_row_obj, process_attribute_map(attr_map), ontology_cache )
+    
+    assert_equal( 5, doc[:mp_id].size ) # we expect 5 terms to be indexed from this id...
+    assert_equal( 4, doc[:mp_term].size )
+    assert( doc[:mp_id].include?('EMAP:3018') )
+    assert( doc[:mp_id].include?('EMAP:0') )
+    assert( doc[:mp_term].include?('TS18,nose') )
+    assert( doc[:mp_term].include?('TS18,embryo') )
+    assert( doc[:mp_ontology].include?('EMAP:0 | EMAP:2636 | EMAP:2822 | EMAP:2987 | EMAP:3018') )
+    
+    # Perform the search from cache...
+    doc2 = new_document()
+    
+    index_ontology_terms( ontology_term_conf, doc2, data_row_obj, process_attribute_map(attr_map), ontology_cache )
+    
+    assert_equal( 5, doc2[:mp_id].size )
+    assert_equal( 4, doc2[:mp_term].size )
+    assert( doc2[:mp_id].include?('EMAP:3018') )
+    assert( doc2[:mp_id].include?('EMAP:0') )
+    assert( doc2[:mp_term].include?('TS18,nose') )
+    assert( doc2[:mp_term].include?('TS18,embryo') )
+    assert( doc2[:mp_ontology].include?('EMAP:0 | EMAP:2636 | EMAP:2822 | EMAP:2987 | EMAP:3018') )
+    
+    # Make sure a bad ontology term doesn't blow stuff up...
+    doc3 = new_document()
+    data_row_obj2 = {
+      'mgi_accession_id' => 'MGI:2444584',
+      'mp_term'          => 'FLIBBLE:5',
+    }
+    
+    index_ontology_terms( ontology_term_conf, doc3, data_row_obj2, process_attribute_map(attr_map), ontology_cache )
+    
+    assert( doc3[:mp_id].empty? )
+    assert( doc3[:mp_term].empty? )
+    assert( doc3[:mp_ontology].empty? )
   end
   
 end

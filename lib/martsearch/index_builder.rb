@@ -140,7 +140,7 @@ module MartSearch
 
             # Any ontology terms to index?
             if ds_index_conf["ontology_terms"]
-              index_ontology_terms( ds_index_conf["ontology_terms"], doc, data_row_obj, map_data )
+              index_ontology_terms( ds_index_conf["ontology_terms"], doc, data_row_obj, map_data, @ontology_cache )
             end
 
             # Finally - save the document to the cache

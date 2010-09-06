@@ -64,9 +64,9 @@ module MartSearch
     
     # Utility function to determine what data values we need to 
     # add to the index given the dataset configuration.
-    def extract_value_to_index( attr_name, attribute_map, mart_data, mart_ds=nil )
+    def extract_value_to_index( attr_name, attribute_map, data_row_obj, mart_ds=nil )
       options         = attribute_map[attr_name]
-      value_to_index  = mart_data[attr_name]
+      value_to_index  = data_row_obj[attr_name]
 
       if options["if_attr_equals"]
         unless options["if_attr_equals"].include?( value_to_index )
@@ -87,9 +87,9 @@ module MartSearch
 
       if options["if_other_attr_indexed"]
         other_attr       = options["if_other_attr_indexed"]
-        other_attr_value = mart_data[ other_attr ]
+        other_attr_value = data_row_obj[ other_attr ]
 
-        unless extract_value_to_index( other_attr, attribute_map, mart_data )
+        unless extract_value_to_index( other_attr, attribute_map, data_row_obj )
           value_to_index = nil
         end
       end
@@ -149,26 +149,26 @@ module MartSearch
     end
     
     # Utility function to handle the indexing of ontology terms
-    def index_ontology_terms( ontology_term_conf, doc, data_row_obj, map_data )
+    def index_ontology_terms( ontology_term_conf, doc, data_row_obj, map_data, cache )
       ontology_term_conf.each do |term_conf|
         attribute      = term_conf["attr"]
-        value_to_index = extract_value_to_index( attribute, data_row_obj[attribute], map_data[:attribute_map], { attribute => data_row_obj[attribute] } )
+        value_to_index = extract_value_to_index( attribute, map_data[:attribute_map], { attribute => data_row_obj[attribute] } )
 
         if value_to_index and !value_to_index.gsub(" ","").empty?
-          cached_data = @ontology_cache[value_to_index]
+          cached_data = cache[value_to_index]
           if cached_data != nil
             index_ontology_terms_from_cache( doc, term_conf, cached_data )
           else
-            index_ontology_terms_from_fresh( doc, term_conf, value_to_index )
+            index_ontology_terms_from_fresh( doc, term_conf, value_to_index, cache )
           end
         end
       end
     end
-
+    
     # Helper function for indexing ontology terms we haven't seen before
-    def index_ontology_terms_from_fresh( doc, term_conf, value_to_index )
+    def index_ontology_terms_from_fresh( doc, term_conf, value_to_index, cache )
       begin
-        ontolo_term  = OntologyTerm.new( value_to_index )
+        ontolo_term  = MartSearch::OntologyTerm.new( value_to_index )
         parent_terms = ontolo_term.parentage
 
         terms_to_index = [ ontolo_term.term ]
@@ -186,8 +186,8 @@ module MartSearch
         names_to_index.shift
 
         # Store these terms to the cache for future use...
-        data_to_cache                   = { :term => terms_to_index, :term_name => names_to_index }
-        @ontology_cache[value_to_index] = data_to_cache
+        data_to_cache         = { :term => terms_to_index, :term_name => names_to_index }
+        cache[value_to_index] = data_to_cache
 
         # Write the data to the doc...
         index_ontology_terms_from_cache( doc, term_conf, data_to_cache )
@@ -195,7 +195,7 @@ module MartSearch
         # The ontology term couldn't be found - no worries, just move on...
       end
     end
-
+    
     # Helper function for indexing ontology terms we have in the cache
     def index_ontology_terms_from_cache( doc, term_conf, cached_data )
       [:term,:term_name].each do |term_or_name|
@@ -205,6 +205,6 @@ module MartSearch
         doc[ term_conf["idx"]["breadcrumb"].to_sym ].push( cached_data[term_or_name].join(" | ") )
       end
     end
-
+    
   end
 end
