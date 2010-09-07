@@ -1,4 +1,6 @@
 log*
+doc*
+.yardoc*
 config/ols_database.yml
 coverage/*
 coverage.info
