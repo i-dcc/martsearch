@@ -1,6 +1,7 @@
 module MartSearch
   module IndexBuilderUtils
-
+    
+    
     def setup_and_move_to_work_directory
       index_builder_tmpdir = "#{MARTSEARCH_PATH}/tmp/index_builder"
       
@@ -10,18 +11,25 @@ module MartSearch
       ['datasource_dowloads','document_cache','solr_xml'].each do |cache_dir|
         Dir.mkdir(cache_dir) unless File.directory?(cache_dir)
         Dir.chdir(cache_dir)
-        
-        Dir.mkdir('current')                  unless File.directory?('current')
-        Dir.mkdir("daily_#{Date.today.to_s}") unless File.directory?("daily_#{Date.today.to_s}")
-        
-        # clean up old daily directories
-        directories = Dir.glob("daily_*").sort
-        while directories.size > 5
-          system("/bin/rm -rf '#{directories.shift}'")
-        end
-        
+        Dir.mkdir('current') unless File.directory?('current')
         Dir.chdir('..')
       end
+    end
+    
+    def open_daily_directory( location, delete=true )
+      Dir.chdir("#{MARTSEARCH_PATH}/tmp/index_builder/#{location}")
+      daily_dir = "daily_#{Date.today.to_s}"
+      
+      system "/bin/rm -r #{daily_dir}" if File.directory?(daily_dir) and delete
+      Dir.mkdir(daily_dir) if delete
+
+      # clean up old daily directories
+      directories = Dir.glob("daily_*").sort
+      while directories.size > 5
+        system("/bin/rm -rf '#{directories.shift}'")
+      end
+      
+      Dir.chdir(daily_dir)
     end
     
     # Utility function to create a new Lucene/Solr document construct.

@@ -1,4 +1,7 @@
 module MartSearch
+  
+  # This class is responsible for building and updating of a Solr search 
+  # index for use with a MartSearch application.
   class IndexBuilder
     include MartSearch
     include MartSearch::Utils
@@ -27,6 +30,9 @@ module MartSearch
     end
     
     def build_index()
+      setup_and_move_to_work_directory()
+      open_daily_directory( 'datasource_dowloads', false )
+      
       ds_to_index = @config[:datasources_to_index]
       
       @log.info "Running Primary DataSource Grabs (in serial)..."
@@ -34,12 +40,7 @@ module MartSearch
         @log.info " - #{ds}"
         @log.info "   - requesting data"
         
-        # results = fetch_datasource( ds )
-        # file = File.new( "#{ds}.marshal", "w" )
-        # file.write( Marshal.dump(results) )
-        # file.close
-        
-        results = Marshal.load( File.new( "#{ds}.marshal", 'r' ) )
+        results = fetch_datasource( ds )
         
         @log.info "   - #{results[:data].size} rows of data returned"
         @log.info "   - processing data"
@@ -53,12 +54,7 @@ module MartSearch
       Parallel.each( ds_to_index['secondary'], :in_threads => 10 ) do |ds|
         @log.info " - #{ds}: requesting data"
         
-        # results = fetch_datasource( ds )
-        # file = File.new( "#{ds}.marshal", "w" )
-        # file.write( Marshal.dump(results) )
-        # file.close
-        
-        results = Marshal.load( File.new( "#{ds}.marshal", 'r' ) )
+        results = fetch_datasource( ds )
         
         @log.info " - #{ds}: #{results[:data].size} rows of data returned"
         @log.info " - #{ds}: processing data"
@@ -74,11 +70,34 @@ module MartSearch
       
     end
     
+    # Queries a given datasource for data to index, stores the returned 
+    # data to two files, a Marshal.dump (for computer consumption) and 
+    # a CSV file (for human consumption).
+    #
+    # @param [String] ds the name of the datasource to fetch from
+    # @return [Hash] a hash containing the :headers (Array) and :data (Array of Arrays) to index
     def fetch_datasource( ds )
       ds_conf    = @config[:datasources][ds.to_sym]
       datasource = @datasources_config[ ds_conf[:datasource].to_sym ]
       
-      datasource.fetch_all_terms_for_indexing( ds_conf[:indexing] )
+      results = Marshal.load( File.new( "#{ds}.marshal", 'r' ) )
+      # results = datasource.fetch_all_terms_for_indexing( ds_conf[:indexing] )
+      
+      file = File.new( "#{ds}.marshal", "w" )
+      file.write( Marshal.dump(results) )
+      file.close
+      
+      CSV.open( "#{ds}.csv", "w" ) do |csv|
+        csv << results[:headers]
+        results[:data].each do |line|
+          csv << line
+        end
+      end
+      
+      system "/bin/cp #{ds}.marshal ../current/#{ds}.marshal"
+      system "/bin/cp #{ds}.csv ../current/#{ds}.csv"
+      
+      return results
     end
     
     def process_results( ds, results )
@@ -160,23 +179,27 @@ module MartSearch
     
     private
     
-    ##
-    ## Cache handling functions...
-    ##
-
-    # Get a document from the @document_cache
+    # Get a document from the @document_cache.
+    #
+    # @param [String] key the unique @document_cache key
     def get_document( key )
       @document_cache[key]
     end
 
-    # Save a document to the @document_cache
+    # Save a document to the @document_cache.
+    #
+    # @param [String] key the unique @document_cache key
+    # @param [Object] value the object to store in the @document_cache
     def set_document( key, value )
       @document_cache_keys[key] = true
       @document_cache[key] = value
     end
 
-    # Utility function to find a specific document (i.e. for a gene), arguments 
-    # are the field to search on, and the term to find.
+    # Utility function to find a specific document (i.e. for a gene).
+    #
+    # @param [Symbol] field the document field upon which to search within
+    # @param [String] search_term the term to search with
+    # @return a document object if found or nil
     def find_document( field, search_term )
       if field == @config[:schema]['unique_key'].to_sym
         return get_document( search_term )
@@ -193,6 +216,8 @@ module MartSearch
     # Utility function to cache a lookup for the @document_cache by a given field. 
     # This allows a much faster lookup of documents when we are not linking by 
     # the primary field.
+    #
+    # @param [Symbol] field the document field to cache the documents by
     def cache_documents_by( field )
       @document_cache_lookup[field] = {}
 

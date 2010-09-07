@@ -23,6 +23,7 @@ require "#{MARTSEARCH_PATH}/lib/martsearch/ontology_term"
 require "#{MARTSEARCH_PATH}/lib/martsearch/index_builder_utils"
 require "#{MARTSEARCH_PATH}/lib/martsearch/index_builder"
 
+# Module housing all of the classes and code that make up the MartSearch portal framework.
 module MartSearch
   
 end

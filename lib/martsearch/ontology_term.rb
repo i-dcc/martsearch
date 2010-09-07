@@ -13,7 +13,9 @@ module MartSearch
   # gem as a base class.
   class OntologyTerm < Tree::TreeNode
     attr_reader :term, :term_name
-
+    
+    # @param [String] name the ontology term (id) i.e. GO00032
+    # @param [String] content the ontology term name/description - optional this will be looked up in the OLS database
     def initialize( name, content=nil )
       super
 
@@ -24,24 +26,32 @@ module MartSearch
     end
 
     # Override to ensure compatibility with Tree::TreeNode.
+    #
+    # @return [String] The ontology term (id) i.e. GO00032
     def term
       self.name
     end
 
     # Override to ensure compatibility with Tree::TreeNode.
+    #
+    # @return [String] The ontology term name/description
     def term_name
       self.content
     end
 
-    # Returns an array of the parents of this term.
+    # Returns an array of parent OntologyTerm objects.
+    #
+    # @return [Array] An array of parent OntologyTerm objects
     def parentage
       get_parents unless @already_fetched_parents
       @already_fetched_parents = true
       super
     end
-
-    # Returns the children of this term as a tree. Will include the 
-    # current term as the 'root' of the tree.
+    
+    # Returns the children of this term as a tree. Will include the current term 
+    # as the 'root' of the tree.
+    #
+    # @return [OntologyTerm] The children of this term as a tree. Will include the current term as the 'root' of the tree.
     def child_tree
       child_check
       child_tree = self.clone
@@ -49,21 +59,27 @@ module MartSearch
       child_tree
     end
 
-    # Returns an array of the direct children of this term.
+    # Returns an array of the direct children (OntologyTerm objects) of this term.
+    #
+    # @return [Array] An array of the direct children (OntologyTerm objects) of this term.
     def children
       child_check
       super
     end
 
     # Returns a flat array containing all the possible child terms
-    # for this given ontology term
+    # for this given ontology term.
+    #
+    # @return [Array] An array of all possible child terms (Strings) for this given ontology term
     def all_child_terms
       get_all_child_lists
       return @all_child_terms
     end
 
     # Returns a flat array containing all the possible child term 
-    # names for this given ontology term
+    # names for this given ontology term.
+    #
+    # @return [Array] A flat array containing all the possible child term names (Strings) for this given ontology term
     def all_child_names
       get_all_child_lists
       return @all_child_names

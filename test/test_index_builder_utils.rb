@@ -20,15 +20,20 @@ class MartSearchIndexBuilderUtilsTest < Test::Unit::TestCase
     assert( File.directory?('solr_xml') )
     assert( File.directory?('solr_xml/current') )
     
-    # Test the daily directory deletion
-    Dir.chdir('solr_xml')
+    Dir.chdir('../../')
+  end
+  
+  def test_open_daily_directory
+    open_daily_directory('solr_xml')
+    
+    Dir.chdir('..')
     (1..10).each do |index|
       Dir.mkdir("daily_0000#{index}") unless File.directory?("daily_0000#{index}")
     end
     
-    setup_and_move_to_work_directory()
+    open_daily_directory('solr_xml')
     
-    Dir.chdir('solr_xml')
+    Dir.chdir('..')
     directories = Dir.glob("daily_*").sort
     
     assert_equal( 5, directories.size )
@@ -39,7 +44,7 @@ class MartSearchIndexBuilderUtilsTest < Test::Unit::TestCase
       end
     end
     
-    Dir.chdir("../../../")
+    Dir.chdir('../../')
   end
   
   def test_new_document
