@@ -11,6 +11,10 @@ module MartSearch
       @config             = ms_config[:index_builder]
       @datasources_config = ms_config[:datasources]
       
+      @log                 = Logger.new(STDOUT)
+      @log.level           = Logger::DEBUG
+      @log.datetime_format = "%Y-%m-%d %H:%M:%S "
+      
       # Create a document cache, and a helper lookup variable
       @file_based_cache      = false
       @document_cache        = {}
@@ -25,10 +29,10 @@ module MartSearch
     def build_index()
       ds_to_index = @config[:datasources_to_index]
       
-      puts "Running Primary DataSource Grabs (in serial)..."
+      @log.info "Running Primary DataSource Grabs (in serial)..."
       ds_to_index['primary'].each do |ds|
-        puts " - #{ds}"
-        puts "   - requesting data"
+        @log.info " - #{ds}"
+        @log.info "   - requesting data"
         
         # results = fetch_datasource( ds )
         # file = File.new( "#{ds}.marshal", "w" )
@@ -37,17 +41,17 @@ module MartSearch
         
         results = Marshal.load( File.new( "#{ds}.marshal", 'r' ) )
         
-        puts "   - #{results[:data].size} rows of data returned"
-        puts "   - processing data"
+        @log.info "   - #{results[:data].size} rows of data returned"
+        @log.info "   - processing data"
         
         process_results( ds, results )
         clean_document_cache()
       end
       
-      puts ""
-      puts "Running Secondary DataSource Grabs (in parallel)..."
+      @log.info ""
+      @log.info "Running Secondary DataSource Grabs (in parallel)..."
       Parallel.each( ds_to_index['secondary'], :in_threads => 10 ) do |ds|
-        puts " - #{ds}: requesting data"
+        @log.info " - #{ds}: requesting data"
         
         # results = fetch_datasource( ds )
         # file = File.new( "#{ds}.marshal", "w" )
@@ -56,17 +60,16 @@ module MartSearch
         
         results = Marshal.load( File.new( "#{ds}.marshal", 'r' ) )
         
-        puts " - #{ds}: #{results[:data].size} rows of data returned"
-        puts " - #{ds}: processing data"
+        @log.info " - #{ds}: #{results[:data].size} rows of data returned"
+        @log.info " - #{ds}: processing data"
         
         process_results( ds, results )
         clean_document_cache()
         
-        puts " - #{ds}: data processing complete"
+        @log.info " - #{ds}: data processing complete"
       end
       
-      puts ""
-      puts "- #{@document_cache.keys.first}:"
+      @log.info "- #{@document_cache.keys.first}:"
       ap @document_cache[@document_cache.keys.first]
       
     end
@@ -149,6 +152,10 @@ module MartSearch
           end
         end
       end
+    end
+    
+    def save_document_cache
+      
     end
     
     private

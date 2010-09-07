@@ -2,6 +2,7 @@ require 'uri'
 require 'net/http'
 require 'cgi'
 require 'singleton'
+require 'logger'
 
 require 'rubygems'
 require 'json'

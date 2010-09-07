@@ -11,14 +11,35 @@ class MartSearchIndexBuilderUtilsTest < Test::Unit::TestCase
     VCR.eject_cassette
   end
   
-  def test_flatten_primary_secondary_datasources
-    hash  = { 'primary' => [1,2], 'secondary' => [3,4,5] }
-    array = flatten_primary_secondary_datasources( hash )
+  def test_setup_and_move_to_work_directory
+    setup_and_move_to_work_directory()
+    assert( File.directory?('datasource_dowloads') )
+    assert( File.directory?('datasource_dowloads/current') )
+    assert( File.directory?('document_cache') )
+    assert( File.directory?('document_cache/current') )
+    assert( File.directory?('solr_xml') )
+    assert( File.directory?('solr_xml/current') )
     
-    assert( array.is_a?(Array) )
-    assert_equal( 1, array[0] )
-    assert_equal( 4, array[3] )
-    assert_equal( 5, array.size )
+    # Test the daily directory deletion
+    Dir.chdir('solr_xml')
+    (1..10).each do |index|
+      Dir.mkdir("daily_0000#{index}") unless File.directory?("daily_0000#{index}")
+    end
+    
+    setup_and_move_to_work_directory()
+    
+    Dir.chdir('solr_xml')
+    directories = Dir.glob("daily_*").sort
+    
+    assert_equal( 5, directories.size )
+
+    directories.each do |dir|
+      if dir.match("daily_0000")
+        system("/bin/rm -r '#{dir}'")
+      end
+    end
+    
+    Dir.chdir("../../../")
   end
   
   def test_new_document
