@@ -75,27 +75,30 @@ module MartSearch
     # a CSV file (for human consumption).
     #
     # @param [String] ds the name of the datasource to fetch from
+    # @param [Boolean] save_to_disk save cache files to disk?
     # @return [Hash] a hash containing the :headers (Array) and :data (Array of Arrays) to index
-    def fetch_datasource( ds )
+    def fetch_datasource( ds, save_to_disk=true )
       ds_conf    = @config[:datasources][ds.to_sym]
       datasource = @datasources_config[ ds_conf[:datasource].to_sym ]
       
-      results = Marshal.load( File.new( "#{ds}.marshal", 'r' ) )
-      # results = datasource.fetch_all_terms_for_indexing( ds_conf[:indexing] )
+      # results = Marshal.load( File.new( "#{ds}.marshal", 'r' ) )
+      results = datasource.fetch_all_terms_for_indexing( ds_conf[:indexing] )
       
-      file = File.new( "#{ds}.marshal", "w" )
-      file.write( Marshal.dump(results) )
-      file.close
-      
-      CSV.open( "#{ds}.csv", "w" ) do |csv|
-        csv << results[:headers]
-        results[:data].each do |line|
-          csv << line
+      if save_to_disk
+        file = File.new( "#{ds}.marshal", "w" )
+        file.write( Marshal.dump(results) )
+        file.close
+        
+        CSV.open( "#{ds}.csv", "w" ) do |csv|
+          csv << results[:headers]
+          results[:data].each do |line|
+            csv << line
+          end
         end
+        
+        system "/bin/cp #{ds}.marshal ../current/#{ds}.marshal"
+        system "/bin/cp #{ds}.csv ../current/#{ds}.csv"
       end
-      
-      system "/bin/cp #{ds}.marshal ../current/#{ds}.marshal"
-      system "/bin/cp #{ds}.csv ../current/#{ds}.csv"
       
       return results
     end

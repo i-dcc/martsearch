@@ -12,7 +12,7 @@ class MartSearchIndexBuilderTest < Test::Unit::TestCase
     
     should 'correctly call the DataSource to fetch all data ready for indexing' do
       VCR.use_cassette( 'test_index_builder_fetch_datasource', :record => :new_episodes ) do
-        ret = @index_builder.fetch_datasource('ikmc-kermits')
+        ret = @index_builder.fetch_datasource( 'ikmc-kermits', false )
         
         assert( ret.is_a?(Hash), "fetch_all_terms_for_indexing() does not return a hash." )
         assert( ret[:headers] != nil, "the returned hash from fetch_all_terms_for_indexing() contains a nil value for :headers." )
@@ -30,8 +30,8 @@ class MartSearchIndexBuilderTest < Test::Unit::TestCase
           'status' => ['Mice - Genotype confirmed','Mice - Germline transmission']
         }
         
-        @index_builder.process_results( 'ikmc-dcc', @index_builder.fetch_datasource( 'ikmc-dcc' ) )
-        @index_builder.process_results( 'ikmc-kermits', @index_builder.fetch_datasource('ikmc-kermits') )
+        @index_builder.process_results( 'ikmc-dcc', @index_builder.fetch_datasource( 'ikmc-dcc', false ) )
+        @index_builder.process_results( 'ikmc-kermits', @index_builder.fetch_datasource( 'ikmc-kermits', false ) )
         
         docs = @index_builder.document_cache
         

@@ -44,7 +44,7 @@ module MartSearch
       datasources     = {}
       datasource_conf = JSON.load( File.new( "#{config_dir}/datasources.json", 'r' ) )
       datasource_conf.each do |ds_name,ds_conf|
-        datasources[ ds_name.to_sym ] = MartSearch.const_get("#{conf['type']}DataSource").new( ds_conf )
+        datasources[ ds_name.to_sym ] = MartSearch.const_get("#{ds_conf['type']}DataSource").new( ds_conf )
       end
       
       return datasources
