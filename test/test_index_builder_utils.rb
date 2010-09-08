@@ -22,14 +22,14 @@ class MartSearchIndexBuilderUtilsTest < Test::Unit::TestCase
   end
   
   def test_open_daily_directory
-    open_daily_directory('solr_xml')
+    open_daily_directory( 'solr_xml', false )
     
     Dir.chdir('..')
     (1..10).each do |index|
       Dir.mkdir("daily_0000#{index}") unless File.directory?("daily_0000#{index}")
     end
     
-    open_daily_directory('solr_xml')
+    open_daily_directory( 'solr_xml', false )
     
     Dir.chdir('..')
     directories = Dir.glob("daily_*").sort

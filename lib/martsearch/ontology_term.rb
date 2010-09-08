@@ -12,6 +12,8 @@ module MartSearch
   # database (created and managed by the EBI) using the Tree::TreeNode (rubytree) 
   # gem as a base class.
   #
+  # @author Darren Oakley
+  #
   # TODO: At the moment this object expects an OLS_DB constant to be present (as a sequel connection to the database) - this should really be handled by MartSearch::ConfigBuilder.
   class OntologyTerm < Tree::TreeNode
     attr_reader :term, :term_name

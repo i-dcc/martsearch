@@ -19,4 +19,12 @@ class MartSearchUtilsTest < Test::Unit::TestCase
     assert_equal( 2, hash['two'] )
     assert_equal( 3, hash['three'] )
   end
+  
+  def test_array_chunking
+    ten_elm_array    = [1,2,3,4,5,6,7,8,9,10]
+    twelve_elm_array = [1,2,3,4,5,6,7,8,9,10,11,12]
+    
+    assert_equal( [[1,2,3,4,5],[6,7,8,9,10]], ten_elm_array.chunk(5) )
+    assert_equal( [[1,2,3,4,5],[6,7,8,9,10],[11,12]], twelve_elm_array.chunk(5) )
+  end
 end

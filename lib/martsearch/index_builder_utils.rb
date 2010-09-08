@@ -1,6 +1,8 @@
 module MartSearch
   
   # Utility module containing helper funcions for the IndexBuilder class.
+  #
+  # @author Darren Oakley
   module IndexBuilderUtils
     
     # Utility function to setup the expected IndexBuilder cache directory structure.
@@ -221,6 +223,30 @@ module MartSearch
           end
         end
       end
+    end
+    
+    # Utility function to create the actual XML markup for a collection 
+    # of solr document constructs.
+    #
+    # @param [Array] docs An array of solr document objects
+    # @return [String] The constructed XML documents
+    def solr_document_xml( docs )
+      solr_xml = ""
+      xml      = Builder::XmlMarkup.new( :target => solr_xml, :indent => 2 )
+
+      xml.add {
+        docs.each do |doc|
+          xml.doc {
+            doc.each do |field,field_terms|
+              field_terms.each do |term|
+                xml.field( term, :name => field )
+              end
+            end
+          }
+        end
+      }
+
+      return solr_xml
     end
     
     private

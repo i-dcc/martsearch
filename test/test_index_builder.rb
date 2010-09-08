@@ -4,7 +4,8 @@ class MartSearchIndexBuilderTest < Test::Unit::TestCase
   include MartSearch::IndexBuilderUtils
   
   def setup
-    @index_builder = MartSearch::IndexBuilder.new()
+    @index_builder           = MartSearch::IndexBuilder.new()
+    @index_builder.log.level = Logger::FATAL
   end
   
   context 'A MartSearch::IndexBuilder object' do
@@ -50,14 +51,22 @@ class MartSearchIndexBuilderTest < Test::Unit::TestCase
         @index_builder.clean_document_cache_public()
         assert_equal( 1, docs['MGI:105369'][:marker_symbol].size )
         
-        # And try saving the document_cache to disk...
+        # And try saving the document_cache and xml files to disk...
         pwd = Dir.pwd
         @index_builder.save_document_cache()
         assert_equal( pwd, Dir.pwd )
         
         open_daily_directory( 'document_cache', false )
         assert( File.exists?( 'document_cache.marshal' ) )
-        Dir.chdir('../../')
+        
+        Dir.chdir(pwd)
+        @index_builder.save_solr_document_xmls()
+        assert_equal( pwd, Dir.pwd )
+        
+        open_daily_directory( 'solr_xml', false )
+        assert( Dir.glob("solr-xml-*.xml").size > 0 )
+        
+        Dir.chdir('../../../../')
       end
     end
     

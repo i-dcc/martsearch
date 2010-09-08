@@ -1,6 +1,8 @@
 module MartSearch
   
   # Utility module containing generic helper funcions.
+  #
+  # @author Darren Oakley
   module Utils
     
     # Takes an input hash and turns all of the keys into symbols.

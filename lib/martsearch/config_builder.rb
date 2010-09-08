@@ -6,6 +6,8 @@ module MartSearch
   # Singleton configuration class for MartSearch.  This class handles all of the 
   # config file parsing and builds up a cache of DataSource objects ready to use 
   # throughout the rest of the MartSearch framework.
+  #
+  # @author Darren Oakley
   class ConfigBuilder
     include Singleton
     include MartSearch::Utils

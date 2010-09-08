@@ -2,6 +2,7 @@ module MartSearch
   
   # DataSource class for modelling a source for data.
   #
+  # @author Darren Oakley
   # @abstract Subclass and override {#fetch_all_terms_for_indexing} to implement a custom DataSource class.
   class DataSource
     include MartSearch::Utils
@@ -24,6 +25,8 @@ module MartSearch
   end
   
   # Custom DataSource class for interacting with BioMart based datasources.
+  #
+  # @author Darren Oakley
   class BiomartDataSource < DataSource
     # The Biomart::Dataset object for the BiomartDataSource
     attr_reader :ds

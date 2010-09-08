@@ -2,17 +2,21 @@ module MartSearch
   
   # This class is responsible for building and updating of a Solr search 
   # index for use with a MartSearch application.
+  #
+  # @author Darren Oakley
   class IndexBuilder
     include MartSearch
     include MartSearch::Utils
     include MartSearch::IndexBuilderUtils
     
-    attr_reader :config, :document_cache
+    attr_reader :config, :document_cache, :log
     
     def initialize()
       ms_config           = MartSearch::ConfigBuilder.instance().config
       @config             = ms_config[:index_builder]
       @datasources_config = ms_config[:datasources]
+      
+      @config[:number_of_docs_per_xml_file] = 1000
       
       @log                 = Logger.new(STDOUT)
       @log.level           = Logger::DEBUG
@@ -189,6 +193,33 @@ module MartSearch
       file = File.new( 'document_cache.marshal', 'w' )
       file.write( Marshal.dump( @document_cache ) )
       file.close
+      
+      Dir.chdir(pwd)
+    end
+    
+    # Function to build and store the XML files needed to update a Solr 
+    # index based on the @document_cache store in this current instance.
+    def save_solr_document_xmls
+      pwd = Dir.pwd
+      open_daily_directory( 'solr_xml' )
+      
+      batch_size = @config[:number_of_docs_per_xml_file]
+      @log.info "Creating Solr XML files (#{batch_size} docs per file)..."
+
+      doc_chunks = @document_cache_keys.keys.chunk( batch_size )
+      doc_chunks.each_index do |chunk_number|
+        @log.info "[ #{chunk_number + 1} / #{doc_chunks.size} ]"
+
+        doc_names = doc_chunks[chunk_number]
+        docs = []
+        doc_names.each do |name|
+          docs.push( get_document( name ) )
+        end
+
+        file = File.open( "solr-xml-#{chunk_number+1}.xml", "w" )
+        file.print solr_document_xml(docs)
+        file.close
+      end
       
       Dir.chdir(pwd)
     end
