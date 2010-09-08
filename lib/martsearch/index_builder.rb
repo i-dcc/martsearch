@@ -74,9 +74,9 @@ module MartSearch
     # data to two files, a Marshal.dump (for computer consumption) and 
     # a CSV file (for human consumption).
     #
-    # @param [String] ds the name of the datasource to fetch from
-    # @param [Boolean] save_to_disk save cache files to disk?
-    # @return [Hash] a hash containing the :headers (Array) and :data (Array of Arrays) to index
+    # @param [String] ds The name of the datasource to fetch from
+    # @param [Boolean] save_to_disk Save cache files to disk?
+    # @return [Hash] A hash containing the :headers (Array) and :data (Array of Arrays) to index
     def fetch_datasource( ds, save_to_disk=true )
       ds_conf    = @config[:datasources][ds.to_sym]
       datasource = @datasources_config[ ds_conf[:datasource].to_sym ]
@@ -184,15 +184,15 @@ module MartSearch
     
     # Get a document from the @document_cache.
     #
-    # @param [String] key the unique @document_cache key
+    # @param [String] key The unique @document_cache key
     def get_document( key )
       @document_cache[key]
     end
 
     # Save a document to the @document_cache.
     #
-    # @param [String] key the unique @document_cache key
-    # @param [Object] value the object to store in the @document_cache
+    # @param [String] key The unique @document_cache key
+    # @param [Object] value The object to store in the @document_cache
     def set_document( key, value )
       @document_cache_keys[key] = true
       @document_cache[key] = value
@@ -200,9 +200,9 @@ module MartSearch
 
     # Utility function to find a specific document (i.e. for a gene).
     #
-    # @param [Symbol] field the document field upon which to search within
-    # @param [String] search_term the term to search with
-    # @return a document object if found or nil
+    # @param [Symbol] field The document field upon which to search within
+    # @param [String] search_term The term to search with
+    # @return A document object if found or nil
     def find_document( field, search_term )
       if field == @config[:schema]['unique_key'].to_sym
         return get_document( search_term )
@@ -220,7 +220,7 @@ module MartSearch
     # This allows a much faster lookup of documents when we are not linking by 
     # the primary field.
     #
-    # @param [Symbol] field the document field to cache the documents by
+    # @param [Symbol] field The document field to cache the documents by
     def cache_documents_by( field )
       @document_cache_lookup[field] = {}
 

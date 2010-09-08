@@ -1,7 +1,9 @@
 module MartSearch
+  
+  # Utility module containing helper funcions for the IndexBuilder class.
   module IndexBuilderUtils
     
-    
+    # Utility function to setup the expected IndexBuilder cache directory structure.
     def setup_and_move_to_work_directory
       index_builder_tmpdir = "#{MARTSEARCH_PATH}/tmp/index_builder"
       
@@ -16,8 +18,12 @@ module MartSearch
       end
     end
     
-    def open_daily_directory( location, delete=true )
-      Dir.chdir("#{MARTSEARCH_PATH}/tmp/index_builder/#{location}")
+    # Utility function to setup and move the current program into a daily cache directory.
+    # 
+    # @param [String] cache_dir The type of cache_dir to open [datasource_dowloads / document_cache / solr_xml]
+    # @param [Boolean] delete Delete an existing daily cache directory?
+    def open_daily_directory( cache_dir, delete=true )
+      Dir.chdir("#{MARTSEARCH_PATH}/tmp/index_builder/#{cache_dir}")
       daily_dir = "daily_#{Date.today.to_s}"
       
       system "/bin/rm -r #{daily_dir}" if File.directory?(daily_dir) and delete
@@ -33,7 +39,9 @@ module MartSearch
     end
     
     # Utility function to create a new Lucene/Solr document construct.
-    def new_document()
+    # 
+    # @return [Hash] A hash object representing an empty Solr document entry
+    def new_document
       index_builder_config = MartSearch::ConfigBuilder.instance().config[:index_builder]
       
       # Work out fields to ignore - these will be auto populated by Solr
@@ -50,7 +58,10 @@ module MartSearch
     end
     
     # Utility function to process the attribute_map configuration into 
-    # something we can use to map biomart results to our index configuration.
+    # something we can use to map dataset results to our index configuration.
+    # 
+    # @param [Hash] attribute_map The attribute_map configuration for a given datasource
+    # @return [Hash] A hash contining the processed :attribute_map, :primary_attribute (of the datasource) and the :map_to_index_field (the index field used to map this data into the index)
     def process_attribute_map( attribute_map )
       map                = {}
       primary_attribute  = nil
@@ -87,6 +98,12 @@ module MartSearch
     
     # Utility function to determine what data values we need to 
     # add to the index given the dataset configuration.
+    # 
+    # @param [String] attr_name The name of the datasource attribute to process
+    # @param [Hash] attribute_map The processed :attribute_map configuration (the value of :attribute_map returned from {#process_attribute_map})
+    # @param [Hash] data_row_obj Hash representing the row of datasource data to process
+    # @param [Biomart::Dataset] mart_ds A Biomart::Dataset object - required if the attribute_map uses the 'index_attr_name' option
+    # @return [nil/String/Array] Can return nil (if there is no data to index), a String (single value to index), or an Array (if there are multiple values to index)
     def extract_value_to_index( attr_name, attribute_map, data_row_obj, mart_ds=nil )
       options         = attribute_map[attr_name]
       value_to_index  = data_row_obj[attr_name]
@@ -130,7 +147,11 @@ module MartSearch
     end
     
     # Utility function to handle the extraction of metadata from indexed values,
-    # (i.e. MP terms in comments)
+    # (i.e. MP terms in comments).
+    # 
+    # @param [Hash] extract_conf The configuration object supplying the "regexp" to use and the "idx" field to send our extracted data to
+    # @param [Hash] doc The Solr document object to inject any indexable data into
+    # @param [String/Array] value_to_index The return from {#extract_value_to_index}
     def index_extracted_attributes( extract_conf, doc, value_to_index )
       regexp  = Regexp.new( extract_conf["regexp"] )
       matches = false
@@ -147,6 +168,11 @@ module MartSearch
     end
     
     # Utility function to handle the indexing of grouped attributes
+    # 
+    # @param [Hash] grouped_attr_conf The configuration object supplying the "attrs" to concatenate, the "using" argument (optional), and the "idx" field to send our data to
+    # @param [Hash] doc The Solr document object to inject any indexable data into
+    # @param [Hash] data_row_obj Hash representing the row of datasource data to process
+    # @param [Hash] map_data The complete processed attribute_map config (return from {#process_attribute_map})
     def index_grouped_attributes( grouped_attr_conf, doc, data_row_obj, map_data )
       grouped_attr_conf.each do |group|
         attrs = []
@@ -171,7 +197,13 @@ module MartSearch
       end
     end
     
-    # Utility function to handle the indexing of ontology terms
+    # Utility function to handle the indexing of ontology terms.
+    # 
+    # @param [Hash] ontology_term_conf The configuration object defining how the ontology data should be indexed
+    # @param [Hash] doc The Solr document object to inject any indexable data into
+    # @param [Hash] data_row_obj Hash representing the row of datasource data to process
+    # @param [Hash] map_data The complete processed attribute_map config (return from {#process_attribute_map})
+    # @param [Hash] cache A cache object to store data about already retrieved ontology terms (this is for optimization as generating the OntologyTerm objects is expensive)
     def index_ontology_terms( ontology_term_conf, doc, data_row_obj, map_data, cache )
       ontology_term_conf.each do |term_conf|
         attribute      = term_conf["attr"]
@@ -188,46 +220,48 @@ module MartSearch
       end
     end
     
-    # Helper function for indexing ontology terms we haven't seen before
-    def index_ontology_terms_from_fresh( doc, term_conf, value_to_index, cache )
-      begin
-        ontolo_term  = MartSearch::OntologyTerm.new( value_to_index )
-        parent_terms = ontolo_term.parentage
+    private
+    
+      # Helper function for indexing ontology terms we haven't seen before
+      def index_ontology_terms_from_fresh( doc, term_conf, value_to_index, cache )
+        begin
+          ontolo_term  = MartSearch::OntologyTerm.new( value_to_index )
+          parent_terms = ontolo_term.parentage
 
-        terms_to_index = [ ontolo_term.term ]
-        names_to_index = [ ontolo_term.term_name ]
+          terms_to_index = [ ontolo_term.term ]
+          names_to_index = [ ontolo_term.term_name ]
 
-        unless parent_terms.nil?
-          parent_terms.each do |term|
-            terms_to_index.unshift( term.term )
-            names_to_index.unshift( term.term_name )
+          unless parent_terms.nil?
+            parent_terms.each do |term|
+              terms_to_index.unshift( term.term )
+              names_to_index.unshift( term.term_name )
+            end
           end
+
+          # Remove the "top-level" ontology name - there's no need to have this 
+          # in the search index...
+          names_to_index.shift
+
+          # Store these terms to the cache for future use...
+          data_to_cache         = { :term => terms_to_index, :term_name => names_to_index }
+          cache[value_to_index] = data_to_cache
+
+          # Write the data to the doc...
+          index_ontology_terms_from_cache( doc, term_conf, data_to_cache )
+        rescue OntologyTermNotFoundError => error
+          # The ontology term couldn't be found - no worries, just move on...
         end
-
-        # Remove the "top-level" ontology name - there's no need to have this 
-        # in the search index...
-        names_to_index.shift
-
-        # Store these terms to the cache for future use...
-        data_to_cache         = { :term => terms_to_index, :term_name => names_to_index }
-        cache[value_to_index] = data_to_cache
-
-        # Write the data to the doc...
-        index_ontology_terms_from_cache( doc, term_conf, data_to_cache )
-      rescue OntologyTermNotFoundError => error
-        # The ontology term couldn't be found - no worries, just move on...
       end
-    end
     
-    # Helper function for indexing ontology terms we have in the cache
-    def index_ontology_terms_from_cache( doc, term_conf, cached_data )
-      [:term,:term_name].each do |term_or_name|
-        cached_data[term_or_name].each do |target|
-          doc[ term_conf["idx"][term_or_name.to_s].to_sym ].push( target )
+      # Helper function for indexing ontology terms we have in the cache
+      def index_ontology_terms_from_cache( doc, term_conf, cached_data )
+        [:term,:term_name].each do |term_or_name|
+          cached_data[term_or_name].each do |target|
+            doc[ term_conf["idx"][term_or_name.to_s].to_sym ].push( target )
+          end
+          doc[ term_conf["idx"]["breadcrumb"].to_sym ].push( cached_data[term_or_name].join(" | ") )
         end
-        doc[ term_conf["idx"]["breadcrumb"].to_sym ].push( cached_data[term_or_name].join(" | ") )
       end
-    end
     
-  end
+    end
 end
