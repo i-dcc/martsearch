@@ -10,12 +10,17 @@ require 'martsearch'
 
 # Set-up VCR for mocking up web requests.
 VCR.config do |c|
-  c.cassette_library_dir     = 'test/vcr_cassettes'
   c.http_stubbing_library    = :fakeweb
   c.default_cassette_options = { 
     :record            => :new_episodes, 
     :match_requests_on => [:uri, :method]
   }
+  
+  if /^1\.8/ === RUBY_VERSION
+    c.cassette_library_dir = 'test/vcr_cassettes_ruby1.8'
+  else
+    c.cassette_library_dir = 'test/vcr_cassettes_ruby1.9'
+  end
 end
 
 # Setup the connection parameters for our OLS database...

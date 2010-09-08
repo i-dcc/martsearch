@@ -4,4 +4,5 @@ doc*
 config/ols_database.yml
 coverage/*
 coverage.info
-test/vcr_cassettes/*
+test/vcr_cassettes*
+tmp/index_builder*
