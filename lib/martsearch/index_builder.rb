@@ -103,6 +103,11 @@ module MartSearch
       return results
     end
     
+    # Function used to process the data returned from a datasource and build 
+    # up the @document_cache.
+    #
+    # @param [String] ds The name of the datasource that the data is from
+    # @param [Hash] results The results hash of data (the return from {#fetch_datasource})
     def process_results( ds, results )
       ds_conf       = @config[:datasources][ds.to_sym]
       datasource    = @datasources_config[ ds_conf[:datasource] ]
@@ -176,84 +181,92 @@ module MartSearch
       end
     end
     
+    # Helper function to dump the current @document_cache to disk.
     def save_document_cache
+      pwd = Dir.pwd
+      open_daily_directory( 'document_cache' )
       
+      file = File.new( 'document_cache.marshal', 'w' )
+      file.write( Marshal.dump( @document_cache ) )
+      file.close
+      
+      Dir.chdir(pwd)
     end
     
     private
     
-    # Get a document from the @document_cache.
-    #
-    # @param [String] key The unique @document_cache key
-    def get_document( key )
-      @document_cache[key]
-    end
+      # Get a document from the @document_cache.
+      #
+      # @param [String] key The unique @document_cache key
+      def get_document( key )
+        @document_cache[key]
+      end
 
-    # Save a document to the @document_cache.
-    #
-    # @param [String] key The unique @document_cache key
-    # @param [Object] value The object to store in the @document_cache
-    def set_document( key, value )
-      @document_cache_keys[key] = true
-      @document_cache[key] = value
-    end
+      # Save a document to the @document_cache.
+      #
+      # @param [String] key The unique @document_cache key
+      # @param [Object] value The object to store in the @document_cache
+      def set_document( key, value )
+        @document_cache_keys[key] = true
+        @document_cache[key] = value
+      end
 
-    # Utility function to find a specific document (i.e. for a gene).
-    #
-    # @param [Symbol] field The document field upon which to search within
-    # @param [String] search_term The term to search with
-    # @return A document object if found or nil
-    def find_document( field, search_term )
-      if field == @config[:schema]['unique_key'].to_sym
-        return get_document( search_term )
-      else
-        map_term = @document_cache_lookup[field][search_term]
-        if map_term
-          return get_document( map_term )
+      # Utility function to find a specific document (i.e. for a gene).
+      #
+      # @param [Symbol] field The document field upon which to search within
+      # @param [String] search_term The term to search with
+      # @return A document object if found or nil
+      def find_document( field, search_term )
+        if field == @config[:schema]['unique_key'].to_sym
+          return get_document( search_term )
         else
-          return nil
-        end
-      end
-    end
-
-    # Utility function to cache a lookup for the @document_cache by a given field. 
-    # This allows a much faster lookup of documents when we are not linking by 
-    # the primary field.
-    #
-    # @param [Symbol] field The document field to cache the documents by
-    def cache_documents_by( field )
-      @document_cache_lookup[field] = {}
-
-      @document_cache_keys.each_key do |cache_key|
-        document = get_document(cache_key)
-        document[field].each do |lookup_value|
-          @document_cache_lookup[field][lookup_value] = cache_key
-        end
-      end
-    end
-
-    # Utility function to remove any duplication from the document cache.
-    def clean_document_cache
-      @document_cache_keys.each_key do |cache_key|
-        document = get_document(cache_key)
-
-        document.each do |index_field,index_values|
-          if index_values.size > 0
-            document[index_field] = index_values.uniq
-          end
-
-          # If we have multiple value entries in what should be a single valued 
-          # field, not the best solution, but just arbitrarily pick the first entry.
-          if !@config[:schema]['fields'][index_field.to_s]['multi_valued'] and index_values.size > 1
-            new_array = []
-            new_array.push(index_values[0])
-            document[index_field] = new_array
+          map_term = @document_cache_lookup[field][search_term]
+          if map_term
+            return get_document( map_term )
+          else
+            return nil
           end
         end
-
-        set_document( cache_key, document )
       end
-    end
+
+      # Utility function to cache a lookup for the @document_cache by a given field. 
+      # This allows a much faster lookup of documents when we are not linking by 
+      # the primary field.
+      #
+      # @param [Symbol] field The document field to cache the documents by
+      def cache_documents_by( field )
+        @document_cache_lookup[field] = {}
+
+        @document_cache_keys.each_key do |cache_key|
+          document = get_document(cache_key)
+          document[field].each do |lookup_value|
+            @document_cache_lookup[field][lookup_value] = cache_key
+          end
+        end
+      end
+
+      # Utility function to remove any duplication from the document cache.
+      def clean_document_cache
+        @document_cache_keys.each_key do |cache_key|
+          document = get_document(cache_key)
+
+          document.each do |index_field,index_values|
+            if index_values.size > 0
+              document[index_field] = index_values.uniq
+            end
+
+            # If we have multiple value entries in what should be a single valued 
+            # field, not the best solution, but just arbitrarily pick the first entry.
+            if !@config[:schema]['fields'][index_field.to_s]['multi_valued'] and index_values.size > 1
+              new_array = []
+              new_array.push(index_values[0])
+              document[index_field] = new_array
+            end
+          end
+
+          set_document( cache_key, document )
+        end
+      end
     
   end
 end

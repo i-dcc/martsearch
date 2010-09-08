@@ -1,6 +1,8 @@
 require File.dirname(__FILE__) + '/test_helper.rb'
 
 class MartSearchIndexBuilderTest < Test::Unit::TestCase
+  include MartSearch::IndexBuilderUtils
+  
   def setup
     @index_builder = MartSearch::IndexBuilder.new()
   end
@@ -47,6 +49,15 @@ class MartSearchIndexBuilderTest < Test::Unit::TestCase
         assert( docs['MGI:105369'][:marker_symbol].size > 1 )
         @index_builder.clean_document_cache_public()
         assert_equal( 1, docs['MGI:105369'][:marker_symbol].size )
+        
+        # And try saving the document_cache to disk...
+        pwd = Dir.pwd
+        @index_builder.save_document_cache()
+        assert_equal( pwd, Dir.pwd )
+        
+        open_daily_directory( 'document_cache', false )
+        assert( File.exists?( 'document_cache.marshal' ) )
+        Dir.chdir('../../')
       end
     end
     

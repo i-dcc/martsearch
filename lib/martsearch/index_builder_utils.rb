@@ -12,9 +12,11 @@ module MartSearch
       
       ['datasource_dowloads','document_cache','solr_xml'].each do |cache_dir|
         Dir.mkdir(cache_dir) unless File.directory?(cache_dir)
-        Dir.chdir(cache_dir)
-        Dir.mkdir('current') unless File.directory?('current')
-        Dir.chdir('..')
+        if cache_dir == 'datasource_dowloads'
+          Dir.chdir(cache_dir)
+          Dir.mkdir('current') unless File.directory?('current')
+          Dir.chdir('..')
+        end
       end
     end
     
@@ -23,6 +25,7 @@ module MartSearch
     # @param [String] cache_dir The type of cache_dir to open [datasource_dowloads / document_cache / solr_xml]
     # @param [Boolean] delete Delete an existing daily cache directory?
     def open_daily_directory( cache_dir, delete=true )
+      setup_and_move_to_work_directory()
       Dir.chdir("#{MARTSEARCH_PATH}/tmp/index_builder/#{cache_dir}")
       daily_dir = "daily_#{Date.today.to_s}"
       

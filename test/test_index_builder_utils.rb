@@ -16,9 +16,7 @@ class MartSearchIndexBuilderUtilsTest < Test::Unit::TestCase
     assert( File.directory?('datasource_dowloads') )
     assert( File.directory?('datasource_dowloads/current') )
     assert( File.directory?('document_cache') )
-    assert( File.directory?('document_cache/current') )
     assert( File.directory?('solr_xml') )
-    assert( File.directory?('solr_xml/current') )
     
     Dir.chdir('../../')
   end
