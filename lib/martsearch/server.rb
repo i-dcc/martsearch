@@ -40,6 +40,16 @@ module MartSearch
       super
     end
     
+    configure :production do
+      @compressed_css = compressed_css()
+      @compressed_js  = compressed_js()
+    end
+    
+    configure :staging do
+      @compressed_css = compressed_css()
+      @compressed_js  = compressed_js()
+    end
+    
     before do
       response["Content-Type"] = "text/html; charset=utf-8"
 
@@ -68,10 +78,42 @@ module MartSearch
       # check_for_messages
     end
     
+    ##
+    ## Basic Routes
+    ##
+    
     get '/?' do
       @current               = "home"
       @hide_side_search_form = true
       erubis :main
+    end
+    
+    get "/about/?" do
+      @current    = "about"
+      @page_title = "About"
+      erubis :about
+    end
+
+    get "/help/?" do
+      @current    = "help"
+      @page_title = "Help"
+      erubis :help
+    end
+    
+    ##
+    ## Dynamic CSS/Javascript 
+    ##
+    
+    get "/css/martsearch*.css" do
+      content_type "text/css"
+      @compressed_css = compressed_css() if @compressed_css.nil?
+      return @compressed_css
+    end
+
+    get "/js/martsearch*.js" do
+      content_type "text/javascript"
+      @compressed_js = compressed_js() if @compressed_js.nil?
+      return @compressed_js
     end
     
     get "/dataview-css/:dataview_name" do
