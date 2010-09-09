@@ -1,0 +1,29 @@
+{
+  "datasource":  "mgi-markers",
+  "enabled":     true,
+  "custom_sort": true,
+  "searching": {
+    "joined_index_field":       "mgi_accession_id_key",
+    "joined_biomart_filter":    "marker_id",
+    "joined_biomart_attribute": "mgi_marker_id_att",
+    "attributes": [
+      "marker_symbol_107",
+      "marker_name_107",
+      "marker_type_107",
+      "synonym_1010",
+      "chromosome_107",
+      "rep_genome_start_102",
+      "rep_genome_end_102",
+      "rep_genome_strand_102",
+      "mgi_marker_id_att",
+      "ensembl_gene_id_103",
+      "vega_gene_id_1011",
+      "mouse_entrez_gene_id_108",
+      "human_symbol_105",
+      "human_entrez_gene_id_105",
+      "rat_symbol_109",
+      "rat_entrez_gene_id_109"
+    ],
+    "filters": {}
+  }
+}

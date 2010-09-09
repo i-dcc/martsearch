@@ -13,5 +13,10 @@
     "type":    "Biomart",
     "url":     "http://www.i-dcc.org/biomart",
     "dataset": "omim"
+  },
+  "mgi-markers": {
+    "type":    "Biomart",
+    "url":     "http://biomart.informatics.jax.org/biomart",
+    "dataset": "markers"
   }
 }

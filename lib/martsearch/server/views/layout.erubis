@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <% if @page_title %>
+      <title><%= @page_title %> - <%= @portal_name %></title>
+    <% else %>
+      <title><%= @portal_name %></title>
+    <% end %>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    
+    <script type="text/javascript" src="<%= @base_uri %>/js/jquery-1.4.2.min.js" charset="utf-8"></script>
+    
+    <% if ENV['RACK_ENV'] == "production" or ENV['RACK_ENV'] == "staging" %>
+      <link type="text/css" href="<%= @base_uri %>/css/martsearch-<%= MartSearch::Server::VERSION %>.css" rel="stylesheet" media="all" />
+    <% else %>
+      <% MartSearch::Server::DEFAULT_CSS_FILES.each do |css_file| %>
+        <link type="text/css" href="<%= @base_uri %>/css/<%= css_file %>" rel="stylesheet" media="all" />
+      <% end %>
+      <% @config[:dataviews].each do |dv| %>
+        <% next if dv[:stylesheet].nil? %>
+        <link type="text/css" href="<%= @base_uri %>/dataview-css/<%= dv[:internal_name] %>.css" rel="stylesheet" media="all" />
+      <% end %>
+    <% end %>
+    
+    <link type="text/css" href="<%= @base_uri %>/css/print.css" rel="stylesheet" media="print" />
+  </head>
+  <body>
+    <div id="wrapper">
+      <div id="header">
+        <span id="fontresize"></span>
+        <a href="<%= @base_uri %>/"><h1><%= @portal_name %></h1></a>
+      </div>
+      
+      <div id="navigation">
+        <% unless @hide_side_search_form %>
+          <span id="search">
+            <form id="martsearchr_nav" action="<%= @base_uri %>/search" method="get" accept-charset="utf-8">
+              <input type="text" class="textinput" name="query" value="" />
+              <input type="submit" class="submit" value="search" />
+            </form>
+          </span>
+        <% end %>
+        <ul>
+          <li<% if @current === "home" %> class="current"<% end %>><a href="<%= @base_uri %>/">Home</a></li>
+          <li<% if @current === "browse" %> class="current"<% end %>><a href="<%= @base_uri %>/browse">Browse</a></li>
+          <li<% if @current === "help" %> class="current"<% end %>><a href="<%= @base_uri %>/help">Help</a></li>
+          <li<% if @current === "about" %> class="current"<% end %>><a href="<%= @base_uri %>/about">About</a></li>
+        </ul>
+        <br style="clear: both;" />
+      </div>
+      
+      <noscript>
+        <div id="noscript_warning" class="error_msgs messages">
+          <strong>WARNING:</strong> It appears that you do not have javascript 
+          enabled in your browser.  This portal will still function correctly
+          without javascript enabled, but the experience will not be as good 
+          as it could be.  For a more complete experience, please
+          <a href="http://www.google.com/search?q=enable+javascript">enable 
+          javascript</a> in your browser and refresh the page.
+        </div>
+      </noscript>
+
+      <div id="browser_warnings" class="error_msgs messages" style="display:none;"></div>
+      
+      <div id="messages">
+        <% if @messages[:status].size > 0 %>
+          <div class="status_msgs messages">
+            <ul>
+              <% @messages[:status].each do |msg| %>
+                <li><%= msg %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+        <% if @messages[:error].size > 0 %>
+          <div class="error_msgs messages">
+            <h2>Sorry, an Error Has Occurred</h2>
+            <ul>
+              <% @messages[:error].each do |msg| %>
+                <li>
+                  <%= msg[:highlight] %>
+                  <% if msg[:full_text] %>
+                    <small><a class="error_msg_toggle">view the full error message</a></small>
+                    <div class="error_msg_content"><%= msg[:full_text] %></div>
+                  <% end %>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+      </div>
+      
+      <div id="content">
+        <%= yield %>
+      </div>
+      
+      <div id="footer">
+        <p>
+          Powered by 
+          <a href="http://github.com/dazoakley/martsearchr">MartSearchr</a>, 
+          developed by the <a href="http://www.sanger.ac.uk/">Wellcome 
+          Trust Sanger Institute</a>
+          <br />
+          Wellcome Trust Genome Campus, Hinxton, Cambridge, CB10 1SA, UK  
+          Tel:+44 (0)1223 834244
+          <br />
+          Registered charity number 210183
+        </p>
+      </div>
+    </div>
+    
+    <% if @config[:debug] %>
+      <div id="debug-config">
+        <h3>MartSearch::Server Config (Debug Info)</h3>
+        <pre><%= @config.to_yaml %></pre>
+      </div>
+    <% end %>
+    
+    <% if ENV['RACK_ENV'] == "production" or ENV['RACK_ENV'] == "staging" %>
+      <script type="text/javascript" src="<%= @base_uri %>/js/martsearch-<%= MartSearch::Server::VERSION %>.js" charset="utf-8"></script>
+    <% else %>
+      <% MartSearch::Server::DEFAULT_JS_FILES.each do |js_file| %>
+        <script type="text/javascript" src="<%= @base_uri %>/js/<%= js_file %>" charset="utf-8"></script>
+      <% end %>
+      <% @config[:dataviews].each do |dv| %>
+        <% next if dv[:javascript].nil? %>
+        <script type="text/javascript" src="<%= @base_uri %>/dataview-js/<%= dv[:internal_name] %>.js" charset="utf-8"></script>
+      <% end %>
+    <% end %>
+  </body>
+</html>

@@ -3,14 +3,23 @@ require 'net/http'
 require 'cgi'
 require 'singleton'
 require 'logger'
-require 'builder'
 
 require 'rubygems'
-require 'json'
+
+gem 'sinatra', '>=1.0'
+gem 'biomart', '>=0.2.0'
+
 require 'biomart'
+require 'sinatra/base'
+
+require 'json'
 require 'parallel'
 require 'tree'
 require 'sequel'
+require 'builder'
+require 'erubis'
+require 'yui/compressor'
+require 'closure-compiler'
 
 require 'ap'
 
@@ -31,3 +40,6 @@ require "#{MARTSEARCH_PATH}/lib/martsearch/ontology_term"
 
 require "#{MARTSEARCH_PATH}/lib/martsearch/index_builder_utils"
 require "#{MARTSEARCH_PATH}/lib/martsearch/index_builder"
+
+require "#{MARTSEARCH_PATH}/lib/martsearch/server_utils"
+require "#{MARTSEARCH_PATH}/lib/martsearch/server"

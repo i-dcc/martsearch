@@ -9,6 +9,8 @@ class MartSearchConfigBuilderTest < Test::Unit::TestCase
     should "initialize correctly" do
       assert( @conf_obj.is_a?(MartSearch::ConfigBuilder), "@conf_obj is not a MartSearch::ConfigBuilder object." )
       assert( @conf_obj.config != nil, "@conf_obj.config is nil." )
+      
+      ap @conf_obj.config[:server]
     end
     
     should "be a singleton class" do
