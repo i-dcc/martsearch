@@ -1,0 +1,255 @@
+<div class="larger">
+  <h2>Reporting Issues/Bugs and Requests</h2>
+  <p>
+    We have tried our best to build this portal as free of problems as possible, but 
+    we may have still missed something.  If you have any issues or would like to 
+    request a new feature that we have not yet thought of, please send an email to 
+    <a href="mailto:<%= @config[:email]["to"] %>"><%= @config[:email]["to"] %></a>.
+  </p>
+  
+  <hr />
+
+  <h2>Searching</h2>
+  <p>
+    By default when you submit a search (without any of the query modifiers detailed 
+    below) your search will be carried out over the following terms:
+    <ul>
+      <li>Gene/Marker Symbol</li>
+      <li>Gene/Marker Name</li>
+      <li>Gene Synonym</li>
+      <li>MGI Accession ID</li>
+      <li>Ensembl Gene ID</li>
+      <li>Vega Gene ID</li>
+      <li>Entrez (NCBI) Gene ID</li>
+      <li>CCDS ID</li>
+      <li>OMIM ID</li>
+      <li>
+        EUCOMM/KOMP Design, Intermediate/Targeting Vector and ES Cell 
+        Clone names
+      </li>
+      <li>Confirmed Positive Phenotype Test Name</li>
+    </ul>
+  </p>
+  
+  <hr />
+  
+  <h2>Advanced Searching</h2>
+  <p>
+     The <%= @config[:portal_name] %> supports several advanced operators, which are 
+     query words that have special meaning to us. These operators modify the search in 
+     some way, or even tell us to do a totally different type of search. For instance, 
+     &quot;marker_symbol:&quot; is a special operator, and the query 
+     <strong>marker_symbol:Cbx1</strong> doesn't do a normal search but instead finds 
+     only the genes with the marker symbol 'Cbx1'.  Listed below are details of these 
+     query modifiers.
+  </p>
+
+  <h3>Query Modifiers</h3>
+  <p>
+  Using the following query modifiers will allow you to restrict the results of your 
+  searches in a controlled way.
+  </p>
+  <table class="with_border">
+    <tr>
+      <th>marker_symbol:</th>
+      <td>
+        <p>
+          i.e. <strong>marker_symbol:cbx1</strong> would return the gene record for 'Cbx1'.
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <th>marker_name:</th>
+      <td>
+        <p>
+          i.e. <strong>marker_name:chromobox*</strong> would return all genes with a marker 
+          name starting with 'chromobox'.
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <th>chromosome:</th>
+      <td>
+        <p>
+          i.e. <strong>chromosome:X</strong> would return all gene records for the X chromosome.
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <th>
+        <p>mgi_accession_id:</p>
+      </th>
+      <td>
+        <p>
+          i.e. <strong>mgi_accession_id:MGI105369</strong> would return the gene record 
+          for 'Cbx1' - alternatively, just searching for <strong>MGI:105369</strong> would 
+          also yield the same effect as the search engine is aware of MGI Accession numbers.
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <th>ensembl_gene_id:</th>
+      <td>
+        <p>
+          i.e. <strong>ensembl_gene_id:ENSMUSG00000018666</strong> would return the gene record for 'Cbx1'.
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <th>vega_gene_id:</th>
+      <td>
+        <p>
+          i.e. <strong>vega_gene_id:OTTMUSG00000001636</strong> would return the gene record for 'Cbx1'.
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <th>entrez_gene_id:</th>
+      <td>
+        <p>
+          i.e. <strong>entrez_gene_id:12412</strong> would return the gene record for 'Cbx1'.
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <th>ccds_id:</th>
+      <td>
+        <p>
+          i.e. <strong>ccds_id:CCDS25303.1</strong> would return the gene record for 'Cbx1'.
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <th>omim_id:</th>
+      <td>
+        <p>
+          i.e. <strong>omim_id:113705</strong> would return the gene record for 'Brca1'.
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <th>targeting_design:</th>
+      <td>
+        <p>
+          This will restrict your results to entries with the corresponding 
+          <a href="http://www.komp.org">KOMP</a>/<a href="http://www.eucomm.org">EUCOMM</a> 
+          targeting design plate/well identifier.
+        </p>
+        <p>
+          i.e. <strong>targeting_design:19_B11</strong> would return the gene record for 'Cbx1' 
+          (as this is the target for this design), whereas <strong>targeting_design:19*</strong> 
+          would return a list of all genes targeted on design plate 19.
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <th>intermediate_vector:</th>
+      <td>
+        <p>
+          This will restrict your results to entries with the corresponding 
+          <a href="http://www.komp.org">KOMP</a>/<a href="http://www.eucomm.org">EUCOMM</a> 
+          intermediate vector plate/well identifier.
+        </p>
+        <p>
+          i.e. <strong>intermediate_vector:PCS00019_A_B11</strong> would return the gene record for 'Cbx1', 
+          (as this is the target for this vector), whereas <strong>intermediate_vector:PCS00019_A*</strong> 
+          would return a list of all genes with vectors on plate PCS00019_A.
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <th>targeting_vector:</th>
+      <td>
+        <p>
+          This will restrict your results to entries with the corresponding 
+          <a href="http://www.komp.org">KOMP</a>/<a href="http://www.eucomm.org">EUCOMM</a> 
+          targeting vector plate/well identifier.
+        </p>
+        <p>
+          i.e. <strong>targeting_vector:PGS00019_A_B11</strong> would return the gene record for 'Cbx1', 
+          (as this is the target for this vector), whereas <strong>targeting_vector:PGS00019_A*</strong> 
+          would return a list of all genes with vectors on plate PGS00019_A.
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <th>escell:</th>
+      <td>
+        <p>
+          This will restrict your results to entries with the corresponding 
+          <a href="http://www.komp.org">KOMP</a>/<a href="http://www.eucomm.org">EUCOMM</a> 
+          escell clone identifier.
+        </p>
+        <p>
+          i.e. <strong>escell:EPD0027_2_A01</strong> would return the gene record for 'Cbx1', 
+          (as this is the targeted gene in this cell), whereas <strong>escell:EPD0027_2*</strong> 
+          would return a list of all genes with targeted cells on plate EPD0027_2.
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <th>phenotype:</th>
+      <td>
+        <p>
+          This will restrict your results to entries with the corresponding positive phenotyping 
+          results.
+        </p>
+        <p>
+          i.e. <strong>phenotype:dexa</strong> would return the gene records for all genes that 
+          attained a positive result for the 'Dexa' phenotyping test.
+        </p>
+      </td>
+    </tr>
+  </table>
+  
+  <h3>Boolean Operators</h3>
+  <p>
+    In addition to the query modifiers detailed above, boolean terms 
+    such as 'AND' and 'OR' can also be used in your searches (even in 
+    conjunction with the query modifiers).  Simple examples of this type 
+    of use would be:
+  </p>
+  <ul>
+    <li>
+      <strong>chromosome:1 OR chromosome:2</strong> would return 
+      information for genes found on either chromosome 1 or 2.
+    </li>
+    <li>
+      <strong>targeting_design:19* AND chromosome:11</strong> would 
+      return information for genes targeted on design plate 19 which 
+      are also found on chromosome 11.
+    </li>
+  </ul>
+  <p>
+    Please note that by default, leaving a space between two search parameters causes the 
+    search engine to perform an AND query, i.e. <strong>chromosome:1 chromosome:2</strong> 
+    is equivalent to <strong>chromosome:1 AND chromosome:2</strong>.
+  </p>
+  
+  <h3>Spaces in Search Terms</h3>
+  <p>
+    As mentioned in the above paragraph, our search engine interprets 
+    whitespace to mean the logical operator 'AND'.  However, if you would 
+    like to group search terms together such as <em>breast cancer</em> you 
+    must enclose the words that are to be interpreted as a group in 
+    double-quotes.
+  </p>
+  <table>
+    <tr>
+      <th>Search</th>
+      <th>Interpretation</th>
+    </tr>
+    <tr>
+      <td><strong>breast cancer</strong></td>
+      <td>&quot;breast&quot; AND &quot;cancer&quot; (anywhere in the gene entry)</td>
+    </tr>
+    <tr>
+      <td><strong>'breast cancer'</strong></td>
+      <td>&quot;breast&quot; AND &quot;cancer&quot; (anywhere in the gene entry)</td>
+    </tr>
+    <tr>
+      <td><strong>&quot;breast cancer&quot;</strong></td>
+      <td>&quot;breast cancer&quot; (grouped as one term)</td>
+    </tr>
+  </table>
+</div>
