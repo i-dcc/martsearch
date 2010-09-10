@@ -20,12 +20,14 @@ require 'builder'
 require 'erubis'
 require 'yui/compressor'
 require 'closure-compiler'
+require 'active_support'
 
 require 'ap'
 
 MARTSEARCH_PATH = "#{File.expand_path(File.dirname(__FILE__))}/.."
 
 require "#{MARTSEARCH_PATH}/lib/martsearch/array"
+require "#{MARTSEARCH_PATH}/lib/martsearch/hash"
 
 # Module housing all of the classes and code that make up the MartSearch portal framework.
 #

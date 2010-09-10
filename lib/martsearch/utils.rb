@@ -38,13 +38,15 @@ module MartSearch
     # @param [String] config_dir The directory location of the 'index_builder.json' config file. and it's seperate datasources config files.
     # @return [Hash] The configuration hash
     def build_index_builder_conf( config_dir )
-      index_builder_conf = symbolise_hash_keys( JSON.load( File.new( "#{config_dir}/index_builder.json", 'r' ) ) )
+      index_builder_conf = JSON.load( File.new( "#{config_dir}/index_builder.json", 'r' ) )
       ['primary','secondary'].each do |pri_sec|
-        index_builder_conf[:datasources_to_index][pri_sec].each do |index_dataset|
-          datasource_conf = symbolise_hash_keys( JSON.load( File.new( "#{config_dir}/datasources/#{index_dataset}.json", 'r' ) ) )
-          index_builder_conf[:datasources][index_dataset.to_sym] = datasource_conf
+        index_builder_conf['datasources_to_index'][pri_sec].each do |index_dataset|
+          datasource_conf = JSON.load( File.new( "#{config_dir}/datasources/#{index_dataset}.json", 'r' ) )
+          index_builder_conf['datasources'][index_dataset] = datasource_conf
         end
       end
+      
+      index_builder_conf.recursively_symbolize_keys!
       
       return index_builder_conf
     end
@@ -54,47 +56,35 @@ module MartSearch
     # @param [String] config_dir The directory location of the 'server.json' config file.
     # @return [Hash] The configuration hash
     def build_server_conf( config_dir )
-      server_conf = symbolise_hash_keys( JSON.load( File.new( "#{config_dir}/server.json", 'r' ) ) )
+      server_conf = JSON.load( File.new( "#{config_dir}/server.json", 'r' ) )
       
       # Configure the portal uri config
-      server_path = URI.parse( server_conf[:portal_url] ).path
+      server_path = URI.parse( server_conf['portal_url'] ).path
       server_path.chop! if server_path =~ /\/$/
-      server_conf[:base_uri] = server_path
+      server_conf['base_uri'] = server_path
       
       # Load the configuration for the dataviews
       dataviews         = []
       dataviews_by_name = {}
-      server_conf[:dataviews].each do |dv_name|
+      server_conf['dataviews'].each do |dv_name|
         dv_location = "#{config_dir}/dataviews/#{dv_name}"
-        dv_conf     = symbolise_hash_keys( JSON.load( File.new( "#{dv_location}/config.json", 'r' ) ) )
+        dv_conf     = JSON.load( File.new( "#{dv_location}/config.json", 'r' ) )
         
-        if dv_conf[:enabled]
-          dv_conf[:internal_name] = dv_name
-          dv_conf[:stylesheet]    = get_file_as_string("#{dv_location}/stylesheet.css") if dv_conf[:custom_css]
-          dv_conf[:javascript]    = get_file_as_string("#{dv_location}/javascript.js") if dv_conf[:custom_js]
+        if dv_conf['enabled']
+          dv_conf['internal_name'] = dv_name
+          dv_conf['stylesheet']    = get_file_as_string("#{dv_location}/stylesheet.css") if dv_conf['custom_css']
+          dv_conf['javascript']    = get_file_as_string("#{dv_location}/javascript.js") if dv_conf['custom_js']
           
           dataviews.push( dv_conf )
           dataviews_by_name[dv_name] = dv_conf
         end
       end
-      server_conf[:dataviews]         = dataviews
-      server_conf[:dataviews_by_name] = symbolise_hash_keys(dataviews_by_name)
+      server_conf['dataviews']         = dataviews
+      server_conf['dataviews_by_name'] = dataviews_by_name
+      
+      server_conf.recursively_symbolize_keys!
       
       return server_conf
-    end
-    
-    # Takes an input hash and turns all of the keys into symbols.
-    #
-    # @param [Hash] hash A hash to symbolise
-    # @return [Hash] The resulting converted hash
-    def symbolise_hash_keys( hash )
-      hash.each do |key,value|
-        if key.is_a?(String)
-          hash[key.to_sym] = value
-          hash.delete(key)
-        end
-      end
-      return hash
     end
     
     # Utility function to convert an array of data to a hash, 

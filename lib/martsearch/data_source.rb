@@ -9,7 +9,7 @@ module MartSearch
     
     # @param [Hash] conf configuration hash
     def initialize( conf )
-      symbolise_hash_keys(conf)
+      conf.recursively_symbolize_keys!
       @url = conf[:url]
     end
     
@@ -43,14 +43,14 @@ module MartSearch
     # @return [Hash] a hash containing the :headers (Array) and :data (Array of Arrays) to index
     def fetch_all_terms_for_indexing( index_conf )
       attributes = []
-      index_conf['attribute_map'].each do |map|
-        attributes.push(map["attr"])
+      index_conf[:attribute_map].each do |map|
+        attributes.push(map[:attr])
       end
       
       biomart_search_params = {
-        :filters => index_conf['filters'],
+        :filters    => index_conf[:filters].stringify_keys!,
         :attributes => attributes.uniq,
-        :timeout => 240
+        :timeout    => 240
       }
       
       @ds.search(biomart_search_params)

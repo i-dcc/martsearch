@@ -51,12 +51,12 @@ module MartSearch
       
       # Work out fields to ignore - these will be auto populated by Solr
       copy_fields = []
-      index_builder_config[:schema]['copy_fields'].each do |copy_field|
-        copy_fields.push( copy_field['dest'] )
+      index_builder_config[:schema][:copy_fields].each do |copy_field|
+        copy_fields.push( copy_field[:dest] )
       end
 
       doc = {}
-      index_builder_config[:schema]['fields'].each do |key,detail|
+      index_builder_config[:schema][:fields].each do |key,detail|
         doc[ key.to_sym ] = [] unless copy_fields.include?(key)
       end
       return doc
@@ -71,23 +71,23 @@ module MartSearch
       map                = {}
       primary_attribute  = nil
       map_to_index_field = nil
-
+      
       # Extract all of the needed index mapping data from the "attribute_map"
       # - The "attribute_map" defines how the biomart attributes relate to the index "fields"
       # - The "primary_attribute" is the biomart attribute used to associate a set of biomart 
       #   results to an index "doc" - using the "map_to_index_field" field as the link.
       attribute_map.each do |mapping_obj|
-        if mapping_obj["use_to_map"]
+        if mapping_obj[:use_to_map]
           if primary_attribute
             raise "You have defined more than one attribute to map to the index with! Please check your config..."
           else
-            primary_attribute  = mapping_obj["attr"]
-            map_to_index_field = mapping_obj["idx"].to_sym
+            primary_attribute  = mapping_obj[:attr]
+            map_to_index_field = mapping_obj[:idx].to_sym
           end
         end
 
-        map[ mapping_obj["attr"] ]        = mapping_obj
-        map[ mapping_obj["attr"] ]["idx"] = map[ mapping_obj["attr"] ]["idx"].to_sym
+        map[ mapping_obj[:attr] ]       = mapping_obj
+        map[ mapping_obj[:attr] ][:idx] = map[ mapping_obj[:attr] ][:idx].to_sym
       end
 
       unless primary_attribute
@@ -113,16 +113,16 @@ module MartSearch
       options         = attribute_map[attr_name]
       value_to_index  = data_row_obj[attr_name]
 
-      if options["if_attr_equals"]
-        unless options["if_attr_equals"].include?( value_to_index )
+      if options[:if_attr_equals]
+        unless options[:if_attr_equals].include?( value_to_index )
           value_to_index = nil
         end
       end
 
-      if options["index_attr_name"] and mart_ds != nil
+      if options[:index_attr_name] and mart_ds != nil
         if value_to_index
           mart_attributes = mart_ds.attributes()
-          if options["index_attr_display_name_only"]
+          if options[:index_attr_display_name_only]
             value_to_index  = mart_attributes[attr_name].display_name
           else
             value_to_index  = [ attr_name, mart_attributes[attr_name].display_name ]
@@ -130,8 +130,8 @@ module MartSearch
         end
       end
 
-      if options["if_other_attr_indexed"]
-        other_attr       = options["if_other_attr_indexed"]
+      if options[:if_other_attr_indexed]
+        other_attr       = options[:if_other_attr_indexed]
         other_attr_value = data_row_obj[ other_attr ]
 
         unless extract_value_to_index( other_attr, attribute_map, data_row_obj )
@@ -140,11 +140,11 @@ module MartSearch
       end
 
       unless value_to_index.nil?
-        if options["attr_prepend"]
-          value_to_index = "#{options["attr_prepend"]}#{value_to_index}"
+        if options[:attr_prepend]
+          value_to_index = "#{options[:attr_prepend]}#{value_to_index}"
         end
-        if options["attr_append"]
-          value_to_index = "#{value_to_index}#{options["attr_append"]}"
+        if options[:attr_append]
+          value_to_index = "#{value_to_index}#{options[:attr_append]}"
         end
       end
 
@@ -158,17 +158,17 @@ module MartSearch
     # @param [Hash] doc The Solr document object to inject any indexable data into
     # @param [String/Array] value_to_index The return from {#extract_value_to_index}
     def index_extracted_attributes( extract_conf, doc, value_to_index )
-      regexp  = Regexp.new( extract_conf["regexp"] )
+      regexp  = Regexp.new( extract_conf[:regexp] )
       matches = false
 
       if value_to_index.is_a?(Array)
         value_to_index.each do |value|
           matches = regexp.match( value )
-          if matches then doc[ extract_conf["idx"].to_sym ].push( matches[0] ) end
+          if matches then doc[ extract_conf[:idx].to_sym ].push( matches[0] ) end
         end
       else
         matches = regexp.match( value_to_index )
-        if matches then doc[ extract_conf["idx"].to_sym ].push( matches[0] ) end
+        if matches then doc[ extract_conf[:idx].to_sym ].push( matches[0] ) end
       end
     end
     
@@ -181,7 +181,7 @@ module MartSearch
     def index_grouped_attributes( grouped_attr_conf, doc, data_row_obj, map_data )
       grouped_attr_conf.each do |group|
         attrs = []
-        group["attrs"].each do |attribute|
+        group[:attrs].each do |attribute|
           value_to_index = extract_value_to_index( attribute, map_data[:attribute_map], { attribute => data_row_obj[attribute] } )
 
           # When we have an attribute that we're indexing the attribute NAME 
@@ -195,9 +195,9 @@ module MartSearch
         end
 
         # Only index when we have values for ALL the grouped attributes
-        if !attrs.empty? and ( attrs.size() === group["attrs"].size() )
-          join_str = group["using"] ? group["using"] : "||"
-          doc[ group["idx"].to_sym ].push( attrs.join(join_str) )
+        if !attrs.empty? and ( attrs.size() === group[:attrs].size() )
+          join_str = group[:using] ? group[:using] : "||"
+          doc[ group[:idx].to_sym ].push( attrs.join(join_str) )
         end
       end
     end
@@ -211,7 +211,7 @@ module MartSearch
     # @param [Hash] cache A cache object to store data about already retrieved ontology terms (this is for optimization as generating the OntologyTerm objects is expensive)
     def index_ontology_terms( ontology_term_conf, doc, data_row_obj, map_data, cache )
       ontology_term_conf.each do |term_conf|
-        attribute      = term_conf["attr"]
+        attribute      = term_conf[:attr]
         value_to_index = extract_value_to_index( attribute, map_data[:attribute_map], { attribute => data_row_obj[attribute] } )
 
         if value_to_index and !value_to_index.gsub(" ","").empty?
@@ -286,9 +286,9 @@ module MartSearch
       def index_ontology_terms_from_cache( doc, term_conf, cached_data )
         [:term,:term_name].each do |term_or_name|
           cached_data[term_or_name].each do |target|
-            doc[ term_conf["idx"][term_or_name.to_s].to_sym ].push( target )
+            doc[ term_conf[:idx][term_or_name].to_sym ].push( target )
           end
-          doc[ term_conf["idx"]["breadcrumb"].to_sym ].push( cached_data[term_or_name].join(" | ") )
+          doc[ term_conf[:idx][:breadcrumb].to_sym ].push( cached_data[term_or_name].join(" | ") )
         end
       end
     

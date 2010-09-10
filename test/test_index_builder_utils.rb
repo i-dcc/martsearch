@@ -51,11 +51,11 @@ class MartSearchIndexBuilderUtilsTest < Test::Unit::TestCase
     
     assert( doc.is_a?(Hash) )
     
-    schema_fields = @index_builder_config[:schema]['fields'].keys
+    schema_fields = @index_builder_config[:schema][:fields].keys
     copy_fields   = []
     
-    @index_builder_config[:schema]['copy_fields'].each do |copy_field|
-      copy_fields.push( copy_field['dest'] )
+    @index_builder_config[:schema][:copy_fields].each do |copy_field|
+      copy_fields.push( copy_field[:dest] )
     end
     
     schema_fields.each do |field|
@@ -70,10 +70,10 @@ class MartSearchIndexBuilderUtilsTest < Test::Unit::TestCase
   
   def test_process_attribute_map
     attribute_map = [
-      { 'attr' =>  'mgi_accession_id', 'idx' =>  'mgi_accession_id_key', 'use_to_map' =>  true },
-      { 'attr' =>  'omim_id',          'idx' =>  'omim_id' },
-      { 'attr' =>  'disorder_name',    'idx' =>  'omim_desc' },
-      { 'attr' =>  'disorder_omim_id', 'idx' =>  'omim_id' }
+      { :attr =>  'mgi_accession_id', :idx =>  'mgi_accession_id_key', :use_to_map =>  true },
+      { :attr =>  'omim_id',          :idx =>  'omim_id' },
+      { :attr =>  'disorder_name',    :idx =>  'omim_desc' },
+      { :attr =>  'disorder_omim_id', :idx =>  'omim_id' }
     ]
     map_obj = process_attribute_map( attribute_map )
     
@@ -88,19 +88,19 @@ class MartSearchIndexBuilderUtilsTest < Test::Unit::TestCase
     assert( map_obj[:primary_attribute].is_a?(String) )
     assert( map_obj[:map_to_index_field].is_a?(Symbol) )
     
-    assert_equal( { 'attr' => 'omim_id', 'idx' => :omim_id }, map_obj[:attribute_map]['omim_id'] )
+    assert_equal( { :attr => 'omim_id', :idx => :omim_id }, map_obj[:attribute_map]['omim_id'] )
     
     assert_raise(RuntimeError) {
-      attribute_map.push({ 'attr' => 'foo', 'idx' => 'ignore_me', 'use_to_map' => true })
+      attribute_map.push({ :attr => 'foo', :idx => 'ignore_me', :use_to_map => true })
       map_obj = process_attribute_map( attribute_map )
     }
     
     assert_raise(RuntimeError) {
       attribute_map = [
-        { 'attr' =>  'mgi_accession_id', 'idx' =>  'mgi_accession_id_key' },
-        { 'attr' =>  'omim_id',          'idx' =>  'omim_id' },
-        { 'attr' =>  'disorder_name',    'idx' =>  'omim_desc' },
-        { 'attr' =>  'disorder_omim_id', 'idx' =>  'omim_id' }
+        { :attr =>  'mgi_accession_id', :idx =>  'mgi_accession_id_key' },
+        { :attr =>  'omim_id',          :idx =>  'omim_id' },
+        { :attr =>  'disorder_name',    :idx =>  'omim_desc' },
+        { :attr =>  'disorder_omim_id', :idx =>  'omim_id' }
       ]
       map_obj = process_attribute_map( attribute_map )
     }
@@ -112,9 +112,9 @@ class MartSearchIndexBuilderUtilsTest < Test::Unit::TestCase
     
     map_obj = {
       'marker_symbol' => {},
-      'colony_prefix' => { 'index_attr_name' => true },
-      'mi_centre'     => { 'if_attr_equals' => 'MGP' },
-      'status'        => { 'if_other_attr_indexed' => 'mi_centre' }
+      'colony_prefix' => { :index_attr_name => true },
+      'mi_centre'     => { :if_attr_equals => 'MGP' },
+      'status'        => { :if_other_attr_indexed => 'mi_centre' }
     }
     
     data_row_obj  = { 'marker_symbol' => 'Cbx1', 'colony_prefix' => 'MAAA', 'mi_centre' => 'WTSI', 'status' => 'done' }
@@ -126,21 +126,21 @@ class MartSearchIndexBuilderUtilsTest < Test::Unit::TestCase
     
     assert( extract_value_to_index( 'colony_prefix', map_obj, data_row_obj, kermits ).include?( kermits.attributes['colony_prefix'].display_name ) )
     
-    map_obj['colony_prefix']['index_attr_display_name_only'] = true
+    map_obj['colony_prefix'][:index_attr_display_name_only] = true
     assert_equal( kermits.attributes['colony_prefix'].display_name, extract_value_to_index( 'colony_prefix', map_obj, data_row_obj, kermits ) )
     
     assert_equal( nil,     extract_value_to_index( 'status', map_obj, data_row_obj ) )
     assert_equal( 'done',  extract_value_to_index( 'status', map_obj, data_row_obj2 ) )
     
-    map_obj['marker_symbol'] = { 'attr_prepend' => 'Somethin like... ' }
+    map_obj['marker_symbol'] = { :attr_prepend => 'Somethin like... ' }
     assert_equal( 'Somethin like... Cbx1', extract_value_to_index( 'marker_symbol', map_obj, data_row_obj ) )
     
-    map_obj['marker_symbol'] = { 'attr_append' => ' w00t' }
+    map_obj['marker_symbol'] = { :attr_append => ' w00t' }
     assert_equal( 'Cbx1 w00t', extract_value_to_index( 'marker_symbol', map_obj, data_row_obj ) )
   end
   
   def test_index_extracted_attributes
-    extract_conf = { "idx" => "mp_id", "regexp" => "MP\\:\\d+" }
+    extract_conf = { :idx => "mp_id", :regexp => "MP\\:\\d+" }
     text         = 'This is a test MP:0001 comment...'
     array        = ['More test text MP:0002','Extra MP:0003 woo']
     doc          = new_document()
@@ -160,20 +160,20 @@ class MartSearchIndexBuilderUtilsTest < Test::Unit::TestCase
   
   def test_index_grouped_attributes
     attr_map = [
-      { 'attr' =>  'marker_symbol', 'idx' =>  'marker_symbol', 'use_to_map' =>  true },
-      { 'attr' =>  'colony_prefix', 'idx' =>  'colony_prefix' },
-      { 'attr' =>  'mi_centre',     'idx' =>  'microinjection_centre' },
-      { 'attr' =>  'status',        'idx' =>  'microinjection_status' }
+      { :attr =>  'marker_symbol', :idx =>  'marker_symbol', :use_to_map =>  true },
+      { :attr =>  'colony_prefix', :idx =>  'colony_prefix' },
+      { :attr =>  'mi_centre',     :idx =>  'microinjection_centre' },
+      { :attr =>  'status',        :idx =>  'microinjection_status' }
     ]
     grouped_attr_conf = [
       {
-        'attrs' => ['mi_centre','status'],
-        'idx'   => 'microinjection_centre_status',
-        'using' => ' - '
+        :attrs => ['mi_centre','status'],
+        :idx   => 'microinjection_centre_status',
+        :using => ' - '
       },
       {
-        'attrs'  => ['marker_symbol','colony_prefix'],
-        'idx'   => 'microinjection_centre_status'
+        :attrs  => ['marker_symbol','colony_prefix'],
+        :idx   => 'microinjection_centre_status'
       }
     ]
     data_row_obj = {
@@ -197,13 +197,13 @@ class MartSearchIndexBuilderUtilsTest < Test::Unit::TestCase
     ontology_cache = {}
     doc = new_document()
     attr_map = [
-      { "attr" => "mgi_accession_id", "idx" => "mgi_accession_id_key", "use_to_map" => true },
-      { "attr" => "mp_term",          "idx" => "mp_id" }
+      { :attr => 'mgi_accession_id', :idx => 'mgi_accession_id_key', :use_to_map => true },
+      { :attr => 'mp_term',          :idx => 'mp_id' }
     ]
     ontology_term_conf = [
       {
-        "attr" => "mp_term",
-        "idx"  => { "term" => "mp_id", "term_name" => "mp_term", "breadcrumb" => "mp_ontology" }
+        :attr => 'mp_term',
+        :idx  => { :term => 'mp_id', :term_name => 'mp_term', :breadcrumb => 'mp_ontology' }
       }
     ]
     data_row_obj = {

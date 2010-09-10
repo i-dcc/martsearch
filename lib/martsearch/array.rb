@@ -1,4 +1,4 @@
-# This is a small extension to the Array class.
+# Small extensions to the Array class.
 class Array
   
   # Splits an array into an array-of-arrays of the defined length.
@@ -17,5 +17,29 @@ class Array
       chunks.last << element
     end
     chunks
+  end
+  
+  # Recursivley converts the keys of all contained hashes to symbols.
+  # @see http://snippets.dzone.com/posts/show/12019
+  def recursively_symbolize_keys!
+    self.each do |item|
+      if item.is_a?(Hash)
+        item.recursively_symbolize_keys!
+      elsif item.is_a? Array
+        item.recursively_symbolize_keys!
+      end
+    end
+  end
+  
+  # Recursivley converts the keys of all contained hashes to strings.
+  # @see http://snippets.dzone.com/posts/show/12019
+  def recursively_stringify_keys!
+    self.each do |item|
+      if item.is_a?(Hash)
+        item.recursively_stringify_keys!
+      elsif item.is_a? Array
+        item.recursively_stringify_keys!
+      end
+    end
   end
 end

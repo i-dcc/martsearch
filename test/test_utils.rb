@@ -40,13 +40,6 @@ class MartSearchUtilsTest < Test::Unit::TestCase
     assert( conifg[:dataviews_by_name].size > 0 )
   end
   
-  def test_symbolise_hash_keys
-    test_hash = symbolise_hash_keys({ 'foo' => 'bar', :wibble => 'blib' })
-    test_hash.each_key do |key|
-      assert( key.is_a?(Symbol), "symbolise_hash_keys has not converted a String into a Symbol." )
-    end
-  end
-  
   def test_convert_array_to_hash
     headers = ['one','two','three']
     data    = [1,2,3]
@@ -63,5 +56,31 @@ class MartSearchUtilsTest < Test::Unit::TestCase
     
     assert_equal( [[1,2,3,4,5],[6,7,8,9,10]], ten_elm_array.chunk(5) )
     assert_equal( [[1,2,3,4,5],[6,7,8,9,10],[11,12]], twelve_elm_array.chunk(5) )
+  end
+  
+  def test_hash_and_array_key_symbolization
+    test = [
+      { 'foo' => true },
+      { 'fee' => { 'a' => 1, 'b' => { 'foo' => true } } },
+      { 'fii' => [ 'a', { 'a' => 2, 'b' => 3 } ] },
+      [ 0, 1, 2, { 'a' => true } ]
+    ]
+    
+    test_orig = test.clone
+    test.recursively_symbolize_keys!
+    
+    assert( test[0].keys.include?(:foo) )
+    assert( test[1].keys.include?(:fee) )
+    assert( test[1][:fee].keys.include?(:a) )
+    assert( test[1][:fee][:b].keys.include?(:foo) )
+    assert( test[1][:fee][:b][:foo] )
+    assert( test[2][:fii][1].keys.include?(:a) )
+    assert( test[3][3].keys.include?(:a) )
+    assert( test[3][3][:a] )
+    
+    test.recursively_stringify_keys!
+    
+    assert_equal( test_orig, test )
+    assert( test[0].keys.include?('foo') )
   end
 end

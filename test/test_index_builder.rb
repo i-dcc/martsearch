@@ -29,8 +29,8 @@ class MartSearchIndexBuilderTest < Test::Unit::TestCase
     
     should 'correctly process the results from a DataSource return' do
       VCR.use_cassette( 'test_index_builder_process_results', :record => :new_episodes ) do
-        @index_builder.config[:datasources][:'ikmc-dcc'][:indexing]['filters'] = {
-          'status' => ['Mice - Genotype confirmed','Mice - Germline transmission']
+        @index_builder.config[:datasources][:'ikmc-dcc'][:indexing][:filters] = {
+          :status => ['Mice - Genotype confirmed','Mice - Germline transmission']
         }
         
         @index_builder.process_results( 'ikmc-dcc', @index_builder.fetch_datasource( 'ikmc-dcc', false ) )

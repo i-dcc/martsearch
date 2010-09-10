@@ -35,12 +35,12 @@ module MartSearch
     
     def build_index()
       setup_and_move_to_work_directory()
-      open_daily_directory( 'datasource_dowloads', false )
+      open_daily_directory( 'datasource_dowloads' )
       
       ds_to_index = @config[:datasources_to_index]
       
       @log.info "Running Primary DataSource Grabs (in serial)..."
-      ds_to_index['primary'].each do |ds|
+      ds_to_index[:primary].each do |ds|
         @log.info " - #{ds}"
         @log.info "   - requesting data"
         
@@ -55,7 +55,7 @@ module MartSearch
       
       @log.info ""
       @log.info "Running Secondary DataSource Grabs (in parallel)..."
-      Parallel.each( ds_to_index['secondary'], :in_threads => 10 ) do |ds|
+      Parallel.each( ds_to_index[:secondary], :in_threads => 10 ) do |ds|
         @log.info " - #{ds}: requesting data"
         
         results = fetch_datasource( ds )
@@ -118,10 +118,10 @@ module MartSearch
       ds_index_conf = ds_conf[:indexing]
       
       # Extract all of the needed index mapping data from "attribute_map"
-      map_data = process_attribute_map( ds_index_conf['attribute_map'] )
+      map_data = process_attribute_map( ds_index_conf[:attribute_map] )
       
       # Do we need to cache lookup data?
-      unless map_data[:map_to_index_field].to_sym == @config[:schema]['unique_key'].to_sym
+      unless map_data[:map_to_index_field].to_sym == @config[:schema][:unique_key].to_sym
         cache_documents_by( map_data[:map_to_index_field] )
       end
       
@@ -139,7 +139,7 @@ module MartSearch
           
           # If we can't find one - see if we're allowed to create one
           if doc.nil?
-            if ds_index_conf['allow_document_creation']
+            if ds_index_conf[:allow_document_creation]
               set_document( value_to_look_up_doc_on, new_document() )
               doc = get_document( value_to_look_up_doc_on )
             end
@@ -151,34 +151,34 @@ module MartSearch
               # Extract and index our initial data return
               value_to_index = extract_value_to_index( attr_name, map_data[:attribute_map], data_row_obj, datasource )
 
-              if value_to_index and doc[ map_data[:attribute_map][attr_name]["idx"] ]
+              if value_to_index and doc[ map_data[:attribute_map][attr_name][:idx] ]
                 if value_to_index.is_a?(Array)
                   value_to_index.each do |value|
-                    doc[ map_data[:attribute_map][attr_name]["idx"] ].push( value )
+                    doc[ map_data[:attribute_map][attr_name][:idx] ].push( value )
                   end
                 else
-                  doc[ map_data[:attribute_map][attr_name]["idx"] ].push( value_to_index )
+                  doc[ map_data[:attribute_map][attr_name][:idx] ].push( value_to_index )
                 end
               end
 
               # Any further metadata to be extracted from here?
-              if value_to_index and map_data[:attribute_map][attr_name]["extract"]
-                index_extracted_attributes( map_data[:attribute_map][attr_name]["extract"], doc, value_to_index )
+              if value_to_index and map_data[:attribute_map][attr_name][:extract]
+                index_extracted_attributes( map_data[:attribute_map][attr_name][:extract], doc, value_to_index )
               end
             end
 
             # Do we have any attributes that we need to group together?
-            if ds_index_conf["grouped_attributes"]
-              index_grouped_attributes( ds_index_conf["grouped_attributes"], doc, data_row_obj, map_data )
+            if ds_index_conf[:grouped_attributes]
+              index_grouped_attributes( ds_index_conf[:grouped_attributes], doc, data_row_obj, map_data )
             end
 
             # Any ontology terms to index?
-            if ds_index_conf["ontology_terms"]
-              index_ontology_terms( ds_index_conf["ontology_terms"], doc, data_row_obj, map_data, @ontology_cache )
+            if ds_index_conf[:ontology_terms]
+              index_ontology_terms( ds_index_conf[:ontology_terms], doc, data_row_obj, map_data, @ontology_cache )
             end
 
             # Finally - save the document to the cache
-            doc_primary_key = doc[@config[:schema]["unique_key"].to_sym][0]
+            doc_primary_key = doc[@config[:schema][:unique_key].to_sym][0]
             set_document( doc_primary_key, doc )
           end
         end
@@ -248,7 +248,7 @@ module MartSearch
       # @param [String] search_term The term to search with
       # @return A document object if found or nil
       def find_document( field, search_term )
-        if field == @config[:schema]['unique_key'].to_sym
+        if field == @config[:schema][:unique_key].to_sym
           return get_document( search_term )
         else
           map_term = @document_cache_lookup[field][search_term]
@@ -288,7 +288,7 @@ module MartSearch
 
             # If we have multiple value entries in what should be a single valued 
             # field, not the best solution, but just arbitrarily pick the first entry.
-            if !@config[:schema]['fields'][index_field.to_s]['multi_valued'] and index_values.size > 1
+            if !@config[:schema][:fields][index_field][:multi_valued] and index_values.size > 1
               new_array = []
               new_array.push(index_values[0])
               document[index_field] = new_array
