@@ -15,7 +15,7 @@ module MartSearch
     attr_reader :config
     
     def initialize()
-      config_dir =  "#{MARTSEARCH_PATH}/config"
+      config_dir = "#{MARTSEARCH_PATH}/config"
       
       @config = {
         :http_client   => build_http_client(),
