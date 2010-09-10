@@ -12,7 +12,7 @@ module MartSearch
     attr_reader :config, :document_cache, :log
     
     def initialize()
-      ms_config           = MartSearch::ConfigBuilder.instance().config
+      ms_config           = MartSearch::Controller.instance().config
       @config             = ms_config[:index_builder]
       @datasources_config = ms_config[:datasources]
       

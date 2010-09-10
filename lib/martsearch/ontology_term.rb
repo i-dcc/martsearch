@@ -14,7 +14,7 @@ module MartSearch
   #
   # @author Darren Oakley
   #
-  # TODO: At the moment this object expects an OLS_DB constant to be present (as a sequel connection to the database) - this should really be handled by MartSearch::ConfigBuilder.
+  # TODO: At the moment this object expects an OLS_DB constant to be present (as a sequel connection to the database) - this should really be handled by MartSearch::Controller.
   class OntologyTerm < Tree::TreeNode
     attr_reader :term, :term_name
     

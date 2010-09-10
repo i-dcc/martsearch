@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/test_helper.rb'
 
 class MartSearchDataSourceTest < Test::Unit::TestCase
   def setup
-    @conf_obj        = MartSearch::ConfigBuilder.instance()
+    @conf_obj        = MartSearch::Controller.instance()
     @datasource      = MartSearch::DataSource.new( :url => "http://www.google.com" )
     @kermits_biomart = MartSearch::BiomartDataSource.new( :url => "http://www.i-dcc.org/biomart", :dataset => "kermits" )
     

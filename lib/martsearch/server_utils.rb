@@ -50,14 +50,14 @@ module MartSearch
           compressed_code << get_file_as_string("#{MARTSEARCH_PATH}/lib/martsearch/server/public/#{short_str}/#{file}")
         end
         
-        MartSearch::ConfigBuilder.instance().config[:server][:dataviews].each do |dv|
+        MartSearch::Controller.instance().config[:server][:dataviews].each do |dv|
            compressed_code << dv[symbol] unless dv[symbol].nil?
         end
         
         begin
           Dir.mktmpdir do |dir|
             if js_or_css == 'js'
-              compressed_code = Closure::Compiler.new(:compilation_level => 'SIMPLE_OPTIMIZATIONS').compress(compressed_code)
+              #compressed_code = Closure::Compiler.new(:compilation_level => 'SIMPLE_OPTIMIZATIONS').compress(compressed_code)
             else
               compressed_code = YUI::CssCompressor.new.compress(compressed_code)
             end

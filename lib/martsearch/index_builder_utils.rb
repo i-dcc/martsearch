@@ -47,7 +47,7 @@ module MartSearch
     # 
     # @return [Hash] A hash object representing an empty Solr document entry
     def new_document
-      index_builder_config = MartSearch::ConfigBuilder.instance().config[:index_builder]
+      index_builder_config = MartSearch::Controller.instance().config[:index_builder]
       
       # Work out fields to ignore - these will be auto populated by Solr
       copy_fields = []

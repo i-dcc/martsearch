@@ -33,7 +33,7 @@ module MartSearch
     ]
     
     def initialize
-      @config      = MartSearch::ConfigBuilder.instance().config[:server]
+      @config      = MartSearch::Controller.instance().config[:server]
       @portal_name = @config[:portal_name]
       @base_uri    = @config[:base_uri]
       

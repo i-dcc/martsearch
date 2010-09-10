@@ -35,7 +35,7 @@ end
 
 require "#{MARTSEARCH_PATH}/lib/martsearch/utils"
 require "#{MARTSEARCH_PATH}/lib/martsearch/data_source"
-require "#{MARTSEARCH_PATH}/lib/martsearch/config_builder"
+require "#{MARTSEARCH_PATH}/lib/martsearch/controller"
 require "#{MARTSEARCH_PATH}/lib/martsearch/ontology_term"
 
 require "#{MARTSEARCH_PATH}/lib/martsearch/index_builder_utils"

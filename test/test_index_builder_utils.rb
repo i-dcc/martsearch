@@ -46,7 +46,7 @@ class MartSearchIndexBuilderUtilsTest < Test::Unit::TestCase
   end
   
   def test_new_document
-    @index_builder_config = MartSearch::ConfigBuilder.instance().config[:index_builder]
+    @index_builder_config = MartSearch::Controller.instance().config[:index_builder]
     doc = new_document()
     
     assert( doc.is_a?(Hash) )
