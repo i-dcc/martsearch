@@ -47,8 +47,11 @@ module MartSearch
         attributes.push(map[:attr])
       end
       
+      filters = index_conf[:filters]
+      filters.stringify_keys! unless filters.nil?
+      
       biomart_search_params = {
-        :filters    => index_conf[:filters].stringify_keys!,
+        :filters    => filters,
         :attributes => attributes.uniq,
         :timeout    => 240
       }

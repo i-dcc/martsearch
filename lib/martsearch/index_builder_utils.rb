@@ -57,7 +57,7 @@ module MartSearch
 
       doc = {}
       index_builder_config[:schema][:fields].each do |key,detail|
-        doc[ key.to_sym ] = [] unless copy_fields.include?(key)
+        doc[ key.to_sym ] = [] unless copy_fields.include?(key.to_s)
       end
       return doc
     end

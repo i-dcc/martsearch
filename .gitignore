@@ -1,9 +1,10 @@
 .DS_Store
-log*
-doc*
 .yardoc*
 config/ols_database.yml
-coverage/*
 coverage.info
+coverage/*
+doc*
+log*
+simplecov/*
 test/vcr_cassettes*
 tmp/index_builder*

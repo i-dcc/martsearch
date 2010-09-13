@@ -3,6 +3,17 @@ require 'test/unit'
 require 'vcr'
 require 'shoulda'
 
+begin
+  require 'simplecov'
+  SimpleCov.start do
+    coverage_dir 'simplecov'
+  end
+rescue LoadError
+  if /^1.9/ === RUBY_VERSION
+    puts "[ERROR] Unable to load 'simplecov' - please run 'gem install simplecov'"
+  end
+end
+
 # Add the lib directory to the search path
 $:.unshift( "#{File.expand_path(File.dirname(__FILE__))}/../lib" )
 
@@ -12,8 +23,10 @@ require 'martsearch'
 VCR.config do |c|
   if /^1\.8/ === RUBY_VERSION
     c.cassette_library_dir = 'test/vcr_cassettes_ruby1.8'
+  elsif RUBY_VERSION == "1.9.1"
+    c.cassette_library_dir = 'test/vcr_cassettes_ruby1.9.1'
   else
-    c.cassette_library_dir = 'test/vcr_cassettes_ruby1.9'
+    c.cassette_library_dir = 'test/vcr_cassettes_ruby1.9.2+'
   end
   
   c.http_stubbing_library    = :fakeweb

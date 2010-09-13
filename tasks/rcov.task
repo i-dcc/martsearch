@@ -10,6 +10,8 @@ begin
     t.verbose = true
   end
 rescue LoadError
-  puts "[ERROR] Unable to load 'rcov' tasks - please run 'gem install rcov'"
+  if /^1\.8/ === RUBY_VERSION
+    puts "[ERROR] Unable to load 'rcov' tasks - please run 'gem install rcov'"
+  end
 end
 

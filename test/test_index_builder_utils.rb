@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/test_helper.rb'
+require 'test_helper'
 
 class MartSearchIndexBuilderUtilsTest < Test::Unit::TestCase
   include MartSearch::IndexBuilderUtils
@@ -48,7 +48,6 @@ class MartSearchIndexBuilderUtilsTest < Test::Unit::TestCase
   def test_new_document
     @index_builder_config = MartSearch::Controller.instance().config[:index_builder]
     doc = new_document()
-    
     assert( doc.is_a?(Hash) )
     
     schema_fields = @index_builder_config[:schema][:fields].keys
@@ -59,11 +58,11 @@ class MartSearchIndexBuilderUtilsTest < Test::Unit::TestCase
     end
     
     schema_fields.each do |field|
-      if copy_fields.include?( field )
-        assert( doc[field.to_sym].nil?, "The Solr copy field '#{field}' is present in the doc object." )
+      if copy_fields.include?( field.to_s )
+        assert( doc[field].nil?, "The Solr copy field '#{field}' is present in the doc object." )
       else
-        assert( doc[field.to_sym] != nil, "The Solr doc object does not contain an entry for '#{field}'." )
-        assert( doc[field.to_sym].is_a?(Array) )
+        assert( doc[field] != nil, "The Solr doc object does not contain an entry for '#{field}'." )
+        assert( doc[field].is_a?(Array) )
       end
     end
   end
