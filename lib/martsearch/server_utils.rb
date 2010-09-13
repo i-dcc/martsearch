@@ -57,7 +57,7 @@ module MartSearch
         begin
           Dir.mktmpdir do |dir|
             if js_or_css == 'js'
-              #compressed_code = Closure::Compiler.new(:compilation_level => 'SIMPLE_OPTIMIZATIONS').compress(compressed_code)
+              compressed_code = Closure::Compiler.new(:compilation_level => 'SIMPLE_OPTIMIZATIONS').compress(compressed_code)
             else
               compressed_code = YUI::CssCompressor.new.compress(compressed_code)
             end
