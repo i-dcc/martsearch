@@ -87,6 +87,32 @@ module MartSearch
       return server_conf
     end
     
+    # Helper function to initialize the caching system.  Uses ActiveSupport::Cache so 
+    # that we can easily support multiple cache backends.
+    #
+    # @param [String] type Can be either 'memcache' or 'file', if none supplied resorts to a memory-based cache
+    # @param [Hash] config Configuration object for the cache store
+    # @return [ActiveSupport::Cache Object] either MemCacheStore, FileStore or MemoryStore
+    def initialize_cache( type=nil, config={} )
+      case type
+      when /memcache/
+        servers = ['localhost']
+        opts    = { :namespace => 'martsearch', :no_reply => true }
+        
+        servers          = config[:servers]   if config[:servers]
+        opts[:namespace] = config[:namespace] if config[:namespace]
+        
+        return ActiveSupport::Cache::MemCacheStore.new( servers, opts )
+      when /file/
+        file_store = "#{MARTSEARCH_PATH}/tmp/cache"
+        file_store = config[:file_store] if config[:file_store]
+        
+        return ActiveSupport::Cache::FileStore.new( file_store )
+      else
+        return ActiveSupport::Cache::MemoryStore.new()
+      end
+    end
+    
     # Utility function to convert an array of data to a hash, 
     # given a set of headers to key the hash by (they will be matched
     # by the array index).

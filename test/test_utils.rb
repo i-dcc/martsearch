@@ -40,6 +40,19 @@ class MartSearchUtilsTest < Test::Unit::TestCase
     assert( conifg[:dataviews_by_name].size > 0 )
   end
   
+  def test_initialize_cache
+    memory_based_cache = initialize_cache()
+    assert( memory_based_cache.is_a?(ActiveSupport::Cache::MemoryStore) )
+    check_file_and_memory_based_cache_use( memory_based_cache, 'memory' )
+    
+    file_based_cache = initialize_cache('file')
+    assert( file_based_cache.is_a?(ActiveSupport::Cache::FileStore) )
+    check_file_and_memory_based_cache_use( file_based_cache, 'file' )
+    
+    memcache_based_cache = initialize_cache('memcache')
+    assert( memcache_based_cache.is_a?(ActiveSupport::Cache::MemCacheStore) )
+  end
+    
   def test_convert_array_to_hash
     headers = ['one','two','three']
     data    = [1,2,3]
@@ -83,4 +96,17 @@ class MartSearchUtilsTest < Test::Unit::TestCase
     assert_equal( test_orig, test )
     assert( test[0].keys.include?('foo') )
   end
+  
+  private
+    
+    def check_file_and_memory_based_cache_use( cache, type )
+      todays_date = Date.today
+      cache.write( "date", todays_date )
+      assert_equal( todays_date, cache.fetch("date"), "The #{type} based cache fell over storing a 'date' stamp!" )
+      assert_equal( true, cache.exist?("date"), "The #{type} based cache fell over recalling a 'date' stamp!" )
+      assert_equal( nil, cache.fetch("foo"), "The #{type} based cache does not return 'nil' upon an empty value." )
+
+      cache.delete_matched( Regexp.new(".*") )
+      assert_equal( false, cache.exist?("foo"), "The 'delete_matched' method hasn't emptied out the cache..." )
+    end
 end
