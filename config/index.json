@@ -1,5 +1,7 @@
 {
   "url":             "http://www.sanger.ac.uk/mouseportal/solr",
+  "docs_per_page":   10,
+  "sort_results_by": "marker_symbol_str asc",
   "schema_name":     "martsearch-search",
   "schema": {
     "unique_key": "mgi_accession_id_key",
@@ -141,5 +143,10 @@
       { "source": "emap_id",                    "dest": "text" },
       { "source": "emap_term",                  "dest": "text" }
     ]
+  },
+  "test": {
+    "single_return_search": "Mysm1",
+    "large_search":         "chromosome:1",
+    "bad_search":           "chromosome:!"
   }
 }

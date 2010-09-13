@@ -13,7 +13,7 @@ module MartSearch
     include MartSearch::Utils
     include MartSearch::ControllerUtils
     
-    attr_reader :config, :cache
+    attr_reader :config, :cache, :index
     
     def initialize()
       config_dir = "#{MARTSEARCH_PATH}/config"
@@ -26,6 +26,7 @@ module MartSearch
       }
       
       @cache = initialize_cache( @config[:server][:cache] )
+      @index = MartSearch::Index.new( @config[:index] )
     end
     
   end

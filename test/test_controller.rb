@@ -10,6 +10,7 @@ class MartSearchControllerTest < Test::Unit::TestCase
       assert( @controller.is_a?(MartSearch::Controller), "@controller is not a MartSearch::Controller object." )
       assert( @controller.config != nil, "@controller.config is nil." )
       assert( @controller.cache != nil, "@controller.cache is nil." )
+      assert( @controller.index.is_a?(MartSearch::Index), "@controller.index is not a MartSearch::Index object." )
     end
     
     should "be a singleton class" do
