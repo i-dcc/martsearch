@@ -33,7 +33,8 @@ module MartSearch
     ]
     
     def initialize
-      @config      = MartSearch::Controller.instance().config[:server]
+      @ms          = MartSearch::Controller.instance()
+      @config      = @ms.config[:server]
       @portal_name = @config[:portal_name]
       @base_uri    = @config[:base_uri]
       
@@ -99,6 +100,23 @@ module MartSearch
       @page_title = "Help"
       erubis :help
     end
+    
+    get "/clear_cache/?" do
+      @ms.cache.delete_matched( Regexp.new(".*") )
+      redirect "#{@base_uri}/"
+    end
+    
+    ##
+    ## Searching
+    ##
+    
+    
+    
+    ##
+    ## Browsing
+    ##
+    
+    
     
     ##
     ## Dynamic CSS/Javascript 

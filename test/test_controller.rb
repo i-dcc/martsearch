@@ -9,6 +9,7 @@ class MartSearchControllerTest < Test::Unit::TestCase
     should "initialize correctly" do
       assert( @controller.is_a?(MartSearch::Controller), "@controller is not a MartSearch::Controller object." )
       assert( @controller.config != nil, "@controller.config is nil." )
+      assert( @controller.cache != nil, "@controller.cache is nil." )
     end
     
     should "be a singleton class" do

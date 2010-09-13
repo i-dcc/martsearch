@@ -11,8 +11,9 @@ module MartSearch
   class Controller
     include Singleton
     include MartSearch::Utils
+    include MartSearch::ControllerUtils
     
-    attr_reader :config
+    attr_reader :config, :cache
     
     def initialize()
       config_dir = "#{MARTSEARCH_PATH}/config"
@@ -23,6 +24,8 @@ module MartSearch
         :index_builder => build_index_builder_conf( "#{config_dir}/index_builder" ),
         :server        => build_server_conf( "#{config_dir}/server" )
       }
+      
+      @cache = initialize_cache( @config[:server][:cache] )
     end
     
   end

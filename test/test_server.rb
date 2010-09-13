@@ -21,6 +21,12 @@ class MartSearchServerTest < Test::Unit::TestCase
         assert( page.has_content?( @server_conf[:portal_name] ) )
       end
     end
+    
+    should "allow you to manually clear the cache by visiting 'clear_cache'" do
+      visit '/clear_cache'
+      assert_equal( '/', current_path )
+      assert( page.has_content?( @server_conf[:portal_name] ) )
+    end
   end
   
 end

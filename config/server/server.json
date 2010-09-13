@@ -6,6 +6,10 @@
     "from": "",
     "to":   ""
   },
+  "cache": {
+    "type": "file",
+    "extra_urls_to_prime":  []
+  },
   "dataviews": [
     "gene-details"
   ]
