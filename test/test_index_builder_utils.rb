@@ -46,14 +46,14 @@ class MartSearchIndexBuilderUtilsTest < Test::Unit::TestCase
   end
   
   def test_new_document
-    @index_builder_config = MartSearch::Controller.instance().config[:index_builder]
+    index_config = MartSearch::Controller.instance().config[:index]
     doc = new_document()
     assert( doc.is_a?(Hash) )
     
-    schema_fields = @index_builder_config[:schema][:fields].keys
+    schema_fields = index_config[:schema][:fields].keys
     copy_fields   = []
     
-    @index_builder_config[:schema][:copy_fields].each do |copy_field|
+    index_config[:schema][:copy_fields].each do |copy_field|
       copy_fields.push( copy_field[:dest] )
     end
     

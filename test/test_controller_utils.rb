@@ -21,7 +21,6 @@ class MartSearchControllerUtilsTest < Test::Unit::TestCase
     assert( conifg.is_a?(Hash) )
     assert( conifg.keys.include?(:datasources) )
     assert( conifg.keys.include?(:datasources_to_index) )
-    assert( conifg.keys.include?(:url) )
     assert( conifg[:datasources].is_a?(Hash) )
   end
   

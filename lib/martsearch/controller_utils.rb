@@ -6,6 +6,16 @@ module MartSearch
   module ControllerUtils
     include MartSearch::Utils
     
+    # Helper function to read in and process the MartSearch::Index configuration.
+    #
+    # @param [String] config_dir The directory location of the 'index.json' config file.
+    # @return [Hash] The configuration hash
+    def build_index_conf( config_dir )
+      index_conf = JSON.load( File.new( "#{config_dir}/index.json", 'r' ) )
+      index_conf.recursively_symbolize_keys!
+      return index_conf
+    end
+    
     # Helper function to process the MartSearch::DataSource configuration and, build 
     # appropriate DataSource objects based on this configuration.
     #

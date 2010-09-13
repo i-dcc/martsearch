@@ -9,14 +9,15 @@ module MartSearch
     include MartSearch::Utils
     include MartSearch::IndexBuilderUtils
     
-    attr_reader :config, :document_cache, :log
+    attr_reader :index_config, :builder_config, :document_cache, :log
     
     def initialize()
       ms_config           = MartSearch::Controller.instance().config
-      @config             = ms_config[:index_builder]
+      @index_config       = ms_config[:index]
+      @builder_config     = ms_config[:index_builder]
       @datasources_config = ms_config[:datasources]
       
-      @config[:number_of_docs_per_xml_file] = 1000
+      @builder_config[:number_of_docs_per_xml_file] = 1000
       
       @log                 = Logger.new(STDOUT)
       @log.level           = Logger::DEBUG
@@ -37,7 +38,7 @@ module MartSearch
       setup_and_move_to_work_directory()
       open_daily_directory( 'datasource_dowloads' )
       
-      ds_to_index = @config[:datasources_to_index]
+      ds_to_index = @builder_config[:datasources_to_index]
       
       @log.info "Running Primary DataSource Grabs (in serial)..."
       ds_to_index[:primary].each do |ds|
@@ -82,7 +83,7 @@ module MartSearch
     # @param [Boolean] save_to_disk Save cache files to disk?
     # @return [Hash] A hash containing the :headers (Array) and :data (Array of Arrays) to index
     def fetch_datasource( ds, save_to_disk=true )
-      ds_conf    = @config[:datasources][ds.to_sym]
+      ds_conf    = @builder_config[:datasources][ds.to_sym]
       datasource = @datasources_config[ ds_conf[:datasource].to_sym ]
       
       # results = Marshal.load( File.new( "#{ds}.marshal", 'r' ) )
@@ -113,7 +114,7 @@ module MartSearch
     # @param [String] ds The name of the datasource that the data is from
     # @param [Hash] results The results hash of data (the return from {#fetch_datasource})
     def process_results( ds, results )
-      ds_conf       = @config[:datasources][ds.to_sym]
+      ds_conf       = @builder_config[:datasources][ds.to_sym]
       datasource    = @datasources_config[ ds_conf[:datasource] ]
       ds_index_conf = ds_conf[:indexing]
       
@@ -121,7 +122,7 @@ module MartSearch
       map_data = process_attribute_map( ds_index_conf[:attribute_map] )
       
       # Do we need to cache lookup data?
-      unless map_data[:map_to_index_field].to_sym == @config[:schema][:unique_key].to_sym
+      unless map_data[:map_to_index_field].to_sym == @index_config[:schema][:unique_key].to_sym
         cache_documents_by( map_data[:map_to_index_field] )
       end
       
@@ -178,7 +179,7 @@ module MartSearch
             end
 
             # Finally - save the document to the cache
-            doc_primary_key = doc[@config[:schema][:unique_key].to_sym][0]
+            doc_primary_key = doc[@index_config[:schema][:unique_key].to_sym][0]
             set_document( doc_primary_key, doc )
           end
         end
@@ -203,7 +204,7 @@ module MartSearch
       pwd = Dir.pwd
       open_daily_directory( 'solr_xml' )
       
-      batch_size = @config[:number_of_docs_per_xml_file]
+      batch_size = @builder_config[:number_of_docs_per_xml_file]
       @log.info "Creating Solr XML files (#{batch_size} docs per file)..."
 
       doc_chunks = @document_cache_keys.keys.chunk( batch_size )
@@ -248,7 +249,7 @@ module MartSearch
       # @param [String] search_term The term to search with
       # @return A document object if found or nil
       def find_document( field, search_term )
-        if field == @config[:schema][:unique_key].to_sym
+        if field == @index_config[:schema][:unique_key].to_sym
           return get_document( search_term )
         else
           map_term = @document_cache_lookup[field][search_term]
@@ -288,7 +289,7 @@ module MartSearch
 
             # If we have multiple value entries in what should be a single valued 
             # field, not the best solution, but just arbitrarily pick the first entry.
-            if !@config[:schema][:fields][index_field][:multi_valued] and index_values.size > 1
+            if !@index_config[:schema][:fields][index_field][:multi_valued] and index_values.size > 1
               new_array = []
               new_array.push(index_values[0])
               document[index_field] = new_array

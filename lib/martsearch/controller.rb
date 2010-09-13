@@ -19,10 +19,10 @@ module MartSearch
       config_dir = "#{MARTSEARCH_PATH}/config"
       
       @config = {
-        :http_client   => build_http_client(),
+        :index         => build_index_conf( config_dir ),
         :datasources   => build_datasources( config_dir ),
-        :index_builder => build_index_builder_conf( "#{config_dir}/index_builder" ),
-        :server        => build_server_conf( "#{config_dir}/server" )
+        :server        => build_server_conf( "#{config_dir}/server" ),
+        :index_builder => build_index_builder_conf( "#{config_dir}/index_builder" )
       }
       
       @cache = initialize_cache( @config[:server][:cache] )
