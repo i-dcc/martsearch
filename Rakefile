@@ -1,3 +1,5 @@
+require 'bundler/setup'
+
 desc 'Default task: run all tests'
 task :default => [:test]
 

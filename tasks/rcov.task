@@ -11,7 +11,7 @@ begin
   end
 rescue LoadError
   if /^1\.8/ === RUBY_VERSION
-    puts "[ERROR] Unable to load 'rcov' tasks - please run 'gem install rcov'"
+    puts "[ERROR] Unable to load 'rcov' tasks - please run 'bundle install'"
   end
 end
 

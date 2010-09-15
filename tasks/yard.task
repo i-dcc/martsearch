@@ -6,5 +6,5 @@ begin
     t.files   = ['lib/**/*.rb']
   end
 rescue LoadError
-  puts "[ERROR] Unable to load 'yard' tasks - please run 'gem install yard'"
+  puts "[ERROR] Unable to load 'yard' tasks - please run 'bundle install'"
 end

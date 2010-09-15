@@ -10,5 +10,5 @@ begin
      t.verbose = true
   end
 rescue LoadError
-  puts "[ERROR] Unable to load 'test' task - please run 'rake install_deps'"
+  puts "[ERROR] Unable to load 'test' task - please run 'bundle install'"
 end
