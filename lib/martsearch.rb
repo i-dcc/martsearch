@@ -31,11 +31,16 @@ require "#{MARTSEARCH_PATH}/lib/martsearch/hash"
 #
 # @author Darren Oakley
 module MartSearch
+  
+  # Error class raised when there is an error with the supplied configuration files.
+  class InvalidConfigError < Exception; end
+  
 end
 
 require "#{MARTSEARCH_PATH}/lib/martsearch/utils"
 require "#{MARTSEARCH_PATH}/lib/martsearch/index"
 require "#{MARTSEARCH_PATH}/lib/martsearch/data_source"
+require "#{MARTSEARCH_PATH}/lib/martsearch/data_set"
 require "#{MARTSEARCH_PATH}/lib/martsearch/controller_utils"
 require "#{MARTSEARCH_PATH}/lib/martsearch/controller"
 require "#{MARTSEARCH_PATH}/lib/martsearch/ontology_term"

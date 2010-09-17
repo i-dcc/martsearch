@@ -24,8 +24,10 @@ module MartSearch
     def build_datasources( config_dir )
       datasources     = {}
       datasource_conf = JSON.load( File.new( "#{config_dir}/datasources.json", 'r' ) )
+      datasource_conf.recursively_symbolize_keys!
       datasource_conf.each do |ds_name,ds_conf|
-        datasources[ ds_name.to_sym ] = MartSearch.const_get("#{ds_conf['type']}DataSource").new( ds_conf )
+        ds_conf[:internal_name] = ds_name
+        datasources[ ds_name ]  = MartSearch.const_get("#{ds_conf[:type]}DataSource").new( ds_conf )
       end
       
       return datasources
@@ -81,6 +83,20 @@ module MartSearch
       server_conf['dataviews']         = dataviews
       server_conf['dataviews_by_name'] = dataviews_by_name
       
+      # Load the configuration for the datasets
+      datasets = {}
+      server_conf['datasets'].each do |ds_name|
+        ds_location = "#{config_dir}/datasets/#{ds_name}"
+        ds_conf     = JSON.load( File.new( "#{ds_location}/config.json", 'r' ) )
+        ds_conf
+        
+        if ds_conf['enabled']
+          ds_conf['internal_name'] = ds_name
+          datasets[ds_name]        = MartSearch::DataSet.new( ds_conf.recursively_symbolize_keys! )
+        end
+      end
+      
+      server_conf['datasets'] = datasets
       server_conf.recursively_symbolize_keys!
       
       return server_conf
@@ -111,6 +127,7 @@ module MartSearch
         return ActiveSupport::Cache::MemoryStore.new()
       end
     end
+    
   end
   
 end
