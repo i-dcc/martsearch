@@ -12,8 +12,8 @@ module MartSearch
   class Index
     include MartSearch::Utils
     
-    attr_reader   :config, :ordered_results, :current_results, :current_results_total, :current_page, :grouped_terms
-    attr_accessor :url
+    attr_reader   :config, :current_results, :grouped_terms
+    attr_accessor :url, :ordered_results, :current_results_total, :current_page
     
     def initialize( config )
       @config        = config
