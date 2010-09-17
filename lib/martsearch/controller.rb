@@ -1,8 +1,5 @@
 module MartSearch
   
-  # Error class raised when there is an error with the supplied configuration files.
-  class InvalidConfigError < Exception; end
-  
   # Singleton controller class for MartSearch.  This is the central contoller 
   # for the MartSearch framework - it handles the config file parsing, building 
   # up all of the DataSource and Index objects, and managing the search mechanics.

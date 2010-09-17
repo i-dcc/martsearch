@@ -5,13 +5,10 @@ require 'singleton'
 require 'logger'
 
 require 'rubygems'
-
-gem 'sinatra', '>=1.0'
-gem 'biomart', '>=0.2.0'
+require 'bundler/setup'
 
 require 'biomart'
 require 'sinatra/base'
-
 require 'json'
 require 'parallel'
 require 'tree'
