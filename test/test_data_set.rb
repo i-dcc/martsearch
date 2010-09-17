@@ -14,7 +14,12 @@ class MartSearchDataSetTest < Test::Unit::TestCase
     should 'raise an error if given a dodgy config object' do
       assert_raise( MartSearch::InvalidConfigError ) do
         bad_ds = MartSearch::DataSet.new( :datasource => 'wibble' )
-        bad_ds.datasource
+        
+        def bad_ds.datasource_public(*args)
+          datasource(*args)
+        end
+        
+        bad_ds.datasource_public
       end
     end
     

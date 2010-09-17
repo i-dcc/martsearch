@@ -23,22 +23,24 @@ module MartSearch
     # @param [Array] query An array of values to query the datasource for
     # @return [Hash] A hash, keyed by the 'joined_attribute' where the values are an array of results objects associated with this key
     def search( query )
-      results        = self.datasource.search( query, @config[:searching] )
+      results        = datasource.search( query, @config[:searching] )
       sorted_results = sort_results( results )
       return sorted_results
     end
     
-    def datasource
-      ds = MartSearch::Controller.instance().config[:datasources][ @config[:datasource].to_sym ]
-      if ds.nil?
-        raise MartSearch::InvalidConfigError, "Unable to find a datasource called '#{@config[:datasource]}' for dataset '#{@config[:internal_name]}'!"
-      else
-        return ds
-      end
-    end
-    
     private
       
+      # Helper function to supply our MartSearch::DataSource instance.
+      #
+      # @return [MartSearch::DataSource] The DataSource this DataSet drives
+      def datasource
+        ds = MartSearch::Controller.instance().config[:datasources][ @config[:datasource].to_sym ]
+        if ds.nil?
+          raise MartSearch::InvalidConfigError, "Unable to find a datasource called '#{@config[:datasource]}' for dataset '#{@config[:internal_name]}'!"
+        else
+          return ds
+        end
+      end
       
       # Helper function to sort the raw results from the MartSearch::DataSource#search 
       # function and put them into something more suitable for integrating with the 
@@ -52,7 +54,7 @@ module MartSearch
         results.each do |result|
           save_this_result = true
           
-          unless self.datasource.is_a?(MartSearch::BiomartDataSource)
+          unless datasource.is_a?(MartSearch::BiomartDataSource)
             required_attrs   = @config[:searching][:required_attributes]
             unless required_attrs.nil?
               required_attrs.each do |req_attr|
