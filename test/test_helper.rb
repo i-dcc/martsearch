@@ -1,22 +1,23 @@
 require 'rubygems'
-require 'test/unit'
-require 'vcr'
-require 'shoulda'
 
-begin
-  require 'simplecov'
-  SimpleCov.start do
-    coverage_dir 'simplecov'
-  end
-rescue LoadError
-  if /^1.9/ === RUBY_VERSION
-    puts "[ERROR] Unable to load 'simplecov' - please run 'gem install simplecov'"
+# Set-up SimpleCov (code coverage tool for Ruby 1.9)
+if /^1.9/ === RUBY_VERSION
+  begin
+    require 'simplecov'
+    SimpleCov.start do
+      coverage_dir 'simplecov'
+    end
+  rescue LoadError
+    puts "[ERROR] Unable to load 'simplecov' - please run 'bundle install'"
   end
 end
 
 # Add the lib directory to the search path
 $:.unshift( "#{File.expand_path(File.dirname(__FILE__))}/../lib" )
 
+require 'test/unit'
+require 'vcr'
+require 'shoulda'
 require 'martsearch'
 
 # Set-up VCR for mocking up web requests.
