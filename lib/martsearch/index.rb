@@ -92,7 +92,7 @@ module MartSearch
       data[:response][:docs].each do |doc|
         @current_results[ doc[ @primary_field ] ] = {
           :index               => doc,
-          :search_explaination => data[:highlighting][ doc[ @primary_field ] ]
+          :search_explaination => data[:highlighting].stringify_keys![ doc[ @primary_field ] ]
         }
       end
       

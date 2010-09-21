@@ -40,6 +40,6 @@ end
 
 # Setup the connection parameters for our OLS database...
 env = ENV['RACK_ENV']
-env = 'development' if env.nil?
+env = 'test' if env.nil?
 dbc = YAML.load_file("#{File.expand_path(File.dirname(__FILE__))}/../config/ols_database.yml")[env]
 OLS_DB = Sequel.connect("mysql://#{dbc['username']}:#{dbc['password']}@#{dbc['host']}:#{dbc['port']}/#{dbc['database']}")

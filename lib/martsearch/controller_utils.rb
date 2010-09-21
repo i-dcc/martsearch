@@ -88,20 +88,21 @@ module MartSearch
       server_conf['datasets'].each do |ds_name|
         ds_location = "#{config_dir}/datasets/#{ds_name}"
         ds_conf     = JSON.load( File.new( "#{ds_location}/config.json", 'r' ) )
-        ds_conf
+
+        ds_conf.recursively_symbolize_keys!
         
-        if ds_conf['enabled']
-          ds_conf['internal_name'] = ds_name
-          dataset                  = MartSearch::DataSet.new( ds_conf.recursively_symbolize_keys! )
+        if ds_conf[:enabled]
+          ds_conf[:internal_name] = ds_name
+          dataset                 = MartSearch::DataSet.new( ds_conf )
           
-          if ds_conf['custom_sort']
-            sort    = get_file_as_string( "#{ds_location}/custom_sort.json" )
-            dataset = MartSearch::Mock.method( dataset, :sort_results ) { eval(sort) }
+          if ds_conf[:custom_sort]
+            sort    = get_file_as_string( "#{ds_location}/custom_sort.rb" )
+            dataset = MartSearch::Mock.method( dataset, :sort_results ) { |results| eval(sort) }
           end
           
-          if ds_conf['custom_secondary_sort']
-            secondary_sort = get_file_as_string( "#{ds_location}/custom_secondary_sort.json" )
-            dataset        = MartSearch::Mock.method( dataset, :secondary_sort ) { eval(secondary_sort) }
+          if ds_conf[:custom_secondary_sort]
+            secondary_sort = get_file_as_string( "#{ds_location}/custom_secondary_sort.rb" )
+            dataset        = MartSearch::Mock.method( dataset, :secondary_sort ) { |search_data| eval(secondary_sort) }
           end
           
           datasets[ds_name] = dataset

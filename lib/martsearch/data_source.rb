@@ -1,5 +1,8 @@
 module MartSearch
   
+  # Error class raised when there is an error whilst interacting with a DataSource.
+  class DataSourceError < Exception; end
+  
   # DataSource class for modelling a source for data.
   #
   # @author Darren Oakley
@@ -97,6 +100,7 @@ module MartSearch
     # Function to search a biomart datasource given an appropriate configuration.
     #
     # @see MartSearch::DataSource#search
+    # @raise [MartSearch::DataSourceError] Raised if an error occurs during the seach process
     def search( query, conf )
       filters = { conf[:joined_filter] => query.join(',') }
       filters.merge!( conf[:filters] ) unless conf[:filters].nil? or conf[:filters].empty?
@@ -113,8 +117,12 @@ module MartSearch
         search_options[:required_attributes] = conf[:required_attributes]
       end
       
-      results = @ds.search(search_options)
-      results.recursively_symbolize_keys!
+      begin
+        results = @ds.search(search_options)
+        results.recursively_symbolize_keys!
+      rescue Biomart::BiomartError => error
+        raise MartSearch::DataSourceError, error
+      end
       
       return results
     end

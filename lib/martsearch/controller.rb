@@ -125,8 +125,8 @@ module MartSearch
             search_terms = @index.grouped_terms[ dataset.joined_index_field.to_sym ]
             results      = dataset.search( search_terms )
             add_dataset_results_to_search_data( dataset.joined_index_field.to_sym, ds_name.to_sym, results )
-          rescue Biomart::BiomartError => error
-            # FIXME - this needs to become something like DataSourceError...
+          rescue MartSearch::DataSourceError => error
+            # FIXME - this needs to be a bit better fleshed out...
             @errors.push({
               :highlight => "The '#{dataset.display_name}' dataset has returned an error for this query.  Please try submitting your search again if you would like data from this source.",
               :full_text => error
@@ -187,7 +187,7 @@ module MartSearch
             stash_to_append_to = @search_data[ lookup[result_key] ]
 
             if stash_to_append_to
-              if @custom_sort
+              if @datasets[dataset_name].config[:custom_sort]
                 # If someone uses a custom sort- we assume they're taking care
                 # of grouping all of thier data together correctly...
                 stash_to_append_to[dataset_name] = result_data
