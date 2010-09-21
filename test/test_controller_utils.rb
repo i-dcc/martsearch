@@ -60,8 +60,12 @@ class MartSearchControllerUtilsTest < Test::Unit::TestCase
       assert_equal( todays_date, cache.fetch("date"), "The #{type} based cache fell over storing a 'date' stamp!" )
       assert_equal( true, cache.exist?("date"), "The #{type} based cache fell over recalling a 'date' stamp!" )
       assert_equal( nil, cache.fetch("foo"), "The #{type} based cache does not return 'nil' upon an empty value." )
-
-      cache.delete_matched( Regexp.new(".*") )
+      
+      cache.write( 'wibble', 'flibble blip', :expires_in => 1.second )
+      sleep(5)
+      assert_equal( nil, cache.fetch('wibble') )
+      
+      cache.clear
       assert_equal( false, cache.exist?("foo"), "The 'delete_matched' method hasn't emptied out the cache..." )
     end
 end

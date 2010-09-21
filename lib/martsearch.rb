@@ -19,6 +19,7 @@ require 'yui/compressor'
 require 'closure-compiler'
 require 'active_support'
 require 'active_support/core_ext/hash' unless Hash.respond_to?(:symbolize_keys!) # Rails 3
+require 'will_paginate/collection'
 
 require 'ap'
 

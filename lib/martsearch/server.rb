@@ -102,7 +102,7 @@ module MartSearch
     end
     
     get "/clear_cache/?" do
-      @ms.cache.delete_matched( Regexp.new(".*") )
+      @ms.cache.clear
       redirect "#{@base_uri}/"
     end
     

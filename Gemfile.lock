@@ -69,7 +69,7 @@ GEM
       roodi (>= 2.1.0)
     mime-types (1.16)
     mysql (2.8.1)
-    net-scp (1.0.3)
+    net-scp (1.0.4)
       net-ssh (>= 1.99.1)
     net-sftp (2.0.5)
       net-ssh (>= 2.0.9)
@@ -108,12 +108,13 @@ GEM
     sequel (3.15.0)
     sexp_processor (3.0.5)
     shoulda (2.11.3)
-    simplecov (0.3.5)
+    simplecov (0.3.6)
       simplecov-html (>= 0.3.7)
     simplecov-html (0.3.8)
     sinatra (1.0)
       rack (>= 1.0)
     vcr (1.1.2)
+    will_paginate (2.3.15)
     yard (0.6.1)
     yui-compressor (0.9.1)
 
@@ -145,5 +146,6 @@ DEPENDENCIES
   simplecov
   sinatra (~> 1.0)
   vcr (>= 1.1)
+  will_paginate (~> 2.3)
   yard
   yui-compressor

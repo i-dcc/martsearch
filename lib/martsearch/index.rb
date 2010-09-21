@@ -12,18 +12,18 @@ module MartSearch
   class Index
     include MartSearch::Utils
     
-    attr_reader   :config, :current_results, :grouped_terms
-    attr_accessor :url, :ordered_results, :current_results_total, :current_page
+    attr_reader   :config, :current_results, :grouped_terms, :primary_field, :paginated_results
+    attr_accessor :url, :current_results_total, :current_page
     
     def initialize( config )
       @config        = config
       @url           = @config[:url]
-      @primary_field = @config[:schema][:unique_key]
+      @primary_field = @config[:schema][:unique_key].to_sym
       @http_client   = build_http_client()
       
       # Placeholders
-      @ordered_results       = []
       @current_results       = {}
+      @paginated_results     = []
       @current_results_total = 0
       @current_page          = 1
       @grouped_terms         = {}
@@ -57,11 +57,11 @@ module MartSearch
     # @return [Hash] A hash of the documents returned from the Solr index - keyed by the primary field
     def search( query, page=1 )
       # Reset all of our stored variables
-      @ordered_results       = []
       @current_results       = {}
       @grouped_terms         = {}
       @current_results_total = 0
       @current_page          = 1
+      @paginated_results     = []
       
       # Calculate the start page
       start_doc = 0
@@ -89,18 +89,16 @@ module MartSearch
         @current_page = ( start_doc / @config[:docs_per_page] ) + 1
       end
       
-      @current_results_total = data[:response][:numFound]
-      
       data[:response][:docs].each do |doc|
         @current_results[ doc[ @primary_field ] ] = {
           :index               => doc,
           :search_explaination => data[:highlighting][ doc[ @primary_field ] ]
         }
-        @ordered_results.push( doc[ @primary_field ] )
       end
       
-      # Process and cache these results ready for searching the marts
-      @grouped_terms = grouped_query_terms( @current_results )
+      @current_results_total = data[:response][:numFound]
+      @grouped_terms         = grouped_query_terms( @current_results )
+      @paginated_results     = paginate_results( data[:response][:docs] )
       
       return @current_results
     end
@@ -155,29 +153,27 @@ module MartSearch
       def grouped_query_terms( results )
         grouped_terms = {}
 
-        unless results.empty?
-          results.each do |primary_field,results_stash|
-            results_stash[:index].each do |field,value|
+        results.each do |primary_field,results_stash|
+          results_stash[:index].each do |field,value|
+            grouped_terms_for_field = grouped_terms[field]
+
+            unless grouped_terms_for_field 
+              grouped_terms[field]    = []
               grouped_terms_for_field = grouped_terms[field]
+            end
 
-              unless grouped_terms_for_field 
-                grouped_terms[field]    = []
-                grouped_terms_for_field = grouped_terms[field]
+            if value.is_a?(Array)
+              value.each do |val|
+                grouped_terms_for_field.push( val )
               end
-
-              if value.is_a?(Array)
-                value.each do |val|
-                  grouped_terms_for_field.push( val )
-                end
-              else
-                grouped_terms_for_field.push( value )
-              end
+            else
+              grouped_terms_for_field.push( value )
             end
           end
+        end
 
-          grouped_terms.each do |field,values|
-            grouped_terms[field] = values.uniq
-          end
+        grouped_terms.each do |field,values|
+          grouped_terms[field] = values.uniq
         end
         
         return grouped_terms
@@ -194,7 +190,17 @@ module MartSearch
           return eval(res.body)
         end
       end
-    
+      
+      # Utility function to return paginated data results.
+      #
+      # @return [Array] a paginated (using will_paginate) list of the search results (the index primary_field)
+      def paginate_results( results )
+        results = WillPaginate::Collection.create( @current_page, @config[:docs_per_page], @current_results_total ) do |pager|
+           pager.replace( results )
+        end
+        return results
+      end
+      
   end
   
 end

@@ -10,6 +10,10 @@ module MartSearch
       @config = conf
     end
     
+    def joined_index_field
+      @config[:searching][:joined_index_field]
+    end
+    
     # Function used to drive a MartSearch::DataSource object to perform 
     # a query for a given dataset. Returns a hash, keyed by the 'joined_attribute' 
     # where the values are an array of results objects associated with this key.
