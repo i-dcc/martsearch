@@ -1,0 +1,22 @@
+{
+  "datasource":            "ikmc-omim",
+  "enabled":               true,
+  "custom_sort":           true,
+  "custom_secondary_sort": false,
+  "searching": {
+    "joined_index_field": "mgi_accession_id_key",
+    "joined_filter":      "mgi_accession_id",
+    "joined_attribute":   "mgi_accession_id",
+    "attributes": [
+      "mgi_accession_id",
+      "disorder_name",
+      "disorder_omim_id",
+      "disorder_type",
+      "tentative"
+    ],
+    "required_attributes": [
+      "disorder_name"
+    ],
+    "filters": {}
+  }
+}

@@ -18,5 +18,10 @@
     "type":    "Biomart",
     "url":     "http://biomart.informatics.jax.org/biomart",
     "dataset": "markers"
+  },
+  "ensembl-mouse": {
+    "type":    "Biomart",
+    "url":     "http://www.ensembl.org/biomart",
+    "dataset": "mmusculus_gene_ensembl"
   }
 }

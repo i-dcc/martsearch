@@ -1,0 +1,21 @@
+{
+  "datasource":            "ensembl-mouse",
+  "enabled":               true,
+  "custom_sort":           true,
+  "custom_secondary_sort": false,
+  "searching": {
+    "joined_index_field": "ensembl_gene_id",
+    "joined_filter":      "ensembl_gene_id",
+    "joined_attribute":   "ensembl_gene_id",
+    "attributes": [
+      "ensembl_gene_id",
+      "human_ensembl_gene",
+      "human_homolog_ensembl_peptide",
+      "zebrafish_ensembl_gene",
+      "zebrafish_homolog_ensembl_peptide",
+      "rat_ensembl_gene",
+      "rat_homolog_ensembl_peptide"
+    ],
+    "filters": {}
+  }
+}
