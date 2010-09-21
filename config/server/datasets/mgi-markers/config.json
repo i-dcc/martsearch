@@ -1,7 +1,7 @@
 {
   "datasource":  "mgi-markers",
   "enabled":     true,
-  "custom_sort": false,
+  "custom_sort": true,
   "searching": {
     "joined_index_field":    "mgi_accession_id_key",
     "joined_attribute":      "mgi_marker_id_att",

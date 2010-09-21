@@ -141,7 +141,11 @@ module MartSearch
           end
         end
         
-        # TODO: Secondary Sort
+        @datasets.each do |dataset_name,dataset|
+          if dataset.config[:custom_secondary_sort]
+            @search_data = dataset.secondary_sort( @search_data )
+          end
+        end
         
         return success
       end

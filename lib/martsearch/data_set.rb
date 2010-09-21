@@ -5,6 +5,8 @@ module MartSearch
   # @author Darren Oakley
   class DataSet
     
+    attr_reader :config
+    
     # @param [Hash] conf Configuration hash
     def initialize( conf )
       @config = conf
@@ -30,6 +32,20 @@ module MartSearch
       results        = datasource.search( query, @config[:searching] )
       sorted_results = sort_results( results )
       return sorted_results
+    end
+    
+    # A secondary sort function that allows a dataset to interact with 
+    # the data from all the other datasets prior to going to the templates 
+    # or into a cache store.  This can be used to house some cross-dataset 
+    # processing that would otherwise be done in the template.
+    #
+    # This function is empty as it's a placeholder for custom code...
+    #
+    # @abstract
+    # @param [Hash] search_data The current @search_data stash in MartSearch::Controller
+    # @return [Hash] The modified copy of @search_data
+    def secondary_sort( search_data )
+      search_data
     end
     
     private

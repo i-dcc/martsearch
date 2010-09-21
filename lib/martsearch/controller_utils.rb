@@ -92,7 +92,19 @@ module MartSearch
         
         if ds_conf['enabled']
           ds_conf['internal_name'] = ds_name
-          datasets[ds_name]        = MartSearch::DataSet.new( ds_conf.recursively_symbolize_keys! )
+          dataset                  = MartSearch::DataSet.new( ds_conf.recursively_symbolize_keys! )
+          
+          if ds_conf['custom_sort']
+            sort    = get_file_as_string( "#{ds_location}/custom_sort.json" )
+            dataset = MartSearch::Mock.method( dataset, :sort_results ) { eval(sort) }
+          end
+          
+          if ds_conf['custom_secondary_sort']
+            secondary_sort = get_file_as_string( "#{ds_location}/custom_secondary_sort.json" )
+            dataset        = MartSearch::Mock.method( dataset, :secondary_sort ) { eval(secondary_sort) }
+          end
+          
+          datasets[ds_name] = dataset
         end
       end
       
