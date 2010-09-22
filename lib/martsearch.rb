@@ -20,6 +20,7 @@ require 'closure-compiler'
 require 'active_support'
 require 'active_support/core_ext/hash' unless Hash.respond_to?(:symbolize_keys!) # Rails 3
 require 'will_paginate/collection'
+require 'will_paginate/view_helpers'
 
 require 'ap'
 
@@ -51,4 +52,5 @@ require "#{MARTSEARCH_PATH}/lib/martsearch/index_builder_utils"
 require "#{MARTSEARCH_PATH}/lib/martsearch/index_builder"
 
 require "#{MARTSEARCH_PATH}/lib/martsearch/server_utils"
+require "#{MARTSEARCH_PATH}/lib/martsearch/server_view_helpers"
 require "#{MARTSEARCH_PATH}/lib/martsearch/server"

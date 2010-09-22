@@ -11,6 +11,7 @@ module MartSearch
     include MartSearch::ControllerUtils
     
     attr_reader :config, :cache, :index, :errors, :search_data, :search_results
+    attr_reader :datasets, :dataviews
     
     def initialize()
       config_dir = "#{MARTSEARCH_PATH}/config"
@@ -22,9 +23,10 @@ module MartSearch
         :index_builder => build_index_builder_conf( "#{config_dir}/index_builder" )
       }
       
-      @cache    = initialize_cache( @config[:server][:cache] )
-      @index    = MartSearch::Index.new( @config[:index] )
-      @datasets = @config[:server][:datasets]
+      @cache     = initialize_cache( @config[:server][:cache] )
+      @index     = MartSearch::Index.new( @config[:index] )
+      @datasets  = @config[:server][:datasets]
+      @dataviews = @config[:server][:dataviews]
       
       # Stores for search result data and errors...
       @errors         = []

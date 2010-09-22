@@ -79,6 +79,14 @@ module MartSearch
       # check_for_messages
     end
     
+    helpers do
+      include Rack::Utils
+      include WillPaginate::ViewHelpers
+      include MartSearch::ServerViewHelpers
+
+      alias_method :h, :escape_html
+    end
+    
     ##
     ## Basic Routes
     ##
@@ -110,7 +118,26 @@ module MartSearch
     ## Searching
     ##
     
-    
+    ["/search/?", "/search/:query/?", "/search/:query/:page/?"].each do |path|
+      get path do
+        if params.empty?
+          redirect "#{@base_uri}/"
+        else
+          @current    = "home"
+          @page_title = "Search Results for '#{params[:query]}'"
+          @results    = @ms.search( params[:query], params[:page].to_i )
+          @data       = @ms.search_data
+          # check_for_errors
+
+          if params[:wt] == "json"
+            content_type "application/json"
+            return @data.to_json
+          else
+            erubis :search
+          end
+        end
+      end
+    end
     
     ##
     ## Browsing
