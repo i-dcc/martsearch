@@ -5,9 +5,12 @@ module MartSearch
   # @author Darren Oakley
   class Server < Sinatra::Base
     include MartSearch::ServerUtils
+    register Sinatra::StaticAssets
+    
+    
     
     set :root, Proc.new { File.join( File.dirname(__FILE__), 'server' ) }
-    enable :logging, :dump_errors
+    enable :logging, :dump_errors, :xhtml
     
     # We're going to use the version number as a cache breaker for the CSS 
     # and javascript code. Update with each release of your portal (especially 
@@ -83,9 +86,10 @@ module MartSearch
       include Rack::Utils
       include WillPaginate::ViewHelpers
       include MartSearch::ServerViewHelpers
-
+      
       alias_method :h, :escape_html
     end
+    
     
     ##
     ## Basic Routes
@@ -111,31 +115,37 @@ module MartSearch
     
     get "/clear_cache/?" do
       @ms.cache.clear
-      redirect "#{@base_uri}/"
+      redirect "#{request.script_name}/"
     end
     
     ##
     ## Searching
     ##
     
-    ["/search/?", "/search/:query/?", "/search/:query/:page/?"].each do |path|
-      get path do
-        if params.empty?
-          redirect "#{@base_uri}/"
-        else
-          @current    = "home"
-          @page_title = "Search Results for '#{params[:query]}'"
-          @results    = @ms.search( params[:query], params[:page].to_i )
-          @data       = @ms.search_data
-          # check_for_errors
+    get "/search/?" do
+      if params.empty?
+        redirect "#{@base_uri}/"
+      else
+        @current    = "home"
+        @page_title = "Search Results for '#{params[:query]}'"
+        @results    = @ms.search( params[:query], params[:page].to_i )
+        @data       = @ms.search_data
+        # check_for_errors
 
-          if params[:wt] == "json"
-            content_type "application/json"
-            return @data.to_json
-          else
-            erubis :search
-          end
+        if params[:wt] == "json"
+          content_type "application/json"
+          return @data.to_json
+        else
+          erubis :search
         end
+      end
+    end
+    
+    ["/search/:query/?", "/search/:query/:page/?"].each do |path|
+      get path do
+        url = "#{request.script_name}/search?query=#{params[:query]}"
+        url << "&page=#{params[:page]}" if params[:page]
+        redirect url
       end
     end
     

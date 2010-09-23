@@ -8,100 +8,97 @@ module MartSearch
       options.merge!(:layout => false)
       if collection = options.delete(:collection) then
         collection.inject([]) do |buffer, member|
-          buffer << erubis(:"#{template}", options.merge(:layout =>
-          false, :locals => {template_array[-1].to_sym => member}))
+          buffer << erubis(:"#{template}", options.merge(:layout => false, :locals => {template_array[-1].to_sym => member}))
         end.join("\n")
       else
         erubis(:"#{template}", options)
       end
     end
-
+    
     def tag_options(options, escape = true)
       option_string = options.collect {|k,v| %{#{k}="#{v}"}}.join(" ")
       option_string = " " + option_string unless option_string.blank?
     end
-
+    
     def content_tag(name, content, options, escape = true)
       tag_options = tag_options(options, escape) if options
       "<#{name}#{tag_options}>#{content}</#{name}>"
     end
-
-    def link_to(text, link = nil, options = {})
-      link ||= text
-      link = url_for(link)
-      tag_options = tag_options(options, true) unless options.empty?
-      "<a href=\"#{link}\"#{tag_options}>#{text}</a>"
-    end
-
-    def url_for(link_options)
-      case link_options
-      when Hash
-        path = link_options.delete(:path) || request.path_info
-        params.delete("captures")
-        path + "?" + build_query(params.merge(link_options))
-      else
-        if link_options =~ /\/search|\/browse/
-          # we've been given a search/browse link
-          tmp  = link_options.split("?")
-          opts = parse_query(tmp[1])
-          url  = ""
-
-          # Work out the url to use
-          if link_options.match("/search")
-            # First try RESTful style urls
-            url = "#{@base_uri}/search/#{opts["query"]}"
-            if opts["page"] then url = "#{url}/#{opts["page"]}" end
-
-            begin
-              uri = URI.parse(url)
-            rescue URI::InvalidURIError
-              # If that goes pear shaped trying to do a weird query, 
-              # use the standard ? interface and CGI::escape...
-              url = "#{@base_uri}/search?query=#{CGI::escape(opts["query"])}"
-              if opts["page"] then url = "#{url}&page=#{opts["page"]}" end
-            end
-          elsif link_options.match("/browse")
-            url = "#{@base_uri}/browse/#{opts["field"]}/#{opts["query"]}"
-            if opts["page"] then url = "#{url}/#{opts["page"]}" end
-          end
-
-          return url
+    
+    def url_for( url_fragment, mode=:path_only )
+      case mode
+      when :path_only
+        base = request.script_name
+      when :full
+        scheme = request.scheme
+        if (scheme == 'http' && request.port == 80 || scheme == 'https' && request.port == 443)
+          port = ""
         else
-          link_options
+          port = ":#{request.port}"
         end
+        base = "#{scheme}://#{request.host}#{port}#{request.script_name}"
+      else
+        raise TypeError, "Unknown url_for mode #{mode}"
       end
-    end
-
-    def process_ensembl_tracks( additional_tracks=[] )
-      standard_tracks = {
-        "contig"                            => "normal",
-        "ruler"                             => "normal",
-        "scalebar"                          => "normal",
-        "transcript_core_ensembl"           => "transcript_label",
-        "transcript_vega_otter"             => "transcript_label",
-        "alignment_compara_364_constrained" => "compact",
-        "alignment_compara_364_scores"      => "off",
-        "chr_band_core"                     => "off",
-        "dna_align_cdna_cDNA_update"        => "off",
-        "dna_align_core_CCDS"               => "off",
-        "fg_regulatory_features_funcgen"    => "off",
-        "fg_regulatory_features_legend"     => "off",
-        "gene_legend"                       => "off",
-        "gc_plot"                           => "off",
-        "info"                              => "off",
-        "missing"                           => "off",
-        "transcript_core_ncRNA"             => "off",
-        "transcript_core_ensembl_IG_gene"   => "off",
-        "variation_legend"                  => "off"
-      }
-      settings = standard_tracks.collect { |key,value| "#{key}=#{value}" }
-
-      additional_tracks.each do |track|
-        settings.unshift("#{track}=normal")
+      
+      url = "#{base}"
+            
+      if url_fragment.is_a?(Hash)
+        path = ''
+        
+        unless url_fragment["path"].nil?
+          path = url + url_fragment.delete("path")
+        else
+          path = request.path_info
+        end
+        
+        params.delete("captures")
+        url = path + "?" + build_query( params.merge(url_fragment) )
+      else
+        url << url_fragment
       end
-
-      return settings.join(",")
+      
+      return url
     end
+    
+    # def url_for(link_options)
+    #   case link_options
+    #   when Hash
+    #     path = link_options.delete(:path) || request.path_info
+    #     params.delete("captures")
+    #     path + "?" + build_query(params.merge(link_options))
+    #   else
+    #     if link_options =~ /\/search|\/browse/
+    #       # we've been given a search/browse link
+    #       tmp  = link_options.split("?")
+    #       opts = parse_query(tmp[1])
+    #       url  = ""
+    # 
+    #       # Work out the url to use
+    #       if link_options.match("/search")
+    #         # First try RESTful style urls
+    #         url = "#{@base_uri}/search/#{opts["query"]}"
+    #         if opts["page"] then url = "#{url}/#{opts["page"]}" end
+    # 
+    #         begin
+    #           uri = URI.parse(url)
+    #         rescue URI::InvalidURIError
+    #           # If that goes pear shaped trying to do a weird query, 
+    #           # use the standard ? interface and CGI::escape...
+    #           url = "#{@base_uri}/search?query=#{CGI::escape(opts["query"])}"
+    #           if opts["page"] then url = "#{url}&page=#{opts["page"]}" end
+    #         end
+    #       elsif link_options.match("/browse")
+    #         url = "#{@base_uri}/browse/#{opts["field"]}/#{opts["query"]}"
+    #         if opts["page"] then url = "#{url}/#{opts["page"]}" end
+    #       end
+    # 
+    #       return url
+    #     else
+    #       link_options
+    #     end
+    #   end
+    # end
 
     def ensembl_human_link_url_from_gene( gene, das_tracks=[] )
       ensembl_link = "http://www.ensembl.org/Homo_sapiens/Location/View"
@@ -134,6 +131,40 @@ module MartSearch
 
       return ensembl_link
     end
+    
+    protected
+      
+      def process_ensembl_tracks( additional_tracks=[] )
+        standard_tracks = {
+          "contig"                            => "normal",
+          "ruler"                             => "normal",
+          "scalebar"                          => "normal",
+          "transcript_core_ensembl"           => "transcript_label",
+          "transcript_vega_otter"             => "transcript_label",
+          "alignment_compara_364_constrained" => "compact",
+          "alignment_compara_364_scores"      => "off",
+          "chr_band_core"                     => "off",
+          "dna_align_cdna_cDNA_update"        => "off",
+          "dna_align_core_CCDS"               => "off",
+          "fg_regulatory_features_funcgen"    => "off",
+          "fg_regulatory_features_legend"     => "off",
+          "gene_legend"                       => "off",
+          "gc_plot"                           => "off",
+          "info"                              => "off",
+          "missing"                           => "off",
+          "transcript_core_ncRNA"             => "off",
+          "transcript_core_ensembl_IG_gene"   => "off",
+          "variation_legend"                  => "off"
+        }
+        settings = standard_tracks.collect { |key,value| "#{key}=#{value}" }
+        
+        additional_tracks.each do |track|
+          settings.unshift("#{track}=normal")
+        end
+        
+        return settings.join(",")
+      end
+      
   end
   
 end

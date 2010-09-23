@@ -9,6 +9,7 @@ require 'bundler/setup'
 
 require 'biomart'
 require 'sinatra/base'
+require 'sinatra/static_assets'
 require 'json'
 require 'parallel'
 require 'tree'
