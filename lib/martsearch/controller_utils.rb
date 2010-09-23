@@ -71,13 +71,17 @@ module MartSearch
         dv_location = "#{config_dir}/dataviews/#{dv_name}"
         dv_conf     = JSON.load( File.new( "#{dv_location}/config.json", 'r' ) )
         
-        if dv_conf['enabled']
-          dv_conf['internal_name'] = dv_name
-          dv_conf['stylesheet']    = get_file_as_string("#{dv_location}/stylesheet.css") if dv_conf['custom_css']
-          dv_conf['javascript']    = get_file_as_string("#{dv_location}/javascript.js") if dv_conf['custom_js']
+        dv_conf.recursively_symbolize_keys!
+        
+        if dv_conf[:enabled]
+          dv_conf[:internal_name] = dv_name
+          dataview                = MartSearch::DataView.new( dv_conf )
           
-          dataviews.push( dv_conf )
-          dataviews_by_name[dv_name] = dv_conf
+          dataview.stylesheet     = get_file_as_string("#{dv_location}/stylesheet.css") if dv_conf[:custom_css]
+          dataview.javascript     = get_file_as_string("#{dv_location}/javascript.js")  if dv_conf[:custom_js]
+          
+          dataviews.push( dataview )
+          dataviews_by_name[dv_name] = dataview
         end
       end
       server_conf['dataviews']         = dataviews
@@ -110,6 +114,7 @@ module MartSearch
       end
       
       server_conf['datasets'] = datasets
+      
       server_conf.recursively_symbolize_keys!
       
       return server_conf

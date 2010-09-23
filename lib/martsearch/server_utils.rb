@@ -51,7 +51,7 @@ module MartSearch
         end
         
         MartSearch::Controller.instance().config[:server][:dataviews].each do |dv|
-           compressed_code << dv[symbol] unless dv[symbol].nil?
+           compressed_code << dv.send(symbol) unless dv.send(symbol).nil?
         end
         
         begin
