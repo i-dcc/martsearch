@@ -174,13 +174,13 @@ module MartSearch
     get "/dataview-css/:dataview_name" do
       content_type "text/css"
       dataview_name = params[:dataview_name].sub(".css","")
-      @config[:dataviews_by_name][ dataview_name.to_sym ][:stylesheet]
+      @ms.dataviews_by_name[ dataview_name.to_sym ].stylesheet
     end
 
     get "/dataview-js/:dataview_name" do
       content_type "text/javascript"
       dataview_name = params[:dataview_name].sub(".js","")
-      @config[:dataviews_by_name][ dataview_name.to_sym ][:javascript]
+      @ms.dataviews_by_name[ dataview_name.to_sym ].javascript
     end
     
   end

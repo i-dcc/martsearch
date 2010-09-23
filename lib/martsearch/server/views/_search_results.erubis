@@ -17,7 +17,11 @@
           <div class="doc_datasets_returned">
             Datasets: 
             <% @ms.dataviews.each do |view| %>
-              <span class="dataset_no_return dataset_link_bubble" title="<%= view[:name] %>"><%= view[:name].gsub( " ", "&nbsp;" ) %></span>
+              <% if view.display_for_result?( result_data ) %>
+                <a href="#<%= result_data[:index][:marker_symbol].downcase %>-<%= view.internal_name %>" class="dataset_returned dataset_link_bubble" title="<%= partial( "view_display_tooltip", :locals => { :view => view, :data_return => true } ) %>"><%= view.name.gsub( " ", "&nbsp;" ) %></a>
+              <% else %>
+                <span class="dataset_no_return dataset_link_bubble" title="<%= partial( "dataset_returned_tooltip", :locals => { :view => view, :data_return => false } ) %>"><%= view.name.gsub( " ", "&nbsp;" ) %></span>
+              <% end %>
             <% end %>
           </div>
         </td>
@@ -55,7 +59,9 @@
     
     <div class="doc_content">
       <% @ms.dataviews.each do |view| %>
-        
+        <% if view.display_for_result?( result_data ) %>
+          w00p
+        <% end %>
       <% end %>
     </div>
   </div>

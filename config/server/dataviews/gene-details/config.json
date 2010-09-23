@@ -1,5 +1,6 @@
 {
   "name":                 "Gene Details",
+  "description":          "wooo wahhh",
   "enabled":              true,
   "display":              true,
   "custom_css":           false,

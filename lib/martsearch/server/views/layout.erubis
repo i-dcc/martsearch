@@ -18,9 +18,9 @@
       <% MartSearch::Server::DEFAULT_CSS_FILES.each do |css_file| %>
         <%= stylesheet_link_tag "/css/#{css_file}", :media => 'all' %>
       <% end %>
-      <% @config[:dataviews].each do |dv| %>
-        <% next if dv[:stylesheet].nil? %>
-        <%= stylesheet_link_tag "/dataview-css/#{dv[:internal_name]}.css", :media => 'all' %>
+      <% @ms.dataviews.each do |view| %>
+        <% next if view.stylesheet.nil? %>
+        <%= stylesheet_link_tag "/dataview-css/#{view.internal_name}.css", :media => 'all' %>
       <% end %>
     <% end %>
     
@@ -124,9 +124,9 @@
       <% MartSearch::Server::DEFAULT_JS_FILES.each do |js_file| %>
         <%= javascript_script_tag "/js/#{js_file}", :charset => "utf-8" %>
       <% end %>
-      <% @config[:dataviews].each do |dv| %>
-        <% next if dv[:javascript].nil? %>
-        <%= javascript_script_tag "/dataview-js/#{dv[:internal_name]}.js", :charset => "utf-8" %>
+      <% @ms.dataviews.each do |view| %>
+        <% next if view.javascript.nil? %>
+        <%= javascript_script_tag "/dataview-js/#{view.internal_name}.js", :charset => "utf-8" %>
       <% end %>
     <% end %>
   </body>
