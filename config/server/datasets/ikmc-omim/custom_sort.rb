@@ -11,7 +11,7 @@ results.each do |result|
 end
 
 sorted_results.each do |key,omim_values|
-  sorted_results[key] = omim_values.sort{ |a,b| a['disorder_name'] <=> b['disorder_name'] }
+  sorted_results[key] = omim_values.sort{ |a,b| a[:disorder_name] <=> b[:disorder_name] }
 end
 
 return sorted_results
