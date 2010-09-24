@@ -37,16 +37,16 @@ module MartSearch
     
     # Function to perform the searches against the index and marts.
     #
-    # Stores a results stash holding the data in a structure like...
-    # {
-    #   IndexDocUniqueKey => {
-    #     "index"         => {}, # index results for this doc
-    #     "internal_name" => []/{}, # array/hash of sorted biomart data
-    #     "internal_name" => []/{}, # array/hash of sorted biomart data
+    # Sets up a results stash (@search_data) holding the data in a structure like:
+    #   {
+    #     IndexDocUniqueKey => {
+    #       "index"         => {}, # index results for this doc
+    #       "internal_name" => []/{}, # array/hash of sorted biomart data
+    #       "internal_name" => []/{}, # array/hash of sorted biomart data
+    #     }
     #   }
-    # }
     # 
-    # But returns an ordered 
+    # But returns an ordered list of the results (@search_results)
     #
     # @param [String] query The query string to pass to the search index
     # @param [Integer] page The page of results to search for/return

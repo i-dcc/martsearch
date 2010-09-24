@@ -1,30 +1,60 @@
 module MartSearch
   
+  # View helpers for the web app code.
+  #
+  # As we use Sinatra::StaticAssets the following helpers are also available 
+  # in the views:
+  # * image_tag
+  # * stylesheet_link_tag
+  # * javascript_script_tag
+  # * link_to
+  #
+  # @author Darren Oakley
   module ServerViewHelpers
-    def partial(template, *args)
+    
+    # Standard partial helper - allows erubis templates to easily call
+    # smaller sub-templates.
+    #
+    # @param [String] template The location/name of the template to call
+    # @param [Hash] options Options hash to pass to the template
+    # @return [String] The processed sub-template
+    def partial( template, options={} )
       template_array = template.to_s.split('/')
+      template_array[-1].sub!("_", "") if template_array[-1] =~ /^_/
+      
       template = template_array[0..-2].join('/') + "/_#{template_array[-1]}"
-      options = args.last.is_a?(Hash) ? args.pop : {}
-      options.merge!(:layout => false)
+      
+      options.merge!( :layout => false )
+      
       if collection = options.delete(:collection) then
         collection.inject([]) do |buffer, member|
-          buffer << erubis(:"#{template}", options.merge(:layout => false, :locals => {template_array[-1].to_sym => member}))
+          buffer << erubis( :"#{template}", options.merge( :locals => { template_array[-1].to_sym => member } ) )
         end.join("\n")
       else
-        erubis(:"#{template}", options)
+        erubis( :"#{template}", options )
       end
     end
     
-    def tag_options(options, escape = true)
-      option_string = options.collect {|k,v| %{#{k}="#{v}"}}.join(" ")
-      option_string = " " + option_string unless option_string.blank?
-    end
-    
-    def content_tag(name, content, options, escape = true)
-      tag_options = tag_options(options, escape) if options
+    # View helper to produce a HTML tag.
+    #
+    # @param [String] name The name for the HTML tag (i.e. 'p', 'h1' etc.)
+    # @param [String] content The content that goes inside the tag
+    # @param [Hash] options A hash representing the HTML attributes to apply to the tag
+    # @return [String] The HTML tag
+    def content_tag( name, content, options )
+      tag_options = tag_options( options ) if options
       "<#{name}#{tag_options}>#{content}</#{name}>"
     end
     
+    # View helper to generate a URL for a static/dynamic page/item.  Will automagically 
+    # cope if the app is not hosted at the root of the domain.  ALWAYS use this function 
+    # (or functions such as 'link_to' that call this under the covers), to link to assets/pages 
+    # in the app.
+    #
+    # @param [String/Hash] url_fragment The url string to link to, or a Hash containing :path and any other parameters that are desired
+    # @param [Symbol] mode Do we want a full url (i.e. for RSS feeds etc) or a relative link. Can be either :path_only or :full
+    # @return [String] The generated url
+    # @raise TypeError if an unkown url mode is passed
     def url_for( url_fragment, mode=:path_only )
       case mode
       when :path_only
@@ -100,40 +130,64 @@ module MartSearch
     #   end
     # end
 
-    def ensembl_human_link_url_from_gene( gene, das_tracks=[] )
-      ensembl_link = "http://www.ensembl.org/Homo_sapiens/Location/View"
-      ensembl_link += "?g=#{gene};"
-      ensembl_link += "contigviewbottom=#{process_ensembl_tracks(das_tracks)}"
-
-      return ensembl_link
-    end
-
-    def ensembl_human_link_url_from_coords( chr, start_pos, end_pos, das_tracks=[] )
-      ensembl_link = "http://www.ensembl.org/Homo_sapiens/Location/View"
-      ensembl_link += "?r=#{chr}:#{start_pos}-#{end_pos};"
-      ensembl_link += "contigviewbottom=#{process_ensembl_tracks(das_tracks)}"
-
-      return ensembl_link
-    end
-
-    def ensembl_link_url_from_gene( gene, das_tracks=[] )
-      ensembl_link = "http://www.ensembl.org/Mus_musculus/Location/View"
-      ensembl_link += "?g=#{gene};"
-      ensembl_link += "contigviewbottom=#{process_ensembl_tracks(das_tracks)}"
-
-      return ensembl_link
-    end
-
-    def ensembl_link_url_from_coords( chr, start_pos, end_pos, das_tracks=[] )
-      ensembl_link = "http://www.ensembl.org/Mus_musculus/Location/View"
-      ensembl_link += "?r=#{chr}:#{start_pos}-#{end_pos};"
-      ensembl_link += "contigviewbottom=#{process_ensembl_tracks(das_tracks)}"
-
-      return ensembl_link
+    # Helper function to construct a url for linking to Ensembl from an 
+    # Ensembl Gene ID.
+    #
+    # @param [String/Symbol] species The Ensmebl species to link to
+    # @param [String] gene The Ensembl Gene ID
+    # @param [Array] das_tracks Any extra tracks that need to be turned on
+    # @raise TypeError if an unkown species is passed
+    def ensembl_link_url_from_gene( species, gene, das_tracks=[] )
+      ensembl_link_url( species, "?g=#{gene}", das_tracks )
     end
     
-    protected
+    # Helper function to construct a url for linking to Ensembl from a 
+    # series of co-ordinates.
+    #
+    # @param [String/Symbol] species The Ensmebl species to link to
+    # @param [String] chr The chromosome
+    # @param [String/Integer] start_pos The start location that you would like contigview to centre on
+    # @param [String/Integer] end_pos The end location that you would like contigview to centre on
+    # @param [Array] das_tracks Any extra tracks that need to be turned on
+    # @raise TypeError if an unkown species is passed
+    def ensembl_link_url_from_coords( species, chr, start_pos, end_pos, das_tracks=[] )
+      ensembl_link_url( species, "?r=#{chr}:#{start_pos}-#{end_pos};", das_tracks )
+    end
+    
+    private
       
+      # Helper function to product the required attribute strings for a HTML tag.
+      #
+      # @param [Hash] options A hash representing the HTML attributes
+      def tag_options( options )
+        option_string = options.collect {|k,v| %{#{k}="#{v}"}}.join(" ")
+        option_string = " " + option_string unless option_string.blank?
+      end
+      
+      # Helper function to build up a link to Ensembl.
+      #
+      # @param [String/Symbol] species The Ensmebl species to link to
+      # @param [String] args The first part of the url arguments
+      # @param [Array] das_tracks Any extra tracks that need to be turned on
+      # @raise TypeError if an unkown species is passed
+      def ensembl_link_url( species, args, das_tracks=[] )
+        database = case species.to_sym
+          when :mouse then 'Mus_musculus'
+          when :human then 'Homo_sapiens'
+          else
+            raise TypeError, "Unknown species for #{species}, try :human or :mouse..."
+        end
+
+        ensembl_link = "http://www.ensembl.org/#{database}/Location/View#{args}"
+        ensembl_link << "contigviewbottom=#{process_ensembl_tracks(das_tracks)}"
+
+        return ensembl_link
+      end
+      
+      # Helper function to provide the raw text string needed to configure the 
+      # Ensembl contig view page.
+      # 
+      # @param [Array] additional_tracks An array of additional (das) tracks to activate in the view
       def process_ensembl_tracks( additional_tracks=[] )
         standard_tracks = {
           "contig"                            => "normal",

@@ -20,7 +20,7 @@ module MartSearch
     #
     # @abstract
     # @return [Boolean] true/false depending on the state of the DataSource
-    # @raise [MartSearch::InvalidConfigError] raised as this is an abstract class and sould not be instanciated
+    # @raise [MartSearch::InvalidConfigError] raised as this is an abstract class and sould not be instantiated
     def is_alive?
       raise_error
     end
@@ -31,7 +31,7 @@ module MartSearch
     # @abstract
     # @param [Hash] conf Configuration hash determining how to query the datasource
     # @return [Hash] a hash containing the :headers (Array) and :data (Array of Arrays) to index - i.e. '{ :headers => [], :data => [[],[],[]] }'
-    # @raise [MartSearch::InvalidConfigError] raised as this is an abstract class and sould not be instanciated
+    # @raise [MartSearch::InvalidConfigError] raised as this is an abstract class and sould not be instantiated
     def fetch_all_terms_for_indexing( conf )
       raise_error
     end
@@ -42,7 +42,7 @@ module MartSearch
     # @param [Array] query An array of values to query the datasource for
     # @param [Hash] conf Configuration hash determining how to query the datasource
     # @return [Array] An array of objects representing the data retrieved from the datasource
-    # @raise [MartSearch::InvalidConfigError] raised as this is an abstract class and sould not be instanciated
+    # @raise [MartSearch::InvalidConfigError] raised as this is an abstract class and sould not be instantiated
     def search( query, conf )
       raise_error
     end
