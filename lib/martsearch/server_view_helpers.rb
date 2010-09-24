@@ -41,7 +41,7 @@ module MartSearch
     # @param [String] content The content that goes inside the tag
     # @param [Hash] options A hash representing the HTML attributes to apply to the tag
     # @return [String] The HTML tag
-    def content_tag( name, content, options )
+    def content_tag( name, content, options=nil )
       tag_options = tag_options( options ) if options
       "<#{name}#{tag_options}>#{content}</#{name}>"
     end

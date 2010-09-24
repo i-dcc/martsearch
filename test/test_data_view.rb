@@ -5,6 +5,7 @@ class MartSearchDataViewTest < Test::Unit::TestCase
     @controller = MartSearch::Controller.instance()
     @test_conf  = {
       :name                => "Gene Details",
+      :description         => "A test dataview",
       :enabled             => true,
       :display             => true,
       :custom_css          => false,

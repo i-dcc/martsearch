@@ -82,6 +82,21 @@ class MartSearchDataSourceTest < Test::Unit::TestCase
         end
       end
     end
+    
+    should 'throw a MartSearch::DataSourceError if something goes wrong with the search' do
+      VCR.use_cassette('test_biomart_data_source_error') do
+        assert_raise(MartSearch::DataSourceError) {
+          dataset_conf = {
+            :joined_index_field => 'marker_symbol',
+            :joined_filter      => 'marker_symbol',
+            :joined_attribute   => 'marker_symbol',
+            :attributes         => [ 'marker_symbol', 'sponsor', 'colony_prefix', 'wibble' ]
+          }
+          
+          ret = @kermits_biomart.search( ['Cbx1','Art4'], dataset_conf )
+        }
+      end
+    end
   end
   
   def check_the_response_from_fetch_all_terms_for_indexing( ret )
