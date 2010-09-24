@@ -60,7 +60,14 @@
     <div class="doc_content">
       <% @ms.dataviews.each do |view| %>
         <% if view.display_for_result?( result_data ) %>
-          w00p
+          <div id="<%= result_data[:index][:marker_symbol].downcase %>-<%= view.internal_name %>" class="dataset">
+            <h4 class="dataset_title toggle-open"><%= view.name %></h4>
+            <div class="dataset_content <%= view.internal_name %>">
+              
+              <div class="attribution">
+              </div>
+            </div>
+          </div>
         <% end %>
       <% end %>
     </div>
