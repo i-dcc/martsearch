@@ -138,7 +138,7 @@ module MartSearch
     # @param [Array] das_tracks Any extra tracks that need to be turned on
     # @raise TypeError if an unkown species is passed
     def ensembl_link_url_from_gene( species, gene, das_tracks=[] )
-      ensembl_link_url( species, "?g=#{gene}", das_tracks )
+      ensembl_vega_link_url( :ensembl, species, "?g=#{gene}", das_tracks )
     end
     
     # Helper function to construct a url for linking to Ensembl from a 
@@ -151,7 +151,18 @@ module MartSearch
     # @param [Array] das_tracks Any extra tracks that need to be turned on
     # @raise TypeError if an unkown species is passed
     def ensembl_link_url_from_coords( species, chr, start_pos, end_pos, das_tracks=[] )
-      ensembl_link_url( species, "?r=#{chr}:#{start_pos}-#{end_pos};", das_tracks )
+      ensembl_vega_link_url( :ensembl, species, "?r=#{chr}:#{start_pos}-#{end_pos};", das_tracks )
+    end
+    
+    # Helper function to construct a url for linking to Vega from a 
+    # Vega Gene ID.
+    #
+    # @param [String/Symbol] species The Vega species to link to
+    # @param [String] gene The Vega Gene ID
+    # @param [Array] das_tracks Any extra tracks that need to be turned on
+    # @raise TypeError if an unkown species is passed
+    def vega_link_url_from_gene( species, gene, das_tracks=[] )
+      ensembl_vega_link_url( :vega, species, "?g=#{gene}", das_tracks )
     end
     
     private
@@ -166,22 +177,28 @@ module MartSearch
       
       # Helper function to build up a link to Ensembl.
       #
+      # @param [String/Symbol] db :ensembl or :vega
       # @param [String/Symbol] species The Ensmebl species to link to
       # @param [String] args The first part of the url arguments
       # @param [Array] das_tracks Any extra tracks that need to be turned on
       # @raise TypeError if an unkown species is passed
-      def ensembl_link_url( species, args, das_tracks=[] )
-        database = case species.to_sym
+      def ensembl_vega_link_url( db, spec, args, das_tracks=[] )
+        species = case spec.to_sym
           when :mouse then 'Mus_musculus'
           when :human then 'Homo_sapiens'
           else
-            raise TypeError, "Unknown species for #{species}, try :human or :mouse..."
+            raise TypeError, "Unknown species for #{spec}, try :human or :mouse..."
         end
-
-        ensembl_link = "http://www.ensembl.org/#{database}/Location/View#{args}"
-        ensembl_link << "contigviewbottom=#{process_ensembl_tracks(das_tracks)}"
-
-        return ensembl_link
+        
+        database = case db
+          when :ensembl then 'www.ensembl.org'
+          when :vega    then 'vega.sanger.ac.uk'
+        end
+        
+        url = "http://#{database}/#{species}/Location/View#{args}"
+        url << "contigviewbottom=#{process_ensembl_tracks(das_tracks)}"
+        
+        return url
       end
       
       # Helper function to provide the raw text string needed to configure the 
@@ -192,23 +209,7 @@ module MartSearch
         standard_tracks = {
           "contig"                            => "normal",
           "ruler"                             => "normal",
-          "scalebar"                          => "normal",
-          "transcript_core_ensembl"           => "transcript_label",
-          "transcript_vega_otter"             => "transcript_label",
-          "alignment_compara_364_constrained" => "compact",
-          "alignment_compara_364_scores"      => "off",
-          "chr_band_core"                     => "off",
-          "dna_align_cdna_cDNA_update"        => "off",
-          "dna_align_core_CCDS"               => "off",
-          "fg_regulatory_features_funcgen"    => "off",
-          "fg_regulatory_features_legend"     => "off",
-          "gene_legend"                       => "off",
-          "gc_plot"                           => "off",
-          "info"                              => "off",
-          "missing"                           => "off",
-          "transcript_core_ncRNA"             => "off",
-          "transcript_core_ensembl_IG_gene"   => "off",
-          "variation_legend"                  => "off"
+          "scalebar"                          => "normal"
         }
         settings = standard_tracks.collect { |key,value| "#{key}=#{value}" }
         

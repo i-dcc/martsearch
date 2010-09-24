@@ -10,6 +10,7 @@ class MartSearchServerViewHelpersTest < Test::Unit::TestCase
   
   def test_ensembl_link_url_from_gene
     link = ensembl_link_url_from_gene( :human, 'ENSG00001' )
+    assert( link =~ /ensembl.org/ )
     assert( link =~ /Homo_sapiens/ )
     assert( link =~ /ENSG00001/ )
     
@@ -34,5 +35,12 @@ class MartSearchServerViewHelpersTest < Test::Unit::TestCase
     assert( link =~ /das:wibble=normal/ )
     
     assert_raise(TypeError) { ensembl_link_url_from_coords( :monkey, 1, 20, 42 ) }
+  end
+  
+  def test_vega_link_url_from_gene
+    link = vega_link_url_from_gene( :mouse, 'OTTMUSG00001' )
+    assert( link =~ /vega.sanger.ac.uk/ )
+    assert( link =~ /Mus_musculus/ )
+    assert( link =~ /OTTMUSG00001/ )
   end
 end
