@@ -63,7 +63,7 @@
           <div id="<%= result_data[:index][:marker_symbol].downcase %>-<%= view.internal_name %>" class="dataset">
             <h4 class="dataset_title toggle-open"><%= view.name %></h4>
             <div class="dataset_content <%= view.internal_name %>">
-              
+              <%= partial( "dataviews/#{view.internal_name}/template", :locals => { :result_data => result_data } ) %>
               <div class="attribution">
               </div>
             </div>
