@@ -1,0 +1,30 @@
+{
+  "datasource":            "emma-strains",
+  "enabled":               true,
+  "custom_sort":           true,
+  "custom_secondary_sort": false,
+  "searching": {
+    "joined_index_field": "emma_id",
+    "joined_filter":      "emma_id",
+    "joined_attribute":   "emma_id",
+    "attributes": [
+      "emma_id",
+      "international_strain_name",
+      "synonym",
+      "maintained_background",
+      "mutation_main_type",
+      "mutation_sub_type",
+      "alls_form",
+      "genetic_description",
+      "phenotype_description",
+      "reference",
+      "pubmed_id",
+      "availability",
+      "owner"
+    ],
+    "required_attributes": [
+      "emma_id"
+    ],
+    "filters": {}
+  }
+}

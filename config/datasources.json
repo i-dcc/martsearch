@@ -1,4 +1,5 @@
 {
+  "emma-strains":       { "type": "Biomart", "url": "http://www.emmanet.org/biomart", "dataset": "strains" },
   "ensembl-mouse":      { "type": "Biomart", "url": "http://www.ensembl.org/biomart", "dataset": "mmusculus_gene_ensembl" },
   "ikmc-dcc":           { "type": "Biomart", "url": "http://www.i-dcc.org/biomart", "dataset": "dcc" },
   "ikmc-idcc_targ_rep": { "type": "Biomart", "url": "http://www.i-dcc.org/biomart", "dataset": "idcc_targ_rep" },

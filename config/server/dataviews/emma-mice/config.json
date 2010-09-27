@@ -1,0 +1,14 @@
+{
+  "name":                 "EMMA Mice",
+  "description":          "Details on mouse lines available to order from The European Mouse Mutant Archive (EMMA).",
+  "enabled":              true,
+  "display":              true,
+  "custom_css":           false,
+  "custom_js":            true,
+  "custom_view_helpers" : true,
+  "custom_routes":        false,
+  "datasets": {
+    "required": [ "emma-strains" ],
+    "optional": []
+  }
+}

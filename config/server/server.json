@@ -11,6 +11,7 @@
     "extra_urls_to_prime":  []
   },
   "datasets": [
+    "emma-strains",
     "ensembl-mouse-homologs",
     "ikmc-dcc-knockout_attempts",
     "ikmc-dcc-other_mutants",
@@ -23,6 +24,7 @@
   "dataviews": [
     "gene-details",
     "ikmc-mice",
+    "emma-mice",
     "ikmc-targeted-products",
     "wtsi-dna-clone-resources",
     "other-mutant-resources"
