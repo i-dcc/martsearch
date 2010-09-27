@@ -25,7 +25,7 @@
         <% orthalog_species.each do |orth| %>
           <% result_data[:'mgi-markers'][:"#{orth}_orthologs"].each do |orth_data| %>
             <tr>
-              <td><%= orth.capitalize %></td>
+              <td><%= orth.to_s.capitalize %></td>
               <td><%= orth_data[:symbol] %></td>
               <td><%= link_to( orth_data[:entrez_gene_id], "http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&amp;cmd=Retrieve&amp;dopt=Graphics&amp;list_uids=#{orth_data[:entrez_gene_id]}", { :target => '_blank' } ) %></td>
               <% if result_data[:'ensembl-mouse-homologs'] %>
