@@ -1,0 +1,36 @@
+{
+  "datasource":            "ikmc-kermits",
+  "enabled":               true,
+  "custom_sort":           true,
+  "custom_secondary_sort": false,
+  "searching": {
+    "joined_index_field": "marker_symbol",
+    "joined_filter":      "marker_symbol",
+    "joined_attribute":   "marker_symbol",
+    "attributes": [
+      "marker_symbol",
+      "sponsor",
+      "escell_clone",
+      "colony_prefix",
+      "escell_strain",
+      "test_cross_strain",
+      "back_cross_strain",
+      "status",
+      "allele_name",
+      "emma",
+      "qc_southern_blot",
+      "qc_tv_backbone_assay",
+      "qc_five_prime_lr_pcr",
+      "qc_loa_qpcr",
+      "qc_homozygous_loa_sr_pcr",
+      "qc_neo_count_qpcr",
+      "qc_lacz_sr_pcr",
+      "qc_five_prime_cass_integrity",
+      "qc_neo_sr_pcr",
+      "qc_mutant_specific_sr_pcr",
+      "qc_loxp_confirmation",
+      "qc_three_prime_lr_pcr"
+    ],
+    "filters": {}
+  }
+}

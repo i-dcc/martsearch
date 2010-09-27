@@ -14,11 +14,13 @@
     "ensembl-mouse-homologs",
     "ikmc-dcc-knockout_attempts",
     "ikmc-idcc_targ_rep",
+    "ikmc-kermits",
     "ikmc-omim",
     "mgi-markers"
   ],
   "dataviews": [
     "gene-details",
+    "ikmc-mice",
     "ikmc-targeted-products"
   ]
 }
