@@ -186,6 +186,7 @@ module MartSearch
         species = case spec.to_sym
           when :mouse then 'Mus_musculus'
           when :human then 'Homo_sapiens'
+          when :rat   then 'Rattus_norvegicus'
           else
             raise TypeError, "Unknown species for #{spec}, try :human or :mouse..."
         end

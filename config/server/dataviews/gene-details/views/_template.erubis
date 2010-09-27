@@ -57,8 +57,8 @@
         <%
           ensembl_ids = result_data[:'mgi-markers'][:ensembl_gene_ids]
           ensembl_links = []
-          for ensembl_id in ensembl_ids
-            ensembl_links.push( ensembl_link_url_from_gene( :mouse, ensembl_id ) )
+          ensembl_ids.each do |ensembl_id|
+            ensembl_links.push( link_to( ensembl_id, ensembl_link_url_from_gene( :mouse, ensembl_id ) ) )
           end
         %>
         <th width="15%">Ensembl Gene ID:</th>
@@ -67,8 +67,8 @@
         <%
           vega_ids = result_data[:'mgi-markers'][:vega_gene_ids]
           vega_links = []
-          for vega_id in vega_ids
-            vega_links.push( vega_link_url_from_gene( :mouse, vega_id ) )
+          vega_ids.each do |vega_id|
+            vega_links.push( link_to( vega_id, vega_link_url_from_gene( :mouse, vega_id ) ) )
           end
         %>
         <th width="15%">Vega Gene ID:</th>
@@ -78,7 +78,7 @@
         <%
           entrez_ids = result_data[:'mgi-markers'][:entrez_gene_ids]
           entrez_links = []
-          for entrez_id in entrez_ids
+          entrez_ids.each do |entrez_id|
             entrez_links.push( link_to( entrez_id, "http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&amp;cmd=Retrieve&amp;dopt=Graphics&amp;list_uids=#{entrez_id}" ) )
           end
         %>
@@ -112,5 +112,9 @@
       <% end %>
     <% end %>
     
+    <%= partial( 'dataviews/gene-details/omim',          :locals => { :result_data => result_data } ) %>
+    <%= partial( 'dataviews/gene-details/gene_ontology', :locals => { :result_data => result_data } ) %>
+    <%= partial( 'dataviews/gene-details/interpro',      :locals => { :result_data => result_data } ) %>
+    <%= partial( 'dataviews/gene-details/orthalogs',     :locals => { :result_data => result_data } ) %>
   </div>
 </div>
