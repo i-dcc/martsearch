@@ -18,6 +18,7 @@
     "ikmc-idcc_targ_rep",
     "ikmc-kermits",
     "ikmc-omim",
+    "ikmc-unitrap",
     "mgi-markers",
     "wtsi-bacs"
   ],
@@ -26,6 +27,7 @@
     "ikmc-mice",
     "emma-mice",
     "ikmc-targeted-products",
+    "ikmc-trapped-products",
     "wtsi-dna-clone-resources",
     "other-mutant-resources"
   ]

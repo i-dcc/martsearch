@@ -1,0 +1,26 @@
+{
+  "datasource":            "ikmc-unitrap",
+  "enabled":               true,
+  "custom_sort":           true,
+  "custom_secondary_sort": false,
+  "searching": {
+    "joined_index_field": "ensembl_gene_id",
+    "joined_filter":      "ensembl_gene_id",
+    "joined_attribute":   "ensembl_gene_id",
+    "attributes": [
+      "ensembl_gene_id",
+      "unitrap_accession_id",
+      "project",
+      "escell_clone",
+      "escell_line",
+      "escell_strain",
+      "design_type"
+    ],
+    "required_attributes": [
+      "project"
+    ],
+    "filters": {
+      "project": "Bay Genomics,EGTC,ESCells,EUCOMM,FHCRC,GGTC,Lexicon,Stanford,TIGEM,TIGM,Vanderbilt,WTSI"
+    }
+  }
+}
