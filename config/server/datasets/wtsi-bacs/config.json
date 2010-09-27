@@ -1,0 +1,20 @@
+{
+  "datasource":            "wtsi-bacs",
+  "enabled":               true,
+  "custom_sort":           true,
+  "custom_secondary_sort": false,
+  "searching": {
+    "joined_index_field": "marker_symbol",
+    "joined_filter":      "marker_symbol",
+    "joined_attribute":   "marker_symbol",
+    "attributes": [
+      "marker_symbol",
+      "library",
+      "chromosome",
+      "strand",
+      "start",
+      "end"
+    ],
+    "filters": {}
+  }
+}

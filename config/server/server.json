@@ -16,11 +16,13 @@
     "ikmc-idcc_targ_rep",
     "ikmc-kermits",
     "ikmc-omim",
-    "mgi-markers"
+    "mgi-markers",
+    "wtsi-bacs"
   ],
   "dataviews": [
     "gene-details",
     "ikmc-mice",
-    "ikmc-targeted-products"
+    "ikmc-targeted-products",
+    "wtsi-dna-clone-resources"
   ]
 }

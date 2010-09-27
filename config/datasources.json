@@ -1,32 +1,9 @@
 {
-  "ikmc-dcc": {
-    "type":    "Biomart",
-    "url":     "http://www.i-dcc.org/biomart",
-    "dataset": "dcc"
-  },
-  "ikmc-idcc_targ_rep": {
-    "type":    "Biomart",
-    "url":     "http://www.i-dcc.org/biomart",
-    "dataset": "idcc_targ_rep"
-  },
-  "ikmc-kermits": {
-    "type":    "Biomart",
-    "url":     "http://www.i-dcc.org/biomart",
-    "dataset": "kermits"
-  },
-  "ikmc-omim": {
-    "type":    "Biomart",
-    "url":     "http://www.i-dcc.org/biomart",
-    "dataset": "omim"
-  },
-  "mgi-markers": {
-    "type":    "Biomart",
-    "url":     "http://biomart.informatics.jax.org/biomart",
-    "dataset": "markers"
-  },
-  "ensembl-mouse": {
-    "type":    "Biomart",
-    "url":     "http://www.ensembl.org/biomart",
-    "dataset": "mmusculus_gene_ensembl"
-  }
+  "ensembl-mouse":      { "type": "Biomart", "url": "http://www.ensembl.org/biomart", "dataset": "mmusculus_gene_ensembl" },
+  "ikmc-dcc":           { "type": "Biomart", "url": "http://www.i-dcc.org/biomart", "dataset": "dcc" },
+  "ikmc-idcc_targ_rep": { "type": "Biomart", "url": "http://www.i-dcc.org/biomart", "dataset": "idcc_targ_rep" },
+  "ikmc-kermits":       { "type": "Biomart", "url": "http://www.i-dcc.org/biomart", "dataset": "kermits" },
+  "ikmc-omim":          { "type": "Biomart", "url": "http://www.i-dcc.org/biomart", "dataset": "omim" },
+  "mgi-markers":        { "type": "Biomart", "url": "http://biomart.informatics.jax.org/biomart", "dataset": "markers" },
+  "wtsi-bacs":          { "type": "Biomart", "url": "http://www.sanger.ac.uk/htgt/biomart", "dataset": "bacs" }
 }

@@ -1,0 +1,14 @@
+{
+  "name":                 "DNA Clone Resources",
+  "description":          "DNA clone resources available from The Wellcome Trust Sanger Institute.",
+  "enabled":              true,
+  "display":              true,
+  "custom_css":           false,
+  "custom_js":            false,
+  "custom_view_helpers" : false,
+  "custom_routes":        false,
+  "datasets": {
+    "required": [ "wtsi-bacs" ],
+    "optional": []
+  }
+}
