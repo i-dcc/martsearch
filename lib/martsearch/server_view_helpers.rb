@@ -196,7 +196,7 @@ module MartSearch
         end
         
         url = "http://#{database}/#{species}/Location/View#{args}"
-        url << "contigviewbottom=#{process_ensembl_tracks(das_tracks)}"
+        url << "&contigviewbottom=#{process_ensembl_tracks(das_tracks)}"
         
         return url
       end
