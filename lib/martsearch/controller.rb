@@ -131,13 +131,13 @@ module MartSearch
           rescue MartSearch::DataSourceError => error
             # FIXME - this needs to be a bit better fleshed out...
             @errors.push({
-              :highlight => "The '#{dataset.display_name}' dataset has returned an error for this query.  Please try submitting your search again if you would like data from this source.",
+              :highlight => "The '#{ds_name}' dataset has returned an error for this query.  Please try submitting your search again if you would like data from this source.",
               :full_text => error
             })
             success = false
           rescue Timeout::Error => error
             @errors.push({
-              :highlight => "The '#{dataset.display_name}' dataset did not respond quickly enough for this query.  Please try submitting your search again in about 15 minutes for a more complete search return.",
+              :highlight => "The '#{ds_name}' dataset did not respond quickly enough for this query.  Please try submitting your search again in about 15 minutes for a more complete search return.",
               :full_text => error
             })
             success = false
