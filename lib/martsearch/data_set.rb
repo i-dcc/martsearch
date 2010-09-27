@@ -4,6 +4,7 @@ module MartSearch
   #
   # @author Darren Oakley
   class DataSet
+    include MartSearch::DataSetUtils
     
     attr_reader :config
     
