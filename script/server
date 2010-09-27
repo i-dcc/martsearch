@@ -1,0 +1,24 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+
+options = {
+  :bind => '0.0.0.0',
+  :port => 3000
+}
+
+parser = OptionParser.new do |opts|
+  opts.banner = "Usage: server [options]"
+
+  opts.on("-b", "--binding", "Binds MartSearch to the specified ip.")  { |arg| options[:bind] = arg }
+  opts.on("-p", "--port",    "Runs MartSearch on the specified port.") { |arg| options[:port] = arg }
+end
+
+parser.parse(ARGV)
+
+# Add the lib directory to the search path
+$:.unshift( "#{File.expand_path(File.dirname(__FILE__))}/../lib" )
+
+require 'martsearch'
+
+MartSearch::Server.run! options
