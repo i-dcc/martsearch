@@ -97,7 +97,7 @@ module MartSearch
       end
       
       @current_results_total = data[:response][:numFound]
-      @grouped_terms         = grouped_query_terms( @current_results )
+      @grouped_terms         = grouped_query_terms( data[:response][:docs] )
       @paginated_results     = paginate_results( data[:response][:docs] )
       
       return @current_results
@@ -148,20 +148,16 @@ module MartSearch
       # response and extract the fields from each doc into 
       # a hash (which is returned).
       #
-      # @param [Hash] results A hash of docs returned from a Solr search (the return from {#search})
+      # @param [Array] docs An array of hashes representing the Solr 'docs' returned from a search
       # @return [Hash] A hash keyed by the document fields containing all the data returned (from all fetched documents) for the given field
-      def grouped_query_terms( results )
+      def grouped_query_terms( docs )
         grouped_terms = {}
-
-        results.each do |primary_field,results_stash|
-          results_stash[:index].each do |field,value|
+        
+        docs.each do |doc|
+          doc.each do |field,value|
             grouped_terms_for_field = grouped_terms[field]
-
-            unless grouped_terms_for_field 
-              grouped_terms[field]    = []
-              grouped_terms_for_field = grouped_terms[field]
-            end
-
+            grouped_terms_for_field = [] if grouped_terms_for_field.nil?
+            
             if value.is_a?(Array)
               value.each do |val|
                 grouped_terms_for_field.push( val )
@@ -169,9 +165,11 @@ module MartSearch
             else
               grouped_terms_for_field.push( value )
             end
+            
+            grouped_terms[field] = grouped_terms_for_field
           end
         end
-
+        
         grouped_terms.each do |field,values|
           grouped_terms[field] = values.uniq
         end

@@ -29,9 +29,14 @@ module MartSearch
     # @param [Array] query An array of values to query the datasource for
     # @return [Hash] A hash, keyed by the 'joined_attribute' where the values are an array of results objects associated with this key
     def search( query )
-      results        = datasource.search( query, @config[:searching] )
-      sorted_results = sort_results( results )
-      return sorted_results
+      if query.nil?
+        # Don't perform a search on empty parameters - this is bad!
+        return {}
+      else
+        results        = datasource.search( query, @config[:searching] )
+        sorted_results = sort_results( results )
+        return sorted_results
+      end
     end
     
     # A secondary sort function that allows a dataset to interact with 
