@@ -1,0 +1,20 @@
+{
+  "datasource":            "ikmc-dcc",
+  "enabled":               true,
+  "custom_sort":           true,
+  "custom_secondary_sort": false,
+  "searching": {
+    "joined_index_field": "mgi_accession_id_key",
+    "joined_filter":      "mgi_accession_id",
+    "joined_attribute":   "mgi_accession_id",
+    "attributes": [
+      "mgi_accession_id",
+      "mgi_gene_traps",
+      "igtc",
+      "imsr",
+      "targeted_mutations",
+      "other_mutations"
+    ],
+    "filters": {}
+  }
+}

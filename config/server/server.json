@@ -13,6 +13,7 @@
   "datasets": [
     "ensembl-mouse-homologs",
     "ikmc-dcc-knockout_attempts",
+    "ikmc-dcc-other_mutants",
     "ikmc-idcc_targ_rep",
     "ikmc-kermits",
     "ikmc-omim",
@@ -23,6 +24,7 @@
     "gene-details",
     "ikmc-mice",
     "ikmc-targeted-products",
-    "wtsi-dna-clone-resources"
+    "wtsi-dna-clone-resources",
+    "other-mutant-resources"
   ]
 }

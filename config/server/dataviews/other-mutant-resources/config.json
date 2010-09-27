@@ -1,0 +1,14 @@
+{
+  "name":                 "Other Mutants/Resources",
+  "description":          "Other mutant lines and resources tracked by MGI.",
+  "enabled":              true,
+  "display":              true,
+  "custom_css":           false,
+  "custom_js":            false,
+  "custom_view_helpers" : false,
+  "custom_routes":        false,
+  "datasets": {
+    "required": [ "ikmc-dcc-other_mutants" ],
+    "optional": []
+  }
+}
