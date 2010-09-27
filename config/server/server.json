@@ -18,6 +18,7 @@
     "mgi-markers"
   ],
   "dataviews": [
-    "gene-details"
+    "gene-details",
+    "ikmc-targeted-products"
   ]
 }

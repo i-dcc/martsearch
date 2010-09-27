@@ -1,0 +1,110 @@
+<%
+  # Make progress bar from products availability
+  progress = idcc_targ_rep_get_progressbar_info( project )
+%>
+
+<table class="ikmc-pipeline-progress-bar" width="100%">
+  <thead>
+    <tr>
+      <th width="15%" class="center"></th>
+      <th width="20%" class="center">Vectors</th>
+      <th width="20%" class="center">ES Cells</th>
+      <th width="20%" class="center">Mice</th>
+      <th></th>
+    </tr>
+  </thead>
+  
+  <!-- Progress bar row -->
+  <tbody>
+    <tr>
+      <!-- Pipeline Name with IKMC Project ID-->
+      <td class="start_<%= progress[:vectors] %>">
+        <strong><%= project[:pipeline] %></strong><br />
+        
+        <!-- Regeneron with product available -->
+        <% if project[:pipeline] === "KOMP-Regeneron" and project[:ikmc_project_id] %>
+          <% velocigene_id = project[:ikmc_project_id].gsub("VG","") %>
+          (Project: 
+          <a href="http://www.velocigene.com/komp/detail/<%= velocigene_id %>" target="_blank">
+            <%= project[:ikmc_project_id] %>
+          </a>)
+
+        <!-- Any other pipeline with product available -->
+        <% elsif project[:ikmc_project_id] and not project[:no_products_available]%>
+          (Project: 
+          <a href="http://www.knockoutmouse.org/martsearch/project/<%= project[:ikmc_project_id] %>" target="_blank">
+            <%= project[:ikmc_project_id] %>
+          </a>)
+
+        <% else %>
+          <!-- Don't print anything if no ikmc_project_id -->
+        <% end %>
+      </td>
+      
+      <!-- Vectors -->
+      <td class="<%= progress[:vectors] %> <%= progress[:vectors] %>_<%= progress[:cells] %>">
+        <% if project[:vector_available] == '1' %>
+          <% if project[:pipeline] == 'mirKO' %>
+            <a href="mailto:mirKO@sanger.ac.uk" class="order unavailable">express&nbsp;interest</a>
+          <% else %>
+            <% url = idcc_targ_rep_product_order_url( project, result_data, "vectors" ) %>
+            <a href="<%= url %>" class="order" target="_blank">order</a>
+          <% end %>
+
+        <% elsif project[:no_products_available] and project[:status] %>
+          <span><%= project[:status] %></span>
+        <% end %>
+      </td>
+      
+      <!-- Cells -->
+      <td class="<%= progress[:cells] %> <%= progress[:cells] %>_<%= progress[:mice] %>">
+        <% if project[:escell_available] == '1' %>
+          <% if project[:pipeline] == 'mirKO' %>
+            <a href="mailto:mirKO@sanger.ac.uk" class="order unavailable">express&nbsp;interest</a>
+          <% else %>
+            <% url = idcc_targ_rep_product_order_url( project, result_data, "cells" ) %>
+            <a href="<%= url %>" class="order" target="_blank">order</a>
+          <% end %>
+        <% end %>
+      </td>
+      
+      <!-- Mice -->
+      <td class="end_<%= progress[:mice] %> <%= progress[:mice] %>">
+        <% if project[:mouse_available] == '1' %>
+          <% if project[:pipeline] == 'mirKO' %>
+            <a href="mailto:mirKO@sanger.ac.uk" class="order unavailable">express&nbsp;interest</a>
+          <% else %>
+            <% url = idcc_targ_rep_product_order_url( project, result_data, "mice" ) %>
+            <a href="<%= url %>" class="order" target="_blank">order</a>
+          <% end %>
+        <% end %>
+      </td>
+      
+      <!-- Details -->
+      <td>
+        <% if project[:no_products_available] %>
+          <% if project[:project_ids] %>
+            Projects:
+            <a href="http://knockoutmouse.org/genedetails/<%= project[:mgi_accesion_id]%>" target="_blank">
+              <%= project[:project_ids].join(', ') -%>
+            </a>
+          <% end %>
+        <% else %>
+          <a class="ikmc-idcc_targ_rep_allele_progress_details_toggle">
+            view&nbsp;details
+          </a>
+        <% end %>
+      </td>
+    </tr>
+    <% if project[:pipeline] == 'mirKO' %>
+      <tr>
+        <td colspan="5" style="text-align:left;color:#666;">
+          Public distribution of the mirKO reagents is pending. If you wish to 
+          express an interest in these reagents then please email 
+          <a href="mailto:mirKO@sanger.ac.uk">mirKO@sanger.ac.uk</a> 
+          and we shall inform you when the resource is able to fulfill general requests.
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

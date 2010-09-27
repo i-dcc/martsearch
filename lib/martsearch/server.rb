@@ -88,6 +88,13 @@ module MartSearch
       include MartSearch::ServerViewHelpers
       
       alias_method :h, :escape_html
+      
+      # Load in any custom (per dataset) helpers
+      MartSearch::Controller.instance().dataviews.each do |dv|
+        if dv.use_custom_view_helpers?
+          load "#{MARTSEARCH_PATH}/config/server/dataviews/#{dv.internal_name}/view_helpers.rb"
+        end
+      end
     end
     
     

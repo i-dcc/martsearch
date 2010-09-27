@@ -29,6 +29,11 @@ module MartSearch
       @config[:description]
     end
     
+    # @return [Boolean] True/False 
+    def use_custom_view_helpers?
+      @config[:custom_view_helpers] ? true : false
+    end
+    
     # Function that determines if we have enough data from the DataSets
     # to be able to produce a display.
     #
