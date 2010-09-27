@@ -20,7 +20,7 @@
               <% if view.display_for_result?( result_data ) %>
                 <a href="#<%= result_data[:index][:marker_symbol].downcase %>-<%= view.internal_name %>" class="dataset_returned dataset_link_bubble" title="<%= partial( "view_display_tooltip", :locals => { :view => view, :data_return => true } ) %>"><%= view.name.gsub( " ", "&nbsp;" ) %></a>
               <% else %>
-                <span class="dataset_no_return dataset_link_bubble" title="<%= partial( "dataset_returned_tooltip", :locals => { :view => view, :data_return => false } ) %>"><%= view.name.gsub( " ", "&nbsp;" ) %></span>
+                <span class="dataset_no_return dataset_link_bubble" title="<%= partial( "view_display_tooltip", :locals => { :view => view, :data_return => false } ) %>"><%= view.name.gsub( " ", "&nbsp;" ) %></span>
               <% end %>
             <% end %>
           </div>
