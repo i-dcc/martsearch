@@ -38,6 +38,7 @@
             cell_strain = ""
             if clone[:parental_cell_line]
               case clone[:parental_cell_line]
+              when /JM8A/  then cell_strain = "C57BL/6N-A<sup>tm1Brd</sup>/a"
               when /JM8/   then cell_strain = "C57BL/6N"
               when /C2/    then cell_strain = "C57BL/6N"
               when /AB2.2/ then cell_strain = "129S7"

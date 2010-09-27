@@ -1,6 +1,6 @@
 {
   "name":                 "Gene Details",
-  "description":          "wooo wahhh",
+  "description":          "Gene, marker and locus information",
   "enabled":              true,
   "display":              true,
   "custom_css":           false,
