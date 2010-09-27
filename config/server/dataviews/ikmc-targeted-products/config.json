@@ -1,0 +1,16 @@
+{
+  "name":                 "IKMC Targeted Products",
+  "description":          "Gene targeted mutant ES cells and vectors produced by members of The International Knockout Mouse Consortium (IKMC).",
+  "enabled":              true,
+  "display":              true,
+  "custom_css":           false,
+  "custom_js":            false,
+  "custom_view_helpers" : false,
+  "custom_routes":        false,
+  "datasets": {
+    "required": [
+      "ikmc-idcc_targ_rep"
+    ],
+    "optional": []
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "datasource":            "ikmc-dcc",
+  "enabled":               true,
+  "custom_sort":           true,
+  "custom_secondary_sort": false,
+  "searching": {
+    "joined_index_field": "mgi_accession_id_key",
+    "joined_filter":      "mgi_accession_id",
+    "joined_attribute":   "mgi_accession_id",
+    "attributes": [
+      "mgi_accession_id",
+      "ensembl_gene_id",
+      "marker_symbol",
+      "mgi_gene_traps",
+      "ikmc_project",
+      "ikmc_project_id",
+      "status",
+      "vector_available",
+      "vector_generated",
+      "escell_available",
+      "escell_generated",
+      "mouse_available",
+      "mouse_generated"
+    ],
+    "required_attributes": [
+      "ikmc_project",
+      "ikmc_project_id"
+    ],
+    "filters": {}
+  }
+}

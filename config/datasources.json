@@ -4,6 +4,11 @@
     "url":     "http://www.i-dcc.org/biomart",
     "dataset": "dcc"
   },
+  "ikmc-idcc_targ_rep": {
+    "type":    "Biomart",
+    "url":     "http://www.i-dcc.org/biomart",
+    "dataset": "idcc_targ_rep"
+  },
   "ikmc-kermits": {
     "type":    "Biomart",
     "url":     "http://www.i-dcc.org/biomart",

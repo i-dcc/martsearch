@@ -11,9 +11,11 @@
     "extra_urls_to_prime":  []
   },
   "datasets": [
-    "mgi-markers",
+    "ensembl-mouse-homologs",
+    "ikmc-dcc-knockout_attempts",
+    "ikmc-idcc_targ_rep",
     "ikmc-omim",
-    "ensembl-mouse-homologs"
+    "mgi-markers"
   ],
   "dataviews": [
     "gene-details"
