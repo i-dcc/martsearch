@@ -1,0 +1,14 @@
+{
+  "name":                 "Europhenome",
+  "description":          "Phenotyping assay data provided by the Europhenome project.",
+  "enabled":              true,
+  "display":              true,
+  "custom_css":           true,
+  "custom_js":            true,
+  "custom_view_helpers" : true,
+  "custom_routes":        true,
+  "datasets": {
+    "required": [ "europhenome" ],
+    "optional": []
+  }
+}

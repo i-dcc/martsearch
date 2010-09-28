@@ -1,0 +1,36 @@
+<tr>
+  <td><%= line_data[:line_name] %>&nbsp;(<%= line_data[:zygosity] %>)</td>
+  <% mp_group_chunks.each do |mp_group| %>
+    <% ['male','female'].each do |sex| %>
+      <%
+        cell_class = 'no-data'
+        unless line_data[:mp_groups][mp_group[:term]].nil?
+          if line_data[:mp_groups][mp_group[:term]][:"is_#{sex}_significant"] == true
+            cell_class = 'significant'
+          elsif line_data[:mp_groups][mp_group[:term]][:"is_#{sex}_significant"] == false
+            cell_class = 'not-significant'
+          else
+            cell_class = 'no-data'
+          end
+        end
+      %>
+      <% if cell_class == "significant" %>
+        <td 
+          class="pheno-result <%= cell_class %>"
+          title="<%= partial( "dataviews/europhenome/popup", :locals => { :line_data => line_data, :parameters => line_data[:mp_groups][mp_group[:term]][:"#{sex}_results"][:significant], :sex => sex } ) %>"
+          rel="qtip"
+        >
+        </td>
+      <% else %>
+        <td class="pheno-result <%= cell_class %>"></td>
+      <% end %>
+    <% end %>
+  <% end %>
+  
+  <% if mp_group_chunks.size < europhenome_tests_per_row %>
+    <% ( europhenome_tests_per_row - mp_group_chunks.size ).times do |fill| %>
+      <td class="nobg noborder"></td>
+      <td class="nobg noborder"></td>
+    <% end %>
+  <% end %>
+</tr>

@@ -1,0 +1,30 @@
+<tr>
+  <th style="vertical-align:middle;font-weight:normal;">
+    <small class="user_instructions" style="display:none;"><em>hover to expand headers</em></small>
+  </th>
+  <% mp_group_chunks.each do |mp_group| %>
+    <th colspan="2">
+      <span class="vertical_text"><%= mp_group[:name] %></span>
+    </th>
+  <% end %>
+
+  <% if mp_group_chunks.size < europhenome_tests_per_row %>
+    <% ( europhenome_tests_per_row - mp_group_chunks.size ).times do |fill| %>
+      <th colspan="2" class="nobg noborder"></th>
+    <% end %>
+  <% end %>
+</tr>
+<tr class="male-female">
+  <td></td>
+  <% mp_group_chunks.each do |mp_group| %>
+    <td class="male" width="<%= column_width %>%">M</td>
+    <td class="female" width="<%= column_width %>%">F</td>
+  <% end %>
+
+  <% if mp_group_chunks.size < europhenome_tests_per_row %>
+    <% ( europhenome_tests_per_row - mp_group_chunks.size ).times do |fill| %>
+      <td class="nobg noborder"></td>
+      <td class="nobg noborder"></td>
+    <% end %>
+  <% end %>
+</tr>

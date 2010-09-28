@@ -1,0 +1,36 @@
+{
+  "datasource":            "europhenome",
+  "enabled":               true,
+  "custom_sort":           true,
+  "custom_secondary_sort": false,
+  "searching": {
+    "joined_index_field": "mgi_accession_id_key",
+    "joined_filter":      "mgi_accession_id",
+    "joined_attribute":   "mgi_accession_id",
+    "attributes": [
+      "mgi_accession_id",
+      "pipeline",
+      "europhenome_id",
+      "line_name",
+      "sex",
+      "zygosity",
+      "allele_id",
+      "allele_name",
+      "emma_id",
+      "escell_clone",
+      "stocklist_id",
+      "parameter_eslim_id",
+      "parameter_name",
+      "significance",
+      "effect_size",
+      "mp_term",
+      "mp_term_name"
+    ],
+    "required_attributes": [
+      "mgi_accession_id",
+      "europhenome_id",
+      "significance"
+    ],
+    "filters": {}
+  }
+}

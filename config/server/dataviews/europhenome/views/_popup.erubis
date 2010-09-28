@@ -1,0 +1,33 @@
+<table class='pheno-result-details'>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>P&nbsp;Value</th>
+      <th>Effect&nbsp;Size</th>
+      <th>MP&nbsp;Annotation</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% parameters.each do |result| %>
+      <tr>
+        <td><%= result[:parameter_name] %></td>
+        <td style='white-space: nowrap;'><%= sprintf( '%.2e', result[:significance] ) %></td>
+        <td style='white-space: nowrap;'><%= sprintf( '%.2e', result[:effect_size] ) %></td>
+        <td><%= result[:mp_term_name] %></td>
+        <td>
+          <%
+            url = europhenome_link_url(
+              :europhenome_id => line_data[:europhenome_id],
+              :zygosity       => line_data[:zygosity],
+              :sex            => sex,
+              :test_id        => result[:test_eslim_id],
+              :parameter_id   => result[:parameter_eslim_id]
+            )
+          %>
+          <a href='<%= url %>' class='ext_link' target='_blank'>graph</a>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

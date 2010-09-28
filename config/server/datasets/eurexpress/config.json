@@ -1,5 +1,5 @@
 {
-  "datasource":            "eurexpress-template",
+  "datasource":            "eurexpress",
   "enabled":               true,
   "custom_sort":           true,
   "custom_secondary_sort": false,

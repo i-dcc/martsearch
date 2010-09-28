@@ -11,6 +11,7 @@
     "extra_urls_to_prime":  []
   },
   "datasets": [
+    "europhenome",
     "emma-strains",
     "ensembl-mouse-homologs",
     "eurexpress",
@@ -25,6 +26,7 @@
   ],
   "dataviews": [
     "gene-details",
+    "europhenome",
     "eurexpress",
     "ikmc-mice",
     "emma-mice",
