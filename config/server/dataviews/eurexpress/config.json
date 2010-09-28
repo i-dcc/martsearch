@@ -1,0 +1,14 @@
+{
+  "name":                 "Eurexpress",
+  "description":          "Gene expression annotation supplied by the Eurexpress project.",
+  "enabled":              true,
+  "display":              true,
+  "custom_css":           false,
+  "custom_js":            false,
+  "custom_view_helpers" : false,
+  "custom_routes":        false,
+  "datasets": {
+    "required": [ "eurexpress" ],
+    "optional": []
+  }
+}

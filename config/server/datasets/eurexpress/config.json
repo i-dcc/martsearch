@@ -1,0 +1,26 @@
+{
+  "datasource":            "eurexpress-template",
+  "enabled":               true,
+  "custom_sort":           true,
+  "custom_secondary_sort": false,
+  "searching": {
+    "joined_index_field": "marker_symbol",
+    "joined_filter":      "tmp_gene_symbol",
+    "joined_attribute":   "tmp_gene_symbol",
+    "attributes": [
+      "tmp_gene_symbol",
+      "ass_assay_id_key",
+      "assay_image_count",
+      "emap_id",
+      "emap_term",
+      "ann_stage",
+      "ann_pattern",
+      "ann_strength",
+      "ann_comments"
+    ],
+    "required_attributes": [
+      "ass_assay_id_key"
+    ],
+    "filters": {}
+  }
+}
