@@ -11,6 +11,12 @@ module MartSearch
   #
   # @author Darren Oakley
   module ServerViewHelpers
+    # Load in any custom (per dataset) helpers
+    MartSearch::Controller.instance().dataviews.each do |dv|
+      if dv.use_custom_view_helpers?
+        load "#{MARTSEARCH_PATH}/config/server/dataviews/#{dv.internal_name}/view_helpers.rb"
+      end
+    end
     
     # Standard partial helper - allows erubis templates to easily call
     # smaller sub-templates.

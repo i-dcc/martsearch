@@ -1,5 +1,7 @@
 
 def europhenome_link_url( opts={} )
+  raise ArgumentError, "You have not passed any options!" if opts.empty?
+  
   url  = "http://www.europhenome.org/databrowser/viewer.jsp?"
   url_opts = {
     'set'                        => 'true',
