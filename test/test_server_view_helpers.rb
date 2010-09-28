@@ -47,7 +47,8 @@ class MartSearchServerViewHelpersTest < Test::Unit::TestCase
   # DataView Helper Tests...
   
   def test_emma_strain_type
-    if MartSearch::ServerViewHelpers.private_methods.include?(:emma_strain_type)
+    if   MartSearch::ServerViewHelpers.private_methods.include?(:emma_strain_type) \
+      or MartSearch::ServerViewHelpers.private_methods.include?('emma_strain_type')
       assert_equal( 'Induced Mutant Strains', emma_strain_type('IN','') )
       assert_equal( 'Induced Mutant Strains : Chemically-Induced', emma_strain_type('IN','CH') )
       assert_raise( ArgumentError ) { emma_strain_type('IN') }
@@ -55,7 +56,8 @@ class MartSearchServerViewHelpersTest < Test::Unit::TestCase
   end
   
   def test_europhenome_link_url
-    if MartSearch::ServerViewHelpers.private_methods.include?(:europhenome_link_url)
+    if   MartSearch::ServerViewHelpers.private_methods.include?(:europhenome_link_url) \
+      or MartSearch::ServerViewHelpers.private_methods.include?('europhenome_link_url')
       url = 'http://www.europhenome.org/databrowser/viewer.jsp?pid_ESLIM_007_001_001=on&l=73&x=Female&m=true&set=true&zygosity=Hom&p=ESLIM_007_001&compareLines=View+Data'
       opts = {
         :europhenome_id => '73',
@@ -76,7 +78,8 @@ class MartSearchServerViewHelpersTest < Test::Unit::TestCase
   end
   
   def test_idcc_targ_rep_get_progressbar_info
-    if MartSearch::ServerViewHelpers.private_methods.include?(:idcc_targ_rep_get_progressbar_info)
+    if   MartSearch::ServerViewHelpers.private_methods.include?(:idcc_targ_rep_get_progressbar_info) \
+      or MartSearch::ServerViewHelpers.private_methods.include?('idcc_targ_rep_get_progressbar_info')
       assert_equal( { :vectors => "normal", :cells => "normal", :mice => "normal" }, idcc_targ_rep_get_progressbar_info({ :mouse_available => '1' }) )
       assert_equal( { :vectors => "normal", :cells => "normal", :mice => "incomp" }, idcc_targ_rep_get_progressbar_info({ :escell_available => '1' }) )
       assert_equal( { :vectors => "normal", :cells => "incomp", :mice => "incomp" }, idcc_targ_rep_get_progressbar_info({ :vector_available => '1' }) )
@@ -86,7 +89,8 @@ class MartSearchServerViewHelpersTest < Test::Unit::TestCase
   end
   
   def test_idcc_targ_rep_product_order_url
-    if MartSearch::ServerViewHelpers.private_methods.include?(:idcc_targ_rep_product_order_url)
+    if   MartSearch::ServerViewHelpers.private_methods.include?(:idcc_targ_rep_product_order_url) \
+      or MartSearch::ServerViewHelpers.private_methods.include?('idcc_targ_rep_product_order_url')
       result_data = { :index => { :marker_symbol => 'foo' } }
       
       komp_csd_project = { :pipeline => 'KOMP-CSD', :mgi_accession_id => 'MGI:1234', :ikmc_project_id => '1234' }
