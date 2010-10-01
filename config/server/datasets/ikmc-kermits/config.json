@@ -10,6 +10,7 @@
     "attributes": [
       "marker_symbol",
       "sponsor",
+      "mi_centre",
       "escell_clone",
       "colony_prefix",
       "escell_strain",
