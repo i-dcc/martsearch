@@ -50,6 +50,29 @@ module MartSearch
       return display
     end
     
+    # Function to provide details for attribution links to the sources of the data.
+    #
+    # @param [Hash] result_data The result_data stash of returned data for a given gene/doc
+    # @return [Array] An array of arrays containing the [ link_text, link_url ]
+    def attribution_links( result_data )
+      martsearch = MartSearch::Controller.instance()
+      datasets   = martsearch.datasets
+      links      = []
+      
+      [ :required, :optional ].each do |ds_class|
+        @config[:datasets][ds_class].each do |ds_name|
+          if result_data.has_key?(ds_name.to_sym) and result_data[ds_name.to_sym] != nil
+            dataset = datasets[ds_name.to_sym]
+            unless dataset.config[:attribution].nil? and dataset.config[:attribution_link].nil?
+              links.push( [ dataset.config[:attribution], dataset.config[:attribution_link] ] )
+            end
+          end
+        end
+      end
+      
+      return links
+    end
+    
     private
       
       # Helper function to check that configuration is not missing required fields.
