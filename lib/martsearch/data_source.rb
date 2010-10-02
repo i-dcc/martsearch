@@ -47,6 +47,18 @@ module MartSearch
       raise_error
     end
     
+    # Abstract method - Function to provide a link URL to the original datasource given a 
+    # dataset query.
+    #
+    # @abstract
+    # @param [Array] query An array of values to query the datasource for
+    # @param [Hash] conf Configuration hash determining how to query the datasource
+    # @return [String] The URL to place in a link
+    # @raise [MartSearch::InvalidConfigError] raised as this is an abstract class and sould not be instantiated
+    def data_origin_url( query, conf )
+      raise_error
+    end
+    
     private
       
       def raise_error
@@ -125,6 +137,51 @@ module MartSearch
       end
       
       return results
+    end
+    
+    # Function to provide a link URL to the original datasource given a 
+    # dataset query.
+    #
+    # @see MartSearch::DataSource#data_origin_url
+    def data_origin_url( query, conf )
+      url = @url + "/martview?VIRTUALSCHEMANAME=default&VISIBLEPANEL=resultspanel"
+
+      # Filters...
+      filters = []
+
+      filters_to_build = { conf[:joined_filter] => query }
+      filters_to_build.merge!( conf[:filters] ) unless conf[:filters].nil?
+
+      filters_to_build.each do |key,value|
+        filter = "#{@conf[:dataset]}.default.filters.#{key}.&quot;"
+
+        if value.is_a?(Array) then filter << "#{CGI::escape(value.join(","))}&quot;"
+        else                       filter << "#{CGI::escape(value)}&quot;"
+        end
+
+        filters.push(filter)
+      end
+
+      url << "&FILTERS=#{filters.join("|")}"
+
+      # Attributes...
+      attrs = []
+      url << "&ATTRIBUTES="
+
+      conf[:attributes].each do |attribute|
+        attrs.push("#{@conf[:dataset]}.default.attributes.#{attribute}")
+      end
+
+      while ( url.length + attrs.join("|").length ) > 2048
+        # This loop ensures that the URL we form is not more than 2048 characters 
+        # long - the maximum length that IE can deal with.  We do the shortening by 
+        # dropping attributes from the selection, it's a pain, but at least it'll be 
+        # easy for the user to add the attribute back in MartView.
+        attrs.pop
+      end
+      url << attrs.join("|")
+
+      return url
     end
     
   end

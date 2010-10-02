@@ -54,6 +54,19 @@ module MartSearch
       search_data
     end
     
+    # Function used to drive a MartSearch::DataSource object and retieve a 
+    # URL to link back to the origin of the data for a given dataset.
+    #
+    # @param [Array] query An array of values to query the datasource for
+    # @return [String] The URL that links to the original datasource
+    def data_origin_url( query )
+      if query.nil?
+        return nil
+      else
+        return datasource.search( query, @config[:searching] )
+      end
+    end
+    
     private
       
       # Helper function to supply our MartSearch::DataSource instance.
