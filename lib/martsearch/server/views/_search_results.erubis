@@ -65,6 +65,16 @@
             <div class="dataset_content <%= view.internal_name %>">
               <%= partial( "dataviews/#{view.internal_name}/template", :locals => { :result_data => result_data } ) %>
               <div class="attribution">
+                <div class="dataset_original_data">
+                  
+                </div>
+                <%
+                  attribution_links = []
+                  view.attribution_links( result_data ).each do |link|
+                    attribution_links.push( link_to( link[0], link[1], { :target => '_blank' } ) )
+                  end
+                %>
+                Data provided by <%=  attribution_links.join(', ') %>
               </div>
             </div>
           </div>

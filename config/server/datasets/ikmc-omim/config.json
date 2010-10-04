@@ -3,6 +3,8 @@
   "enabled":               true,
   "custom_sort":           true,
   "custom_secondary_sort": false,
+  "attribution":           "OMIM",
+  "attribution_link":      "http://www.ncbi.nlm.nih.gov/omim",
   "searching": {
     "joined_index_field": "mgi_accession_id_key",
     "joined_filter":      "mgi_accession_id",

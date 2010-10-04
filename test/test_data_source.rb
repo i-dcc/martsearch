@@ -23,6 +23,10 @@ class MartSearchDataSourceTest < Test::Unit::TestCase
     should 'return the expeced data structure for search()' do
       assert_raise(MartSearch::InvalidConfigError) { @datasource.search( 'foo', {} ) }
     end
+    
+    should 'provide a URL link to the datasource of a search' do
+      assert_raise(MartSearch::InvalidConfigError) { @datasource.data_origin_url( 'foo', {} ) }
+    end
   end
   
   context 'A MartSearch::BiomartDataSource object' do
@@ -96,6 +100,22 @@ class MartSearchDataSourceTest < Test::Unit::TestCase
           ret = @kermits_biomart.search( ['Cbx1','Art4'], dataset_conf )
         }
       end
+    end
+    
+    should 'provide a URL link to the datasource of a search' do
+      dataset_conf = {
+        :joined_index_field => 'marker_symbol',
+        :joined_filter      => 'marker_symbol',
+        :joined_attribute   => 'marker_symbol',
+        :attributes         => [ 'marker_symbol', 'sponsor', 'colony_prefix', 'status',  'emma' ]
+      }
+      
+      url = @kermits_biomart.data_origin_url( ['Cbx1','Art4'], dataset_conf )
+      
+      assert( url.is_a?(String) )
+      assert( !url.empty?, 'dataset.data_origin_url() does not return an empty string.' )
+      assert( url.match(/^http:\/\/.*/), 'dataset.data_origin_url() does not return a url.' )
+      assert( url.length < 2048, "dataset.data_origin_url() is returning url's that are too long for IE to handle." )
     end
   end
   
