@@ -113,7 +113,7 @@ class MartSearchDataSourceTest < Test::Unit::TestCase
       url = @kermits_biomart.data_origin_url( ['Cbx1','Art4'], dataset_conf )
       
       assert( url.is_a?(String) )
-      assert( !url.empty?, 'dataset.data_origin_url() does not return an empty string.' )
+      assert( !url.empty?, 'datasource.data_origin_url() does not return an empty string.' )
       assert( url.match(/^http:\/\/.*/), 'dataset.data_origin_url() does not return a url.' )
       assert( url.length < 2048, "dataset.data_origin_url() is returning url's that are too long for IE to handle." )
     end

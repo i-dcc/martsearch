@@ -73,6 +73,32 @@ module MartSearch
       return links.uniq
     end
     
+    # Function to provide details for the links to the *actual* data that makes
+    # up the data view.
+    #
+    # @param [Hash] result_data The result_data stash of returned data for a given gene/doc
+    # @return [Array] An array of arrays containing the [ link_text, link_url ]
+    def data_origin_links( result_data )
+      martsearch = MartSearch::Controller.instance()
+      datasets   = martsearch.datasets
+      links      = []
+      
+      [ :required, :optional ].each do |ds_class|
+        @config[:datasets][ds_class].each do |ds_name|
+          if result_data.has_key?(ds_name.to_sym) and result_data[ds_name.to_sym] != nil
+            dataset = datasets[ds_name.to_sym]
+            
+            links.push([
+              "#{dataset.config[:attribution]} - <em>&quot;#{ds_name}&quot;</em>",
+              dataset.data_origin_url( result_data[:index][ dataset.joined_index_field.to_sym ] )
+            ])
+          end
+        end
+      end
+      
+      return links.uniq
+    end
+    
     private
       
       # Helper function to check that configuration is not missing required fields.

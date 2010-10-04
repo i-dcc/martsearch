@@ -66,7 +66,14 @@
               <%= partial( "dataviews/#{view.internal_name}/template", :locals => { :result_data => result_data } ) %>
               <div class="attribution">
                 <div class="dataset_original_data">
-                  
+                  <a href="#" class="single_parent_toggler_toggle">view original data</a>
+                  <div class="dataset_original_data_links single_parent_toggler_content" style="display:none;">
+                    <ul>
+                      <% view.data_origin_links( result_data ).each do |link| %>
+                        <li><%= link_to( link[0], link[1], { :target => '_blank' } ) %></li>
+                      <% end %>
+                    </ul>
+                  </div>
                 </div>
                 <%
                   attribution_links = []

@@ -1,5 +1,9 @@
 /* Page Layout */
 
+* {
+    z-index: 1;
+}
+
 #wrapper {
 	width: 960px;
 	margin: 0 auto;
@@ -601,9 +605,35 @@ form#martsearchr {
 	text-align: right;
 }
 
-#search_results .result div.dataset_original_data a {
-	background: url(../images/silk/bullet_go.png) no-repeat left center;
-	padding: 2px 0 2px 16px;
+#search_results .result div.dataset_original_data_links {
+	position: relative;
+	z-index: 10;
+    text-align: left;
+    background-color: #ccc;
+    border: 1px solid #989898;
+    border-radius: 2px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	-o-border-radius: 2px;
+}
+
+#search_results .result div.dataset_original_data_links a {
+    color: #424242;
+}
+
+#search_results .result div.dataset_original_data_links a:hover {
+    color: #963534;
+}
+
+#search_results .result div.dataset_original_data_links ul {
+    list-style-type: none;
+    margin: 5px;
+}
+
+#search_results .result div.dataset_original_data_links ul li {
+    padding: 2px 3px 2px 16px;
+    margin: 2px;
+    background: url(../images/silk/bullet_go.png) no-repeat left center;
 }
 
 /* Welcome Page Specifics */

@@ -63,7 +63,7 @@ module MartSearch
       if query.nil?
         return nil
       else
-        return datasource.search( query, @config[:searching] )
+        return datasource.data_origin_url( query, @config[:searching] )
       end
     end
     
