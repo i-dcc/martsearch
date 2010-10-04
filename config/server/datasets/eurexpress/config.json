@@ -3,6 +3,8 @@
   "enabled":               true,
   "custom_sort":           true,
   "custom_secondary_sort": false,
+  "attribution":           "Eurexpress",
+  "attribution_link":      "http://www.eurexpress.org/",
   "searching": {
     "joined_index_field": "marker_symbol",
     "joined_filter":      "tmp_gene_symbol",

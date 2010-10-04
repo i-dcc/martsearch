@@ -3,6 +3,8 @@
   "enabled":               true,
   "custom_sort":           true,
   "custom_secondary_sort": false,
+  "attribution":           "UniTrap",
+  "attribution_link":      "http://unitrap.cbm.fvg.it/",
   "searching": {
     "joined_index_field": "ensembl_gene_id",
     "joined_filter":      "ensembl_gene_id",

@@ -70,7 +70,7 @@ module MartSearch
         end
       end
       
-      return links
+      return links.uniq
     end
     
     private

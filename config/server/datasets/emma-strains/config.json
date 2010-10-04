@@ -3,6 +3,8 @@
   "enabled":               true,
   "custom_sort":           true,
   "custom_secondary_sort": false,
+  "attribution":           "The European Mouse Mutant Archive (EMMA)",
+  "attribution_link":      "http://www.emmanet.org/",
   "searching": {
     "joined_index_field": "emma_id",
     "joined_filter":      "emma_id",

@@ -3,6 +3,8 @@
   "enabled":               true,
   "custom_sort":           true,
   "custom_secondary_sort": false,
+  "attribution":           "The International Knockout Mouse Consortium (IKMC)",
+  "attribution_link":      "http://www.knockoutmouse.org/",
   "searching": {
     "joined_index_field": "marker_symbol",
     "joined_filter":      "marker_symbol",
