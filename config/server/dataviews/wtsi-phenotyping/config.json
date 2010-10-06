@@ -1,0 +1,22 @@
+{
+  "name":                 "WTSI Phenotyping",
+  "description":          "Phenotyping assay data from the Mouse Genetics Program (MGP) at the Wellcome Trust Sanger Institute.",
+  "enabled":              true,
+  "display":              true,
+  "custom_css":           false,
+  "custom_js":            false,
+  "custom_view_helpers" : false,
+  "custom_routes":        false,
+  "datasets": {
+    "required": [
+      "wtsi-phenotyping-heatmap"
+    ],
+    "optional": [
+      "wtsi-expression-ticklist",
+      "wtsi-mgp_graphs",
+      "wtsi-mgp_images-wholemount_expression",
+      "wtsi-phenotyping-fertility",
+      "wtsi-phenotyping-hom_viability"
+    ]
+  }
+}

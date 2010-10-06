@@ -24,14 +24,15 @@
     "mgi-markers",
     "wtsi-bacs",
     "wtsi-expression-ticklist",
-    "wtsi-mgp_graphs"
+    "wtsi-mgp_graphs",
     "wtsi-mgp_images-wholemount_expression",
     "wtsi-phenotyping-fertility",
     "wtsi-phenotyping-heatmap",
-    "wtsi-phenotyping-hom_viability",
+    "wtsi-phenotyping-hom_viability"
   ],
   "dataviews": [
     "gene-details",
+    "wtsi-phenotyping",
     "europhenome",
     "eurexpress",
     "ikmc-mice",
