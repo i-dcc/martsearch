@@ -191,9 +191,17 @@ module MartSearch
 
             if stash_to_append_to
               if @datasets[dataset_name].config[:custom_sort]
-                # If someone uses a custom sort- we assume they're taking care
-                # of grouping all of their data together correctly...
-                stash_to_append_to[dataset_name] = result_data
+                current_stash = stash_to_append_to[dataset_name]
+                
+                if current_stash.nil?
+                  current_stash = result_data
+                elsif current_stash.is_a?(Array)
+                  current_stash.push(result_data)
+                elsif current_stash.is_a?(Hash)
+                  current_stash.merge!(result_data)
+                end
+                
+                stash_to_append_to[dataset_name] = current_stash
               else
                 stash_to_append_to[dataset_name] = [] unless stash_to_append_to[dataset_name.to_sym]
 

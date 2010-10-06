@@ -11,10 +11,10 @@
     "extra_urls_to_prime":  []
   },
   "datasets": [
-    "europhenome",
     "emma-strains",
     "ensembl-mouse-homologs",
     "eurexpress",
+    "europhenome",
     "ikmc-dcc-knockout_attempts",
     "ikmc-dcc-other_mutants",
     "ikmc-idcc_targ_rep",
@@ -22,7 +22,13 @@
     "ikmc-omim",
     "ikmc-unitrap",
     "mgi-markers",
-    "wtsi-bacs"
+    "wtsi-bacs",
+    "wtsi-expression-ticklist",
+    "wtsi-mgp_graphs"
+    "wtsi-mgp_images-wholemount_expression",
+    "wtsi-phenotyping-fertility",
+    "wtsi-phenotyping-heatmap",
+    "wtsi-phenotyping-hom_viability",
   ],
   "dataviews": [
     "gene-details",

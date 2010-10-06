@@ -9,5 +9,9 @@
   "ikmc-omim":          { "type": "Biomart", "url": "http://www.i-dcc.org/biomart", "dataset": "omim" },
   "ikmc-unitrap":       { "type": "Biomart", "url": "http://biomart.helmholtz-muenchen.de/biomart", "dataset": "unitrap" },
   "mgi-markers":        { "type": "Biomart", "url": "http://biomart.informatics.jax.org/biomart", "dataset": "markers" },
-  "wtsi-bacs":          { "type": "Biomart", "url": "http://www.sanger.ac.uk/htgt/biomart", "dataset": "bacs" }
+  "wtsi-bacs":          { "type": "Biomart", "url": "http://www.sanger.ac.uk/htgt/biomart", "dataset": "bacs" },
+  "wtsi-expression":    { "type": "Biomart", "url": "http://www.sanger.ac.uk/htgt/biomart", "dataset": "wholemount_expression" },
+  "wtsi-mgp_graphs":    { "type": "Biomart", "url": "http://www.sanger.ac.uk/htgt/biomart", "dataset": "mgp_graphs" },
+  "wtsi-mgp_images":    { "type": "Biomart", "url": "http://www.sanger.ac.uk/htgt/biomart", "dataset": "mgp_images" },
+  "wtsi-phenotyping":   { "type": "Biomart", "url": "http://www.sanger.ac.uk/htgt/biomart", "dataset": "phenotyping" }
 }

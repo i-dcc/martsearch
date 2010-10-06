@@ -1,0 +1,35 @@
+{
+  "datasource":            "wtsi-mgp_images",
+  "enabled":               true,
+  "custom_sort":           true,
+  "custom_secondary_sort": false,
+  "attribution":           "The Wellcome Trust Sanger Institute (WTSI)",
+  "attribution_link":      "http://www.sanger.ac.uk/",
+  "searching": {
+    "joined_index_field": "colony_prefix",
+    "joined_filter":      "colony_prefix",
+    "joined_attribute":   "colony_prefix",
+    "attributes": [
+      "colony_prefix",
+      "mouse_id",
+      "gender",
+      "genotype",
+      "age_at_death",
+      "tissue",
+      "image_type",
+      "description",
+      "annotations",
+      "comments",
+      "url"
+    ],
+    "required_attributes": [
+      "colony_prefix",
+      "tissue",
+      "url"
+    ],
+    "filters": {
+      "image_type": "Wholemount Expression",
+      "genotype":   ["Heterozygous","Homozygous","Hemizygous"]
+    }
+  }
+}

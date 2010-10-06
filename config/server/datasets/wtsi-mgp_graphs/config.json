@@ -1,0 +1,24 @@
+{
+  "datasource":            "wtsi-mgp_graphs",
+  "enabled":               true,
+  "custom_sort":           true,
+  "custom_secondary_sort": false,
+  "attribution":           "The Wellcome Trust Sanger Institute (WTSI)",
+  "attribution_link":      "http://www.sanger.ac.uk/",
+  "searching": {
+    "joined_index_field": "colony_prefix",
+    "joined_filter":      "colony_prefix",
+    "joined_attribute":   "colony_prefix",
+    "attributes": [
+      "colony_prefix",
+      "heatmap_group",
+      "heatmap_group_description",
+      "pipeline",
+      "test",
+      "url",
+      "order_by",
+      "raw_data"
+    ],
+    "filters": {}
+  }
+}

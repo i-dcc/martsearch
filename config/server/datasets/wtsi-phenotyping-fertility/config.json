@@ -1,0 +1,35 @@
+{
+  "datasource":            "wtsi-phenotyping",
+  "enabled":               true,
+  "custom_sort":           true,
+  "custom_secondary_sort": false,
+  "attribution":           "The Wellcome Trust Sanger Institute (WTSI)",
+  "attribution_link":      "http://www.sanger.ac.uk/",
+  "searching": {
+    "joined_index_field": "colony_prefix",
+    "joined_filter":      "colony_prefix",
+    "joined_attribute":   "fertility_colony_prefix",
+    "attributes": [
+      "fertility_colony_prefix",
+      "mir_project_licence",
+      "breeding_name",
+      "breeding_category",
+      "father",
+      "father_age_at_setup",
+      "mother",
+      "mother_age_at_setup",
+      "father_genotype",
+      "mother_genotype",
+      "setup_date",
+      "separation_date",
+      "length_of_mating_weeks",
+      "number_of_pups_born",
+      "number_of_pups_weaned",
+      "total_number_of_litters_born",
+      "number_prewean_deaths",
+      "number_prewean_culls"
+    ],
+    "required_attributes": [ "fertility_colony_prefix" ],
+    "filters": {}
+  }
+}

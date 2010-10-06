@@ -1,0 +1,41 @@
+{
+  "datasource":            "wtsi-phenotyping",
+  "enabled":               true,
+  "custom_sort":           true,
+  "custom_secondary_sort": false,
+  "attribution":           "The Wellcome Trust Sanger Institute (WTSI)",
+  "attribution_link":      "http://www.sanger.ac.uk/",
+  "searching": {
+    "joined_index_field": "colony_prefix",
+    "joined_filter":      "colony_prefix",
+    "joined_attribute":   "hom_viability_colony_prefix",
+    "attributes": [
+      "hom_viability_colony_prefix",
+      "genetic_background",
+      "colony_ppl",
+      "female_wt",
+      "male_wt",
+      "female_het",
+      "male_het",
+      "female_hom",
+      "male_hom",
+      "wt_ratio",
+      "het_ratio",
+      "hom_ratio",
+      "total_untested",
+      "total_failed",
+      "total_wt",
+      "total_het",
+      "total_hom",
+      "total_wt_het_hom",
+      "wt_expected",
+      "het_expected",
+      "hom_expected",
+      "chi_sqred",
+      "p_value",
+      "significant"
+    ],
+    "required_attributes": [ "hom_viability_colony_prefix" ],
+    "filters": {}
+  }
+}
