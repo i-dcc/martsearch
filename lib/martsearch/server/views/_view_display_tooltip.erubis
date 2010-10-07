@@ -1,7 +1,11 @@
 <h6 style='margin-bottom:5px'><%= view.name %></h6>
 <%= view.description %>
 
-<% unless data_return %>
+<% case data_return %>
+<% when 'none' %>
   <br /><br />
   <strong><em>This dataset did NOT return any information for this gene.</em></strong>
+<% when 'error' %>
+  <br /><br />
+  <strong><em>An error occurred whilst gathering data for this dataset.</em></strong>
 <% end %>

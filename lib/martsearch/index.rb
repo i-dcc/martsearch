@@ -35,6 +35,7 @@ module MartSearch
     # @return [Boolean] true/false depending on if the solr server is up.
     # @raise [MartSearch::IndexUnavailableError]
     def is_alive?
+      clear_instance_variables
       res = @http_client.get_response( URI.parse("#{@url}/admin/ping?wt=ruby") )
 
       if res.code != "200"
@@ -56,12 +57,7 @@ module MartSearch
     # @param [Integer] page The page of results to search for/return
     # @return [Hash] A hash of the documents returned from the Solr index - keyed by the primary field
     def search( query, page=1 )
-      # Reset all of our stored variables
-      @current_results       = {}
-      @grouped_terms         = {}
-      @current_results_total = 0
-      @current_page          = 1
-      @paginated_results     = []
+      clear_instance_variables
       
       # Calculate the start page
       start_doc = 0
@@ -183,7 +179,7 @@ module MartSearch
         res = @http_client.post_form( URI.parse("#{self.url}/select"), params.update({ "wt" => "ruby" }) )
         
         if res.code.to_i != 200
-          raise MartSearch::IndexSearchError, "Index Search Error: #{res.body}"
+          raise MartSearch::IndexSearchError, "#{res.body}"
         else
           return eval(res.body)
         end
@@ -199,6 +195,14 @@ module MartSearch
         return results
       end
       
+      # Utility function to clear all instance variables
+      def clear_instance_variables
+        @current_results       = {}
+        @grouped_terms         = {}
+        @current_results_total = 0
+        @current_page          = 1
+        @paginated_results     = []
+      end
   end
   
 end

@@ -64,33 +64,29 @@
 
       <div id="browser_warnings" class="error_msgs messages" style="display:none;"></div>
       
-      <div id="messages">
-        <% if @messages[:status].size > 0 %>
-          <div class="status_msgs messages">
-            <ul>
-              <% @messages[:status].each do |msg| %>
-                <li><%= msg %></li>
-              <% end %>
-            </ul>
-          </div>
-        <% end %>
-        <% if @messages[:error].size > 0 %>
-          <div class="error_msgs messages">
-            <h2>Sorry, an Error Has Occurred</h2>
-            <ul>
-              <% @messages[:error].each do |msg| %>
-                <li>
-                  <%= msg[:highlight] %>
-                  <% if msg[:full_text] %>
-                    <small><a class="error_msg_toggle">view the full error message</a></small>
-                    <div class="error_msg_content"><%= msg[:full_text] %></div>
-                  <% end %>
-                </li>
-              <% end %>
-            </ul>
-          </div>
-        <% end %>
+      <!--
+      <div id="user_messages" class="messages">
       </div>
+      -->
+      
+      <% if @errors[:index] and !@errors[:index].empty? %>
+        <!-- search engine errors -->
+        <div id="serious_errors" class="messages">
+          <h5>Sorry, an error occurred whilst querying the search engine...</h5>
+          <% @errors[:index].each do |error| %>
+            <div id="serious_error_wrapper">
+              <%= error[:text] %>&nbsp;&nbsp;
+              <a href="#" class="single_parent_toggler_toggle">more&nbsp;information</a>
+              <div class="single_parent_toggler_content error_more_information">
+                <strong><%= error[:type] %></strong><br />
+                <pre>
+                  <%= error[:error] %>
+                </pre>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
       
       <div id="content">
         <%= yield %>

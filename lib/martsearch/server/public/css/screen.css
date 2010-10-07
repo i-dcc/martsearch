@@ -176,7 +176,6 @@ a.button:hover, a.order:hover {
 	-moz-border-radius: 2px;
 	-o-border-radius: 2px;
 	padding: 10px;
-	margin: 10px;
 }
 
 .messages ul {
@@ -187,57 +186,61 @@ a.button:hover, a.order:hover {
 	margin-bottom: 2px;
 }
 
-.status_msgs {
+.messages pre {
+	font-family: "DejaVu Sans Mono", "Bitstream Vera Sans Mono", Monaco, "Lucida Console", monospace;
+    margin: 5px 0 0;
+    border-top: 1px solid #ccc;
+    padding-top: 5px;
+    font-weight: normal;
+    font-style: normal;
+}
+
+.messages .error_more_information {
+    margin: 5px 0 0;
+    text-align: left;
+    color: #333;
+    border: 1px solid #ccc;
+	background-color: #f1f1f1;
+    padding: 4px;
+}
+
+#user_messages {
 	color: #323200;
 	border-color: #cacb66;
 	background-color: #fdfecc;
 }
 
-.error_msgs {
+#serious_errors {
 	color: #640808;
-	border-color: #963534;
-	background-color: #fdcccc;
+	border-color: #640808;
+	background: #fdcccc url(../images/silk/exclamation.png) no-repeat 5px 10px;
+    padding-left: 25px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
-.error_msgs .error_msg_content {
-	color: #333;
-	border: 1px solid #999;
-	background-color: #f4f4f4;
-	padding: 10px;
-	margin-top: 5px;
-	margin-bottom: 5px;
-	font-family: Verdana, sans-serif;
+#serious_errors h5 {
+    margin-bottom: 5px;
+}
+
+.dataset_error {
+  	border-color: #b2a67b;
+	padding: 5px 5px 5px 25px;
+	margin-bottom: 10px;
+	background: #fbe8ad url(../images/silk/exclamation.png) no-repeat 5px 5px;
+  	font-style: italic;
+  	color: #333;
+}
+
+.dataset_error li {
+    margin-left: 20px;
 }
 
 .help {
-	border: 1px solid #ccc;
-	padding: 10px;
+	background: #f1f1f1 url(../images/silk/help.png) no-repeat 5px 5px;
+	border-color: #ccc;
 	margin-bottom: 15px;
-	border-radius: 2px;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	-o-border-radius: 2px;
-	background-color: #f1f1f1;
-}
-
-.help h4, .help h5, .help h6 {
-	background: url(../images/silk/help.png) no-repeat 0 center;
-	padding-top: 2px;
-	padding-bottom: 2px;
-	padding-left: 20px;
-}
-
-.dataset_warning {
-  	border: 1px solid #f1f737;
-	padding: 7px 7px 7px 36px;
-	margin-bottom: 10px;
-	border-radius: 5px;
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	-o-border-radius: 5px;
-	background: #fcf9ad url(../images/silk/exclamation.png) no-repeat 10px center;
-  	font-style: italic;
-  	color: #333;
+    padding: 7px 7px 7px 27px;
 }
 
 /* Toggle Controls */
@@ -560,16 +563,14 @@ form#martsearchr {
 	margin-bottom: 0;
 }
 
-#search_results .result div.doc_datasets_returned {
+.doc_datasets_returned {
 	font-size: 0.8em;
 	text-align: right;
 }
 
-#search_results .doc_datasets_returned .dataset_returned,
-#search_results .doc_datasets_returned .dataset_no_return {
-	color: #fff;
-	background-color: #fd9acd;
-	border: 1px solid #ca679a;
+.doc_datasets_returned .dataset_returned,
+.doc_datasets_returned .dataset_no_return,
+.doc_datasets_returned .dataset_error {
 	display: inline-block;
 	font-weight: bold;
 	border-radius: 2px;
@@ -580,16 +581,35 @@ form#martsearchr {
 	margin: 1px 0 0;
 }
 
-#search_results .doc_datasets_returned .dataset_returned:hover {
+.doc_datasets_returned .dataset_returned {
+	color: #fff;
+	background-color: #fd9acd;
+	border: 1px solid #ca679a;
+
+}
+
+.doc_datasets_returned .dataset_returned:hover {
 	background-color: #fff;
 	color: #ca679a;
 }
 
-#search_results .doc_datasets_returned .dataset_no_return {
+.doc_datasets_returned .dataset_no_return {
 	color: #919191;
 	background-color: #eaeaea;
 	border: 1px solid #919191;
 	opacity: 0.5;
+}
+
+.doc_datasets_returned .dataset_error {
+	color: #b2a67b;
+    border: 1px solid #b2a67b;
+    background-image: none;
+    font-style: normal;
+    font-weight:bold;
+}
+
+.doc_datasets_returned .dataset_error:hover {
+	background-color: #fff;
 }
 
 #search_results .result div.attribution {

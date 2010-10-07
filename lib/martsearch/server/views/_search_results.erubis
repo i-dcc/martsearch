@@ -17,10 +17,15 @@
           <div class="doc_datasets_returned">
             Datasets: 
             <% @ms.dataviews.each do |view| %>
-              <% if view.display_for_result?( result_data ) %>
-                <a href="#<%= result_data[:index][:marker_symbol].downcase %>-<%= view.internal_name %>" class="dataset_returned dataset_link_bubble" title="<%= partial( "view_display_tooltip", :locals => { :view => view, :data_return => true } ) %>"><%= view.name.gsub( " ", "&nbsp;" ) %></a>
+              <% if view.display_for_result?( result_data, @errors[:datasets] ) %>
+                <% dataset_errors = view.search_errors( @errors[:datasets] ) %>
+                <% if dataset_errors[:required].empty? %>
+                  <a href="#<%= result_data[:index][:marker_symbol].downcase %>-<%= view.internal_name %>" class="dataset_returned dataset_link_bubble" title="<%= partial( "view_display_tooltip", :locals => { :view => view, :data_return => 'display' } ) %>"><%= view.name.gsub( " ", "&nbsp;" ) %></a>
+                <% else %>
+                  <a href="#<%= result_data[:index][:marker_symbol].downcase %>-<%= view.internal_name %>" class="dataset_error dataset_link_bubble" title="<%= partial( "view_display_tooltip", :locals => { :view => view, :data_return => 'error' } ) %>"><%= view.name.gsub( " ", "&nbsp;" ) %></a>
+                <% end %>
               <% else %>
-                <span class="dataset_no_return dataset_link_bubble" title="<%= partial( "view_display_tooltip", :locals => { :view => view, :data_return => false } ) %>"><%= view.name.gsub( " ", "&nbsp;" ) %></span>
+                <span class="dataset_no_return dataset_link_bubble" title="<%= partial( "view_display_tooltip", :locals => { :view => view, :data_return => 'none' } ) %>"><%= view.name.gsub( " ", "&nbsp;" ) %></span>
               <% end %>
             <% end %>
           </div>
@@ -29,7 +34,7 @@
     </table>
     
     <% unless @current == "browse" or result_data[:search_explaination].nil? %>
-      <div class="search_explaination help">
+      <div class="messages search_explaination help">
         <a class="search_explaination_close" href="#"></a>
         <% if result_data[:search_explaination].empty? %>
           <em>
@@ -59,30 +64,46 @@
     
     <div class="doc_content">
       <% @ms.dataviews.each do |view| %>
-        <% if view.display_for_result?( result_data ) %>
+        <% if view.display_for_result?( result_data, @errors[:datasets] ) %>
           <div id="<%= result_data[:index][:marker_symbol].downcase %>-<%= view.internal_name %>" class="dataset">
             <h4 class="dataset_title toggle-open"><%= view.name %></h4>
             <div class="dataset_content <%= view.internal_name %>">
-              <%= partial( "dataviews/#{view.internal_name}/template", :locals => { :result_data => result_data } ) %>
-              <div class="attribution">
-                <div class="dataset_original_data">
-                  <a href="#" class="single_parent_toggler_toggle">view original data</a>
-                  <div class="dataset_original_data_links single_parent_toggler_content" style="display:none;">
-                    <ul>
-                      <% view.data_origin_links( result_data ).each do |link| %>
-                        <li><%= link_to( link[0], link[1], { :target => '_blank' } ) %></li>
-                      <% end %>
-                    </ul>
-                  </div>
+              
+              <% dataset_errors = view.search_errors( @errors[:datasets] ) %>
+              <% unless dataset_errors[:required].empty? and dataset_errors[:optional].empty? %>
+                <div class="messages dataset_error">
+                  <ul>
+                    <% [:required,:optional].each do |ds_class| %>
+                      <% dataset_errors[ds_class].map!{ |elm| elm[ds_class] = true; elm; }%>
+                      <%= partial( "dataset_error", :collection => dataset_errors[ds_class] ) %>
+                    <% end %>
+                  </ul>
                 </div>
-                <%
-                  attribution_links = []
-                  view.attribution_links( result_data ).each do |link|
-                    attribution_links.push( link_to( link[0], link[1], { :target => '_blank' } ) )
-                  end
-                %>
-                Data provided by <%=  attribution_links.join(', ') %>
-              </div>
+              <% end %>
+              
+              <% if dataset_errors[:required].empty? %>
+                <%= partial( "dataviews/#{view.internal_name}/template", :locals => { :result_data => result_data } ) %>
+                
+                <div class="attribution">
+                  <div class="dataset_original_data">
+                    <a href="#" class="single_parent_toggler_toggle">view original data</a>
+                    <div class="dataset_original_data_links single_parent_toggler_content" style="display:none;">
+                      <ul>
+                        <% view.data_origin_links( result_data ).each do |link| %>
+                          <li><%= link_to( link[0], link[1], { :target => '_blank' } ) %></li>
+                        <% end %>
+                      </ul>
+                    </div>
+                  </div>
+                  <%
+                    attribution_links = []
+                    view.attribution_links( result_data ).each do |link|
+                      attribution_links.push( link_to( link[0], link[1], { :target => '_blank' } ) )
+                    end
+                  %>
+                  Data provided by <%=  attribution_links.join(', ') %>
+                </div>
+              <% end %>
             </div>
           </div>
         <% end %>

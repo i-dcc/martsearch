@@ -30,7 +30,7 @@ module MartSearch
       @dataviews_by_name = @config[:server][:dataviews_by_name]
       
       # Stores for search result data and errors...
-      @errors         = []
+      @errors         = { :index => [], :datasets => {} }
       @search_data    = {}
       @search_results = []
     end
@@ -104,12 +104,22 @@ module MartSearch
       # @return [Boolean] true/false reporting if the search went without error (actual results are stored in @search_data)
       def search_from_fresh_index( query, page )
         begin
-          @search_data = @index.search( query, page )
-          return true
-        rescue IndexSearchError => error
-          @errors.push({
-            :highlight => "The search term you used has caused an error on the search engine, please try another search term without any special characters in it.",
-            :full_text => error
+          if @index.is_alive?
+            @search_data = @index.search( query, page )
+            return true
+          end
+        rescue MartSearch::IndexUnavailableError => error
+          @errors[:index].push({
+            :text  => 'The search index is currently unavailable, please check back again soon.',
+            :error => error,
+            :type  => 'MartSearch::IndexUnavailableError'
+          })
+          return false
+        rescue MartSearch::IndexSearchError => error
+          @errors[:index].push({
+            :text  => 'The search term you used has caused an error on the search engine, please try another search term without any special characters in it.',
+            :error => error,
+            :type  => 'MartSearch::IndexSearchError'
           })
           return false
         end
@@ -129,17 +139,18 @@ module MartSearch
             results      = dataset.search( search_terms )
             add_dataset_results_to_search_data( dataset.joined_index_field.to_sym, ds_name.to_sym, results )
           rescue MartSearch::DataSourceError => error
-            # FIXME - this needs to be a bit better fleshed out...
-            @errors.push({
-              :highlight => "The '#{ds_name}' dataset has returned an error for this query.  Please try submitting your search again if you would like data from this source.",
-              :full_text => error
-            })
+            @errors[:datasets][ds_name] = {
+              :text  => "The '#{ds_name}' dataset has returned an error for this query.",
+              :error => error,
+              :type  => 'MartSearch::DataSourceError'
+            }
             success = false
           rescue Timeout::Error => error
-            @errors.push({
-              :highlight => "The '#{ds_name}' dataset did not respond quickly enough for this query.  Please try submitting your search again in about 15 minutes for a more complete search return.",
-              :full_text => error
-            })
+            @errors[:datasets][ds_name] = {
+              :text  => "The '#{ds_name}' dataset did not respond quickly enough for this query.",
+              :error => error,
+              :type  => 'Timeout::Error'
+            }
             success = false
           end
         end
@@ -217,7 +228,7 @@ module MartSearch
       
       # Utility function to clear all instance variables
       def clear_instance_variables
-        @errors         = []
+        @errors         = { :index => [], :datasets => {} }
         @search_data    = {}
         @search_results = []
       end

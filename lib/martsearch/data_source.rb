@@ -1,7 +1,7 @@
 module MartSearch
   
   # Error class raised when there is an error whilst interacting with a DataSource.
-  class DataSourceError < Exception; end
+  class DataSourceError < StandardError; end
   
   # DataSource class for modelling a source for data.
   #
@@ -133,7 +133,7 @@ module MartSearch
         results = @ds.search(search_options)
         results.recursively_symbolize_keys!
       rescue Biomart::BiomartError => error
-        raise MartSearch::DataSourceError, error
+        raise MartSearch::DataSourceError, "Biomart::BiomartError: #{error.message}"
       end
       
       return results

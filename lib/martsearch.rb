@@ -36,7 +36,7 @@ require "#{MARTSEARCH_PATH}/lib/martsearch/hash"
 module MartSearch
   
   # Error class raised when there is an error with the supplied configuration files.
-  class InvalidConfigError < Exception; end
+  class InvalidConfigError < StandardError; end
   
 end
 

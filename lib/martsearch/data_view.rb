@@ -38,16 +38,32 @@ module MartSearch
     # to be able to produce a display.
     #
     # @param [Hash] result One of the result objects from {MartSearch::Controller#search}
+    # @param [Hash] errors A hash containing error records for the dataset searches (if any)
     # @return [Boolean] True/False 
-    def display_for_result?( result )
+    def display_for_result?( result, errors )
       check_datasets unless @alredy_checked_datasets_ok
       
       display = true
       @config[:datasets][:required].each do |ds_name|
         display = false if result[ds_name.to_sym].nil?
+        display = true  unless errors[ds_name.to_sym].nil?
       end
       
       return display
+    end
+    
+    def search_errors( dataset_errors )
+      errors = { :required => [], :optional => [] }
+      
+      [ :required, :optional ].each do |ds_class|
+        @config[:datasets][ds_class].each do |ds_name|
+          if dataset_errors.include?(ds_name.to_sym)
+            errors[ds_class].push( dataset_errors[ds_name.to_sym] )
+          end
+        end
+      end
+      
+      return errors
     end
     
     # Function to provide details for attribution links to the sources of the data.

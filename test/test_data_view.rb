@@ -4,6 +4,7 @@ class MartSearchDataViewTest < Test::Unit::TestCase
   def setup
     @controller = MartSearch::Controller.instance()
     @test_conf  = {
+      :internal_name       => 'gene-details',
       :name                => "Gene Details",
       :description         => "A test dataview",
       :enabled             => true,
@@ -44,7 +45,7 @@ class MartSearchDataViewTest < Test::Unit::TestCase
         search_results = @controller.search( @controller.config[:index][:test][:single_return_search], 1 )
         result         = @controller.search_data[ search_results[0][ @controller.index.primary_field ] ]
       
-        dataview.display_for_result?( result )
+        dataview.display_for_result?( result, {} )
       end
     end
     
@@ -53,13 +54,15 @@ class MartSearchDataViewTest < Test::Unit::TestCase
       search_results = @controller.search( @controller.config[:index][:test][:single_return_search], 1 )
       result         = @controller.search_data[ search_results[0][ @controller.index.primary_field ] ]
       
-      assert_equal( true, dataview.display_for_result?( result ) )
+      assert_equal( true, dataview.display_for_result?( result, {} ) )
+      assert_equal( true, dataview.display_for_result?( result, { :'mgi-markers' => [1,2,3] } ) )
       
       result.each do |key,value|
         result[key] = nil
       end
       
-      assert_equal( false, dataview.display_for_result?( result ) )
+      assert_equal( true, dataview.display_for_result?( result, { :'mgi-markers' => [1,2,3] } ) )
+      assert_equal( false, dataview.display_for_result?( result, {} ) )
     end
   end
   

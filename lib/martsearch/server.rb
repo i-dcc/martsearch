@@ -7,8 +7,6 @@ module MartSearch
     include MartSearch::ServerUtils
     register Sinatra::StaticAssets
     
-    
-    
     set :root, Proc.new { File.join( File.dirname(__FILE__), 'server' ) }
     enable :logging, :dump_errors, :xhtml
     
@@ -73,13 +71,7 @@ module MartSearch
 
       @current    = nil
       @page_title = nil
-
-      @messages = {
-        :status => [],
-        :error  => []
-      }
-
-      # check_for_messages
+      @errors     = {}
     end
     
     helpers do
@@ -89,7 +81,6 @@ module MartSearch
       
       alias_method :h, :escape_html
     end
-    
     
     ##
     ## Basic Routes
@@ -130,7 +121,7 @@ module MartSearch
         @page_title = "Search Results for '#{params[:query]}'"
         @results    = @ms.search( params[:query], params[:page].to_i )
         @data       = @ms.search_data
-        # check_for_errors
+        @errors     = @ms.errors
 
         if params[:wt] == "json"
           content_type "application/json"
