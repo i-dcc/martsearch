@@ -52,12 +52,16 @@ module MartSearch
       return display
     end
     
+    # Function to determine if there are any search errors related to this dataview.
+    #
+    # @param [Hash] dataset_errors A hash of recorded search errors - keyed by dataset name
+    # @return [Hash] A hash of any dataset errors related to this view
     def search_errors( dataset_errors )
       errors = { :required => [], :optional => [] }
       
       [ :required, :optional ].each do |ds_class|
         @config[:datasets][ds_class].each do |ds_name|
-          if dataset_errors.include?(ds_name.to_sym)
+          if dataset_errors.has_key?(ds_name.to_sym)
             errors[ds_class].push( dataset_errors[ds_name.to_sym] )
           end
         end
