@@ -1,3 +1,10 @@
+HoptoadNotifier.configure do |config|
+  config.api_key          = ''
+  config.host             = 'htgt.internal.sanger.ac.uk'
+  config.port             = 4007 # Note: Deployment notifications only work on port 80
+  config.environment_name = ENV['RACK_ENV'] ? ENV['RACK_ENV'] : 'development'
+end
+
 module MartSearch
   
   # MartSearch::Server - Sinatra based web interface for MartSearch
@@ -6,9 +13,10 @@ module MartSearch
   class Server < Sinatra::Base
     include MartSearch::ServerUtils
     register Sinatra::StaticAssets
+    use HoptoadNotifier::Rack
     
     set :root, Proc.new { File.join( File.dirname(__FILE__), 'server' ) }
-    enable :logging, :dump_errors, :xhtml
+    enable :logging, :raise_errors, :dump_errors, :xhtml
     
     # We're going to use the version number as a cache breaker for the CSS 
     # and javascript code. Update with each release of your portal (especially 
@@ -42,12 +50,7 @@ module MartSearch
       super
     end
     
-    configure :production do
-      @compressed_css = compressed_css()
-      @compressed_js  = compressed_js()
-    end
-    
-    configure :staging do
+    configure [:production,:staging] do
       @compressed_css = compressed_css()
       @compressed_js  = compressed_js()
     end

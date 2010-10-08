@@ -22,6 +22,7 @@ require 'active_support'
 require 'active_support/core_ext/hash' unless Hash.respond_to?(:symbolize_keys!) # Rails 3
 require 'will_paginate/collection'
 require 'will_paginate/view_helpers'
+require 'hoptoad_notifier'
 
 require 'ap'
 

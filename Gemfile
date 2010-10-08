@@ -15,6 +15,7 @@ gem 'closure-compiler'
 gem 'activesupport',        '>=2.3'
 gem 'memcache-client',      '>=1.8'
 gem 'will_paginate',        '~>2.3'
+gem 'hoptoad_notifier'
 
 # IndexBuilder
 gem 'rubytree',             '~>0.7',    :require => 'tree'
