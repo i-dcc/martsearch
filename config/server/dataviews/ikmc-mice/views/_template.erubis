@@ -12,58 +12,6 @@
     </tr>
   </thead>
   <tbody>
-    <% result_data[:'ikmc-kermits'].each do |result| %>
-      <tr>
-        <td><%= result[:allele_name] %></td>
-        <td><%= result[:allele_type] %></td>
-        <td><%= result[:colony_prefix] %></td>
-        <td><%= result[:escell_clone] %></td>
-        <td>
-          <%
-            genetic_background = [];
-            if result[:back_cross_strain] then genetic_background.push(result[:back_cross_strain]) end
-            if result[:test_cross_strain] then genetic_background.push(result[:test_cross_strain]) end
-            if result[:escell_strain]     then genetic_background.push(result[:escell_strain])     end
-          %>
-          <%= genetic_background.join(';') %>
-        </td>
-        <td><%= result[:mi_centre] %></td>
-        <td>
-          <% if result[:qc_count] > 0 %>
-            <a class="ikmc-kermits_qc_details_toggle">view&nbsp;data</a>
-          <% else %>
-            <em style="color:#999;">no&nbsp;data&nbsp;reported</em>
-          <% end %>
-          <br />
-          (&nbsp;<a href="http://www.knockoutmouse.org/kb/entry/90/" target="_blank" class="ext_link">about</a>&nbsp;)
-        </td>
-        <td>
-          <% if result[:emma] == "1" %>
-            <%
-              link = nil
-              if result[:sponsor] == "EUCOMM"
-                link = "http://www.emmanet.org/mutant_types.php?keyword=#{result[:marker_symbol]}";
-              elsif result[:sponsor] == "KOMP"
-                link = "mailto:mouseinterest@sanger.ac.uk?subject=Interest in Mouse for #{result[:marker_symbol]}"
-              end
-            %>
-            <% if link %>
-              <a href="<%= link %>" class="order">register&nbsp;interest</a>
-            <% else %>
-              <span class="order unavailable">currently&nbsp;unavailable</span>
-            <% end %>
-          <% else %>
-            <span class="order unavailable">currently&nbsp;unavailable</span>
-          <% end %>
-        </td>
-      </tr>
-      <% if result[:qc_count] > 0 %>
-        <tr class="ikmc-kermits_qc_details">
-          <td colspan="7">
-            <%= partial('dataviews/ikmc-mice/qc_data', :locals => { :result => result }) %>
-          </td>
-        </tr>
-      <% end %>
-    <% end %>
+    <%= partial('dataviews/ikmc-mice/result', :collection => result_data[:'ikmc-kermits'] ) %>
   </tbody>
 </table>
