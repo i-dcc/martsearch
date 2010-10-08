@@ -7,14 +7,17 @@ options = {
   :port => 3000
 }
 
-parser = OptionParser.new do |opts|
+OptionParser.new do |opts|
   opts.banner = "Usage: server [options]"
 
-  opts.on("-b", "--binding", "Binds MartSearch to the specified ip.")  { |arg| options[:bind] = arg }
-  opts.on("-p", "--port",    "Runs MartSearch on the specified port.") { |arg| options[:port] = arg }
-end
-
-parser.parse(ARGV)
+  opts.on("-b", "--binding [HOST]", String, "Binds MartSearch to the specified ip. (Default is 0.0.0.0)") do |address|
+    options[:bind] = address
+  end
+  
+  opts.on("-p", "--port [PORT]", Integer, "Runs MartSearch on the specified port. (Default is 3000)") do |port|
+    options[:port] = port
+  end
+end.parse!
 
 # Add the lib directory to the search path
 $:.unshift( "#{File.expand_path(File.dirname(__FILE__))}/../lib" )
