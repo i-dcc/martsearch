@@ -26,7 +26,7 @@ group :development, :test do
   gem 'yard'
   gem 'shoulda',            '>=2.11'
   gem 'vcr',                '>=1.1'
-  gem 'fakeweb',            '>=1.3'
+  gem 'webmock'
   gem 'rack-test',          '>=0.5'
   gem 'capybara',           '>=0.3.9'
   gem 'capistrano',         '>=2.5'
