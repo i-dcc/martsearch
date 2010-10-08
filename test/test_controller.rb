@@ -37,8 +37,6 @@ class MartSearchControllerTest < Test::Unit::TestCase
         assert( key.is_a?(Symbol) )
       end
       
-      assert( @controller.config[:server][:portal_url] != nil )
-      assert( @controller.config[:server][:base_uri]   != nil )
       assert( @controller.config[:server][:dataviews]  != nil )
       assert( @controller.config[:server][:datasets]   != nil )
       

@@ -57,67 +57,15 @@ module MartSearch
     # @param [String] config_dir The directory location of the 'server.json' config file.
     # @return [Hash] The configuration hash
     def build_server_conf( config_dir )
-      server_conf = JSON.load( File.new( "#{config_dir}/server.json", 'r' ) )
-      
-      # Configure the portal uri config
-      server_path = URI.parse( server_conf['portal_url'] ).path
-      server_path.chop! if server_path =~ /\/$/
-      server_conf['base_uri'] = server_path
-      
-      # Load the configuration for the dataviews
-      dataviews         = []
-      dataviews_by_name = {}
-      server_conf['dataviews'].each do |dv_name|
-        dv_location = "#{config_dir}/dataviews/#{dv_name}"
-        dv_conf     = JSON.load( File.new( "#{dv_location}/config.json", 'r' ) )
-        
-        dv_conf.recursively_symbolize_keys!
-        
-        if dv_conf[:enabled]
-          dv_conf[:internal_name] = dv_name
-          dataview                = MartSearch::DataView.new( dv_conf )
-          
-          dataview.stylesheet     = get_file_as_string("#{dv_location}/stylesheet.css") if dv_conf[:custom_css]
-          dataview.javascript     = get_file_as_string("#{dv_location}/javascript.js")  if dv_conf[:custom_js]
-          
-          dataviews.push( dataview )
-          dataviews_by_name[dv_name] = dataview
-        end
-      end
-      server_conf['dataviews']         = dataviews
-      server_conf['dataviews_by_name'] = dataviews_by_name
-      
-      # Load the configuration for the datasets
-      datasets = {}
-      server_conf['datasets'].each do |ds_name|
-        ds_location = "#{config_dir}/datasets/#{ds_name}"
-        ds_conf     = JSON.load( File.new( "#{ds_location}/config.json", 'r' ) )
-
-        ds_conf.recursively_symbolize_keys!
-        
-        if ds_conf[:enabled]
-          ds_conf[:internal_name] = ds_name
-          dataset                 = MartSearch::DataSet.new( ds_conf )
-          
-          if ds_conf[:custom_sort]
-            sort    = get_file_as_string( "#{ds_location}/custom_sort.rb" )
-            dataset = MartSearch::Mock.method( dataset, :sort_results ) { |results| eval(sort) }
-          end
-          
-          if ds_conf[:custom_secondary_sort]
-            secondary_sort = get_file_as_string( "#{ds_location}/custom_secondary_sort.rb" )
-            dataset        = MartSearch::Mock.method( dataset, :secondary_sort ) { |search_data| eval(secondary_sort) }
-          end
-          
-          datasets[ds_name] = dataset
-        end
-      end
-      
-      server_conf['datasets'] = datasets
+      server_conf                      = JSON.load( File.new( "#{config_dir}/server.json", 'r' ) )
+      dataviews_conf                   = process_dataviews_conf( config_dir, server_conf['dataviews'] )
+      server_conf['dataviews']         = dataviews_conf[:dataviews]
+      server_conf['dataviews_by_name'] = dataviews_conf[:dataviews_by_name]
+      server_conf['datasets']          = process_datasets_conf( config_dir, server_conf['datasets'] )
+      server_conf['browsable_content'] = process_browsable_content_conf( server_conf['browsable_content'] )
       
       server_conf.recursively_symbolize_keys!
-      
-      return server_conf
+      server_conf
     end
     
     # Helper function to initialize the caching system.  Uses ActiveSupport::Cache so 
@@ -146,6 +94,139 @@ module MartSearch
       end
     end
     
+    private
+      
+      ##
+      ## Helpers for 'build_server_conf'
+      ##
+      
+      def process_dataviews_conf( config_dir, dataviews_conf )
+        dataviews         = []
+        dataviews_by_name = {}
+        
+        dataviews_conf.each do |dv_name|
+          dv_location = "#{config_dir}/dataviews/#{dv_name}"
+          dv_conf     = JSON.load( File.new( "#{dv_location}/config.json", 'r' ) )
+
+          dv_conf.recursively_symbolize_keys!
+
+          if dv_conf[:enabled]
+            dv_conf[:internal_name] = dv_name
+            dataview                = MartSearch::DataView.new( dv_conf )
+
+            dataview.stylesheet     = get_file_as_string("#{dv_location}/stylesheet.css") if dv_conf[:custom_css]
+            dataview.javascript     = get_file_as_string("#{dv_location}/javascript.js")  if dv_conf[:custom_js]
+
+            dataviews.push( dataview )
+            dataviews_by_name[dv_name] = dataview
+          end
+        end
+        
+        { :dataviews => dataviews, :dataviews_by_name => dataviews_by_name }
+      end
+      
+      def process_datasets_conf( config_dir, datasets_conf )
+        datasets = {}
+        
+        datasets_conf.each do |ds_name|
+          ds_location = "#{config_dir}/datasets/#{ds_name}"
+          ds_conf     = JSON.load( File.new( "#{ds_location}/config.json", 'r' ) )
+          
+          ds_conf.recursively_symbolize_keys!
+          
+          if ds_conf[:enabled]
+            ds_conf[:internal_name] = ds_name
+            dataset                 = MartSearch::DataSet.new( ds_conf )
+            
+            if ds_conf[:custom_sort]
+              sort    = get_file_as_string( "#{ds_location}/custom_sort.rb" )
+              dataset = MartSearch::Mock.method( dataset, :sort_results ) { |results| eval(sort) }
+            end
+            
+            if ds_conf[:custom_secondary_sort]
+              secondary_sort = get_file_as_string( "#{ds_location}/custom_secondary_sort.rb" )
+              dataset        = MartSearch::Mock.method( dataset, :secondary_sort ) { |search_data| eval(secondary_sort) }
+            end
+            
+            datasets[ds_name] = dataset
+          end
+        end
+        
+        datasets
+      end
+      
+      def process_browsable_content_conf( browsable_content )
+        browsable_content.each do |content_group,content_conf|
+          content_conf['display_options'] = {}
+          content_conf['search_options']  = {}
+          
+          content_conf['options'].map! do |option|
+            # Display options first...
+            disp_query = nil
+            disp_text  = nil
+            
+            if option.is_a?(Array)
+              disp_query = option[0].downcase
+              disp_text  = option[0]
+            elsif option.is_a?(Hash)
+              disp_query = option[:slug].downcase
+              disp_text  = option[:text]
+            else
+              disp_query = option.downcase
+              disp_text  = option
+            end
+            
+            disp_text.gsub!(' ','&nbsp;')
+            content_conf['display_options'][disp_query] = {
+              :text       => disp_text,
+              :link_query => disp_query
+            }
+            
+            # Now search options...
+            browsing_by = nil
+            solr_query  = nil
+            search_term = nil
+            
+            if option.is_a?(Array)
+              display_query = option[0]
+              solr_query    = "#{content_conf['index_field']}:#{option[1]}"
+              search_term   = option[1]
+            elsif option.is_a?(Hash)
+              display_query = option['text']
+              solr_query    = "#{content_conf['index_field']}:#{option['query']}"
+              search_term   = option['query']
+            else
+              display_query = option
+              solr_query    = "#{content_conf['index_field']}:#{option}"
+              search_term   = option
+            end
+            
+            # If the configuration doesnt already contain a grouped query 
+            # make the search case insensitive (as we assume we are searching
+            # on a solr string field - i.e. not interpreted in any way...)
+            unless solr_query.match(/\)$/)
+              if content_conf['exact_search']
+                if search_term =~ /[0-9]+/
+                  solr_query = "#{content_conf['index_field']}:#{search_term}"
+                else
+                  solr_query = "(#{content_conf['index_field']}:#{search_term.downcase} OR #{content_conf['index_field']}:#{search_term.upcase})"
+                end
+              else
+                solr_query = "(#{content_conf['index_field']}:#{search_term.downcase}* OR #{content_conf['index_field']}:#{search_term.upcase}*)"
+              end
+            end
+            
+            content_conf['search_options'][disp_query] = {
+              :display_query => display_query,
+              :solr_query    => solr_query
+            }
+            
+            disp_query
+          end
+        end
+        
+        browsable_content
+      end
   end
   
 end

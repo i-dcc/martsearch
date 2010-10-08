@@ -21,31 +21,30 @@ module MartSearch
     # We're going to use the version number as a cache breaker for the CSS 
     # and javascript code. Update with each release of your portal (especially 
     # if you change the CSS or JS)!!!
-    VERSION = "0.0.15"
+    VERSION = '0.0.15'
     DEFAULT_CSS_FILES = [
-      "reset.css",
-      "jquery.prettyPhoto.css",
-      "jquery.tablesorter.css",
-      "jquery.fontresize.css",
-      "jquery-ui-1.8.1.redmond.css",
-      "screen.css"
+      'reset.css',
+      'jquery.prettyPhoto.css',
+      'jquery.tablesorter.css',
+      'jquery.fontresize.css',
+      'jquery-ui-1.8.1.redmond.css',
+      'screen.css'
     ]
     DEFAULT_JS_FILES  = [
-      "jquery.qtip-1.0.js",
-      "jquery.prettyPhoto.js",
-      "jquery.tablesorter.js",
-      "jquery.cookie.js",
-      "jquery.fontResize.js",
-      "jquery.scrollTo-1.4.2.js",
-      "jquery-ui-1.8.1.min.js",
-      "martsearchr.js"
+      'jquery.qtip-1.0.js',
+      'jquery.prettyPhoto.js',
+      'jquery.tablesorter.js',
+      'jquery.cookie.js',
+      'jquery.fontResize.js',
+      'jquery.scrollTo-1.4.2.js',
+      'jquery-ui-1.8.1.min.js',
+      'martsearchr.js'
     ]
     
     def initialize
       @ms          = MartSearch::Controller.instance()
       @config      = @ms.config[:server]
       @portal_name = @config[:portal_name]
-      @base_uri    = @config[:base_uri]
       
       super
     end
@@ -56,7 +55,7 @@ module MartSearch
     end
     
     before do
-      response["Content-Type"] = "text/html; charset=utf-8"
+      response['Content-Type'] = 'text/html; charset=utf-8'
 
       # TODO: We need a better way of configuring idiots to block
       accept_request = true
@@ -64,13 +63,13 @@ module MartSearch
 
       blocked_hosts.each do |host|
         if \
-             ( request.env["HTTP_FROM"] and request.env["HTTP_FROM"].match(host) ) \
-          or ( request.env["HTTP_USER_AGENT"] and request.env["HTTP_USER_AGENT"].match(host) )
+             ( request.env['HTTP_FROM'] and request.env['HTTP_FROM'].match(host) ) \
+          or ( request.env['HTTP_USER_AGENT'] and request.env['HTTP_USER_AGENT'].match(host) )
           accept_request = false
         end
       end
 
-      halt 403, "go away!" unless accept_request
+      halt 403, 'go away!' unless accept_request
 
       @current    = nil
       @page_title = nil
@@ -90,24 +89,24 @@ module MartSearch
     ##
     
     get '/?' do
-      @current               = "home"
+      @current               = 'home'
       @hide_side_search_form = true
       erubis :main
     end
     
-    get "/about/?" do
-      @current    = "about"
-      @page_title = "About"
+    get '/about/?' do
+      @current    = 'about'
+      @page_title = 'About'
       erubis :about
     end
 
-    get "/help/?" do
-      @current    = "help"
-      @page_title = "Help"
+    get '/help/?' do
+      @current    = 'help'
+      @page_title = 'Help'
       erubis :help
     end
     
-    get "/clear_cache/?" do
+    get '/clear_cache/?' do
       @ms.cache.clear
       redirect "#{request.script_name}/"
     end
@@ -116,18 +115,18 @@ module MartSearch
     ## Searching
     ##
     
-    get "/search/?" do
+    get '/search/?' do
       if params.empty?
-        redirect "#{@base_uri}/"
+        redirect "#{request.script_name}/"
       else
-        @current    = "home"
+        @current    = 'home'
         @page_title = "Search Results for '#{params[:query]}'"
         @results    = @ms.search( params[:query], params[:page].to_i )
         @data       = @ms.search_data
         @errors     = @ms.errors
 
-        if params[:wt] == "json"
-          content_type "application/json"
+        if params[:wt] == 'json'
+          content_type 'application/json'
           return @data.to_json
         else
           erubis :search
@@ -135,10 +134,11 @@ module MartSearch
       end
     end
     
-    ["/search/:query/?", "/search/:query/:page/?"].each do |path|
+    ['/search/:query/?', '/search/:query/:page/?'].each do |path|
       get path do
         url = "#{request.script_name}/search?query=#{params[:query]}"
         url << "&page=#{params[:page]}" if params[:page]
+        status 301
         redirect url
       end
     end
@@ -147,33 +147,77 @@ module MartSearch
     ## Browsing
     ##
     
+    get '/browse/?' do
+      @current    = 'browse'
+      @page_title = 'Browse'
+      @results    = nil
+      @data       = nil
+      @params     = params
+      
+      if params[:field] and params[:query]
+        
+        
+        if !@config[:browsable_content].has_key?(params[:field].to_sym)
+          status 404
+          halt
+        elsif !@config[:browsable_content][params[:field].to_sym][:search_options].has_key?(params[:query].to_sym)
+          status 404
+          halt
+        else
+          browser_field_conf = @config[:browsable_content][params[:field].to_sym]
+          browser            = browser_field_conf[:search_options][params[:query].to_sym]
+          
+          @page_title    = "Browsing Data by #{browser_field_conf[:display_name]}: '#{browser[:display_query]}'"
+          @results_title = @page_title
+          @solr_query    = browser[:solr_query]
+          @results       = @ms.search( @solr_query, params[:page].to_i )
+          @data          = @ms.search_data
+          @errors        = @ms.errors
+        end
+      end
+      
+      if params[:wt] == 'json'
+        content_type 'application/json'
+        return @data.to_json
+      else
+        erubis :browse
+      end
+    end
     
+    ['/browse/:field/:query/?', '/browse/:field/:query/:page?'].each do |path|
+      get path do
+        url = "#{request.script_name}/browse?field=#{params[:field]}&query=#{params[:query]}"
+        url << "&page=#{params[:page]}" if params[:page]
+        status 301
+        redirect url
+      end
+    end
     
     ##
     ## Dynamic CSS/Javascript 
     ##
     
-    get "/css/martsearch*.css" do
-      content_type "text/css"
+    get '/css/martsearch*.css' do
+      content_type 'text/css'
       @compressed_css = compressed_css() if @compressed_css.nil?
       return @compressed_css
     end
 
-    get "/js/martsearch*.js" do
-      content_type "text/javascript"
+    get '/js/martsearch*.js' do
+      content_type 'text/javascript'
       @compressed_js = compressed_js() if @compressed_js.nil?
       return @compressed_js
     end
     
-    get "/dataview-css/:dataview_name" do
-      content_type "text/css"
-      dataview_name = params[:dataview_name].sub(".css","")
+    get '/dataview-css/:dataview_name' do
+      content_type 'text/css'
+      dataview_name = params[:dataview_name].sub('.css','')
       @ms.dataviews_by_name[ dataview_name.to_sym ].stylesheet
     end
 
-    get "/dataview-js/:dataview_name" do
-      content_type "text/javascript"
-      dataview_name = params[:dataview_name].sub(".js","")
+    get '/dataview-js/:dataview_name' do
+      content_type 'text/javascript'
+      dataview_name = params[:dataview_name].sub('.js','')
       @ms.dataviews_by_name[ dataview_name.to_sym ].javascript
     end
     

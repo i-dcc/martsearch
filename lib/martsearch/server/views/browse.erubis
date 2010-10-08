@@ -1,0 +1,38 @@
+<table id="browsable_content" class="nobg noborder">
+  <% @ms.config[:server][:browsable_content].each do |field,field_config| %>
+    <tr>
+      <th><%= field_config[:display_name] %>:</th>
+      <td>
+        <% field_config[:options].each do |option_name| %>
+          <%
+            display_opts = field_config[:display_options][option_name.to_sym]
+            query        = display_opts[:link_query]
+            text         = display_opts[:text]
+          %>
+          <% if field.to_s == params[:field] and query == params[:query] %>
+            <%= link_to( text, { :path => '/browse', :field => field, :query => query }, { :class => 'current' } )%>
+          <% else %>     
+            <%= link_to( text, { :path => '/browse', :field => field, :query => query } )%>
+          <% end %>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+</table>
+
+<% if @results_title %>
+  <div id="search_results">
+    <h2><%= @results_title %></h2>
+    <% if @results and !@results.empty? %>
+      <%= partial( :search_results ) %>
+    <% else %>
+      <em>Sorry, your search did not return any results.</em>
+    <% end %>
+  </div>
+<% end %>
+
+<% if @ms.config[:debug] %>
+  <div>
+    Solr search parameters used: <%= @solr_query %>
+  </div>
+<% end %>

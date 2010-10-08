@@ -81,15 +81,17 @@ module MartSearch
       url = "#{base}"
             
       if url_fragment.is_a?(Hash)
+        url_fragment.stringify_keys!
         path = ''
         
-        unless url_fragment["path"].nil?
-          path = url + url_fragment.delete("path")
+        unless url_fragment['path'].nil?
+          path = url + url_fragment.delete('path')
         else
           path = request.path_info
         end
         
-        params.delete("captures")
+        params.delete('captures')
+        params.delete('page')
         url = path + "?" + build_query( params.merge(url_fragment) )
       else
         url << url_fragment
@@ -98,45 +100,6 @@ module MartSearch
       return url
     end
     
-    # def url_for(link_options)
-    #   case link_options
-    #   when Hash
-    #     path = link_options.delete(:path) || request.path_info
-    #     params.delete("captures")
-    #     path + "?" + build_query(params.merge(link_options))
-    #   else
-    #     if link_options =~ /\/search|\/browse/
-    #       # we've been given a search/browse link
-    #       tmp  = link_options.split("?")
-    #       opts = parse_query(tmp[1])
-    #       url  = ""
-    # 
-    #       # Work out the url to use
-    #       if link_options.match("/search")
-    #         # First try RESTful style urls
-    #         url = "#{@base_uri}/search/#{opts["query"]}"
-    #         if opts["page"] then url = "#{url}/#{opts["page"]}" end
-    # 
-    #         begin
-    #           uri = URI.parse(url)
-    #         rescue URI::InvalidURIError
-    #           # If that goes pear shaped trying to do a weird query, 
-    #           # use the standard ? interface and CGI::escape...
-    #           url = "#{@base_uri}/search?query=#{CGI::escape(opts["query"])}"
-    #           if opts["page"] then url = "#{url}&page=#{opts["page"]}" end
-    #         end
-    #       elsif link_options.match("/browse")
-    #         url = "#{@base_uri}/browse/#{opts["field"]}/#{opts["query"]}"
-    #         if opts["page"] then url = "#{url}/#{opts["page"]}" end
-    #       end
-    # 
-    #       return url
-    #     else
-    #       link_options
-    #     end
-    #   end
-    # end
-
     # Helper function to construct a url for linking to Ensembl from an 
     # Ensembl Gene ID.
     #

@@ -29,8 +29,6 @@ class MartSearchControllerUtilsTest < Test::Unit::TestCase
     conifg     = build_server_conf(conifg_dir)
     
     assert( conifg.is_a?(Hash) )
-    assert( conifg.keys.include?(:portal_url) )
-    assert( conifg.keys.include?(:base_uri) )
     assert( conifg.keys.include?(:dataviews) )
     assert( conifg.keys.include?(:dataviews_by_name) )
     assert( conifg[:dataviews].is_a?(Array) )
