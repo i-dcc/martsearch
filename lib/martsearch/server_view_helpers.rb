@@ -31,8 +31,9 @@ module MartSearch
       template = template_array[0..-2].join('/') + "/_#{template_array[-1]}"
       
       options.merge!( :layout => false )
+      collection = options.delete(:collection)
       
-      if collection = options.delete(:collection) then
+      if collection
         collection.inject([]) do |buffer, member|
           buffer << erubis( :"#{template}", options.merge( :locals => { template_array[-1].to_sym => member } ) )
         end.join("\n")
@@ -67,7 +68,7 @@ module MartSearch
         base = request.script_name
       when :full
         scheme = request.scheme
-        if (scheme == 'http' && request.port == 80 || scheme == 'https' && request.port == 443)
+        if (scheme == 'http' && request.port == 80) || (scheme == 'https' && request.port == 443)
           port = ""
         else
           port = ":#{request.port}"
