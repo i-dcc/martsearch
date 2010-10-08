@@ -84,6 +84,8 @@ GEM
     nokogiri (1.4.3.1)
     parallel (0.4.4)
     rack (1.2.1)
+    rack-contrib (1.0.1)
+      rack (>= 0.9.1)
     rack-test (0.5.6)
       rack (>= 1.0)
     rails_best_practices (0.4.0)
@@ -150,6 +152,7 @@ DEPENDENCIES
   mysql (>= 2.8)
   parallel
   rack (>= 1.0)
+  rack-contrib
   rack-test (>= 0.5)
   rcov
   rubytree (~> 0.7)
