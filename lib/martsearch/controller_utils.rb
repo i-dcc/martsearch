@@ -116,7 +116,7 @@ module MartSearch
 
             dataview.stylesheet      = get_file_as_string("#{dv_location}/stylesheet.css")     if dv_conf[:custom_css]
             dataview.javascript_head = get_file_as_string("#{dv_location}/javascript_head.js") if dv_conf[:custom_head_js]
-            dataview.javascript_base = get_file_as_string("#{dv_location}/javascript.js")      if (dv_conf[:custom_js] or dv_conf[:custom_base_js])
+            dataview.javascript_base = get_file_as_string("#{dv_location}/javascript_base.js") if dv_conf[:custom_base_js]
 
             dataviews.push( dataview )
             dataviews_by_name[dv_name] = dataview
