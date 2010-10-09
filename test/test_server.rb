@@ -71,14 +71,13 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
       VCR.use_cassette('test_server_browsing') do
         @controller.config[:server][:browsable_content].each do |name,conf|
           conf[:options].each do |option_name|
-            search_opts  = conf[:search_options][option_name.to_sym]
-            display_opts = conf[:display_options][option_name.to_sym]
+            opts = conf[:processed_options][option_name.to_sym]
             
             page_no = 1
             while page_no < 3
-              visit "/browse/#{name}/#{display_opts[:link_query]}/#{page_no}"
+              visit "/browse/#{name}/#{opts[:link_arg]}/#{page_no}"
               assert_equal( '/browse', current_path )
-              assert( page.has_content?("Browsing Data by #{conf[:display_name]}: '#{search_opts[:display_query]}'") )
+              assert( page.has_content?("Browsing Data by #{conf[:display_name]}: '#{opts[:display_arg]}'") )
               
               if page.has_css?('.pagination a.next_page')
                 page_no = page_no + 1
@@ -132,10 +131,9 @@ class MartSearchServerRackTest < Test::Unit::TestCase
       VCR.use_cassette('test_server_browsing') do
         @controller.config[:server][:browsable_content].each do |name,conf|
           conf[:options].each do |option_name|
-            search_opts  = conf[:search_options][option_name.to_sym]
-            display_opts = conf[:display_options][option_name.to_sym]
+            opts = conf[:processed_options][option_name.to_sym]
             
-            @browser.get "/browse?field=#{name}&query=#{display_opts[:link_query]}&page=1&wt=json"
+            @browser.get "/browse?field=#{name}&query=#{opts[:link_arg]}&page=1&wt=json"
             assert( @browser.last_response.ok? )
             
             json = JSON.parse( @browser.last_response.body )
