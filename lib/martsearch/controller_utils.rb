@@ -157,48 +157,29 @@ module MartSearch
       
       def process_browsable_content_conf( browsable_content )
         browsable_content.each do |content_group,content_conf|
-          content_conf['display_options'] = {}
-          content_conf['search_options']  = {}
+          content_conf['processed_options'] = {}
           
           content_conf['options'].map! do |option|
-            # Display options first...
-            disp_query = nil
-            disp_text  = nil
-            
-            if option.is_a?(Array)
-              disp_query = option[0].downcase
-              disp_text  = option[0]
-            elsif option.is_a?(Hash)
-              disp_query = option[:slug].downcase
-              disp_text  = option[:text]
-            else
-              disp_query = option.downcase
-              disp_text  = option
-            end
-            
-            disp_text.gsub!(' ','&nbsp;')
-            content_conf['display_options'][disp_query] = {
-              :text       => disp_text,
-              :link_query => disp_query
-            }
-            
-            # Now search options...
-            browsing_by = nil
+            link_arg    = nil
+            display_arg = nil
             solr_query  = nil
             search_term = nil
             
             if option.is_a?(Array)
-              display_query = option[0]
-              solr_query    = "#{content_conf['index_field']}:#{option[1]}"
-              search_term   = option[1]
+              link_arg    = option[0].downcase
+              display_arg = option[0]
+              search_term = option[1]
+              solr_query  = "#{content_conf['index_field']}:#{search_term}"
             elsif option.is_a?(Hash)
-              display_query = option['text']
-              solr_query    = "#{content_conf['index_field']}:#{option['query']}"
-              search_term   = option['query']
+              link_arg    = option['slug'].downcase
+              display_arg = option['text']
+              search_term = option['query']
+              solr_query  = "#{content_conf['index_field']}:#{search_term}"
             else
-              display_query = option
-              solr_query    = "#{content_conf['index_field']}:#{option}"
-              search_term   = option
+              link_arg    = option.downcase
+              display_arg = option
+              search_term = option
+              solr_query  = "#{content_conf['index_field']}:#{search_term}"
             end
             
             # If the configuration doesnt already contain a grouped query 
@@ -216,12 +197,15 @@ module MartSearch
               end
             end
             
-            content_conf['search_options'][disp_query] = {
-              :display_query => display_query,
-              :solr_query    => solr_query
+            display_arg.gsub!(' ','&nbsp;')
+            content_conf['processed_options'][link_arg] = {
+              :display_arg => display_arg,
+              :link_arg    => link_arg,
+              :solr_query  => solr_query,
+              :search_term => search_term
             }
             
-            disp_query
+            link_arg
           end
         end
         

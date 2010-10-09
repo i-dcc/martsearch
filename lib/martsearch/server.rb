@@ -160,14 +160,14 @@ module MartSearch
         if !@config[:browsable_content].has_key?(params[:field].to_sym)
           status 404
           halt
-        elsif !@config[:browsable_content][params[:field].to_sym][:search_options].has_key?(params[:query].to_sym)
+        elsif !@config[:browsable_content][params[:field].to_sym][:processed_options].has_key?(params[:query].to_sym)
           status 404
           halt
         else
           browser_field_conf = @config[:browsable_content][params[:field].to_sym]
-          browser            = browser_field_conf[:search_options][params[:query].to_sym]
+          browser            = browser_field_conf[:processed_options][params[:query].to_sym]
           
-          @page_title    = "Browsing Data by #{browser_field_conf[:display_name]}: '#{browser[:display_query]}'"
+          @page_title    = "Browsing Data by #{browser_field_conf[:display_name]}: '#{browser[:display_arg]}'"
           @results_title = @page_title
           @solr_query    = browser[:solr_query]
           @results       = @ms.search( @solr_query, params[:page].to_i )

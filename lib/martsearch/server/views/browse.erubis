@@ -5,9 +5,9 @@
       <td>
         <% field_config[:options].each do |option_name| %>
           <%
-            display_opts = field_config[:display_options][option_name.to_sym]
-            query        = display_opts[:link_query]
-            text         = display_opts[:text]
+            display_opts = field_config[:processed_options][option_name.to_sym]
+            query        = display_opts[:link_arg]
+            text         = display_opts[:display_arg]
           %>
           <% if field.to_s == params[:field] and query == params[:query] %>
             <%= link_to( text, { :path => '/browse', :field => field, :query => query }, { :class => 'current' } )%>
