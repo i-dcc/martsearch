@@ -6,15 +6,24 @@ module MartSearch
   module ServerUtils
     include MartSearch::Utils
     
-    # Helper function - returns all of the javascript for the 
-    # web app concatenated into one file and compressed using 
+    # Helper function - returns all of the javascript for the head
+    # of the web app concatenated into one file and compressed using 
     # the Google Closure Compiler.
     #
     # @return [String] The concatenated and compressed javascript code
-    def compressed_js
-      compress_js_or_css('js')
+    def compressed_head_js
+      compress_js_or_css('js-head')
     end
     
+    # Helper function - returns all of the javascript for the base
+    # of the web app concatenated into one file and compressed using 
+    # the Google Closure Compiler.
+    #
+    # @return [String] The concatenated and compressed javascript code
+    def compressed_base_js
+      compress_js_or_css('js-base')
+    end
+
     # Helper function - returns all of the css for the web app 
     # concatenated into one file and compressed using the YUI 
     # CSS Compressor.
@@ -29,15 +38,20 @@ module MartSearch
       # Utility function to do the actual javascript/css concatenation 
       # and compression.
       #
-      # @param [String] js_or_css Pass either 'js' or 'css'
+      # @param [String] js_or_css Pass either 'js-head', 'js-base' or 'css'
       # @return [String] The concatenated and compressed code
       def compress_js_or_css( js_or_css )
         compressed_code = ''
         
-        if js_or_css == 'js'
-          defaults  = MartSearch::Server::DEFAULT_JS_FILES
+        if js_or_css == 'js-head'
+          defaults  = MartSearch::Server::DEFAULT_HEAD_JS_FILES
           short_str = 'js'
-          symbol    = :javascript
+          symbol    = :javascript_head
+          warn_str  = 'Closure::Compiler javascript'
+        elsif js_or_css == 'js-base'
+          defaults  = MartSearch::Server::DEFAULT_BASE_JS_FILES
+          short_str = 'js'
+          symbol    = :javascript_base
           warn_str  = 'Closure::Compiler javascript'
         else
           defaults  = MartSearch::Server::DEFAULT_CSS_FILES
@@ -56,7 +70,7 @@ module MartSearch
         
         begin
           Dir.mktmpdir do |dir|
-            if js_or_css == 'js'
+            if js_or_css =~ /js/
               compressed_code = Closure::Compiler.new(:compilation_level => 'SIMPLE_OPTIMIZATIONS').compress(compressed_code)
             else
               compressed_code = YUI::CssCompressor.new.compress(compressed_code)

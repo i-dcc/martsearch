@@ -10,17 +10,24 @@
     
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     
-    <%= javascript_script_tag '/js/jquery-1.4.2.min.js', :charset => "utf-8" %>
-    
     <% if ENV['RACK_ENV'] == "production" or ENV['RACK_ENV'] == "staging" %>
+      <%= javascript_script_tag "/js/martsearch-head-#{MartSearch::Server::VERSION}.js", :charset => "utf-8" %>
       <%= stylesheet_link_tag "/css/martsearch-#{MartSearch::Server::VERSION}.css", :media => 'all' %>
+      
     <% else %>
+      <% MartSearch::Server::DEFAULT_HEAD_JS_FILES.each do |js_file| %>
+        <%= javascript_script_tag "/js/#{js_file}", :charset => "utf-8" %>
+      <% end %>
       <% MartSearch::Server::DEFAULT_CSS_FILES.each do |css_file| %>
         <%= stylesheet_link_tag "/css/#{css_file}", :media => 'all' %>
       <% end %>
       <% @ms.dataviews.each do |view| %>
-        <% next if view.stylesheet.nil? %>
-        <%= stylesheet_link_tag "/dataview-css/#{view.internal_name}.css", :media => 'all' %>
+        <% unless view.stylesheet.nil? %>
+          <%= stylesheet_link_tag "/dataview-css/#{view.internal_name}.css", :media => 'all' %>
+        <% end %>
+        <% unless view.javascript_head.nil? %>
+          <%= javascript_script_tag "/dataview-head-js/#{view.internal_name}.js", :charset => "utf-8" %>
+        <% end %>
       <% end %>
     <% end %>
     
@@ -115,14 +122,14 @@
     <% end %>
     
     <% if ENV['RACK_ENV'] == "production" or ENV['RACK_ENV'] == "staging" %>
-      <%= javascript_script_tag "/js/martsearch-#{MartSearch::Server::VERSION}.js", :charset => "utf-8" %>
+      <%= javascript_script_tag "/js/martsearch-base-#{MartSearch::Server::VERSION}.js", :charset => "utf-8" %>
     <% else %>
-      <% MartSearch::Server::DEFAULT_JS_FILES.each do |js_file| %>
+      <% MartSearch::Server::DEFAULT_BASE_JS_FILES.each do |js_file| %>
         <%= javascript_script_tag "/js/#{js_file}", :charset => "utf-8" %>
       <% end %>
       <% @ms.dataviews.each do |view| %>
-        <% next if view.javascript.nil? %>
-        <%= javascript_script_tag "/dataview-js/#{view.internal_name}.js", :charset => "utf-8" %>
+        <% next if view.javascript_base.nil? %>
+        <%= javascript_script_tag "/dataview-base-js/#{view.internal_name}.js", :charset => "utf-8" %>
       <% end %>
     <% end %>
   </body>

@@ -6,7 +6,7 @@ module MartSearch
   class DataView
     
     attr_reader :config
-    attr_accessor :stylesheet, :javascript
+    attr_accessor :stylesheet, :javascript_head, :javascript_base
     
     # @param [Hash] conf Configuration hash
     def initialize(conf)

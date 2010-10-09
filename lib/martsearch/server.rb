@@ -21,7 +21,7 @@ module MartSearch
     # We're going to use the version number as a cache breaker for the CSS 
     # and javascript code. Update with each release of your portal (especially 
     # if you change the CSS or JS)!!!
-    VERSION = '0.0.15'
+    VERSION = '0.1.0'
     DEFAULT_CSS_FILES = [
       'reset.css',
       'jquery.prettyPhoto.css',
@@ -30,7 +30,11 @@ module MartSearch
       'jquery-ui-1.8.1.redmond.css',
       'screen.css'
     ]
-    DEFAULT_JS_FILES  = [
+    DEFAULT_HEAD_JS_FILES  = [
+      'jquery-1.4.2.min.js',
+      'martsearch-head.js'
+    ]
+    DEFAULT_BASE_JS_FILES  = [
       'jquery.qtip-1.0.js',
       'jquery.prettyPhoto.js',
       'jquery.tablesorter.js',
@@ -38,7 +42,7 @@ module MartSearch
       'jquery.fontResize.js',
       'jquery.scrollTo-1.4.2.js',
       'jquery-ui-1.8.1.min.js',
-      'martsearchr.js'
+      'martsearch-base.js'
     ]
     
     def initialize
@@ -50,8 +54,9 @@ module MartSearch
     end
     
     configure [:production,:staging] do
-      @compressed_css = compressed_css()
-      @compressed_js  = compressed_js()
+      @compressed_css     = compressed_css()
+      @compressed_head_js = compressed_head_js()
+      @compressed_base_js = compressed_base_js()
     end
     
     before do
@@ -203,10 +208,16 @@ module MartSearch
       return @compressed_css
     end
 
-    get '/js/martsearch*.js' do
+    get '/js/martsearch-head*.js' do
       content_type 'text/javascript'
-      @compressed_js = compressed_js() if @compressed_js.nil?
-      return @compressed_js
+      @compressed_head_js = compressed_head_js() if @compressed_head_js.nil?
+      return @compressed_head_js
+    end
+    
+    get '/js/martsearch-base*.js' do
+      content_type 'text/javascript'
+      @compressed_base_js = compressed_base_js() if @compressed_base_js.nil?
+      return @compressed_base_js
     end
     
     get '/dataview-css/:dataview_name' do
@@ -215,10 +226,16 @@ module MartSearch
       @ms.dataviews_by_name[ dataview_name.to_sym ].stylesheet
     end
 
-    get '/dataview-js/:dataview_name' do
+    get '/dataview-head-js/:dataview_name' do
       content_type 'text/javascript'
       dataview_name = params[:dataview_name].sub('.js','')
-      @ms.dataviews_by_name[ dataview_name.to_sym ].javascript
+      @ms.dataviews_by_name[ dataview_name.to_sym ].javascript_head
+    end
+    
+    get '/dataview-base-js/:dataview_name' do
+      content_type 'text/javascript'
+      dataview_name = params[:dataview_name].sub('.js','')
+      @ms.dataviews_by_name[ dataview_name.to_sym ].javascript_base
     end
     
   end
