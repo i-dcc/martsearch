@@ -1,7 +1,7 @@
 
-//.europhenome custom javascript
+// europhenome custom javascript
 
-jQuery(".europhenome").find("td[rel^='qtip']").each( function() {
+jQuery("#search_results .europhenome").find("td[rel^='qtip']").each( function() {
   jQuery(this).attr( "tooltip", jQuery(this).attr("title") );
   jQuery(this).attr( "title", "" );
   jQuery(this).qtip({
@@ -13,9 +13,9 @@ jQuery(".europhenome").find("td[rel^='qtip']").each( function() {
 });
 
 if ( ! jQuery.browser.msie ) {
-  jQuery(".europhenome table.europhenome-data th .user_instructions").show();
-  jQuery(".europhenome table.europhenome-data th").css({ "height": "30px", "overflow": "hidden" });
-  jQuery(".europhenome table.europhenome-data th")
+  jQuery("#search_results table.europhenome-data th .user_instructions").show();
+  jQuery("#search_results table.europhenome-data th").css({ "height": "30px", "overflow": "hidden" });
+  jQuery("#search_results table.europhenome-data th")
     .live( "mouseover", function() { jQuery(this).css({ "height": "188px" }); })
     .live( "mouseout", function()  { jQuery(this).css({ "height": "30px" });  });
 }
