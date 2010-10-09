@@ -4,7 +4,8 @@
   "enabled":              true,
   "display":              true,
   "custom_css":           false,
-  "custom_js":            true,
+  "custom_head_js":       false,
+  "custom_base_js":       true,
   "custom_view_helpers" : true,
   "custom_routes":        false,
   "datasets": {

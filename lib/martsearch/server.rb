@@ -238,6 +238,16 @@ module MartSearch
       @ms.dataviews_by_name[ dataview_name.to_sym ].javascript_base
     end
     
+    ##
+    ## Load in any custom (per dataset) routes
+    ##
+    
+    MartSearch::Controller.instance().dataviews.each do |dv|
+      if dv.use_custom_routes?
+        load "#{MARTSEARCH_PATH}/config/server/dataviews/#{dv.internal_name}/routes.rb"
+      end
+    end
+    
   end
   
 end

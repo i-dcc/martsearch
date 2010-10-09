@@ -34,6 +34,11 @@ module MartSearch
       @config[:custom_view_helpers] ? true : false
     end
     
+    # @return [Boolean] True/False 
+    def use_custom_routes?
+      @config[:custom_routes] ? true : false
+    end
+    
     # Function that determines if we have enough data from the DataSets
     # to be able to produce a display.
     #

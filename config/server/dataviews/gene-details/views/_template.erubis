@@ -47,8 +47,8 @@
 </table>
 
 <div>
-  <h5 class="mgi-markers_toggle">More Information</h5>
-  <div class="mgi-markers_content">
+  <h5 class="single_parent_toggler_toggle">More Information</h5>
+  <div class="single_parent_toggler_content">
     <table>
       <tr>
         <th width="15%">MGI Gene Accession:</th>
