@@ -54,9 +54,9 @@ module MartSearch
     end
     
     configure [:production,:staging] do
-      @compressed_css     = compressed_css()
-      @compressed_head_js = compressed_head_js()
-      @compressed_base_js = compressed_base_js()
+      @compressed_css     = compressed_css( VERSION )
+      @compressed_head_js = compressed_head_js( VERSION )
+      @compressed_base_js = compressed_base_js( VERSION )
     end
     
     before do
@@ -204,19 +204,19 @@ module MartSearch
     
     get '/css/martsearch*.css' do
       content_type 'text/css'
-      @compressed_css = compressed_css() if @compressed_css.nil?
+      @compressed_css = compressed_css( VERSION ) if @compressed_css.nil?
       return @compressed_css
     end
 
     get '/js/martsearch-head*.js' do
       content_type 'text/javascript'
-      @compressed_head_js = compressed_head_js() if @compressed_head_js.nil?
+      @compressed_head_js = compressed_head_js( VERSION ) if @compressed_head_js.nil?
       return @compressed_head_js
     end
     
     get '/js/martsearch-base*.js' do
       content_type 'text/javascript'
-      @compressed_base_js = compressed_base_js() if @compressed_base_js.nil?
+      @compressed_base_js = compressed_base_js( VERSION ) if @compressed_base_js.nil?
       return @compressed_base_js
     end
     

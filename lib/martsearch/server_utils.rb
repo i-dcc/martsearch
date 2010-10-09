@@ -10,27 +10,36 @@ module MartSearch
     # of the web app concatenated into one file and compressed using 
     # the Google Closure Compiler.
     #
+    # @param [String] version The version tag to put in the file name
     # @return [String] The concatenated and compressed javascript code
-    def compressed_head_js
-      compress_js_or_css('js-head')
+    def compressed_head_js( version )
+      text = compress_js_or_css('js-head')
+      save_to_disk( text, 'js', "martsearch-head-#{version}.js" )
+      text
     end
     
     # Helper function - returns all of the javascript for the base
     # of the web app concatenated into one file and compressed using 
     # the Google Closure Compiler.
     #
+    # @param [String] version The version tag to put in the file name
     # @return [String] The concatenated and compressed javascript code
-    def compressed_base_js
-      compress_js_or_css('js-base')
+    def compressed_base_js( version )
+      text = compress_js_or_css('js-base')
+      save_to_disk( text, 'js', "martsearch-base-#{version}.js" )
+      text
     end
 
     # Helper function - returns all of the css for the web app 
     # concatenated into one file and compressed using the YUI 
     # CSS Compressor.
     #
+    # @param [String] version The version tag to put in the file name
     # @return [String] The concatenated and compressed css code
-    def compressed_css
-      compress_js_or_css('css')
+    def compressed_css( version )
+      text = compress_js_or_css('css')
+      save_to_disk( text, 'css', "martsearch-#{version}.css" )
+      text
     end
     
     private
@@ -82,6 +91,17 @@ module MartSearch
         end
         
         return compressed_code
+      end
+      
+      # Utility function to save a given text string to disk
+      #
+      # @param [String] content The file content
+      # @param [String] type The subdirectory in /public to save to
+      # @param [String] name The file name to save
+      def save_to_disk( content, type, name )
+        file = File.new("#{MARTSEARCH_PATH}/lib/martsearch/server/public/#{type}/#{name}",'w')
+        file.write content
+        file.close
       end
       
   end
