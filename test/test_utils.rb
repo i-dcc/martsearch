@@ -46,4 +46,16 @@ class MartSearchUtilsTest < Test::Unit::TestCase
     assert_equal( test_orig, test )
     assert( test[0].keys.include?('foo') )
   end
+  
+  def test_array_randomisation
+    twelve_elm_array = [1,2,3,4,5,6,7,8,9,10,11,12]
+    random_array     = twelve_elm_array.randomly_pick(4)
+    random_array2    = twelve_elm_array.randomly_pick(13)
+    
+    assert( random_array.is_a?(Array) )
+    assert_equal( twelve_elm_array.length, random_array2.length )
+    random_array.each do |elm|
+      assert( twelve_elm_array.include?(elm) )
+    end
+  end
 end

@@ -70,7 +70,8 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
     should "enable browsing of the data..." do
       VCR.use_cassette('test_server_browsing') do
         @controller.config[:server][:browsable_content].each do |name,conf|
-          conf[:options].each do |option_name|
+          # Select 5 random pages to hit - doing them all takes forever...
+          conf[:options].randomly_pick(5).each do |option_name|
             opts = conf[:processed_options][option_name.to_sym]
             
             page_no = 1
@@ -130,7 +131,8 @@ class MartSearchServerRackTest < Test::Unit::TestCase
     should 'enable browsing of the data and retrieve a JSON response...' do
       VCR.use_cassette('test_server_browsing') do
         @controller.config[:server][:browsable_content].each do |name,conf|
-          conf[:options].each do |option_name|
+          # Select 5 random pages to hit - doing them all takes forever...
+          conf[:options].randomly_pick(5).each do |option_name|
             opts = conf[:processed_options][option_name.to_sym]
             
             @browser.get "/browse?field=#{name}&query=#{opts[:link_arg]}&page=1&wt=json"

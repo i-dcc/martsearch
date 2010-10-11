@@ -42,4 +42,17 @@ class Array
       end
     end
   end
+  
+  # Randomises an array returns the defined number of elements.
+  #
+  # If +number+ is greater than the size of the array, the method
+  # will simply return the array itself sorted randomly.
+  #
+  # @param [Integer] number The number of elements to return
+  # @return [Array] The randomised array
+  # @example
+  #   "[1,2,3,4,5,6,7,8,9,10,11,12].randomly_pick(3)" => "[3,12,7]"
+  def randomly_pick( number )
+    sort_by{ rand }.slice( 0...number )
+  end
 end
