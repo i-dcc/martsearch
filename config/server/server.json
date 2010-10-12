@@ -1,13 +1,16 @@
 {
-  "portal_name": "MartSearch",
+  "portal_name": "IKMC MartSearch",
   "debug":       false,
   "email": {
-    "from": "",
-    "to":   ""
+    "to":   "team87@sanger.ac.uk",
+    "from": "team87@sanger.ac.uk"
   },
   "cache": {
     "type": "file",
-    "extra_urls_to_prime":  []
+    "extra_urls_to_prime":  [
+      "search?query=Cbx1",
+      "search?query=EPD0027_2_A01"
+    ]
   },
   "datasets": [
     "emma-strains",
@@ -20,25 +23,16 @@
     "ikmc-kermits",
     "ikmc-omim",
     "ikmc-unitrap",
-    "mgi-markers",
-    "wtsi-bacs",
-    "wtsi-expression-ticklist",
-    "wtsi-mgp_graphs",
-    "wtsi-mgp_images-wholemount_expression",
-    "wtsi-phenotyping-fertility",
-    "wtsi-phenotyping-heatmap",
-    "wtsi-phenotyping-hom_viability"
+    "mgi-markers"
   ],
   "dataviews": [
     "gene-details",
-    "wtsi-phenotyping",
     "europhenome",
     "eurexpress",
     "ikmc-mice",
     "emma-mice",
     "ikmc-targeted-products",
     "ikmc-trapped-products",
-    "wtsi-dna-clone-resources",
     "other-mutant-resources"
   ],
   "browsable_content": {
