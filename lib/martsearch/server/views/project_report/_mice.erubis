@@ -33,8 +33,11 @@
               (&nbsp;<a href="http://www.knockoutmouse.org/kb/entry/90/" target="_blank" class="ext_link">about</a>&nbsp;)
             </td>
             <td class="nobg noborder hide_on_print">
-              <% order_url = @data.has_key?(:order_mouse_url) ? @data[:order_mouse_url] : @data[:order_default_url] %>
-              <a href="<%= order_url %>" class="order" target="_blank">register&nbsp;interest</a>
+              <% 
+                dist_flag = false
+                dist_flag = true if mouse[:emma] == "1"
+              %>
+              <%= mouse_order_button( @data[:marker_symbol], @data[:ikmc_project], @data[:project_id], dist_flag ) %>
             </td>
           </tr>
           <% if mouse[:qc_count] > 0 %>

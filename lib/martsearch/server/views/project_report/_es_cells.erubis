@@ -1,26 +1,27 @@
-<% order_cell_url = @data.has_key?(:order_cell_url) ? @data[:order_cell_url] : @data[:order_default_url] %>
+<%
+  title   = ''
+  img_txt = ''
+  if cond_vs_noncond == :conditional
+    title = 'with conditional potential'
+  else
+    if @data[:es_cells][cond_vs_noncond][:design_type] == 'Deletion'
+      if @data[:ikmc_project] == "NorCOMM"
+        title   = ' (conditional ready)'
+        img_txt = 'These mutations can be made conditional by a &quot;docking&quot; procedure which uses the attP/puro docking site in the cassette.'
+      else
+        title   = 'without conditional potential (deletions)'
+        img_txt = 'Mutations of type &quot;Deletion&quot; are correctly targeted clones that have had the target exon removed. These mutations cannot be converted into conditional alleles.'
+      end
+    else
+      title   = 'without conditional potential'
+      img_txt = 'Mutations of type &quot;Without Conditional Potential&quot; are correctly targeted clones that have lost the 3&apos; LoxP site. These mutations cannot be converted into conditional alleles.'
+    end
+  end
+  
+  order_cell_url = ikmc_product_order_url( :es_cell, @data[:ikmc_project], @data[:project_id], @data[:mgi_accession_id], @data[:marker_symbol] )
+-%>
 
 <div class="dataset">
-  <%
-    title   = ''
-    img_txt = ''
-    if cond_vs_noncond == 'conditional'
-      title = 'with conditional potential'
-    else
-      if @data[:es_cells][cond_vs_noncond][:design_type] == 'Deletion'
-        if @data[:ikmc_project] == "NorCOMM"
-          title   = ' (conditional ready)'
-          img_txt = 'These mutations can be made conditional by a &quot;docking&quot; procedure which uses the attP/puro docking site in the cassette.'
-        else
-          title   = 'without conditional potential (deletions)'
-          img_txt = 'Mutations of type &quot;Deletion&quot; are correctly targeted clones that have had the target exon removed. These mutations cannot be converted into conditional alleles.'
-        end
-      else
-        title   = 'without conditional potential'
-        img_txt = 'Mutations of type &quot;Without Conditional Potential&quot; are correctly targeted clones that have lost the 3&apos; LoxP site. These mutations cannot be converted into conditional alleles.'
-      end
-    end
-  %>
   <h4 class="dataset_title toggle-open">ES Cell Clones <%= title.titlecase %></h4>
   <div class="dataset_content">
     <%- cells = @data[:es_cells][cond_vs_noncond][:cells] -%>

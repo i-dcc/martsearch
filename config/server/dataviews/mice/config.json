@@ -1,0 +1,15 @@
+{
+  "name":                 "Mice",
+  "description":          "Mouse breeding and distribution information from the IKMC.",
+  "enabled":              true,
+  "display":              true,
+  "custom_css":           true,
+  "custom_head_js":       false,
+  "custom_base_js":       false,
+  "custom_view_helpers" : false,
+  "custom_routes":        false,
+  "datasets": {
+    "required": [ "ikmc-kermits" ],
+    "optional": [ "emma-strains" ]
+  }
+}

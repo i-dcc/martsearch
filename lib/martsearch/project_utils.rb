@@ -24,7 +24,6 @@ module MartSearch
         data.merge!( get_human_orthalog( datasources, data[:ensembl_gene_id] ) ) if data[:ensembl_gene_id]
         data.merge!( get_mice( datasources, data[:marker_symbol] ) ) if data[:marker_symbol]
         data.merge!( get_vectors_and_cells( datasources, project_id, data[:mice] ) )
-        data.merge!( order_buttons_url( data[:ikmc_project], project_id, data[:mgi_accession_id], data[:marker_symbol] ) )
         data.merge!( get_pipeline_stage( data[:status]) ) if data[:status]
       end
       
@@ -105,7 +104,7 @@ module MartSearch
           :process_results => true,
           :filters         => { 'marker_symbol' => marker_symbol, 'active' => '1' },
           :attributes      => [
-              'status',        'allele_name', 'escell_clone',
+              'status', 'allele_name', 'escell_clone', 'emma',
               'escell_strain', 'escell_line', 'mi_centre',
               qc_metrics
           ].flatten,
@@ -304,47 +303,6 @@ module MartSearch
         end
 
         return data.recursively_symbolize_keys!
-      end
-      
-      # Helper function to keep all of the repository URLs in one sensible place.
-      #
-      # @param [String] pipeline The IKMC pipeline name
-      # @param [String] project_id The IKMC project ID
-      # @param [String] mgi_acc_id The MGI accession ID for the gene
-      # @param [String] marker_symbol The marker_symbol for the gene
-      # @return [Hash] A hash containing all of the relevant urls for this project
-      def order_buttons_url( pipeline, project_id, mgi_acc_id, marker_symbol )
-        mgi_acc_id = mgi_acc_id[4..-1]
-      
-        urls = case pipeline
-        when "KOMP-CSD"
-          {
-            :order_vector_url   => "http://www.komp.org/vectorOrder.php?projectid=#{project_id}",
-            :order_cell_url     => "http://www.komp.org/orders.php?project=CSD#{project_id}&amp;product=1",
-            :order_default_url  => "http://www.komp.org/geneinfo.php?project=CSD#{project_id}"
-          }
-        when "KOMP-Regeneron"
-          {
-            :order_vector_url   => "http://www.komp.org/vectorOrder.php?projectid=#{project_id}",
-            :order_cell_url     => "http://www.komp.org/orders.php?project=#{project_id}&amp;product=1",
-            :order_default_url  => "http://www.komp.org/geneinfo.php?project=#{project_id}"
-          }
-        when ("EUCOMM" or "mirKO")
-          {
-            :order_vector_url   => "http://www.eummcr.org/final_vectors.php?mgi_id=#{mgi_acc_id}",
-            :order_cell_url     => "http://www.eummcr.org/es_cells.php?mgi_id=#{mgi_acc_id}",
-            :order_mouse_url    => "http://www.emmanet.org/mutant_types.php?keyword=#{marker_symbol}%25EUCOMM&select_by=InternationalStrainName&search=ok",
-            :order_default_url  => "http://www.eummcr.org/order.php"
-          }
-        when "NorCOMM"
-          {
-            :order_default_url  => "http://www.phenogenomics.ca/services/cmmr/escell_services.html"
-          }
-        else
-          {}
-        end
-      
-        return urls
       end
       
       # Helper function to determine how to draw the progress bar at the top of the 
