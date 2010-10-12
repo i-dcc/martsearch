@@ -22,3 +22,5 @@ search_data.each do |key,result_data|
     result_data[:'ikmc-kermits'] = mouse_data
   end
 end
+
+return search_data

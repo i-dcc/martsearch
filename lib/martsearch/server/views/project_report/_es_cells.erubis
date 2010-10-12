@@ -1,7 +1,7 @@
 <%
   title   = ''
   img_txt = ''
-  if cond_vs_noncond == 'conditional'
+  if cond_vs_noncond == :conditional
     title = 'with conditional potential'
   else
     if @data[:es_cells][cond_vs_noncond][:design_type] == 'Deletion'
@@ -18,7 +18,7 @@
     end
   end
   
-  order_cell_url = ikmc_product_order_url( :es_cell, @data[:ikmc_project], @data[:project_id], @data[:mgi_accession_id], @data[:marker_symbol] ) %>
+  order_cell_url = ikmc_product_order_url( :es_cell, @data[:ikmc_project], @data[:project_id], @data[:mgi_accession_id], @data[:marker_symbol] )
 -%>
 
 <div class="dataset">
