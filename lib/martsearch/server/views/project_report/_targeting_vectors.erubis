@@ -1,7 +1,7 @@
 <div class="dataset">
   <h4 class="dataset_title toggle-open">Targeting Vectors</h4>
   <div class="dataset_content">
-    <% order_vector_url = @data.include?(:order_vector_url) ? @data[:order_vector_url] : @data[:order_default_url] %>
+    <% order_vector_url = ikmc_product_order_url( :vector, @data[:ikmc_project], @data[:project_id], @data[:mgi_accession_id], @data[:marker_symbol] ) %>
     
     <img src="<%= @data[:vector_image] %>" width="940px" />
     <div class="clear"></div>
