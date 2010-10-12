@@ -20,6 +20,7 @@ results.each do |result|
   singles = [
     :emma_id,
     :international_strain_name,
+    :common_name,
     :synonym,
     :maintained_background,
     :mutation_main_type,

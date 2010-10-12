@@ -13,13 +13,13 @@
       <td><%= data[:synonym] %></td>
       <td><%= data[:international_strain_name] %></td>
       <td><%= data[:allele_name] %></td>
-      <td><a href="#" id="<%= data[:emma_id].gsub(":","") %>-toggle" class="emma-strains-information-toggle">more information</a></td>
+      <td><a href="#" class="emma-strains-information-toggle">more&nbsp;information</a></td>
       <td>
         <% url_args = "?new=y&id=#{data[:emma_id]}&sname=#{data[:international_strain_name]}&cname=#{data[:synonym]}" %>
         <a href="https://www.emmanet.org/apps/RegisterInterest/requestFormView.emma<%= CGI::escapeHTML(url_args) %>" class="order">order</a>
       </td>
     </tr>
-    <tr id="<%= data[:emma_id].gsub(":","") %>-content" class="emma-strains-information-content">
+    <tr class="emma-strains-information-content">
       <td colspan="6">
         <table width="100%">
           <tr>
