@@ -50,7 +50,12 @@ module MartSearch
             'mouse_available', 'escell_available', 'vector_available'
           ]
         })
-        return results[0].symbolize_keys!
+        
+        if results.empty? or results.nil?
+          return nil
+        else
+          return results[0].symbolize_keys!
+        end
       end
       
       # This function hits the Ensembl (mouse) mart and looks for a human orthalog.
