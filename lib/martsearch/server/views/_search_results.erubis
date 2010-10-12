@@ -17,6 +17,7 @@
           <div class="doc_datasets_returned">
             Datasets: 
             <% @ms.dataviews.each do |view| %>
+              <% next unless view.display %>
               <% if view.display_for_result?( result_data, @errors[:datasets] ) %>
                 <% dataset_errors = view.search_errors( @errors[:datasets] ) %>
                 <% if dataset_errors[:required].empty? %>
