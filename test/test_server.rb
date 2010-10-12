@@ -90,6 +90,19 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
         end
       end
     end
+    
+    should "render IKMC project pages" do
+      VCR.use_cassette('test_server_project_page') do
+        project_ids_to_test = ['35505','27042','42474']
+        
+        project_ids_to_test.each do |project_id|
+          visit "/project/#{project_id}"
+          assert_equal( "/project/#{project_id}", current_path )
+          assert( page.has_content?("(ID: #{project_id})") )
+        end
+      end
+    end
+    
   end
   
 end
@@ -137,13 +150,25 @@ class MartSearchServerRackTest < Test::Unit::TestCase
             
             @browser.get "/browse?field=#{name}&query=#{opts[:link_arg]}&page=1&wt=json"
             assert( @browser.last_response.ok? )
-            
             json = JSON.parse( @browser.last_response.body )
-            
             assert( json.is_a?(Hash) )
           end
         end
       end
     end
+    
+    should "render IKMC project pages as JSON..." do
+      VCR.use_cassette('test_server_project_page') do
+        project_ids_to_test = ['35505','27042','42474']
+        
+        project_ids_to_test.each do |project_id|
+          @browser.get "/project/#{project_id}?wt=json"
+          assert( @browser.last_response.ok? )
+          json = JSON.parse( @browser.last_response.body )
+          assert( json.is_a?(Hash) )
+        end
+      end
+    end
+    
   end
 end
