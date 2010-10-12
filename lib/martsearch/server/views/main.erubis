@@ -1,8 +1,135 @@
-<form id="martsearchr" action="<%= url_for '/search' %>" method="get" accept-charset="utf-8">
-  <input type="text" name="query" value="" size="50" />&nbsp;
-  <input type="submit" value="Search" /><br />
-  <small>Enter gene symbols, gene or product identifiers or any other search term described in the <%= link_to 'help', '/help' %> section.</small>
-</form>
+<div class="larger">
+  <table class="welcome" style="margin-bottom:5px">
+    <tr>
+      <td width="50%">
+        <p>
+          The IKMC MartSearch project integrates data from numerous 
+          <a href="http://www.biomart.org">Biomarts</a> to facilitate 
+          both simple and expert searches.  Use the search bar 
+          to the right to perform simple searches of our data.
+        </p>
+      </td>
+      <td width="50%">
+        <form id="martsearchr" action="<%= url_for '/search' %>" method="get" accept-charset="utf-8">
+          <input type="text" name="query" value="" size="50" />&nbsp;
+          <input type="submit" value="Search" /><br />
+          <small>
+            Enter gene/product identifiers (e.g. 
+            <%= link_to( 'Cbx1', '/search/Cbx1' ) %> or 
+            <%= link_to( 'EPD0027_2_A01', '/search/EPD0027_2_A01' ) %>) 
+            or any other <br />search term described in the 
+            <%= link_to( 'help', '/help' ) %> section.
+          </small>
+        </form>
+      </td>
+    </tr>
+  </table>
+  
+  <h3>Viewing IKMC Data in Ensembl</h3>
+  <p>
+    Most of the products/data found within this portal can also be viewed as <a href="http://en.wikipedia.org/wiki/Distributed_Annotation_System" target="_blank">DAS</a> 
+    tracks in the <a href="http://www.ensembl.org/" target="_blank">Ensembl genome browser</a>.  Follow these links 
+    to have the tracks automatically activated for you:
+  </p>
+  <ul class="ensembl_link_list">
+    <li><a href="<%= ensembl_link_url_from_coords( :mouse, 5, 151365628, 151394454, ['das:http://das.sanger.ac.uk/das/ikmc_products'] ) %>" class="ensembl_link" target="_blank">IKMC alleles in Ensembl Mouse</a></li>
+    <li><a href="<%= ensembl_link_url_from_coords( :human, 17, 46063149, 46263148, ['das:http://das.sanger.ac.uk/das/mouse_KOs'] ) %>" class="ensembl_link" target="_blank">IKMC alleles on orthologous genes in Ensembl Human</a></li>
+  </ul>
 
-<div class="clear"></div>
+  <hr />
 
+  <h2>Federated Searches</h2>
+  <p>
+    The links below take you to the <a href="http://www.i-dcc.org/biomart">standard 
+    MartView interface</a> for several examples of federated queries:
+  </p>
+  <ol>
+    <li>
+      <a href='http://www.i-dcc.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=mmusculus_gene_ensembl.default.feature_page.chromosome_name|mmusculus_gene_ensembl.default.feature_page.start_position|mmusculus_gene_ensembl.default.feature_page.go_molecular_function_id|mmusculus_gene_ensembl.default.feature_page.go_molecular_function__dm_name_1006|dcc.default.feature_page.marker_symbol|dcc.default.feature_page.mgi_accession_id|dcc.default.feature_page.ikmc_project|dcc.default.feature_page.status|dcc.default.feature_page.mouse_available&FILTERS=mmusculus_gene_ensembl.default.filters.go_molecular_function_parent_term."GO:0003677"|mmusculus_gene_ensembl.default.filters.chromosome_name."1"|dcc.default.filters.project."KOMP-CSD,KOMP-Regeneron,EUCOMM,NorCOMM"|dcc.default.filters.escell_available."1"&VISIBLEPANEL=resultspanel' target="_blank">
+        Find all IKMC targeted ES cells for genes encoding transcription factors on Chromosome 1.
+      </a>
+      <span style="color:#666;font-style:italic;">
+        (This query joins IKMC Projects/Alleles to Ensembl).
+      </span>
+    </li>
+    <li>
+      <a href='http://www.i-dcc.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=kermits.default.attributes.marker_symbol|kermits.default.attributes.sponsor|kermits.default.attributes.mi_centre|kermits.default.attributes.emma|idcc_targ_rep.default.attributes.pipeline|idcc_targ_rep.default.attributes.allele_symbol_superscript|idcc_targ_rep.default.attributes.mutation_type|idcc_targ_rep.default.attributes.mutation_subtype|idcc_targ_rep.default.attributes.escell_clone|idcc_targ_rep.default.attributes.parental_cell_line|idcc_targ_rep.default.attributes.targeting_vector|idcc_targ_rep.default.attributes.cassette&FILTERS=kermits.default.filters.emma."1"|kermits.default.filters.status."Genotype Confirmed"&VISIBLEPANEL=resultspanel' target="_blank">
+        Find all IKMC mice available from the EMMA Repository with information on the vector used to make the mutation.
+      </a>
+      <span style="color:#666;font-style:italic;">
+        (This query joins IKMC Targeting Repository to Mouse Production data).
+      </span>
+    </li>
+    <li>
+      <a href='http://www.i-dcc.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=template.default.attributes.emap_term|template.default.attributes.ann_strength|template.default.attributes.ann_pattern|dcc.default.attributes.marker_symbol|dcc.default.attributes.ikmc_project|dcc.default.attributes.mgi_accession_id|dcc.default.attributes.escell_available&FILTERS=template.default.filters.emap_term."heart"|dcc.default.filters.escell_available."1"&VISIBLEPANEL=resultspanel' target="_blank">
+        Find all IKMC targeted ES cells for genes expressed in heart.
+      </a>
+      <span style="color:#666;font-style:italic;">
+        (This query joins IKMC Projects/Alleles to EurExpress).
+      </span>
+    </li>
+  </ol>
+
+  <hr />
+
+  <h2>The Biomarts</h2>
+  <p>
+    This portal integrates information on IKMC mouse knockout resources with numerous 
+    other relevant datasets, including Ensembl, Europhenome, EurExpress and EMMA.  For more 
+    information about this portal and the way in which it unites and searches the data, 
+    please see the <%= link_to( 'about', '/about' ) %> page.
+  </p>
+  <div style="text-align:center">
+    <style type="text/css" media="screen">
+      img.image_map_img     {display:none;}
+      dl.image_map          {display:block; width:749px; height:435px; background:url("<%= url_for '/images/about-page/ikmc-biomarts.png' %>"); position:relative; margin:2px auto 2px auto;}
+      dl.image_map a        {display:block; width:191px; height:0; padding-top:34px; overflow:hidden; position:absolute; background:transparent;}
+      dl.image_map a:hover  {background:transparent; border:1px dashed #999; color:black;}
+      dl.image_map a:focus  {outline:none;}
+      a#ikmc_proj_alle_link {left:105px; top:35px;}
+      a#ikmc_targ_prod_link {left:105px; top:69px;}
+      a#ikmc_mous_prod_link {left:105px; top:103px;}
+      a#ikmc_omim_link      {left:105px; top:137px;}
+      a#mgi_features_link   {left:358px; top:77px;}
+      a#ikmc_unitrap_link   {left:58px; top:224px;}
+      a#europhenome_link    {left:500px; top:155px;}
+      a#eurexpress_link     {left:535px; top:241px;}
+      a#mgp_phenotype_link  {left:27px; top:315px;}
+      a#mgp_expressio_link  {left:27px; top:350px;}
+      a#wtsi_dna_clon_link  {left:27px; top:385px;}
+      a#ensembl_mouse_link  {left:266px; top:359px;}
+      a#emma_link           {left:500px; top:326px;}
+    </style>
+
+    <img class="image_map_img" src="<%= url_for '/images/about-page/ikmc-biomarts.png' %>" alt="The Biomarts Linked into this Portal" />
+    <dl class="image_map">
+      <dd><a id="ikmc_proj_alle_link" title="IKMC Projects / Alleles" href="http://www.i-dcc.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=dcc.default.attributes.marker_symbol|dcc.default.attributes.mgi_accession_id|dcc.default.attributes.ikmc_project|dcc.default.attributes.ikmc_project_id|dcc.default.attributes.status|dcc.default.attributes.mouse_available|dcc.default.attributes.escell_available|dcc.default.attributes.vector_available&FILTERS=&VISIBLEPANEL=mainpanel"></a></dd>
+      <dd><a id="ikmc_targ_prod_link" title="IKMC Targeted Products" href="http://www.i-dcc.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=idcc_targ_rep.default.attributes.pipeline|idcc_targ_rep.default.attributes.ikmc_project_id|idcc_targ_rep.default.attributes.mgi_accession_id|idcc_targ_rep.default.attributes.targeting_vector|idcc_targ_rep.default.attributes.escell_clone&FILTERS=&VISIBLEPANEL=mainpanel"></a></dd>
+      <dd><a id="ikmc_mous_prod_link" title="IKMC Mouse Production" href="http://www.i-dcc.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=kermits.default.attributes.sponsor|kermits.default.attributes.marker_symbol|kermits.default.attributes.status&FILTERS=&VISIBLEPANEL=mainpanel"></a></dd>
+      <dd><a id="ikmc_omim_link" title="OMIM" href="http://www.i-dcc.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=omim.default.attributes.omim_id|omim.default.attributes.title|omim.default.attributes.human_gene_symbol|omim.default.attributes.mouse_gene_symbol|omim.default.attributes.mgi_accession_id|omim.default.attributes.location|omim.default.attributes.gene_status|omim.default.attributes.mapping_method|omim.default.attributes.disorder_name|omim.default.attributes.disorder_type|omim.default.attributes.tentative&FILTERS=&VISIBLEPANEL=mainpanel"></a></dd>
+      <dd><a id="mgi_features_link" title="MGI Features" href="http://biomart.informatics.jax.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=markers.default.markers_attributes.marker_symbol_107|markers.default.markers_attributes.marker_name_107&FILTERS=&VISIBLEPANEL=mainpanel"></a></dd>
+      <dd><a id="ikmc_unitrap_link" title="UniTrap" href="http://biomart.helmholtz-muenchen.de/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=unitrap.default.attributes.ensembl_gene_id|unitrap.default.attributes.ensembl_exon_id|unitrap.default.attributes.unitrap_accession_id|unitrap.default.attributes.genbank_id|unitrap.default.attributes.genbank_accession|unitrap.default.attributes.project|unitrap.default.attributes.escell_clone&FILTERS=&VISIBLEPANEL=mainpanel"></a></dd>
+      <dd><a id="europhenome_link" title="Europhenome" href='http://www.europhenome.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=europhenome.default.naive_attributes.ensembl_gene_id|europhenome.default.naive_attributes.stocklist_id|europhenome.default.naive_attributes.sex|europhenome.default.naive_attributes.escell_clone|europhenome.default.naive_attributes.allele_name|europhenome.default.naive_attributes.marker_name|europhenome.default.naive_attributes.line_name|europhenome.default.naive_attributes.emma_id|europhenome.default.naive_attributes.effect_size|europhenome.default.naive_attributes.significance|europhenome.default.naive_attributes.mp_term_name|europhenome.default.naive_attributes.zygosity|europhenome.default.naive_attributes.europhenome_id|europhenome.default.naive_attributes.parameter_eslim_id|europhenome.default.naive_attributes.pipeline|europhenome.default.naive_attributes.mp_term|europhenome.default.naive_attributes.ikmc_project_id|europhenome.default.naive_attributes.marker_symbol|europhenome.default.naive_attributes.parameter_name|europhenome.default.naive_attributes.mgi_accession_id&FILTERS=europhenome.default.naive_filters.significance."0.05"&VISIBLEPANEL=mainpanel'></a></dd>
+      <dd><a id="eurexpress_link" title="Eurexpress" href="http://biomart.eurexpress.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=template.default.attributes.tmp_template_id_key|template.default.attributes.tmp_gene_symbol|template.default.attributes.tmp_gene_description|template.default.attributes.tmp_chromosone_location|template.default.attributes.tmp_aliases|template.default.attributes.ass_assay_id_key|template.default.attributes.assay_image|template.default.attributes.emap_term&FILTERS=&VISIBLEPANEL=mainpanel"></a></dd>
+      <dd><a id="mgp_phenotype_link" title="MGP Phenotyping" href="http://www.sanger.ac.uk/htgt/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=phenotyping.default.heatmap.marker_symbol|phenotyping.default.heatmap.colony_prefix|phenotyping.default.heatmap.pipeline&FILTERS=&VISIBLEPANEL=mainpanel"></a></dd>
+      <dd><a id="mgp_expressio_link" title="MGP Wholemount Expression" href="http://www.sanger.ac.uk/htgt/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=wholemount_expression.default.results.marker_symbol|wholemount_expression.default.results.colony_prefix|wholemount_expression.default.results.mouse_id|wholemount_expression.default.results.age_in_weeks|wholemount_expression.default.results.gender|wholemount_expression.default.results.genotype|wholemount_expression.default.results.pipeline|wholemount_expression.default.results.comments&FILTERS=&VISIBLEPANEL=mainpanel"></a></dd>
+      <dd><a id="wtsi_dna_clon_link" title="WTSI DNA Clone Resources" href="http://www.sanger.ac.uk/htgt/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=bacs.default.attributes.marker_symbol|bacs.default.attributes.chromosome|bacs.default.attributes.start|bacs.default.attributes.num_products_per_gene|bacs.default.attributes.end|bacs.default.attributes.strand|bacs.default.attributes.library&FILTERS=&VISIBLEPANEL=mainpanel"></a></dd>
+      <dd><a id="ensembl_mouse_link" title="Ensembl Mouse (Gene)" href="http://www.i-dcc.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=mmusculus_gene_ensembl.default.feature_page.ensembl_gene_id|mmusculus_gene_ensembl.default.feature_page.ensembl_transcript_id&FILTERS=&VISIBLEPANEL=mainpanel"></a></dd>
+      <dd><a id="emma_link" title="EMMA" href="http://www.emmanet.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=strains.default.naive_attributes.emma_id|strains.default.naive_attributes.international_strain_name|strains.default.naive_attributes.synonym|strains.default.naive_attributes.maintained_background|strains.default.naive_attributes.mutation_main_type|strains.default.naive_attributes.mutation_sub_type|strains.default.naive_attributes.gene_symbol|strains.default.naive_attributes.alls_form&FILTERS=&VISIBLEPANEL=mainpanel"></a></dd>
+    </dl>
+  </div>
+
+  <hr />
+
+  <h2>Information for Developers</h2>
+  <p>
+    All the code and data that we produce is open-source and free to use. The following links 
+    will guide you to our source-code and documentation on how you can interact with the 
+    services we provide.
+  </p>
+  <ul>
+    <li><a href="http://github.com/i-dcc/martsearch" target="_blank">All the code used to create this portal</a></li>
+    <li><a href="http://github.com/dazoakley/biomart" target="_blank">The ruby API used to interact with the Biomarts</a></li>
+    <li><a href="http://github.com/i-dcc/martsearch/wiki/using-the-ikmc-search-engine-in-your-application" target="_blank">Using our search engine in your application</a></li>
+  </ul>
+</div>

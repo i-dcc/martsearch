@@ -876,3 +876,23 @@ table.ikmc-pipeline-progress-bar td.end_error {
 table.ikmc-pipeline-progress-bar td.end_warn {
   background-image: url('../images/progress-bar/progress-end-warn.png');
 }
+
+/* IKMC Welcome Page Specifics */
+
+#header {
+	height: 92px;
+	background: url('../images/ikmc-logo.png') no-repeat;
+}
+
+#header a h1 {
+	color: #000;
+	margin-bottom: 0;
+	padding: 35px 0 40px 100px;
+}
+
+div#googlemeter_crop {
+	height: 225px;
+	width: 375px;
+	overflow: hidden;
+	padding: 10px;
+}
