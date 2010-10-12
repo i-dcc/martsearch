@@ -2,7 +2,7 @@
   "datasource":            "ikmc-kermits",
   "enabled":               true,
   "custom_sort":           true,
-  "custom_secondary_sort": false,
+  "custom_secondary_sort": true,
   "attribution":           "The International Knockout Mouse Consortium (IKMC)",
   "attribution_link":      "http://www.knockoutmouse.org/",
   "searching": {
