@@ -4,7 +4,7 @@
     We have tried our best to build this portal as free of problems as possible, but 
     we may have still missed something.  If you have any issues or would like to 
     request a new feature that we have not yet thought of, please send an email to 
-    <a href="mailto:<%= @config[:email]["to"] %>"><%= @config[:email]["to"] %></a>.
+    <a href="mailto:<%= @config[:email][:to] %>"><%= @config[:email][:to] %></a>.
   </p>
   
   <hr />
@@ -23,10 +23,6 @@
       <li>Entrez (NCBI) Gene ID</li>
       <li>CCDS ID</li>
       <li>OMIM ID</li>
-      <li>
-        EUCOMM/KOMP Design, Intermediate/Targeting Vector and ES Cell 
-        Clone names
-      </li>
       <li>Confirmed Positive Phenotype Test Name</li>
     </ul>
   </p>
