@@ -21,10 +21,10 @@
     how this linking is done and the relationships between the data:
     <ul>
       <li>
-        <a href="<%= @base_uri %>/images/about-page/indexing-strategy.png" title="How the search engine is built" rel="prettyPhoto">How the search engine is built</a>.
+        <a href="<%= url_for '/images/about-page/indexing-strategy.png' %>" title="How the search engine is built" rel="prettyPhoto">How the search engine is built</a>.
       </li>
       <li>
-        <a href="<%= @base_uri %>/images/about-page/ikmc-biomart-links.png" title="How the biomarts are linked into the search engine (and portal)" rel="prettyPhoto">How the biomarts are linked into the search engine (and portal)</a>.
+        <a href="<%= url_for '/images/about-page/ikmc-biomart-links.png' %>" title="How the biomarts are linked into the search engine (and portal)" rel="prettyPhoto">How the biomarts are linked into the search engine (and portal)</a>.
       </li>
     </ul>
   </p>
