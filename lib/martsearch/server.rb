@@ -12,6 +12,7 @@ module MartSearch
   # @author Darren Oakley
   class Server < Sinatra::Base
     include MartSearch::ServerUtils
+    include MartSearch::ProjectUtils
     register Sinatra::StaticAssets
     use HoptoadNotifier::Rack
     
@@ -195,6 +196,42 @@ module MartSearch
         url << "&page=#{params[:page]}" if params[:page]
         status 301
         redirect url
+      end
+    end
+    
+    ##
+    ## IKMC Project Reports
+    ##
+    
+    ['/project/:id','/project/?'].each do |path|
+      get path do
+        project_id = params[:id]
+        redirect "#{request.script_name}/" if project_id.nil?
+        
+        @current    = "home"
+        @page_title = "IKMC Project: #{project_id}"
+        @data       = nil
+        cache       = MartSearch::Controller.instance().cache
+        
+        cached_data = cache.fetch("project-report-#{project_id}")
+        if cached_data.nil? or params[:fresh] == "true"
+          @data = get_ikmc_project_page_data( project_id )
+          cache.write("project-report-#{project_id}", Marshal.dump(@data), :expires_in => 12.hours )
+        else
+          @data = Marshal.load(cached_data)
+        end
+        
+        if @data.nil?
+          status 404
+          erubis :not_found
+        else
+          if params[:wt] == "json"
+            content_type "application/json"
+            return @data.to_json
+          else
+            erubis :project_report
+          end
+        end
       end
     end
     
