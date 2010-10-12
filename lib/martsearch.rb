@@ -1,6 +1,3 @@
-require 'uri'
-require 'net/http'
-require 'cgi'
 require 'singleton'
 require 'logger'
 
@@ -9,20 +6,18 @@ require 'bundler/setup'
 
 require 'biomart'
 require 'sinatra/base'
+require 'erubis'
 require 'sinatra/static_assets'
+require 'hoptoad_notifier'
 require 'json'
 require 'parallel'
 require 'tree'
 require 'sequel'
-require 'builder'
-require 'erubis'
 require 'yui/compressor'
 require 'closure-compiler'
-require 'active_support'
 require 'active_support/core_ext/hash' unless Hash.respond_to?(:symbolize_keys!) # Rails 3
 require 'will_paginate/collection'
 require 'will_paginate/view_helpers'
-require 'hoptoad_notifier'
 
 require 'ap'
 

@@ -291,6 +291,6 @@ module MartSearch
           doc[ term_conf[:idx][:breadcrumb].to_sym ].push( cached_data[term_or_name].join(" | ") )
         end
       end
-    
-    end
+      
+  end
 end

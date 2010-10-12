@@ -16,8 +16,6 @@ module MartSearch
   #
   # TODO: At the moment this object expects an OLS_DB constant to be present (as a sequel connection to the database) - this should really be handled by MartSearch::Controller.
   class OntologyTerm < Tree::TreeNode
-    attr_reader :term, :term_name
-    
     # @param [String] name the ontology term (id) i.e. GO00032
     # @param [String] content the ontology term name/description - optional this will be looked up in the OLS database
     def initialize( name, content=nil )
