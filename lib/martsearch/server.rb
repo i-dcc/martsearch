@@ -60,6 +60,16 @@ module MartSearch
       @compressed_base_js = compressed_base_js( VERSION )
     end
     
+    not_found do
+      @martsearch_error = false
+      if request.env["HTTP_REFERER"] and request.env["HTTP_REFERER"].match(request.env["HTTP_HOST"])
+        @martsearch_error = true
+      end
+
+      @request = request
+      erubis :not_found
+    end
+    
     before do
       response['Content-Type'] = 'text/html; charset=utf-8'
 

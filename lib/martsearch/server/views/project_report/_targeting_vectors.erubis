@@ -1,49 +1,45 @@
 <div class="dataset">
   <h4 class="dataset_title toggle-open">Targeting Vectors</h4>
   <div class="dataset_content">
-    <% if @data[:targeting_vectors] %>
-      <% order_vector_url = @data.include?(:order_vector_url) ? @data[:order_vector_url] : @data[:order_default_url] %>
-      
-      <img src="<%= @data[:vector_image] %>" width="940px" />
-      <div class="clear"></div>
-      
-      <%= partial("project_report/ensembl_links") %>
-      
-      <table>
-        <thead>
-          <th class="hide_on_print"></th>
-          <th>Design ID</th>
-          <th>Vector Type</th>
-          <th>Targeting Vector</th>
-          <th>Floxed Exon</th>
-          <th>Cassette</th>
-          <th>Backbone</th>
-          <th class="hide_on_print">Genbank File</th>
-        </thead>
-        <tbody class="products">
-          <% @data[:targeting_vectors].each do |targvec| %>
-            <tr>
-              <td class="hide_on_print">
-                <a href="<%= order_vector_url %>" class="order" target="_blank">order</a>
-              </td>
-              <td><%= targvec[:design_id] %></td>
-              <td><%= targvec[:design_type] %></td>
-              <td><%= targvec[:name] %></td>
-              <td><%= targvec[:floxed_exon] %></td>
-              <td><%= targvec[:cassette] %></td>
-              <td><%= targvec[:backbone] %></td>
-              <td class="hide_on_print">
-                <a href="<%= @data[:vector_gb] %>" target="_blank" class="file ext_link">view</a>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-      <% if @data[:targeting_vectors].size > 1 %>
-        <a class="products_toggle">show/hide more targeting vectors</a>
-      <% end %>
-    <% else %>
-      <em>No distributable targeting vector available for this project.</em>
+    <% order_vector_url = @data.include?(:order_vector_url) ? @data[:order_vector_url] : @data[:order_default_url] %>
+    
+    <img src="<%= @data[:vector_image] %>" width="940px" />
+    <div class="clear"></div>
+    
+    <%= partial("project_report/ensembl_links") %>
+    
+    <table>
+      <thead>
+        <th class="hide_on_print"></th>
+        <th>Design ID</th>
+        <th>Vector Type</th>
+        <th>Targeting Vector</th>
+        <th>Floxed Exon</th>
+        <th>Cassette</th>
+        <th>Backbone</th>
+        <th class="hide_on_print">Genbank File</th>
+      </thead>
+      <tbody class="products">
+        <% @data[:targeting_vectors].each do |targvec| %>
+          <tr>
+            <td class="hide_on_print">
+              <a href="<%= order_vector_url %>" class="order" target="_blank">order</a>
+            </td>
+            <td><%= targvec[:design_id] ? targvec[:design_id] : '-' %></td>
+            <td><%= targvec[:design_type] %></td>
+            <td><%= targvec[:name] %></td>
+            <td><%= targvec[:floxed_exon] %></td>
+            <td><%= targvec[:cassette] %></td>
+            <td><%= targvec[:backbone] %></td>
+            <td class="hide_on_print">
+              <a href="<%= @data[:vector_gb] %>" target="_blank" class="file ext_link">view</a>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <% if @data[:targeting_vectors].size > 1 %>
+      <a class="products_toggle">show/hide more targeting vectors</a>
     <% end %>
     <div class="clear"></div>
   </div>

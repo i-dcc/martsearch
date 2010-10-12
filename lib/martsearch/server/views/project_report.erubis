@@ -17,19 +17,33 @@
     <%= partial("project_report/progress_bar") %>
     
     <!-- Mice -->
-    <%= partial("project_report/mice") %>
+    <% unless @data[:mice].nil? %>
+      <%= partial("project_report/mice") %>
+    <% end %>
     
-    <!-- ES Cell Clones (Conditional) -->
-    <%= partial("project_report/es_cells", :locals => { :cond_vs_noncond => :'conditional' }) %>
     
-    <!-- ES Cell Clones (Non-Conditionals) -->
-    <%= partial("project_report/es_cells", :locals => { :cond_vs_noncond => :'targeted non-conditional' }) %>
+    <% unless @data[:es_cells].nil? %>
+      <!-- ES Cell Clones (Conditional) -->
+      <% unless @data[:es_cells][:conditional][:cells].empty? %>
+        <%= partial("project_report/es_cells", :locals => { :cond_vs_noncond => :conditional }) %>
+      <% end %>
+      
+      <!-- ES Cell Clones (Non-Conditionals) -->
+      <% unless @data[:es_cells][:'targeted non-conditional'][:cells].empty? %>
+        <%= partial("project_report/es_cells", :locals => { :cond_vs_noncond => :'targeted non-conditional' }) %>
+      <% end %>
+    <% end %>
+    
     
     <!-- Targeting Vectors -->
-    <%= partial("project_report/targeting_vectors") %>
+    <% unless @data[:targeting_vectors].nil? %>
+      <%= partial("project_report/targeting_vectors") %>
+    <% end %>
     
     <!-- Intermediate Vectors -->
-    <%= partial("project_report/intermediate_vectors") %>
+    <% unless @data[:intermediate_vectors].nil? %>
+      <%= partial("project_report/intermediate_vectors") %>
+    <% end %>
   </div>
 </div>
 
