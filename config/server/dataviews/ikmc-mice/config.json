@@ -2,7 +2,7 @@
   "name":                 "IKMC Mice",
   "description":          "Mouse breeding statistics produced by members of The International Knockout Mouse Consortium (IKMC).",
   "enabled":              true,
-  "display":              true,
+  "display":              false,
   "custom_css":           false,
   "custom_head_js":       true,
   "custom_base_js":       true,
