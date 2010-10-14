@@ -1,7 +1,15 @@
 
 <% if result_data[:'mgi-markers'][:start] and result_data[:'mgi-markers'][:end] %>
   <span style="float: right;">
-    <img src="http://gbrowse.informatics.jax.org/cgi-bin/gbrowse_img/thumbs_current/?abs=1;options=Everything;width=200;name=<%= result_data[:'mgi-markers'][:chromosome] %>%3A<%= result_data[:'mgi-markers'][:start] %>-<%= result_data[:'mgi-markers'][:end] %>" alt="" />
+    <%= 
+      mgi_gbrowse_img(
+        300,
+        result_data[:'mgi-markers'][:chromosome],
+        result_data[:'mgi-markers'][:start],
+        result_data[:'mgi-markers'][:end],
+        { 'MGI_Representative_Transcripts' => :expanded_labeled }
+      )
+    %>
   </span>
 <% end %>
 
@@ -46,7 +54,7 @@
   </tr>
 </table>
 
-<div>
+<div style="clear:both;">
   <h5 class="single_parent_toggler_toggle">More Information</h5>
   <div class="single_parent_toggler_content">
     <table>
