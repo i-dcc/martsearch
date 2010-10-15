@@ -179,7 +179,7 @@ module MartSearch
       if flagged_for_dist
         order_url = ikmc_product_order_url( :mouse, project, project_id, nil, marker_symbol )
         unless order_url.empty?
-          button_text = link_to( 'order', order_url, { :class => 'order', :target => '_blank' } )
+          button_text = "<a href=\"#{order_url}\" class=\"order\" target=\"_blank\">order</a>"
         end
       end
       
@@ -206,7 +206,7 @@ module MartSearch
       embed_url << 'embed=1;'
       embed_url << '&iframe=true&width=95%&height=95%'
       
-      return link_to( image_tag( img_url ), embed_url, { :rel => 'prettyPhoto' } )
+      return "<a href=\"#{embed_url}\" rel=\"prettyPhoto\"><img src=\"#{img_url}\" /></a>"
     end
     
     # Helper function to generate the options to drive a GBrowse img server.
