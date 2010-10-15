@@ -71,7 +71,7 @@ module MartSearch
     end
     
     before do
-      response['Content-Type'] = 'text/html; charset=utf-8'
+      content_type 'text/html', :charset => 'utf-8'
 
       # TODO: We need a better way of configuring idiots to block
       accept_request = true
@@ -143,7 +143,7 @@ module MartSearch
         @errors     = @ms.errors
 
         if params[:wt] == 'json'
-          content_type 'application/json'
+          content_type 'application/json', :charset => 'utf-8'
           return @data.to_json
         else
           erubis :search
@@ -194,7 +194,7 @@ module MartSearch
       end
       
       if params[:wt] == 'json'
-        content_type 'application/json'
+        content_type 'application/json', :charset => 'utf-8'
         return @data.to_json
       else
         erubis :browse
@@ -236,8 +236,8 @@ module MartSearch
           status 404
           erubis :not_found
         else
-          if params[:wt] == "json"
-            content_type "application/json"
+          if params[:wt] == 'json'
+            content_type 'application/json', :charset => 'utf-8'
             return @data.to_json
           else
             erubis :project_report
@@ -251,37 +251,37 @@ module MartSearch
     ##
     
     get '/css/martsearch*.css' do
-      content_type 'text/css'
+      content_type 'text/css', :charset => 'utf-8'
       @compressed_css = compressed_css( VERSION ) if @compressed_css.nil?
       return @compressed_css
     end
 
     get '/js/martsearch-head*.js' do
-      content_type 'text/javascript'
+      content_type 'text/javascript', :charset => 'utf-8'
       @compressed_head_js = compressed_head_js( VERSION ) if @compressed_head_js.nil?
       return @compressed_head_js
     end
     
     get '/js/martsearch-base*.js' do
-      content_type 'text/javascript'
+      content_type 'text/javascript', :charset => 'utf-8'
       @compressed_base_js = compressed_base_js( VERSION ) if @compressed_base_js.nil?
       return @compressed_base_js
     end
     
     get '/dataview-css/:dataview_name' do
-      content_type 'text/css'
+      content_type 'text/css', :charset => 'utf-8'
       dataview_name = params[:dataview_name].sub('.css','')
       @ms.dataviews_by_name[ dataview_name.to_sym ].stylesheet
     end
 
     get '/dataview-head-js/:dataview_name' do
-      content_type 'text/javascript'
+      content_type 'text/javascript', :charset => 'utf-8'
       dataview_name = params[:dataview_name].sub('.js','')
       @ms.dataviews_by_name[ dataview_name.to_sym ].javascript_head
     end
     
     get '/dataview-base-js/:dataview_name' do
-      content_type 'text/javascript'
+      content_type 'text/javascript', :charset => 'utf-8'
       dataview_name = params[:dataview_name].sub('.js','')
       @ms.dataviews_by_name[ dataview_name.to_sym ].javascript_base
     end
