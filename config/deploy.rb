@@ -44,7 +44,7 @@ namespace :deploy do
   
   desc 'Set the permissions of the filesystem so that others in the team can deploy'
   task :fix_perms do
-    run "chmod 02775 #{release_path}"
+    run "chmod g+w #{release_path}"
   end
 end
 
