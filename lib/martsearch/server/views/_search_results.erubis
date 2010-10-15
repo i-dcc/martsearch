@@ -11,7 +11,17 @@
     <table class="noborder nocol result-header" width="100%">
       <tr>
         <td width="30%">
-          <h3 class="doc_title toggle-open"><%= result_data[:index][:marker_symbol] %></h3>
+          <h3 class="doc_title toggle-open">
+            <%
+              doc_title = ''
+              if result_data[:index][:marker_symbol] != nil
+                doc_title = result_data[:index][:marker_symbol]
+              else
+                doc_title = result_data[:index][:mgi_accession_id]
+              end
+            %>
+            <%= doc_title %>
+          </h3>
         </td>
         <td>
           <div class="doc_datasets_returned">
@@ -19,11 +29,19 @@
             <% @ms.dataviews.each do |view| %>
               <% next unless view.display %>
               <% if view.display_for_result?( result_data, @errors[:datasets] ) %>
-                <% dataset_errors = view.search_errors( @errors[:datasets] ) %>
+                <%
+                  dataset_errors = view.search_errors( @errors[:datasets] )
+                  uniq_id_str    = ''
+                  if result_data[:index][:marker_symbol] != nil
+                    uniq_id_str = "#{result_data[:index][:marker_symbol].downcase}-#{view.internal_name}"
+                  else
+                    uniq_id_str = "#{result_data[:index][:mgi_accession_id].gsub(':','_').downcase}-#{view.internal_name}"
+                  end
+                %>
                 <% if dataset_errors[:required].empty? %>
-                  <a href="#<%= result_data[:index][:marker_symbol].downcase %>-<%= view.internal_name %>" class="dataset_returned dataset_link_bubble" title="<%= partial( "view_display_tooltip", :locals => { :view => view, :data_return => 'display' } ) %>"><%= view.name.gsub( " ", "&nbsp;" ) %></a>
+                  <a href="#<%= uniq_id_str %>" class="dataset_returned dataset_link_bubble" title="<%= partial( "view_display_tooltip", :locals => { :view => view, :data_return => 'display' } ) %>"><%= view.name.gsub( " ", "&nbsp;" ) %></a>
                 <% else %>
-                  <a href="#<%= result_data[:index][:marker_symbol].downcase %>-<%= view.internal_name %>" class="dataset_error dataset_link_bubble" title="<%= partial( "view_display_tooltip", :locals => { :view => view, :data_return => 'error' } ) %>"><%= view.name.gsub( " ", "&nbsp;" ) %></a>
+                  <a href="#<%= uniq_id_str %>" class="dataset_error dataset_link_bubble" title="<%= partial( "view_display_tooltip", :locals => { :view => view, :data_return => 'error' } ) %>"><%= view.name.gsub( " ", "&nbsp;" ) %></a>
                 <% end %>
               <% else %>
                 <span class="dataset_no_return dataset_link_bubble" title="<%= partial( "view_display_tooltip", :locals => { :view => view, :data_return => 'none' } ) %>"><%= view.name.gsub( " ", "&nbsp;" ) %></span>
@@ -66,11 +84,18 @@
     <div class="doc_content">
       <% @ms.dataviews.each do |view| %>
         <% if view.display_for_result?( result_data, @errors[:datasets] ) %>
-          <div id="<%= result_data[:index][:marker_symbol].downcase %>-<%= view.internal_name %>" class="dataset">
+          <%
+            dataset_errors = view.search_errors( @errors[:datasets] )
+            uniq_id_str    = ''
+            if result_data[:index][:marker_symbol] != nil
+              uniq_id_str = "#{result_data[:index][:marker_symbol].downcase}-#{view.internal_name}"
+            else
+              uniq_id_str = "#{result_data[:index][:mgi_accession_id].gsub(':','_').downcase}-#{view.internal_name}"
+            end
+          %>
+          <div id="#<%= uniq_id_str %>" class="dataset">
             <h4 class="dataset_title toggle-open"><%= view.name %></h4>
             <div class="dataset_content <%= view.internal_name %>">
-              
-              <% dataset_errors = view.search_errors( @errors[:datasets] ) %>
               <% unless dataset_errors[:required].empty? and dataset_errors[:optional].empty? %>
                 <div class="messages dataset_error">
                   <ul>
