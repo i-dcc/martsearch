@@ -3,7 +3,7 @@
   <span style="float: right;">
     <%= 
       mgi_gbrowse_img(
-        300,
+        350,
         result_data[:'mgi-markers'][:chromosome],
         result_data[:'mgi-markers'][:start],
         result_data[:'mgi-markers'][:end],

@@ -191,10 +191,22 @@ module MartSearch
     # Helper function to embed an image from the MGI GBrowse server.
     # 
     # @see #format_gbrowse_img_opts
-    def mgi_gbrowse_img(*args)
-      url = "http://gbrowse.informatics.jax.org/cgi-bin/gbrowse_img/mouse_current/"
-      url << format_gbrowse_img_opts(*args)
-      return image_tag( url )
+    def mgi_gbrowse_img( width, chromosome, start_pos, end_pos, img_tracks=[] )
+      mgi_url        = "http://gbrowse.informatics.jax.org/cgi-bin/gbrowse_img/mouse_current/"
+      default_tracks = {
+        'NCBI_Transcripts'               => :expanded_labeled,
+        'ENSEMBL_Transcripts'            => :expanded_labeled,
+        'MGI_Representative_Transcripts' => :expanded_labeled,
+        'VEGA_Transcripts'               => :expanded_labeled
+      }
+      
+      img_url = mgi_url + format_gbrowse_img_opts( width, chromosome, start_pos, end_pos, img_tracks )
+      
+      embed_url = mgi_url + format_gbrowse_img_opts( 700, chromosome, start_pos, end_pos, img_tracks.merge!(default_tracks) )
+      embed_url << 'embed=1;'
+      embed_url << '&iframe=true&width=90%&height=90%'
+      
+      return link_to( image_tag( img_url ), embed_url, { :rel => 'prettyPhoto' } )
     end
     
     # Helper function to generate the options to drive a GBrowse img server.
@@ -241,7 +253,7 @@ module MartSearch
       
       unless img_tracks.empty?
         url_opts << "type=#{tracks.join('+')};"
-        url_opts << "options=#{options.join('+')}"
+        url_opts << "options=#{options.join('+')};"
       end
       
       return url_opts
