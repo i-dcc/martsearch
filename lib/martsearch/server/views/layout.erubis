@@ -11,22 +11,22 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     
     <% if ENV['RACK_ENV'] == "production" or ENV['RACK_ENV'] == "staging" %>
-      <%= javascript_script_tag "/js/martsearch-head-#{MartSearch::Server::VERSION}.js", :charset => "utf-8" %>
-      <%= stylesheet_link_tag "/css/martsearch-#{MartSearch::Server::VERSION}.css", :media => 'all' %>
+      <%= javascript_script_tag "/js/martsearch-head-#{MartSearch::Server::VERSION}.js", :charset => 'utf-8' %>
+      <%= stylesheet_link_tag "/css/martsearch-#{MartSearch::Server::VERSION}.css", :media => 'all', :charset => 'utf-8' %>
       
     <% else %>
       <% MartSearch::Server::DEFAULT_HEAD_JS_FILES.each do |js_file| %>
-        <%= javascript_script_tag "/js/#{js_file}", :charset => "utf-8" %>
+        <%= javascript_script_tag "/js/#{js_file}", :charset => 'utf-8' %>
       <% end %>
       <% MartSearch::Server::DEFAULT_CSS_FILES.each do |css_file| %>
-        <%= stylesheet_link_tag "/css/#{css_file}", :media => 'all' %>
+        <%= stylesheet_link_tag "/css/#{css_file}", :media => 'all', :charset => 'utf-8' %>
       <% end %>
       <% @ms.dataviews.each do |view| %>
         <% unless view.stylesheet.nil? %>
-          <%= stylesheet_link_tag "/dataview-css/#{view.internal_name}.css", :media => 'all' %>
+          <%= stylesheet_link_tag "/dataview-css/#{view.internal_name}.css", :media => 'all', :charset => 'utf-8' %>
         <% end %>
         <% unless view.javascript_head.nil? %>
-          <%= javascript_script_tag "/dataview-head-js/#{view.internal_name}.js", :charset => "utf-8" %>
+          <%= javascript_script_tag "/dataview-head-js/#{view.internal_name}.js", :charset => 'utf-8' %>
         <% end %>
       <% end %>
     <% end %>
@@ -43,7 +43,7 @@
       <div id="navigation">
         <% unless @hide_side_search_form %>
           <span id="search">
-            <form id="martsearchr_nav" action="<%= url_for('/search') %>" method="get" accept-charset="utf-8">
+            <form id="martsearchr_nav" action="<%= url_for('/search') %>" method="get" accept-charset='utf-8'>
               <input type="text" class="textinput" name="query" value="" />
               <input type="submit" class="submit" value="search" />
             </form>
@@ -122,14 +122,14 @@
     <% end %>
     
     <% if ENV['RACK_ENV'] == "production" or ENV['RACK_ENV'] == "staging" %>
-      <%= javascript_script_tag "/js/martsearch-base-#{MartSearch::Server::VERSION}.js", :charset => "utf-8" %>
+      <%= javascript_script_tag "/js/martsearch-base-#{MartSearch::Server::VERSION}.js", :charset => 'utf-8' %>
     <% else %>
       <% MartSearch::Server::DEFAULT_BASE_JS_FILES.each do |js_file| %>
-        <%= javascript_script_tag "/js/#{js_file}", :charset => "utf-8" %>
+        <%= javascript_script_tag "/js/#{js_file}", :charset => 'utf-8' %>
       <% end %>
       <% @ms.dataviews.each do |view| %>
         <% next if view.javascript_base.nil? %>
-        <%= javascript_script_tag "/dataview-base-js/#{view.internal_name}.js", :charset => "utf-8" %>
+        <%= javascript_script_tag "/dataview-base-js/#{view.internal_name}.js", :charset => 'utf-8' %>
       <% end %>
     <% end %>
   </body>
