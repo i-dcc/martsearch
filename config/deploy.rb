@@ -25,7 +25,8 @@ namespace :deploy do
     run "ln -nfs #{shared_path}/ols_database.yml #{release_path}/config/ols_database.yml"
     
     # /log
-    run "ln -nfs #{shared_path}/log #{release_path}/log"
+    run "rm -rf #{release_path}/lib/martsearch/server/logs"
+    run "ln -nfs #{shared_path}/log #{release_path}/lib/martsearch/server/logs"
     
     # /tmp
     run "mkdir -m 777 -p #{var_run_path}/tmp"
