@@ -40,9 +40,9 @@ end
 # annotations at the top...
 results_to_return = {}
 
-sorted_results.each do |id,results|
+sorted_results.each do |id,the_results|
   assays = []
-  results.each do |assay_id,assay_data|
+  the_results.each do |assay_id,assay_data|
     assays.push(assay_data)
   end
   results_to_return[id] = assays.sort_by { |a| -1*(a[:annotations].size) }
