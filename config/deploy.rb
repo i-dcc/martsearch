@@ -1,6 +1,6 @@
-set :application, 'martsearch'
+set :application, 'ikmc_portal'
 set :repository,  'git://github.com/i-dcc/martsearch.git'
-set :branch, 'master'
+set :branch, 'ikmc_portal'
 set :user, `whoami`.chomp
 
 set :scm, :git

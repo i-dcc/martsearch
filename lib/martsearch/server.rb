@@ -1,5 +1,5 @@
 HoptoadNotifier.configure do |config|
-  config.api_key          = ''
+  config.api_key          = '1fad0eaacba687ba1ded863171b814c4'
   config.host             = 'htgt.internal.sanger.ac.uk'
   config.port             = 4007 # Note: Deployment notifications only work on port 80
   config.environment_name = ENV['RACK_ENV'] ? ENV['RACK_ENV'] : 'development'
