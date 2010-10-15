@@ -16,6 +16,8 @@ GEM
       net-sftp (>= 2.0.0)
       net-ssh (>= 2.0.14)
       net-ssh-gateway (>= 1.0.0)
+    capistrano-ext (1.2.1)
+      capistrano (>= 1.0.0)
     capybara (0.3.9)
       culerity (>= 0.2.4)
       mime-types (>= 1.16)
@@ -91,6 +93,7 @@ GEM
     rails_best_practices (0.4.0)
       ruby2ruby (>= 1.2.4)
       ruby_parser (>= 2.0.4)
+    railsless-deploy (1.0.2)
     rake (0.8.7)
     rcov (0.9.9)
     reek (1.2.8)
@@ -142,6 +145,7 @@ DEPENDENCIES
   builder (~> 2.1)
   bundler (>= 1.0.0)
   capistrano (>= 2.5)
+  capistrano-ext
   capybara (>= 0.3.9)
   closure-compiler
   erubis
@@ -154,6 +158,7 @@ DEPENDENCIES
   rack (>= 1.0)
   rack-contrib
   rack-test (>= 0.5)
+  railsless-deploy
   rcov
   rubytree (~> 0.7)
   sequel (~> 3.0)

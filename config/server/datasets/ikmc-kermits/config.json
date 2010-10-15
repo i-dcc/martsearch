@@ -34,6 +34,9 @@
       "qc_loxp_confirmation",
       "qc_three_prime_lr_pcr"
     ],
-    "filters": {}
+    "filters": {
+      "status": "Genotype Confirmed",
+      "emma":   "1"
+    }
   }
 }

@@ -52,7 +52,7 @@ search_data.each do |key,result_data|
     result_data[:'ikmc-idcc_targ_rep'].each do |pipeline, pipeline_projects|
       displayed_project = nil
       
-      pipeline_projects.each do |key, project|
+      pipeline_projects.each do |project_key, project|
         
         # Get mice availability
         if result_data[:'ikmc-dcc-knockout_attempts']
@@ -67,13 +67,13 @@ search_data.each do |key,result_data|
       
         # Push the most advanced project of this pipeline to the right array depending 
         # on its product availability
-        displayed_project = key if displayed_project.nil?
+        displayed_project = project_key if displayed_project.nil?
         if project[:mouse_available] == '1'
           projects_with_mice.push( project )
-          displayed_project = key unless pipeline_projects[displayed_project][:mouse_available] == '1'
+          displayed_project = project_key unless pipeline_projects[displayed_project][:mouse_available] == '1'
         elsif project[:escell_available] == '1' # From idcc-targ_rep custom sort
           projects_with_clones.push( project )
-          displayed_project = key unless pipeline_projects[displayed_project][:mouse_available] == '1'
+          displayed_project = project_key unless pipeline_projects[displayed_project][:mouse_available] == '1'
         elsif project[:vector_available] == '1' # From idcc-targ_rep custom sort
           projects_with_vectors.push( project )
         end

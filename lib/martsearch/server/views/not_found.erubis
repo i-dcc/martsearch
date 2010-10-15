@@ -2,7 +2,7 @@
 
 <% if @martsearch_error %>
   <p>
-    Sorry, it looks like an link within <%= @ms.portal_name %> has been 
+    Sorry, it looks like an link within <%= @portal_name %> has been 
     misconfigured.  The team responsible for this site have automatically 
     been sent an email to let them know that this needs fixing.
   </p>

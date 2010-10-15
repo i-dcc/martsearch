@@ -32,6 +32,8 @@ group :development, :test do
   gem 'rack-test',          '>=0.5'
   gem 'capybara',           '>=0.3.9'
   gem 'capistrano',         '>=2.5'
+  gem 'capistrano-ext'
+  gem 'railsless-deploy'
   gem 'simplecov',                      :platforms => :ruby_19
   gem 'rcov',                           :platforms => :ruby_18
   gem 'metric_fu',                      :platforms => :ruby_18

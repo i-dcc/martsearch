@@ -102,7 +102,11 @@ module MartSearch
         kermits_mart = datasources[:'ikmc-kermits'].ds
         results      = kermits_mart.search({
           :process_results => true,
-          :filters         => { 'marker_symbol' => marker_symbol, 'active' => '1' },
+          :filters         => {
+            'marker_symbol' => marker_symbol,
+            'status'        => 'Genotype Confirmed',
+            'emma'          => '1'
+          },
           :attributes      => [
               'status', 'allele_name', 'escell_clone', 'emma',
               'escell_strain', 'escell_line', 'mi_centre',
