@@ -191,7 +191,7 @@ module MartSearch
     # Helper function to embed an image from the MGI GBrowse server.
     # 
     # @see #format_gbrowse_img_opts
-    def mgi_gbrowse_img( width, chromosome, start_pos, end_pos, img_tracks=[] )
+    def mgi_gbrowse_img( width, chromosome, start_pos, end_pos, img_tracks={} )
       mgi_url        = "http://gbrowse.informatics.jax.org/cgi-bin/gbrowse_img/mouse_current/"
       default_tracks = {
         'NCBI_Transcripts'               => :expanded_labeled,
@@ -204,7 +204,7 @@ module MartSearch
       
       embed_url = mgi_url + format_gbrowse_img_opts( 700, chromosome, start_pos, end_pos, img_tracks.merge!(default_tracks) )
       embed_url << 'embed=1;'
-      embed_url << '&iframe=true&width=90%&height=90%'
+      embed_url << '&iframe=true&width=95%&height=95%'
       
       return link_to( image_tag( img_url ), embed_url, { :rel => 'prettyPhoto' } )
     end
