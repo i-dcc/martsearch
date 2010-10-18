@@ -1,3 +1,6 @@
+# Add the lib directory to the search path
+$:.unshift( "#{File.dirname(__FILE__)}/lib" )
+
 require 'bundler/setup'
 
 desc 'Default task: run all tests'

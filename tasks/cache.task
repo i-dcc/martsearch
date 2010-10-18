@@ -1,0 +1,50 @@
+begin
+  require 'martsearch'
+  
+  @ms = MartSearch::Controller.instance()
+  
+  namespace :cache do
+    
+    desc "Clears the search cache"
+    task :clear do
+      puts "Clearing cache..."
+      @ms.cache.clear
+    end
+    
+    desc "Primes the search cache"
+    task :prime do
+      puts "Priming cache..."
+      
+      # Prime the browsable content (the first three pages of each option)
+      @ms.config[:server][:browsable_content].each do |name,conf|
+        puts " - browsable_content: #{conf[:display_name]}"
+        
+        conf[:options].each do |option_name|
+          opts = conf[:processed_options][option_name.to_sym]
+          puts "   - #{opts[:display_arg]}"
+          
+          (1..3).each do |page_no|
+            @ms.search( opts[:solr_query], page_no )
+          end
+        end
+      end
+      
+      # Any extra URLs to prime?
+      unless @ms.config[:server][:cache][:extra_searches_to_prime].empty?
+        puts " - extra_searches_to_prime:"
+        @ms.config[:server][:cache][:extra_searches_to_prime].each do |search_term|
+          puts "   - #{search_term}"
+          @ms.search( search_term )
+        end
+      end
+    end
+    
+    desc "Both clears and primes the search cache"
+    task :refresh => [ :clear, :prime ] do
+    end
+    
+  end
+  
+rescue LoadError
+  puts "[ERROR] Unable to load 'cache' tasks - please run 'bundle install'"
+end

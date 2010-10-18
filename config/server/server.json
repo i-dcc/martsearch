@@ -7,7 +7,7 @@
   },
   "cache": {
     "type": "file",
-    "extra_urls_to_prime":  []
+    "extra_searches_to_prime":  []
   },
   "datasets": [
     "emma-strains",
