@@ -11,7 +11,7 @@ module MartSearch
   #
   # @author Darren Oakley
   class Server < Sinatra::Base
-    include MartSearch::ServerUtils
+    register MartSearch::ServerUtils
     include MartSearch::ProjectUtils
     register Sinatra::StaticAssets
     use HoptoadNotifier::Rack
