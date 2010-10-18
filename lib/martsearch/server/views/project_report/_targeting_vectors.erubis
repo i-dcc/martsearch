@@ -1,8 +1,6 @@
 <div class="dataset">
   <h4 class="dataset_title toggle-open">Targeting Vectors</h4>
   <div class="dataset_content">
-    <% order_vector_url = ikmc_product_order_url( :vector, @data[:ikmc_project], @data[:project_id], @data[:mgi_accession_id], @data[:marker_symbol] ) %>
-    
     <% unless @data[:vector_image].nil? %>
       <img src="<%= @data[:vector_image] %>" width="940px" />
       <div class="clear"></div>
@@ -22,10 +20,11 @@
         <th class="hide_on_print">Genbank File</th>
       </thead>
       <tbody class="products">
+        <% order_vector_txt = vector_order_button( @data[:mgi_accession_id], @data[:marker_symbol], @data[:ikmc_project], @data[:project_id] ) %>
         <% @data[:targeting_vectors].each do |targvec| %>
           <tr>
             <td class="hide_on_print">
-              <a href="<%= order_vector_url %>" class="order" target="_blank">order</a>
+              <%= order_vector_txt %>
             </td>
             <td><%= targvec[:design_id] ? targvec[:design_id] : '-' %></td>
             <td><%= targvec[:design_type] %></td>
