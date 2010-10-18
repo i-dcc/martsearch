@@ -54,10 +54,12 @@ module MartSearch
       super
     end
     
-    configure [:production,:staging] do
-      @compressed_css     = compressed_css( VERSION )
-      @compressed_head_js = compressed_head_js( VERSION )
-      @compressed_base_js = compressed_base_js( VERSION )
+    configure :production, :staging do
+      unless File.exists?("#{MARTSEARCH_PATH}/lib/martsearch/server/public/css/martsearch-#{VERSION}.css")
+        @compressed_css     = compressed_css( VERSION )
+        @compressed_head_js = compressed_head_js( VERSION )
+        @compressed_base_js = compressed_base_js( VERSION )
+      end
     end
     
     not_found do
