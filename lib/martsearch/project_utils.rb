@@ -173,6 +173,8 @@ module MartSearch
             'mutation_subtype',
             'cassette',
             'backbone',
+            'allele_gb_file',
+            'vector_gb_file',
             'intermediate_vector',
             'targeting_vector',
             'allele_symbol_superscript',
@@ -187,18 +189,21 @@ module MartSearch
       
         results.each do |result|
           if data.empty?
-            data.update({
+            data = {
               'intermediate_vectors' => [],
               'targeting_vectors'    => [],
               'es_cells'             => {
                 'conditional'              => { 'cells' => [], 'allele_img' => nil, 'allele_gb' => nil }, 
                 'targeted non-conditional' => { 'cells' => [], 'allele_img' => nil, 'allele_gb' => nil }
-              },
-              'vector_image' => "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/vector-image",
-              'vector_gb'    => "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/targeting-vector-genbank-file"
-            })
+              }
+            }
           end
-        
+          
+          if result['vector_gb_file'] == 'yes'
+            data['vector_image'] = "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/vector-image"
+            data['vector_gb']    = "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/targeting-vector-genbank-file"
+          end
+          
           design_type = case result['mutation_subtype']
             when 'conditional_ready'        then 'Conditional (Frameshift)'
             when 'deletion'                 then 'Deletion'
@@ -259,8 +264,10 @@ module MartSearch
             do_i_have_a_mouse = 'yes' if mouse_data.any?{ |mouse| mouse[:escell_clone] == result['escell_clone'] }
           end
 
-          data['es_cells'][push_to]['allele_img'] = "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/allele-image"
-          data['es_cells'][push_to]['allele_gb']  = "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/escell-clone-genbank-file"
+          if result['allele_gb_file'] == 'yes'
+            data['es_cells'][push_to]['allele_img'] = "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/allele-image"
+            data['es_cells'][push_to]['allele_gb']  = "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/escell-clone-genbank-file"
+          end
           data['es_cells'][push_to]['cells'].push(
             {
               'name'                      => result['escell_clone'],

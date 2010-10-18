@@ -58,6 +58,11 @@ results.each do |result|
       :targeting_vector    => result[:targeting_vector],
       :intermediate_vector => result[:intermediate_vector]
     }
+    
+    targ_vec[:gb_file] = case result[:vector_gb_file]
+    when 'yes' then true
+    when 'no'  then false
+    end
 
     unless project[:targeting_vectors].include? targ_vec
       project[:vector_available] = '1'
@@ -118,9 +123,19 @@ results.each do |result|
     if ['targeted_non_conditional', 'deletion'].include? result[:mutation_subtype]
       clone_type = :nonconditional_clones
       project[:nonconditional_allele_id] = result[:allele_id]
+      
+      project[:nonconditional_allele_gb_file] = case result[:allele_gb_file]
+      when 'yes' then true
+      when 'no'  then false
+      end
     else
       clone_type = :conditional_clones
       project[:conditional_allele_id] = result[:allele_id]
+      
+      project[:conditional_allele_gb_file] = case result[:allele_gb_file]
+      when 'yes' then true
+      when 'no'  then false
+      end
     end
     
     unless project[clone_type].include? es_cell

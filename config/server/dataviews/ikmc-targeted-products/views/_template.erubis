@@ -43,15 +43,17 @@
                 :pipeline                 => project[:pipeline],
                 :conditional_clones       => project[:conditional_clones],
                 :conditional_allele_id    => project[:conditional_allele_id],
+                :conditional_allele_gb    => project[:conditional_allele_gb_file],
                 :nonconditional_clones    => project[:nonconditional_clones],
-                :nonconditional_allele_id => project[:nonconditional_allele_id]
+                :nonconditional_allele_id => project[:nonconditional_allele_id],
+                :nonconditional_allele_gb => project[:nonconditional_allele_gb_file]
               }
             )
           %>
           <div class="clear"></div>
 
           <!-- Targeting Vectors -->
-          <% if project['targeting_vectors'] %>
+          <% if project[:targeting_vectors] %>
             <%=
               partial(
                 'dataviews/ikmc-targeted-products/targeting_vectors',

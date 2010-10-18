@@ -3,8 +3,10 @@
   <div class="dataset_content">
     <% order_vector_url = ikmc_product_order_url( :vector, @data[:ikmc_project], @data[:project_id], @data[:mgi_accession_id], @data[:marker_symbol] ) %>
     
-    <img src="<%= @data[:vector_image] %>" width="940px" />
-    <div class="clear"></div>
+    <% unless @data[:vector_image].nil? %>
+      <img src="<%= @data[:vector_image] %>" width="940px" />
+      <div class="clear"></div>
+    <% end %>
     
     <%= partial("project_report/ensembl_links") %>
     
@@ -32,7 +34,11 @@
             <td><%= targvec[:cassette] %></td>
             <td><%= targvec[:backbone] %></td>
             <td class="hide_on_print">
-              <a href="<%= @data[:vector_gb] %>" target="_blank" class="file ext_link">view</a>
+              <% if @data[:vector_gb].nil? %>
+                <span style="color:#999;">unavailable</span>
+              <% else %>
+                <a href="<%= @data[:vector_gb] %>" target="_blank" class="file ext_link">view</a>
+              <% end %>
             </td>
           </tr>
         <% end %>
