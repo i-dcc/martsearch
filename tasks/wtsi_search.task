@@ -1,0 +1,141 @@
+begin
+  require 'martsearch'
+  
+  NAME_ON_SANGER_INDEX = 'Mouse Portal'
+  DESC_ON_SANGER_INDEX = 'Unified access to the different resources available from the Institute or its collaborators'
+  DOCS_PER_FILE        = 1000 # Retrieve data by chunks of 1000 docs
+  WTSI_XML_DIR         = "#{File.dirname(__FILE__)}/../tmp/wtsi_document_xmls"
+  WTSI_XML_DIR_DAILY   = WTSI_XML_DIR + '/' + Date.today.to_s
+  
+  ##
+  ## Setup
+  ##
+  
+  @http_client = Net::HTTP
+  if ENV['http_proxy'] or ENV['HTTP_PROXY']
+    proxy = URI.parse( ENV['http_proxy'] ) || URI.parse( ENV['HTTP_PROXY'] )
+    @http_client = Net::HTTP::Proxy( proxy.host, proxy.port )
+  end
+  
+  @ms = MartSearch::Controller.instance()
+
+  # Helper func to post a request to the Solr index
+  def index_request( params={} )
+    res = @http_client.post_form( URI.parse(@ms.config[:index][:url] + '/select'), params.update({ "wt" => "ruby" }) )
+  
+    if res.code.to_i != 200
+      raise "Index Search Error: #{res.body}"
+    else
+      return eval(res.body)
+    end
+  end
+
+
+  ##
+  ##  Tasks definitions
+  ##
+
+  namespace :wtsi do
+    
+    desc "Cleans up old WTSI document XML directories"
+    task :clean_daily_directories do
+      puts "Cleaning daily directories"
+      begin
+        Dir.chdir(WTSI_XML_DIR) do
+          directories = Dir.glob("*").sort
+          while directories.size > 4
+            system("/bin/rm -rf '#{directories.shift}'")
+          end
+        end
+      rescue Errno::ENOENT => e
+        Dir.mkdir(WTSI_XML_DIR)
+      end
+    end
+  
+    desc "Generates the search index document XML and saves it in the /tmp/wtsi_document_xmls directory"
+    task :build_document_xml => :clean_daily_directories do
+      puts "Building WTSI search index XML"
+      begin
+        Dir.mkdir( WTSI_XML_DIR_DAILY )
+      rescue Errno::EEXIST => e
+        system("/bin/rm -rf '#{WTSI_XML_DIR_DAILY}'")
+        Dir.mkdir( WTSI_XML_DIR_DAILY )
+      end
+      
+      # Change to temp dir
+      tmpdir = Dir.mktmpdir
+      Dir.chdir(tmpdir) do
+        puts " - Working in #{tmpdir}"
+        
+        # Get number of docs in mouse portal index
+        data = index_request({ :q => '*', :start => 0, :rows => 1 })
+        nb_docs = data['response']['numFound']
+        
+        # Retrieve mouse portal data by chunks of 1000 docs
+        puts " - Requesting docs from solr"
+        docs = (0..nb_docs).step( DOCS_PER_FILE ).collect do |step|
+          puts "   - #{step} of #{nb_docs}"
+          data = index_request( :q => '*', :start => step, :rows => DOCS_PER_FILE )
+          data['response']['docs']
+        end
+        docs.flatten!
+        
+        puts " - Processing retieved docs"
+        count = 0
+        docs.each do |doc|
+          puts "   - #{count} of #{nb_docs}" if count % DOCS_PER_FILE == 0
+          
+          if doc.include? 'product_status'
+            doc['available_resources'] = []
+            doc['product_status'].each do |status|
+              if status.include? 'Vector Available'
+                doc['available_resources'].push('Targeting Vectors')
+              elsif status.include? 'ES Cell Available'
+                doc['available_resources'].push('ES Cells')
+              elsif status.include? 'Mouse Available'
+                doc['available_resources'].push('Mice')
+              end
+            end
+          else
+            doc['available_resources'] = ''
+          end
+        
+          # Use HTML formatting
+          doc.each do |key, value|
+            doc[key] = value.join(', ') if value.is_a? Array
+          
+            if doc[key].is_a? String
+              doc[key].gsub!('&', '&amp;')
+              doc[key].gsub!('"', '&quot;')
+              doc[key].gsub!("'", '&apos;')
+              doc[key].gsub!('<', '&lt;')
+              doc[key].gsub!('>', '&gt;')
+            end
+          end
+          
+          count = count + 1
+        end
+      
+        # Dump data to XML following WTSI search index requirements
+        puts " - Writing data to disk"
+        
+        template_file = File.new( "#{File.dirname(__FILE__)}/../templates/wtsi_search_engine.xml.erubis", 'r' )
+        template = Erubis::Eruby.new( template_file.read )
+        template_file.close()
+      
+        xml_file = File.new( "mouseportal-data.xml", 'w')
+        xml_file.print( template.result( binding ) )
+        xml_file.close()
+      
+        system("/bin/mv * #{WTSI_XML_DIR_DAILY}/")
+        system("/bin/cp #{WTSI_XML_DIR_DAILY}/mouseportal-data.xml #{WTSI_XML_DIR_DAILY}/../mouseportal-data.xml.new")
+        system("/bin/mv #{WTSI_XML_DIR_DAILY}/../mouseportal-data.xml.new #{WTSI_XML_DIR_DAILY}/../mouseportal-data.xml")
+      end
+    
+      system("/bin/rmdir #{tmpdir}")
+    end
+  end
+  
+rescue LoadError
+  puts "[ERROR] Unable to load 'wtsi' tasks - please run 'bundle install'"
+end

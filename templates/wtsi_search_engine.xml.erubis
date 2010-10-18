@@ -1,0 +1,23 @@
+<%- excluded_fields = ['timestamp','mgi_accession_id_key','product_status'] -%>
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<database>
+  <name><%= NAME_ON_SANGER_INDEX %></name>
+  <description><%= DESC_ON_SANGER_INDEX %></description>
+  <entry_count><%= docs.length %></entry_count>
+  <release_date><%= Date.today.to_s %></release_date>
+  
+  <entries>
+    <%- docs.each do |doc| -%>
+    <entry id="<%= doc['mgi_accession_id'] %>">
+      <name><%= doc['marker_symbol'] ? doc['marker_symbol'] : doc['mgi_accession_id'] %></name>
+      <description>Unified access to the different mouse-related resources available at WTSI for the gene <%= doc['marker_symbol'] %> (<%= doc['marker_name'] %>).</description>
+      <additional_fields>
+      <%- doc.each do |field_name, field_value| -%>
+        <%- next if excluded_fields.include? field_name -%>
+        <field name="<%= field_name %>"><%= field_value %></field>
+      <%- end -%>
+      </additional_fields>
+    </entry>
+    <%- end -%>
+  </entries>
+</database>

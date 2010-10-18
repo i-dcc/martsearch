@@ -24,6 +24,8 @@
       "cassette_start",
       "cassette_end",
       "loxp_start",
+      "allele_gb_file",
+      "vector_gb_file",
       "intermediate_vector",
       "targeting_vector",
       "ikmc_project_id",

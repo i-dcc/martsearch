@@ -18,7 +18,7 @@
     end
   end
   
-  order_cell_url = ikmc_product_order_url( :es_cell, @data[:ikmc_project], @data[:project_id], @data[:mgi_accession_id], @data[:marker_symbol] )
+  order_cell_txt = escell_order_button( @data[:mgi_accession_id], @data[:marker_symbol], @data[:ikmc_project], @data[:project_id] )
 -%>
 
 <div class="dataset">
@@ -26,11 +26,13 @@
   <div class="dataset_content">
     <%- cells = @data[:es_cells][cond_vs_noncond][:cells] -%>
     
-    <img src="<%= @data[:es_cells][cond_vs_noncond][:allele_img] %>" width="940px" />
-    <div class="clear"></div>
-    
-    <% if cond_vs_noncond != 'conditional' and img_txt != '' %>
-      <p><strong>Note:</strong> <%= img_txt %></p>
+    <% unless @data[:es_cells][cond_vs_noncond][:allele_img].nil? %>
+      <img src="<%= @data[:es_cells][cond_vs_noncond][:allele_img] %>" width="940px" />
+      <div class="clear"></div>
+      
+      <% if cond_vs_noncond != 'conditional' and img_txt != '' %>
+        <p><strong>Note:</strong> <%= img_txt %></p>
+      <% end %>
     <% end %>
     
     <%= partial("project_report/ensembl_links") %>
@@ -50,14 +52,18 @@
         <% cells.each do |cell| %>
           <tr>
             <td class="hide_on_print">
-              <a href="<%= order_cell_url %>" class="order" target="_blank">order</a>
+              <%= order_cell_txt %>
             </td>
             <td><%= cell[:name] %></td>
             <td><%= cell[:targeting_vector] %></td>
             <td><%= @data[:marker_symbol] %><sup><%= cell[:allele_symbol_superscript] %></sup></td>
             <td><%= cell[:parental_cell_line] %></td>
             <td class="hide_on_print">
-              <a href="<%= @data[:es_cells][cond_vs_noncond][:allele_gb] %>" target="_blank" class="file ext_link">view</a>
+              <% if @data[:es_cells][cond_vs_noncond][:allele_gb].nil? %>
+                <span style="color:#999;">unavailable</span>
+              <% else %>
+                <a href="<%= @data[:es_cells][cond_vs_noncond][:allele_gb] %>" target="_blank" class="file ext_link">view</a>
+              <% end %>
             </td>
             <td><%= cell[:mouse?] %></td>
             <td>

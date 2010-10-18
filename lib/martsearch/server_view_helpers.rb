@@ -135,58 +135,50 @@ module MartSearch
       ensembl_vega_link_url( :vega, species, "?g=#{gene}", das_tracks )
     end
     
-    # Helper function to centralise the generation of product ordering links.
-    #
-    # @param [Symbol] product_type The type of product to get a link for [:vector,:es_cell,:mouse]
-    # @param [String] pipeline The IKMC pipeline name ['KOMP/KOMP-CSD','KOMP-Regeneron','NorCOMM','EUCOMM','mirKO']
-    # @param [String] project_id The IKMC project ID
-    # @param [String] mgi_acc_id The MGI accession ID for the gene
-    # @param [String] marker_symbol The marker_symbol for the gene
-    # @return [Hash] A hash containing all of the relevant urls for this project
-    def ikmc_product_order_url( product_type, project=nil, project_id=nil, mgi_accession_id=nil, marker_symbol=nil )
-      mgi_accession_id.sub!('MGI:','') unless mgi_accession_id.nil?
-      
-      order_url = case project
-      when ( "KOMP" or "KOMP-CSD") then "http://www.komp.org/geneinfo.php?project=CSD#{project_id}"
-      when "KOMP-Regeneron"        then "http://www.komp.org/geneinfo.php?project=#{project_id}"
-      when "NorCOMM"               then "http://www.phenogenomics.ca/services/cmmr/escell_services.html"
-      when ("EUCOMM" or "mirKO")
-        case product_type
-        when :vector  then "http://www.eummcr.org/final_vectors.php?mgi_id=#{mgi_accession_id}"
-        when :es_cell then "http://www.eummcr.org/es_cells.php?mgi_id=#{mgi_accession_id}"
-        when :mouse   then "http://www.emmanet.org/mutant_types.php?keyword=#{marker_symbol}%25EUCOMM&select_by=InternationalStrainName&search=ok"
-        else
-          "http://www.eummcr.org/order.php"
-        end
-      else
-        ""
-      end
-      
-      return order_url
-    end
-    
     # Helper function to centralise the logic for producing a button for 
     # ordering a mouse.
     #
-    # @param [String] marker_symbol The marker_symbol for the gene
+    # @param [String] mgi_accession_id The MGI accession ID for the gene
+    # @param [String] marker_symbol The marker symbol for the gene
     # @param [String] project The IKMC project name ['KOMP/KOMP-CSD','KOMP-Regeneron','NorCOMM','EUCOMM','mirKO']
     # @param [String] project_id The IKMC project ID
     # @param [Boolean] flagged_for_dist Whether the mouse has been flagged as available at the repositories
     # @return [String] The html markup for a button
-    def mouse_order_button( marker_symbol, project, project_id, flagged_for_dist )
-      button_text = '<span class="order unavailable">currently&nbsp;unavailable</span>'
-      
-      if flagged_for_dist
-        order_url = ikmc_product_order_url( :mouse, project, project_id, nil, marker_symbol )
-        unless order_url.empty?
-          button_text = "<a href=\"#{order_url}\" class=\"order\" target=\"_blank\">order</a>"
-        end
-      end
+    def mouse_order_button( mgi_accession_id, marker_symbol, project, project_id, flagged_for_dist )
+      order_url   = ikmc_product_order_url( :mouse, project, project_id, mgi_accession_id, marker_symbol )
+      order_url   = "" unless flagged_for_dist
+      button_text = generic_order_button( project, order_url )
       
       return button_text
     end
     
-    # TODO: Finish the other order buttons!
+    # Helper function to centralise the logic for producing a button for 
+    # ordering an ES cell.
+    #
+    # @param [String] mgi_accession_id The MGI accession ID for the gene
+    # @param [String] marker_symbol The marker symbol for the gene
+    # @param [String] project The IKMC project name ['KOMP/KOMP-CSD','KOMP-Regeneron','NorCOMM','EUCOMM','mirKO']
+    # @param [String] project_id The IKMC project ID
+    # @return [String] The html markup for a button
+    def escell_order_button( mgi_accession_id, marker_symbol, project, project_id )
+      order_url   = ikmc_product_order_url( :escell, project, project_id, mgi_accession_id, marker_symbol )
+      button_text = generic_order_button( project, order_url )
+      return button_text
+    end
+    
+    # Helper function to centralise the logic for producing a button for 
+    # ordering a vector.
+    #
+    # @param [String] mgi_accession_id The MGI accession ID for the gene
+    # @param [String] marker_symbol The marker symbol for the gene
+    # @param [String] project The IKMC project name ['KOMP/KOMP-CSD','KOMP-Regeneron','NorCOMM','EUCOMM','mirKO']
+    # @param [String] project_id The IKMC project ID
+    # @return [String] The html markup for a button
+    def vector_order_button( mgi_accession_id, marker_symbol, project, project_id )
+      order_url   = ikmc_product_order_url( :vector, project, project_id, mgi_accession_id, marker_symbol )
+      button_text = generic_order_button( project, order_url )
+      return button_text
+    end
     
     # Helper function to embed an image from the MGI GBrowse server.
     # 
@@ -313,6 +305,58 @@ module MartSearch
         end
         
         return settings.join(",")
+      end
+      
+      # Helper function to centralise the generation of product ordering links.
+      #
+      # @param [Symbol] product_type The type of product to get a link for [:vector,:es_cell,:mouse]
+      # @param [String] pipeline The IKMC pipeline name ['KOMP/KOMP-CSD','KOMP-Regeneron','NorCOMM','EUCOMM','mirKO']
+      # @param [String] project_id The IKMC project ID
+      # @param [String] mgi_acc_id The MGI accession ID for the gene
+      # @param [String] marker_symbol The marker_symbol for the gene
+      # @return [Hash] A hash containing all of the relevant urls for this project
+      def ikmc_product_order_url( product_type, project=nil, project_id=nil, mgi_accession_id=nil, marker_symbol=nil )
+        mgi_accession_id.sub!('MGI:','') unless mgi_accession_id.nil?
+
+        order_url = case project
+        when "KOMP"           then "http://www.komp.org/geneinfo.php?project=CSD#{project_id}"
+        when "KOMP-CSD"       then "http://www.komp.org/geneinfo.php?project=CSD#{project_id}"
+        when "KOMP-Regeneron" then "http://www.komp.org/geneinfo.php?project=#{project_id}"
+        when "NorCOMM"        then "http://www.phenogenomics.ca/services/cmmr/escell_services.html"
+        when "EUCOMM"
+          case product_type
+          when :vector  then "http://www.eummcr.org/final_vectors.php?mgi_id=#{mgi_accession_id}"
+          when :escell  then "http://www.eummcr.org/es_cells.php?mgi_id=#{mgi_accession_id}"
+          when :mouse   then "http://www.emmanet.org/mutant_types.php?keyword=#{marker_symbol}%25EUCOMM&select_by=InternationalStrainName&search=ok"
+          else
+            "http://www.eummcr.org/order.php"
+          end
+        when "mirKO"
+          "mailto:mirKO@sanger.ac.uk?subject=Information on mirKO products for #{marker_symbol}"
+        else
+          ""
+        end
+
+        return order_url
+      end
+      
+      # Simple helper that produces the HTML text for an order button.
+      #
+      # @param [String] project The IKMC pipeline name ['KOMP/KOMP-CSD','KOMP-Regeneron','NorCOMM','EUCOMM','mirKO']
+      # @param [String] order_url The URL for the button to link to
+      # @return The HTML markup for the order button
+      def generic_order_button( project, order_url )
+        button_text = '<span class="order unavailable">currently&nbsp;unavailable</span>'
+        
+        unless order_url.empty?
+          button_text = "<a href=\"#{order_url}\" class=\"order\" target=\"_blank\">order</a>"
+        end
+        
+        if project == 'mirKO'
+          button_text = "<a href=\"#{order_url}\" class=\"order unavailable\">express&nbsp;interest</a>"
+        end
+        
+        return button_text
       end
       
   end

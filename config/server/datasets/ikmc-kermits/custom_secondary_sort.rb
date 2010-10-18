@@ -18,7 +18,8 @@ search_data.each do |key,result_data|
   # Now relate the mice to the cells/projects
   mouse_data = []
   result_data[:'ikmc-kermits'].each do |mouse|
-    mouse[:ikmc_project_id] = escell_cache[ mouse[:escell_clone] ]
+    mouse[:ikmc_project_id]  = escell_cache[ mouse[:escell_clone] ]
+    mouse[:mgi_accession_id] = result_data[:index][:mgi_accession_id]
     mouse_data.push(mouse)
   end
   

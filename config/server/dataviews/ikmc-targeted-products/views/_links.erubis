@@ -3,7 +3,7 @@
   
   <ul>
     <% if ensembl_gene_id %>
-      <li>
+      <li class="ensembl_link">
         <a href="<%= ensembl_link_url_from_gene( :mouse, ensembl_gene_id, ['das:http://das.sanger.ac.uk/das/ikmc_products'] ) %>" target="_blank">view this allele in Ensembl</a>
       </li>
     <% end %>
@@ -22,8 +22,8 @@
         end
       %>
       <% unless url.nil? %>
-        <li><a href="<%= url %>" target="_blank">view allele details (<%= dest %>)</a></li>
-        <li><a href="http://www.knockoutmouse.org/martsearch/project/<%= ikmc_project_id %>" target="_blank">view allele details (IKMC)</a></li>
+        <li class="ext_link"><a href="<%= url %>" target="_blank">view allele details (<%= dest %>)</a></li>
+        <li class="ext_link"><a href="http://www.knockoutmouse.org/martsearch/project/<%= ikmc_project_id %>" target="_blank">view allele details (IKMC)</a></li>
       <% end %>
     <% end %>
   </ul>

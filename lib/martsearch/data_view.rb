@@ -52,17 +52,16 @@ module MartSearch
     # @return [Boolean] True/False 
     def display_for_result?( result, errors )
       check_datasets unless @alredy_checked_datasets_ok
+      display = false
       
       if self.display
-        display = true
         @config[:datasets][:required].each do |ds_name|
-          display = false if result[ds_name.to_sym].nil?
-          display = true  unless errors[ds_name.to_sym].nil?
+          display = true unless result[ds_name.to_sym].nil?
+          display = true unless errors[ds_name.to_sym].nil?
         end
-        return display
-      else
-        return false
       end
+      
+      return display
     end
     
     # Function to determine if there are any search errors related to this dataview.

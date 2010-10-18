@@ -7,9 +7,9 @@
   },
   "cache": {
     "type": "file",
-    "extra_urls_to_prime":  [
-      "search?query=Cbx1",
-      "search?query=EPD0027_2_A01"
+    "extra_searches_to_prime":  [
+      "Cbx1",
+      "EPD0027_2_A01"
     ]
   },
   "datasets": [
