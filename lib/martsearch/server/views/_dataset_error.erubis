@@ -4,9 +4,9 @@
   <div class="single_parent_toggler_content error_more_information">
     <strong><%= dataset_error[:type] %></strong><br/>
     <% if dataset_error[:required] %>
-      This is a <strong>required</strong> dataset for this view.  Unfortunately we 
-      cannot render this view without this dataset.<br/>
-      Please try resubmitting your search.
+      This is an <strong>important</strong> dataset for this view.  The data in this
+      view may not be complete without this information.<br/>
+      Please try resubmitting your search to include this dataset.
     <% else %>
       This is a <strong>optional</strong> dataset for this view.  The data shown below 
       will not include data from this dataset.  
