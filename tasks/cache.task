@@ -1,30 +1,47 @@
 begin
   require 'martsearch'
   
-  @ms = MartSearch::Controller.instance()
+  @url = 'http://loaclhost:3000/'
+  @ms  = MartSearch::Controller.instance()
+  
+  # Set up a HTTP client
+  @client = Net::HTTP
+  if ENV['http_proxy'] or ENV['HTTP_PROXY']
+    proxy = URI.parse( ENV['http_proxy'] ) || URI.parse( ENV['HTTP_PROXY'] )
+    @client = Net::HTTP::Proxy( proxy.host, proxy.port )
+  end
   
   namespace :cache do
     
     desc "Clears the search cache"
     task :clear do
       puts "Clearing cache..."
-      @ms.cache.clear
+      res = @client.get( URI.parse("#{@url}clear_cache") )
     end
     
     desc "Primes the search cache"
     task :prime do
-      puts "Priming cache..."
+      puts "Priming cache... (on #{@url})"
+      
+      # Hit the home page first
+      puts " - home page"
+      @client.get( URI.parse(@url) )
       
       # Prime the browsable content (the first three pages of each option)
       @ms.config[:server][:browsable_content].each do |name,conf|
         puts " - browsable_content: #{conf[:display_name]}"
-        
-        conf[:options].each do |option_name|
+
+        Parallel.each( conf[:options], :in_threads => 10 ) do |option_name|
           opts = conf[:processed_options][option_name.to_sym]
-          puts "   - #{opts[:display_arg]}"
           
-          (1..3).each do |page_no|
-            @ms.search( opts[:solr_query], page_no )
+          no_page_url = "#{@url}browse?field=#{name}&query=#{opts[:link_arg]}"
+          @client.get( URI.parse(no_page_url) )
+          print "   - #{no_page_url} \n"
+          
+          (1..5).each do |page_no|
+            browse_url = "#{no_page_url}&page=#{page_no}"
+            print "   - #{browse_url} \n"
+            @client.get( URI.parse(browse_url) )
           end
         end
       end
@@ -34,7 +51,7 @@ begin
         puts " - extra_searches_to_prime:"
         @ms.config[:server][:cache][:extra_searches_to_prime].each do |search_term|
           puts "   - #{search_term}"
-          @ms.search( search_term )
+          @client.get( URI.parse("#{@url}search?query=#{CGI::escape(search_term)}") )
         end
       end
     end

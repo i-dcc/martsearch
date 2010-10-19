@@ -94,7 +94,7 @@ module MartSearch
             :current_page          => @index.current_page,
             :current_results_total => @index.current_results_total
           }
-          @cache.write( "query:#{query}-page:#{page}", Marshal.dump(obj_to_cache), { :expires_in => 6.hours } )
+          @cache.write( "query:#{query}-page:#{page}", Marshal.dump(obj_to_cache), { :expires_in => 12.hours } )
         end
       end
       
