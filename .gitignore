@@ -8,7 +8,6 @@ doc*
 lib/martsearch/server/public/css/martsearch-*.css
 lib/martsearch/server/public/js/martsearch-base-*.js
 lib/martsearch/server/public/js/martsearch-head-*.js
-log*
 simplecov/*
 test/vcr_cassettes*
 tmp/index_builder*
