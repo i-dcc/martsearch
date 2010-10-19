@@ -93,7 +93,7 @@
               uniq_id_str = "#{result_data[:index][:mgi_accession_id].gsub(':','_').downcase}-#{view.internal_name}"
             end
           %>
-          <div id="#<%= uniq_id_str %>" class="dataset">
+          <div id="<%= uniq_id_str %>" class="dataset">
             <h4 class="dataset_title toggle-open"><%= view.name %></h4>
             <div class="dataset_content <%= view.internal_name %>">
               <% unless dataset_errors[:required].empty? and dataset_errors[:optional].empty? %>
