@@ -9,6 +9,8 @@ GEM
     awesome_print (0.2.1)
     biomart (0.2.0)
       builder
+    bson (1.1.1)
+    bson_ext (1.1.1)
     builder (2.1.2)
     capistrano (2.5.19)
       highline
@@ -75,6 +77,11 @@ GEM
       reek (>= 1.2.6)
       roodi (>= 2.1.0)
     mime-types (1.16)
+    mongo (1.1.1)
+      bson (>= 1.1.1)
+    mongo_store (0.3.0)
+      activesupport (>= 2.2)
+      mongo (>= 1.0)
     mysql (2.8.1)
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
@@ -143,6 +150,7 @@ DEPENDENCIES
   activesupport (>= 2.3)
   awesome_print
   biomart (>= 0.2.0)
+  bson_ext
   builder (~> 2.1)
   bundler (>= 1.0.0)
   capistrano (>= 2.5)
@@ -154,6 +162,7 @@ DEPENDENCIES
   json
   memcache-client (>= 1.8)
   metric_fu
+  mongo_store
   mysql (>= 2.8)
   newrelic_rpm
   parallel

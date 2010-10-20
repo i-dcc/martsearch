@@ -149,7 +149,7 @@ class MartSearchServerRackTest < Test::Unit::TestCase
             opts = conf[:processed_options][option_name.to_sym]
             
             @browser.get "/browse?field=#{name}&query=#{opts[:link_arg]}&page=1&wt=json"
-            assert( @browser.last_response.ok? )
+            assert( @browser.last_response.ok?, "A request to '/browse?field=#{name}&query=#{opts[:link_arg]}&page=1&wt=json' failed!" )
             json = JSON.parse( @browser.last_response.body )
             assert( json.is_a?(Hash) )
           end
@@ -163,7 +163,7 @@ class MartSearchServerRackTest < Test::Unit::TestCase
         
         project_ids_to_test.each do |project_id|
           @browser.get "/project/#{project_id}?wt=json"
-          assert( @browser.last_response.ok? )
+          assert( @browser.last_response.ok?, "A request to '/project/#{project_id}?wt=json' failed!" )
           json = JSON.parse( @browser.last_response.body )
           assert( json.is_a?(Hash) )
         end

@@ -89,11 +89,19 @@ module MartSearch
         file_store = config[:file_store] if config[:file_store]
         
         return ActiveSupport::Cache::FileStore.new( file_store )
+      when /mongo/
+        server     = config[:server]     ? config[:server]     : 'localhost'
+        port       = config[:port]       ? config[:port].to_i  : 27017
+        db         = config[:db]         ? config[:db]         : 'martsearch'
+        collection = config[:collection] ? config[:collection] : 'martsearch_cache'
+        mongo      = Mongo::Connection.new(server, port).db(db)
+        
+        return MartSearch::MongoCache.new( :db => mongo, :collection_name => collection )
       else
         return ActiveSupport::Cache::MemoryStore.new()
       end
     end
-    
+
     private
       
       ##

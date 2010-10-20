@@ -1,5 +1,5 @@
 <%
-  ikmc_projects     = [ 'TIGM', 'ESCells', 'Stanford', 'EUCOMM' ]
+  ikmc_projects     = [ :TIGM, :ESCells, :Stanford, :EUCOMM ]
   non_ikmc_projects = result_data[:'ikmc-unitrap'][:project_counts_total].keys.sort - ikmc_projects
   
   projects = ikmc_projects + non_ikmc_projects
@@ -60,8 +60,8 @@
     <% projects.each do |project| %>
       <td>
         <% if result_data[:'ikmc-unitrap'][:project_counts_total][project] > 0 %>
-          <% anchor_ref = [ mgi_acc_id_for_ref, 'traps-by-project', project.gsub(' ','_') ].join('-') %>
-          <a href="#<%= anchor_ref %>" class="unitraps_by_link" rel="<%= project.gsub(' ','_') %>">
+          <% anchor_ref = [ mgi_acc_id_for_ref, 'traps-by-project', project.to_s.gsub(' ','_') ].join('-') %>
+          <a href="#<%= anchor_ref %>" class="unitraps_by_link" rel="<%= project.to_s.gsub(' ','_') %>">
             <%= result_data[:'ikmc-unitrap'][:project_counts_total][project] %> 
             <% if result_data[:'ikmc-unitrap'][:project_counts_total][project] > 1 %>
               traps
@@ -82,8 +82,8 @@
   <!-- Traps by project -->
   <% projects.each do |project| %>
     <% if traps_by[project].size > 0 %>
-      <% anchor_ref = [ mgi_acc_id_for_ref, 'traps-by-project', project.gsub(' ','_') ].join('-') %>
-      <div id="<%= anchor_ref %>" class="<%= project.gsub(' ','_') %>">
+      <% anchor_ref = [ mgi_acc_id_for_ref, 'traps-by-project', project.to_s.gsub(' ','_') ].join('-') %>
+      <div id="<%= anchor_ref %>" class="<%= project.to_s.gsub(' ','_') %>">
         <%=
           partial(
             'dataviews/ikmc-trapped-products/trap_table',

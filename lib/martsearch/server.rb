@@ -140,7 +140,9 @@ module MartSearch
       else
         @current    = 'home'
         @page_title = "Search Results for '#{params[:query]}'"
-        @results    = @ms.search( params[:query], params[:page].to_i )
+        Marker.mark("running search") do
+          @results    = @ms.search( params[:query], params[:page].to_i )
+        end
         @data       = @ms.search_data
         @errors     = @ms.errors
 
@@ -148,7 +150,9 @@ module MartSearch
           content_type 'application/json', :charset => 'utf-8'
           return @data.to_json
         else
-          erubis :search
+          Marker.mark("rendering page") do
+            erubis :search
+          end
         end
       end
     end
@@ -229,9 +233,16 @@ module MartSearch
         cached_data = cache.fetch("project-report-#{project_id}")
         if cached_data.nil? or params[:fresh] == "true"
           @data = get_ikmc_project_page_data( project_id )
-          cache.write("project-report-#{project_id}", Marshal.dump(@data), :expires_in => 12.hours )
+          
+          if cache.is_a?(MartSearch::MongoCache)
+            cache.write("project-report-#{project_id}", @data, :expires_in => 12.hours )
+          else
+            cache.write("project-report-#{project_id}", @data.to_json, :expires_in => 12.hours )
+          end
         else
-          @data = Marshal.load(cached_data)
+          @data = cached_data
+          @data = JSON.parse(@data) unless cache.is_a?(MartSearch::MongoCache)
+          @data.recursively_symbolize_keys!
         end
         
         if @data.nil?

@@ -18,14 +18,14 @@ results.each do |result|
     
     data = sorted_results[ result[ joined_attribute ] ]
     projects.each do |proj|
-      data[:project_counts_total][proj] = 0
-      data[:traps][proj]                = {}
+      data[:project_counts_total][proj.to_sym] = 0
+      data[:traps][proj.to_sym]                = {}
     end
   end
   
   data       = sorted_results[ result[ joined_attribute ] ]
-  unitrap_id = result[:unitrap_accession_id]
-  project    = result[:project]
+  unitrap_id = result[:unitrap_accession_id].to_sym
+  project    = result[:project].to_sym
   
   # Instanciate variables
   data[:traps][ project ][ unitrap_id ]     = [] unless data[:traps][ project ][ unitrap_id ]
