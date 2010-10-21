@@ -55,4 +55,18 @@ class Array
   def randomly_pick( number )
     sort_by{ rand }.slice( 0...number )
   end
+  
+  if RUBY_VERSION < '1.9'
+    def clean_hashes
+      self.map do |item|
+        if item.is_a?(Hash)
+          item.clean_hash
+        elsif item.is_a?(Array)
+          item.clean_hashes
+        else
+          item
+        end
+      end
+    end
+  end
 end

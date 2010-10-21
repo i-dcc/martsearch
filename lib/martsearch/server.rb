@@ -237,11 +237,12 @@ module MartSearch
           if cache.is_a?(MartSearch::MongoCache)
             cache.write("project-report-#{project_id}", @data, :expires_in => 12.hours )
           else
-            cache.write("project-report-#{project_id}", @data.to_json, :expires_in => 12.hours )
+            cache.write("project-report-#{project_id}", BSON.serialize(@data), :expires_in => 12.hours )
           end
         else
           @data = cached_data
-          @data = JSON.parse(@data) unless cache.is_a?(MartSearch::MongoCache)
+          @data = BSON.deserialize(@data) unless cache.is_a?(MartSearch::MongoCache)
+          @data = @data.clean_hash if RUBY_VERSION < '1.9'
           @data.recursively_symbolize_keys!
         end
         

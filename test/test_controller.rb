@@ -68,13 +68,11 @@ class MartSearchControllerTest < Test::Unit::TestCase
         good_result = @controller.search_from_fresh_index_public( @controller.config[:index][:test][:single_return_search], 1 )
         assert_equal( true, good_result )
         
-        # Now check the 'cached' data
-        fresh_index_data  = Marshal.load( Marshal.dump( @controller.search_data ) )
-        cached_index_data = @controller.cache.fetch("index:#{@controller.config[:index][:test][:single_return_search]}-page1")
-        
-        @controller.clear_instance_variables_public()
-        @controller.search_from_cached_index_public( cached_index_data )
-        assert_equal( fresh_index_data, @controller.search_data )
+        # Now check the 'cachability' of the data
+        search_data = BSON.deserialize( BSON.serialize( @controller.search_data ) )
+        search_data = search_data.clean_hash if RUBY_VERSION < '1.9'
+        search_data.recursively_symbolize_keys!
+        assert_equal( search_data, @controller.search_data )
         
         ##
         ## Test search_from_fresh_datasets
