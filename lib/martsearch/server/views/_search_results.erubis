@@ -6,7 +6,7 @@
 </div>
 
 <% @results.each do |result| %>
-  <% result_data = @data[ result[@ms.index.primary_field] ] %>
+  <% result_data = @data[ result[@ms.index.primary_field].to_sym ] %>
   <div class="result">
     <table class="noborder nocol result-header" width="100%">
       <tr>

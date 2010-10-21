@@ -12,7 +12,7 @@ module MartSearch
   class Index
     include MartSearch::Utils
     
-    attr_reader   :config, :current_results, :grouped_terms, :primary_field, :paginated_results
+    attr_reader   :config, :current_results, :primary_field, :paginated_results
     attr_accessor :url, :current_results_total, :current_page
     
     def initialize( config )
@@ -86,14 +86,13 @@ module MartSearch
       end
       
       data[:response][:docs].each do |doc|
-        @current_results[ doc[ @primary_field ] ] = {
+        @current_results[ doc[ @primary_field ].to_sym ] = {
           :index               => doc,
           :search_explaination => data[:highlighting].stringify_keys![ doc[ @primary_field ] ]
         }
       end
       
       @current_results_total = data[:response][:numFound]
-      @grouped_terms         = grouped_query_terms( data[:response][:docs] )
       @paginated_results     = paginate_results( data[:response][:docs] )
       
       return @current_results
@@ -138,40 +137,17 @@ module MartSearch
       return data["response"]["numFound"]
     end
     
-    private
-      
-      # Helper function to process the results of the JSON 
-      # response and extract the fields from each doc into 
-      # a hash (which is returned).
-      #
-      # @param [Array] docs An array of hashes representing the Solr 'docs' returned from a search
-      # @return [Hash] A hash keyed by the document fields containing all the data returned (from all fetched documents) for the given field
-      def grouped_query_terms( docs )
-        grouped_terms = {}
-        
-        docs.each do |doc|
-          doc.each do |field,value|
-            grouped_terms_for_field = grouped_terms[field]
-            grouped_terms_for_field = [] if grouped_terms_for_field.nil?
-            
-            if value.is_a?(Array)
-              value.each do |val|
-                grouped_terms_for_field.push( val )
-              end
-            else
-              grouped_terms_for_field.push( value )
-            end
-            
-            grouped_terms[field] = grouped_terms_for_field
-          end
-        end
-        
-        grouped_terms.each do |field,values|
-          grouped_terms[field] = values.uniq
-        end
-        
-        return grouped_terms
+    # Utility function to return paginated data results.
+    #
+    # @return [Array] a paginated (using will_paginate) list of the search results (the index primary_field)
+    def paginate_results( results )
+      results = WillPaginate::Collection.create( @current_page, @config[:docs_per_page], @current_results_total ) do |pager|
+         pager.replace( results )
       end
+      return results
+    end
+    
+    private
       
       # Utility function to handle the search/count requsets 
       # to the index.
@@ -183,16 +159,6 @@ module MartSearch
         else
           return eval(res.body)
         end
-      end
-      
-      # Utility function to return paginated data results.
-      #
-      # @return [Array] a paginated (using will_paginate) list of the search results (the index primary_field)
-      def paginate_results( results )
-        results = WillPaginate::Collection.create( @current_page, @config[:docs_per_page], @current_results_total ) do |pager|
-           pager.replace( results )
-        end
-        return results
       end
       
       # Utility function to clear all instance variables

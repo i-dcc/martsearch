@@ -47,56 +47,87 @@ module MartSearch
     #     }
     #   }
     # 
-    # But returns an ordered list of the results (@search_results)
+    # But returns an ordered list of the results/index docs (@search_results)
     #
     # @param [String] query The query string to pass to the search index
     # @param [Integer] page The page of results to search for/return
     # @return [Array] A list of the search results (primary index fields)
     def search( query, page=1 )
+      page = 1 if page == 0
       clear_instance_variables
       
-      cached_data = @cache.fetch("query:#{query}-page:#{page}")
-      if cached_data
-        search_from_cache( cached_data )
-      else
-        search_from_fresh( query, page )
-      end
-
-      # Return paged_results
-      return @search_results
-    end
-    
-    private
       
-      # Utility function to extract search results from a cached data object
-      def search_from_cache( cached_data )
-        clear_instance_variables
+      # Marker.mark("checking index cache") do
+        cached_index_data = @cache.fetch( "index:#{query}-page#{page}" )
+      # end
+      
+      if cached_index_data != nil
+        # Marker.mark("de-serialising index JSON response") do
+          cached_index_data = BSON.deserialize(cached_index_data) unless @cache.is_a?(MartSearch::MongoCache)
+          cached_index_data = cached_index_data.clean_hash if RUBY_VERSION < '1.9'
+          cached_index_data.recursively_symbolize_keys!
+        # end
         
-        cached_data_obj              = Marshal.load(cached_data)
-        @search_data                 = cached_data_obj[:search_data]
-        @search_results              = cached_data_obj[:search_results]
-        @index.current_page          = cached_data_obj[:current_page]
-        @index.current_results_total = cached_data_obj[:current_results_total]
-      end
-
-      # Utility function to control a fresh search off of the index and datasets
-      def search_from_fresh( query, page )
-        clear_instance_variables
-        
-        index_search_status   = search_from_fresh_index( query, page )
-        dataset_search_status = search_from_fresh_datasets() unless @index.current_results_total == 0
-        @search_results       = @index.paginated_results
-        
-        if index_search_status and dataset_search_status
-          obj_to_cache = {
+        # Marker.mark("preparing index response") do
+          search_from_cached_index( cached_index_data )
+        # end
+      else
+        if search_from_fresh_index( query, page )
+          obj_to_cache    = {
             :search_data           => @search_data,
             :search_results        => @search_results,
             :current_page          => @index.current_page,
             :current_results_total => @index.current_results_total
           }
-          @cache.write( "query:#{query}-page:#{page}", Marshal.dump(obj_to_cache), { :expires_in => 6.hours } )
+          if @cache.is_a?(MartSearch::MongoCache)
+            @cache.write( "index:#{query}-page#{page}", obj_to_cache, { :expires_in => 12.hours } )
+          else
+            @cache.write( "index:#{query}-page#{page}", BSON.serialize(obj_to_cache), { :expires_in => 12.hours } )
+          end
         end
       end
+      
+      unless @index.current_results_total == 0
+        fresh_ds_queries_to_do = []
+        
+        @search_data.each do |data_key,data|
+          # Marker.mark("checking dataset cache") do
+            cached_dataset_data = @cache.fetch( "datasets:#{data_key}" )
+          # end
+          
+          if cached_dataset_data != nil
+            # Marker.mark("de-serialising dataset JSON response") do
+              cached_dataset_data = BSON.deserialize(cached_dataset_data) unless @cache.is_a?(MartSearch::MongoCache)
+              cached_dataset_data = cached_dataset_data.clean_hash if RUBY_VERSION < '1.9'
+              cached_dataset_data.recursively_symbolize_keys!
+            # end
+            
+            # Marker.mark("preparing dataset response") do
+              @search_data[data_key] = cached_dataset_data.merge(data)
+            # end
+          else
+            fresh_ds_queries_to_do.push(data_key)
+          end
+        end
+        
+        unless fresh_ds_queries_to_do.empty?
+          if search_from_fresh_datasets( prepare_dataset_search_terms( fresh_ds_queries_to_do ) )
+            fresh_ds_queries_to_do.each do |data_key|
+              if @cache.is_a?(MartSearch::MongoCache)
+                @cache.write( "datasets:#{data_key}", @search_data[data_key], { :expires_in => 12.hours } )
+              else
+                @cache.write( "datasets:#{data_key}", BSON.serialize(@search_data[data_key]), { :expires_in => 12.hours } )
+              end
+            end
+          end
+        end
+      end
+      
+      # Return paged_results
+      return @search_results
+    end
+    
+    private
       
       # Utility function that drives the index searches.
       #
@@ -106,7 +137,8 @@ module MartSearch
       def search_from_fresh_index( query, page )
         begin
           if @index.is_alive?
-            @search_data = @index.search( query, page )
+            @search_data    = @index.search( query, page )
+            @search_results = @index.paginated_results
             return true
           end
         rescue MartSearch::IndexUnavailableError => error
@@ -126,17 +158,57 @@ module MartSearch
         end
       end
       
+      # Utility function to load index data into the instance variables from a 
+      # cached object.
+      #
+      # @param [String] cached_data The marshaled object to load
+      def search_from_cached_index( cached_data )
+        @search_data                 = cached_data[:search_data]
+        @index.current_page          = cached_data[:current_page]
+        @index.current_results_total = cached_data[:current_results_total]
+        @search_results              = @index.paginate_results(cached_data[:search_results])
+      end
+      
+      # Utility function to prepare the search terms used to drive the dataset searches.
+      #
+      # @param [Array] search_keys The keys/docs in @search_data to prepare dataset searches for
+      # @return [Hash] A hash keyed by the document fields containing all the terms found for the given field
+      def prepare_dataset_search_terms( search_keys )
+        grouped_terms = {}
+        
+        search_keys.each do |key|
+          doc = @search_data[key][:index]
+          doc.each do |field,value|
+            grouped_terms_for_field = grouped_terms[field]
+            grouped_terms_for_field = [] if grouped_terms_for_field.nil?
+            
+            if value.is_a?(Array)
+              value.each do |val|
+                grouped_terms_for_field.push( val )
+              end
+            else
+              grouped_terms_for_field.push( value )
+            end
+            
+            grouped_terms[field] = grouped_terms_for_field
+          end
+        end
+        
+        return grouped_terms
+      end
+      
       # Utility function that performs the dataset searches and 
       # post-search sorting routines
       #
+      # @param [Hash] grouped_terms A hash of terms (grouped by index field) that can be used to drive the dataset searches
       # @return [Boolean] true/false reporting if the searches went without error (actual results are stored in @search_data)
-      def search_from_fresh_datasets
+      def search_from_fresh_datasets( grouped_terms )
         success = true
         
         Parallel.each( @datasets.keys, :in_threads => 10 ) do |ds_name|
           begin
             dataset      = @datasets[ds_name]
-            search_terms = @index.grouped_terms[ dataset.joined_index_field.to_sym ]
+            search_terms = grouped_terms[ dataset.joined_index_field.to_sym ]
             results      = dataset.search( search_terms )
             add_dataset_results_to_search_data( dataset.joined_index_field.to_sym, ds_name.to_sym, results )
           rescue MartSearch::DataSourceError => error
@@ -175,11 +247,10 @@ module MartSearch
         # as the primary key of our results data, if yes, use 
         # this association as it's easy and bloody fast!
         if @index.primary_field == index_field
-          
+          results.symbolize_keys!
           @search_data.each do |primary_key,data_value|
             data_value[dataset_name] = results[primary_key]
           end
-          
         else
           
           # Create a lookup hash of the 'index_field' values so that 

@@ -9,8 +9,8 @@ require 'rack/contrib'
 
 use Rack::ETag
 
-log = File.new("#{File.dirname(__FILE__)}/lib/martsearch/server/logs/martsearch.log", "a+")
-err = File.new("#{File.dirname(__FILE__)}/lib/martsearch/server/logs/martsearch.err", "a+")
+log = File.new("#{File.dirname(__FILE__)}/lib/martsearch/server/log/martsearch.log", "a+")
+err = File.new("#{File.dirname(__FILE__)}/lib/martsearch/server/log/martsearch.err", "a+")
 $stdout.reopen(log)
 $stderr.reopen(err)
 

@@ -52,49 +52,42 @@ class MartSearchControllerTest < Test::Unit::TestCase
     
     should "allow us to perform controlled searches" do
       VCR.use_cassette('test_controller_search_simulation') do
+        @controller.cache.clear
+        
         assert( @controller.search_data.is_a?(Hash) )
         assert( @controller.search_data.empty? )
         
-        # Test search_from_fresh_index first
+        ##
+        ## Test search_from_*_index
+        ##
+        
+        # Hit the 'fresh' searches first
         bad_result = @controller.search_from_fresh_index_public( @controller.config[:index][:test][:bad_search], 1 )
         assert_equal( false, bad_result )
         
         good_result = @controller.search_from_fresh_index_public( @controller.config[:index][:test][:single_return_search], 1 )
         assert_equal( true, good_result )
         
-        # Now search_from_fresh_datasets
-        dataset_results = @controller.search_from_fresh_datasets_public()
+        # Now check the 'cachability' of the data
+        search_data = BSON.deserialize( BSON.serialize( @controller.search_data ) )
+        search_data = search_data.clean_hash if RUBY_VERSION < '1.9'
+        search_data.recursively_symbolize_keys!
+        assert_equal( search_data, @controller.search_data )
+        
+        ##
+        ## Test search_from_fresh_datasets
+        ##
+        
+        # First prepare the search terms to drive the dataset searches
+        grouped_search_terms = @controller.prepare_dataset_search_terms_public( @controller.search_data.keys )
+        
+        # Now drive the dataset searches
+        dataset_results = @controller.search_from_fresh_datasets_public( grouped_search_terms )
         assert( dataset_results.is_a?(TrueClass) || dataset_results.is_a?(FalseClass) )
         
         @controller.search_data.each do |key,value|
           assert( value.keys.size > 2 )
         end
-        
-        # Now search_from_fresh (one of the wrapper functions)
-        @controller.clear_instance_variables_public()
-        assert( @controller.search_data.empty? )
-        
-        @controller.search_from_fresh_public( @controller.config[:index][:test][:single_return_search], 1 )
-        @controller.search_data.each do |key,value|
-          assert( value.keys.size > 2 )
-        end
-        
-        @controller.clear_instance_variables_public()
-        assert( @controller.search_data.empty? )
-        
-        @controller.search_from_fresh_public( @controller.config[:index][:test][:bad_search], 1 )
-        assert( @controller.search_data.empty? )
-        
-        # Now search_from_cache (another wrapper function)
-        @controller.clear_instance_variables_public()
-        @controller.search_from_fresh_public( @controller.config[:index][:test][:single_return_search], 1 )
-        
-        fresh_search_data = Marshal.load( Marshal.dump( @controller.search_data ) )
-        
-        @controller.clear_instance_variables_public()
-        @controller.search_from_cache_public( @controller.cache.fetch("query:#{@controller.config[:index][:test][:single_return_search]}-page:1") )
-        
-        assert_equal( fresh_search_data, @controller.search_data )
       end
     end
     
@@ -113,16 +106,16 @@ class MartSearchControllerTest < Test::Unit::TestCase
   end
   
   def setup_access_to_private_methods( controller )
-    def controller.search_from_fresh_public(*args)
-      search_from_fresh(*args)
-    end
-    
-    def controller.search_from_cache_public(*args)
-      search_from_cache(*args)
-    end
-    
     def controller.search_from_fresh_index_public(*args)
       search_from_fresh_index(*args)
+    end
+    
+    def controller.search_from_cached_index_public(*args)
+      search_from_cached_index(*args)
+    end
+    
+    def controller.prepare_dataset_search_terms_public(*args)
+      prepare_dataset_search_terms(*args)
     end
     
     def controller.search_from_fresh_datasets_public(*args)
