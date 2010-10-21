@@ -57,19 +57,20 @@ module MartSearch
       clear_instance_variables
       
       
-      cached_index_data = Marker.mark("checking index cache") do
-        @cache.fetch( "index:#{query}-page#{page}" )
-      end
+      # Marker.mark("checking index cache") do
+        cached_index_data = @cache.fetch( "index:#{query}-page#{page}" )
+      # end
       
-      if cached_index_data
-        Marker.mark("de-serialising index JSON response") do
+      if cached_index_data != nil
+        # Marker.mark("de-serialising index JSON response") do
           cached_index_data = BSON.deserialize(cached_index_data) unless @cache.is_a?(MartSearch::MongoCache)
+          cached_index_data = cached_index_data.clean_hash if RUBY_VERSION < '1.9'
           cached_index_data.recursively_symbolize_keys!
-        end
+        # end
         
-        Marker.mark("preparing index response") do
+        # Marker.mark("preparing index response") do
           search_from_cached_index( cached_index_data )
-        end
+        # end
       else
         if search_from_fresh_index( query, page )
           obj_to_cache    = {
@@ -90,19 +91,20 @@ module MartSearch
         fresh_ds_queries_to_do = []
         
         @search_data.each do |data_key,data|
-          cached_dataset_data = Marker.mark("checking dataset cache") do
-            @cache.fetch( "datasets:#{data_key}" )
-          end
+          # Marker.mark("checking dataset cache") do
+            cached_dataset_data = @cache.fetch( "datasets:#{data_key}" )
+          # end
           
-          if cached_dataset_data
-            Marker.mark("de-serialising dataset JSON response") do
+          if cached_dataset_data != nil
+            # Marker.mark("de-serialising dataset JSON response") do
               cached_dataset_data = BSON.deserialize(cached_dataset_data) unless @cache.is_a?(MartSearch::MongoCache)
+              cached_dataset_data = cached_dataset_data.clean_hash if RUBY_VERSION < '1.9'
               cached_dataset_data.recursively_symbolize_keys!
-            end
+            # end
             
-            Marker.mark("preparing dataset response") do
+            # Marker.mark("preparing dataset response") do
               @search_data[data_key] = cached_dataset_data.merge(data)
-            end
+            # end
           else
             fresh_ds_queries_to_do.push(data_key)
           end

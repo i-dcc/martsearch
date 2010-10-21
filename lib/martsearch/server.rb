@@ -140,9 +140,9 @@ module MartSearch
       else
         @current    = 'home'
         @page_title = "Search Results for '#{params[:query]}'"
-        Marker.mark("running search") do
+        # Marker.mark("running search") do
           @results    = @ms.search( params[:query], params[:page].to_i )
-        end
+        # end
         @data       = @ms.search_data
         @errors     = @ms.errors
 
@@ -150,9 +150,9 @@ module MartSearch
           content_type 'application/json', :charset => 'utf-8'
           return @data.to_json
         else
-          Marker.mark("rendering page") do
+          # Marker.mark("rendering page") do
             erubis :search
-          end
+          # end
         end
       end
     end
