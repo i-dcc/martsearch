@@ -24,9 +24,11 @@
           &nbsp;
           <% if conditional_allele_gb %>
             (
-            <a href="http://www.i-dcc.org/targ_rep/alleles/<%= conditional_allele_id %>/escell-clone-genbank-file" class="file">genbank&nbsp;file</a> | 
-            <a href="http://www.i-dcc.org/targ_rep/alleles/<%= conditional_allele_id %>/allele-image" class="image" rel="prettyPhoto">allele&nbsp;image</a> | 
-            <a href="http://www.i-dcc.org/targ_rep/alleles/<%= conditional_allele_id %>/vector-image" class="image" rel="prettyPhoto">vector&nbsp;image</a>
+            <a href="http://www.i-dcc.org/targ_rep/alleles/<%= conditional_allele_id %>/escell-clone-genbank-file" class="file">genbank&nbsp;file</a>
+            <% unless ['KOMP-Regeneron','mirKO'].include?(pipeline) %>
+               | <a href="http://www.i-dcc.org/targ_rep/alleles/<%= conditional_allele_id %>/allele-image" class="image" rel="prettyPhoto">allele&nbsp;image</a>
+               | <a href="http://www.i-dcc.org/targ_rep/alleles/<%= conditional_allele_id %>/vector-image" class="image" rel="prettyPhoto">vector&nbsp;image</a>
+            <% end %>
             )
           <% end %>
         </td>
@@ -35,9 +37,11 @@
           <% if nonconditional_allele_gb %>
             &nbsp;
             (
-            <a href="http://www.i-dcc.org/targ_rep/alleles/<%= nonconditional_allele_id %>/escell-clone-genbank-file" class="file">genbank&nbsp;file</a> | 
-            <a href="http://www.i-dcc.org/targ_rep/alleles/<%= nonconditional_allele_id %>/allele-image" class="image" rel="prettyPhoto">allele&nbsp;image</a> | 
-            <a href="http://www.i-dcc.org/targ_rep/alleles/<%= nonconditional_allele_id %>/vector-image" class="image" rel="prettyPhoto">vector&nbsp;image</a>
+            <a href="http://www.i-dcc.org/targ_rep/alleles/<%= nonconditional_allele_id %>/escell-clone-genbank-file" class="file">genbank&nbsp;file</a>
+            <% unless ['KOMP-Regeneron','mirKO'].include?(pipeline) %>
+               | <a href="http://www.i-dcc.org/targ_rep/alleles/<%= nonconditional_allele_id %>/allele-image" class="image" rel="prettyPhoto">allele&nbsp;image</a>
+               | <a href="http://www.i-dcc.org/targ_rep/alleles/<%= nonconditional_allele_id %>/vector-image" class="image" rel="prettyPhoto">vector&nbsp;image</a>
+            <% end %>
             )
           <% end %>
         </td>
