@@ -37,7 +37,7 @@
                 dist_flag = false
                 dist_flag = true if mouse[:emma] == "1"
               %>
-              <%= mouse_order_button( @data[:mgi_accession_id], @data[:marker_symbol], @data[:ikmc_project], @data[:project_id], dist_flag ) %>
+              <%= mouse_order_button( @data[:mgi_accession_id], @data[:marker_symbol], @data[:ikmc_project], @data[:project_id], dist_flag, mouse[:mi_centre], mouse[:distribution_centre] ) %>
             </td>
           </tr>
           <% if mouse[:qc_count] > 0 %>

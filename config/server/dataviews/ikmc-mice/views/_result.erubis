@@ -27,7 +27,7 @@
       dist_flag = false
       dist_flag = true if result[:emma] == "1"
     %>
-    <%= mouse_order_button( result[:mgi_accession_id], result[:marker_symbol], result[:sponsor], result[:ikmc_project_id], dist_flag ) %>
+    <%= mouse_order_button( result[:mgi_accession_id], result[:marker_symbol], result[:sponsor], result[:ikmc_project_id], dist_flag, result[:mi_centre], result[:distribution_centre] ) %>
   </td>
 </tr>
 <% if result[:qc_count] > 0 %>

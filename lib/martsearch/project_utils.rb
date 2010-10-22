@@ -109,7 +109,7 @@ module MartSearch
           },
           :attributes      => [
               'status', 'allele_name', 'escell_clone', 'emma',
-              'escell_strain', 'escell_line', 'mi_centre',
+              'escell_strain', 'escell_line', 'mi_centre', 'distribution_centre',
               qc_metrics
           ].flatten,
           :required_attributes => ['status']

@@ -39,16 +39,16 @@ status_order = {
 # Sort projects on products availability (mice -> cells -> vectors -> nothing)
 #
 search_data.each do |key,result_data|
+  #
+  # Sorting on mice, cells and vectors availability
+  # (mouse availability is retrieved from 'ikmc-dcc-knockout_attempts')
+  #
   projects_with_mice    = []
   projects_with_clones  = []
   projects_with_vectors = []
   projects_with_nothing = [] # ie. No available product
   
-  #
-  # Sorting on mice, cells and vectors availability
-  # (mouse availability is retrieved from 'ikmc-dcc-knockout_attempts')
-  #
-  if result_data[:'ikmc-idcc_targ_rep']
+  unless result_data[:'ikmc-idcc_targ_rep'].nil?
     result_data[:'ikmc-idcc_targ_rep'].each do |pipeline, pipeline_projects|
       displayed_project = nil
       
@@ -122,6 +122,59 @@ search_data.each do |key,result_data|
     + projects_with_vectors \
     + projects_with_nothing
   )
+  
+  #
+  # Finally, try to associate any microinfection data to es cells.
+  #
+  if !result_data[:'ikmc-idcc_targ_rep'].empty? and !result_data[:'ikmc-kermits'].nil?
+    mi_cache = {}
+    
+    # Cache the mi and distribution centres from the kermits entries
+    result_data[:'ikmc-kermits'].each do |mi|
+      unless mi[:escell_clone].nil?
+        mi_cache[ mi[:escell_clone] ] = {
+          :emma                => mi[:emma],
+          :mi_centre           => mi[:mi_centre],
+          :distribution_centre => mi[:distribution_centre]
+        }
+      end
+    end
+    
+    # Now try and stamp this data on the targ_rep entries
+    result_data[:'ikmc-idcc_targ_rep'].each do |project|
+      mi_data_for_project = []
+      [:conditional_clones,:nonconditional_clones].each do |clone_type|
+        unless project[clone_type].nil?
+          project[clone_type].each do |clone|
+            unless mi_cache[ clone[:escell_clone] ].nil?
+              mi_data_for_project.push( mi_cache[ clone[:escell_clone] ] )
+            end
+          end
+        end
+      end
+      
+      # Reconcile multiple mi's for a project... Basically, the only rule here 
+      # is that:
+      #   - for KOMP products, an MI with a distribution centre of 'UCD'
+      #     trumps all others.
+      #   - for EUCOMM (and all other projects) products we don't care...
+      unless mi_data_for_project.empty?
+        chosen_mi = mi_data_for_project.first
+        
+        if mi_data_for_project.size > 1 and project[:pipeline] =~ /KOMP/
+          mi_data_for_project.each do |other_mi|
+            if other_mi[:distribution_centre] == 'UCD' and chosen_mi[:distribution_centre] != 'UCD'
+              chosen_mi = other_mi
+            end
+          end
+        end
+        
+        project[:mouse_emma]                = chosen_mi[:emma]
+        project[:mouse_mi_centre]           = chosen_mi[:mi_centre]
+        project[:mouse_distribution_centre] = chosen_mi[:distribution_centre]
+      end
+    end
+  end
   
   if result_data[:'ikmc-idcc_targ_rep'].empty?
     result_data[:'ikmc-idcc_targ_rep'] = nil
