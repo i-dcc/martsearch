@@ -12,9 +12,9 @@ module MartSearch
       Dir.mkdir(index_builder_tmpdir) unless File.directory?(index_builder_tmpdir)
       Dir.chdir(index_builder_tmpdir)
       
-      ['datasource_dowloads','document_cache','solr_xml'].each do |cache_dir|
+      ['dataset_dowloads','document_cache','solr_xml'].each do |cache_dir|
         Dir.mkdir(cache_dir) unless File.directory?(cache_dir)
-        if cache_dir == 'datasource_dowloads'
+        if cache_dir == 'dataset_dowloads'
           Dir.chdir(cache_dir)
           Dir.mkdir('current') unless File.directory?('current')
           Dir.chdir('..')
@@ -24,7 +24,7 @@ module MartSearch
     
     # Utility function to setup and move the current program into a daily cache directory.
     # 
-    # @param [String] cache_dir The type of cache_dir to open [datasource_dowloads / document_cache / solr_xml]
+    # @param [String] cache_dir The type of cache_dir to open [dataset_dowloads / document_cache / solr_xml]
     # @param [Boolean] delete Delete an existing daily cache directory?
     def open_daily_directory( cache_dir, delete=true )
       setup_and_move_to_work_directory()
@@ -65,8 +65,8 @@ module MartSearch
     # Utility function to process the attribute_map configuration into 
     # something we can use to map dataset results to our index configuration.
     # 
-    # @param [Hash] attribute_map The attribute_map configuration for a given datasource
-    # @return [Hash] A hash contining the processed :attribute_map, :primary_attribute (of the datasource) and the :map_to_index_field (the index field used to map this data into the index)
+    # @param [Hash] attribute_map The attribute_map configuration for a given dataset
+    # @return [Hash] A hash contining the processed :attribute_map, :primary_attribute (of the dataset) and the :map_to_index_field (the index field used to map this data into the index)
     def process_attribute_map( attribute_map )
       map                = {}
       primary_attribute  = nil
@@ -104,9 +104,9 @@ module MartSearch
     # Utility function to determine what data values we need to 
     # add to the index given the dataset configuration.
     # 
-    # @param [String] attr_name The name of the datasource attribute to process
+    # @param [String] attr_name The name of the dataset attribute to process
     # @param [Hash] attribute_map The processed :attribute_map configuration (the value of :attribute_map returned from {#process_attribute_map})
-    # @param [Hash] data_row_obj Hash representing the row of datasource data to process
+    # @param [Hash] data_row_obj Hash representing the row of dataset data to process
     # @param [Biomart::Dataset] mart_ds A Biomart::Dataset object - required if the attribute_map uses the 'index_attr_name' option
     # @return [nil/String/Array] Can return nil (if there is no data to index), a String (single value to index), or an Array (if there are multiple values to index)
     def extract_value_to_index( attr_name, attribute_map, data_row_obj, mart_ds=nil )
@@ -176,7 +176,7 @@ module MartSearch
     # 
     # @param [Hash] grouped_attr_conf The configuration object supplying the "attrs" to concatenate, the "using" argument (optional), and the "idx" field to send our data to
     # @param [Hash] doc The Solr document object to inject any indexable data into
-    # @param [Hash] data_row_obj Hash representing the row of datasource data to process
+    # @param [Hash] data_row_obj Hash representing the row of dataset data to process
     # @param [Hash] map_data The complete processed attribute_map config (return from {#process_attribute_map})
     def index_grouped_attributes( grouped_attr_conf, doc, data_row_obj, map_data )
       grouped_attr_conf.each do |group|
@@ -206,7 +206,7 @@ module MartSearch
     # 
     # @param [Hash] ontology_term_conf The configuration object defining how the ontology data should be indexed
     # @param [Hash] doc The Solr document object to inject any indexable data into
-    # @param [Hash] data_row_obj Hash representing the row of datasource data to process
+    # @param [Hash] data_row_obj Hash representing the row of dataset data to process
     # @param [Hash] map_data The complete processed attribute_map config (return from {#process_attribute_map})
     # @param [Hash] cache A cache object to store data about already retrieved ontology terms (this is for optimization as generating the OntologyTerm objects is expensive)
     def index_ontology_terms( ontology_term_conf, doc, data_row_obj, map_data, cache )

@@ -36,16 +36,16 @@ module MartSearch
     
     def build_index()
       setup_and_move_to_work_directory()
-      open_daily_directory( 'datasource_dowloads' )
+      open_daily_directory( 'dataset_dowloads' )
       
-      ds_to_index = @builder_config[:datasources_to_index]
+      ds_to_index = @builder_config[:datasets_to_index]
       
       @log.info "Running Primary DataSource Grabs (in serial)..."
       ds_to_index[:primary].each do |ds|
         @log.info " - #{ds}"
         @log.info "   - requesting data"
         
-        results = fetch_datasource( ds )
+        results = fetch_dataset( ds )
         
         @log.info "   - #{results[:data].size} rows of data returned"
         @log.info "   - processing data"
@@ -59,7 +59,7 @@ module MartSearch
       Parallel.each( ds_to_index[:secondary], :in_threads => 10 ) do |ds|
         @log.info " - #{ds}: requesting data"
         
-        results = fetch_datasource( ds )
+        results = fetch_dataset( ds )
         
         @log.info " - #{ds}: #{results[:data].size} rows of data returned"
         @log.info " - #{ds}: processing data"
@@ -79,11 +79,11 @@ module MartSearch
     # data to two files, a Marshal.dump (for computer consumption) and 
     # a CSV file (for human consumption).
     #
-    # @param [String] ds The name of the datasource to fetch from
+    # @param [String] ds The name of the dataset
     # @param [Boolean] save_to_disk Save cache files to disk?
     # @return [Hash] A hash containing the :headers (Array) and :data (Array of Arrays) to index
-    def fetch_datasource( ds, save_to_disk=true )
-      ds_conf    = @builder_config[:datasources][ds.to_sym]
+    def fetch_dataset( ds, save_to_disk=true )
+      ds_conf    = @builder_config[:datasets][ds.to_sym]
       datasource = @datasources_config[ ds_conf[:datasource].to_sym ]
       
       # results = Marshal.load( File.new( "#{ds}.marshal", 'r' ) )
@@ -108,14 +108,14 @@ module MartSearch
       return results
     end
     
-    # Function used to process the data returned from a datasource and build 
+    # Function used to process the data returned from a dataset and build 
     # up the @document_cache.
     #
-    # @param [String] ds The name of the datasource that the data is from
-    # @param [Hash] results The results hash of data (the return from {#fetch_datasource})
+    # @param [String] ds The name of the dataset that the data is from
+    # @param [Hash] results The results hash of data (the return from {#fetch_dataset})
     def process_results( ds, results )
-      ds_conf       = @builder_config[:datasources][ds.to_sym]
-      datasource    = @datasources_config[ ds_conf[:datasource] ]
+      ds_conf       = @builder_config[:datasets][ds.to_sym]
+      datasource    = @datasources_config[ ds_conf[:datasource].to_sym ]
       ds_index_conf = ds_conf[:indexing]
       
       # Extract all of the needed index mapping data from "attribute_map"

@@ -51,7 +51,7 @@ class MartSearchDataSourceTest < Test::Unit::TestCase
     
     should 'return the expeced data structure for fetch_all_terms_for_indexing()' do
       VCR.use_cassette('test_biomart_data_source_index_fetch') do
-        ds_conf = @conf_obj.config[:index_builder][:datasources][:'ikmc-kermits']
+        ds_conf = @conf_obj.config[:index_builder][:datasets][:'ikmc-kermits']
         ret     = @kermits_biomart.fetch_all_terms_for_indexing( ds_conf[:indexing] )
         check_the_response_from_fetch_all_terms_for_indexing( ret )
       end

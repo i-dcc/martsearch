@@ -19,9 +19,9 @@ class MartSearchControllerUtilsTest < Test::Unit::TestCase
     conifg     = build_index_builder_conf(conifg_dir)
     
     assert( conifg.is_a?(Hash) )
-    assert( conifg.keys.include?(:datasources) )
-    assert( conifg.keys.include?(:datasources_to_index) )
-    assert( conifg[:datasources].is_a?(Hash) )
+    assert( conifg.keys.include?(:datasets) )
+    assert( conifg.keys.include?(:datasets_to_index) )
+    assert( conifg[:datasets].is_a?(Hash) )
   end
   
   def test_build_server_conf
