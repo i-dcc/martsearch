@@ -32,7 +32,7 @@ module MartSearch
       daily_dir = "daily_#{Date.today.to_s}"
       
       system "/bin/rm -r #{daily_dir}" if File.directory?(daily_dir) and delete
-      Dir.mkdir(daily_dir) if delete
+      Dir.mkdir(daily_dir) if delete or !File.directory?(daily_dir)
 
       # clean up old daily directories
       directories = Dir.glob("daily_*").sort

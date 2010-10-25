@@ -1,0 +1,32 @@
+begin
+  require 'martsearch'
+  
+  @ms      = MartSearch::Controller.instance()
+  @builder = MartSearch::IndexBuilder.new()
+  
+  namespace :index do
+    
+    task :fetch_datasets do
+      @builder.fetch_datasets
+    end
+    
+    task :process_datasets do
+      @builder.process_datasets
+    end
+    
+    task :save_solr_document_xmls do
+      @builder.save_solr_document_xmls
+    end
+    
+    task :send_xml_to_solr do
+      @builder.send_xml_to_solr
+    end
+    
+    desc "Daily task to rebuild the Solr index"
+    task :rebuild_index => [:fetch_datasets, :process_datasets, :save_solr_document_xmls, :send_xml_to_solr]
+    
+  end
+  
+rescue LoadError
+  puts "[ERROR] Unable to load 'index' tasks - please run 'bundle install'"
+end

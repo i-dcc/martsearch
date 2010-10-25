@@ -6,6 +6,7 @@ class MartSearchIndexBuilderTest < Test::Unit::TestCase
   def setup
     @index_builder           = MartSearch::IndexBuilder.new()
     @index_builder.log.level = Logger::FATAL
+    setup_access_to_private_methods( @index_builder )
   end
   
   context 'A MartSearch::IndexBuilder object' do
@@ -28,13 +29,16 @@ class MartSearchIndexBuilderTest < Test::Unit::TestCase
     end
     
     should 'correctly process the results from a DataSource return' do
-      VCR.use_cassette( 'test_index_builder_process_results', :record => :new_episodes ) do
+      VCR.use_cassette( 'test_index_builder_process_dataset' ) do
         @index_builder.builder_config[:datasets][:'ikmc-dcc'][:indexing][:filters] = {
           :status => ['Mice - Genotype confirmed','Mice - Germline transmission']
         }
         
-        @index_builder.process_results( 'ikmc-dcc', @index_builder.fetch_dataset( 'ikmc-dcc', false ) )
-        @index_builder.process_results( 'ikmc-kermits', @index_builder.fetch_dataset( 'ikmc-kermits', false ) )
+        @index_builder.fetch_dataset_public( 'ikmc-dcc' )
+        @index_builder.fetch_dataset_public( 'ikmc-kermits' )
+        
+        @index_builder.process_dataset_public( 'ikmc-dcc' )
+        @index_builder.process_dataset_public( 'ikmc-kermits' )
         
         docs = @index_builder.document_cache
         
@@ -43,10 +47,6 @@ class MartSearchIndexBuilderTest < Test::Unit::TestCase
         assert( docs['MGI:105369'][:colony_prefix].include?('MAAT'), "The document entry for Cbx1 hasn't got a colony_prefix from kermits." )
         
         # Test the document cleaning while we're here...
-        def @index_builder.clean_document_cache_public(*args)
-          clean_document_cache(*args)
-        end
-        
         assert( docs['MGI:105369'][:marker_symbol].size > 1 )
         @index_builder.clean_document_cache_public()
         assert_equal( 1, docs['MGI:105369'][:marker_symbol].size )
@@ -70,5 +70,19 @@ class MartSearchIndexBuilderTest < Test::Unit::TestCase
       end
     end
     
+  end
+  
+  def setup_access_to_private_methods( builder )
+    def builder.fetch_dataset_public(*args)
+      fetch_dataset(*args)
+    end
+    
+    def builder.process_dataset_public(*args)
+      process_dataset(*args)
+    end
+    
+    def builder.clean_document_cache_public(*args)
+      clean_document_cache(*args)
+    end
   end
 end
