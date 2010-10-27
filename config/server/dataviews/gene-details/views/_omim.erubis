@@ -6,7 +6,7 @@
         <%
           display_str = omim[:disorder_name]
           unless omim[:disorder_omim_id].nil?
-            display_str = link_to( display_str, "http://www.ncbi.nlm.nih.gov/omim/#{omim[:disorder_omim_id]}", { :target => '_blank' } )
+            display_str = "<a href=\"http://www.ncbi.nlm.nih.gov/omim/#{omim[:disorder_omim_id]}\" target=\"_blank\">#{display_str}</a>"
           end
         %>
         <%= display_str %>
