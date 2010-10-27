@@ -9,7 +9,7 @@
   </tr>
   <% result_data[:'emma-strains'].each do |id,data| %>
     <tr>
-      <td><%= link_to( data[:emma_id], "http://www.emmanet.org/mutant_types.php?keyword=#{data[:emma_id]}")%></td>
+      <td><a href="<%= "http://www.emmanet.org/mutant_types.php?keyword=#{data[:emma_id]}" %>"><%= data[:emma_id] %></td>
       <td><%= data[:synonym] %></td>
       <td><%= data[:international_strain_name] %></td>
       <td><%= data[:allele_name] %></td>
@@ -72,7 +72,7 @@
                   <% data[:references].each do |pmid,ref_data| %>
                     <li>
                       <%= ref_data[:reference] %> 
-                      (<%= link_to( "PMID:#{ref_data[:pubmed_id]}", "http://www.ncbi.nlm.nih.gov/pubmed/#{ref_data[:pubmed_id]}?dopt=Abstract" ) %>)
+                      (<a href="<%= "http://www.ncbi.nlm.nih.gov/pubmed/#{ref_data[:pubmed_id]}?dopt=Abstract" %>"><%= "PMID:#{ref_data[:pubmed_id]}" %></a>)
                     </li>
                   <% end %>
                 </ul>

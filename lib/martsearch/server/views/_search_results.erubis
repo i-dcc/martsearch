@@ -116,7 +116,9 @@
                     <div class="dataset_original_data_links single_parent_toggler_content" style="display:none;">
                       <ul>
                         <% view.data_origin_links( result_data ).each do |link| %>
-                          <li><%= link_to( link[0], link[1], { :target => '_blank' } ) %></li>
+                          <li>
+                            <a href="<%= link[1] %>" target="_blank"><%= link[0] %></a>
+                          </li>
                         <% end %>
                       </ul>
                     </div>
@@ -124,7 +126,9 @@
                   <%
                     attribution_links = []
                     view.attribution_links( result_data ).each do |link|
-                      attribution_links.push( link_to( link[0], link[1], { :target => '_blank' } ) )
+                      attribution_links.push(
+                        "<a href=\"#{link[1]}\" target=\"_blank\">#{link[0]}</a>"
+                      )
                     end
                   %>
                   Data provided by <%=  attribution_links.join(', ') %>
