@@ -65,5 +65,15 @@ class MartSearchControllerUtilsTest < Test::Unit::TestCase
       
       cache.clear
       assert_equal( false, cache.exist?("foo"), "The 'delete_matched' method hasn't emptied out the cache..." )
+      
+      cache.write("foo", "bar")
+      cache.write("fu", "baz")
+      cache.write("foo/bar", "baz")
+      cache.write("fu/baz", "bar")
+      cache.delete_matched(/oo/)
+      assert_equal( false, cache.exist?("foo") )
+      assert_equal( true, cache.exist?("fu") )
+      assert_equal( false, cache.exist?("foo/bar") )
+      assert_equal( true, cache.exist?("fu/baz") )
     end
 end

@@ -76,6 +76,34 @@ class MartSearchIndexBuilderTest < Test::Unit::TestCase
       end
     end
     
+    should 'correctly fetch all of the datasets for indexing' do
+      VCR.use_cassette( 'test_index_builder_fetch_datasets', :record => :new_episodes ) do
+        @index_builder.fetch_datasets()
+        
+        pwd = Dir.pwd
+        setup_and_move_to_work_directory()
+        Dir.chdir('dataset_dowloads/current')
+        
+        assert_equal( @index_builder.builder_config[:datasets].size, Dir.glob("*.marshal").size )
+        assert_equal( @index_builder.builder_config[:datasets].size, Dir.glob("*.csv").size )
+        
+        Dir.chdir(pwd)
+      end
+    end
+    
+    should 'correctly process all of the datasets data for indexing' do
+      @index_builder.process_datasets()
+      
+      pwd = Dir.pwd
+      setup_and_move_to_work_directory()
+      open_daily_directory( 'document_cache', false )
+      
+      assert( @index_builder.document_cache != nil )
+      assert( @index_builder.document_cache.size > 10 )
+      assert_equal( 1, Dir.glob("document_cache.marshal").size )
+      
+      Dir.chdir(pwd)
+    end
   end
   
   def setup_access_to_private_methods( builder )

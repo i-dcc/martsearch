@@ -58,4 +58,17 @@ class MartSearchUtilsTest < Test::Unit::TestCase
       assert( twelve_elm_array.include?(elm) )
     end
   end
+  
+  def test_hash_cleaning
+    orig = {
+      :a => 'foo',
+      :b => [1,2,3],
+      :c => { :a => true, :b => [ 1, 2, { :a => true, :b => false }, [1,2] ] }
+    }
+    clone = orig.clean_hash()
+    
+    assert_equal( orig[:a], clone[:a] )
+    assert_equal( orig[:c][:a], clone[:c][:a] )
+    assert_equal( orig[:c][:b][2], clone[:c][:b][2] )
+  end
 end
