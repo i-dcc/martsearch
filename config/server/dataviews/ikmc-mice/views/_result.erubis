@@ -13,6 +13,7 @@
     <%= genetic_background.join(';') %>
   </td>
   <td><%= result[:mi_centre] %></td>
+  <td><%= result[:distribution_centre]%></td>
   <td>
     <% if result[:qc_count] > 0 %>
       <a class="ikmc-kermits_qc_details_toggle">view&nbsp;data</a>
@@ -22,17 +23,17 @@
     <br />
     (&nbsp;<a href="http://www.knockoutmouse.org/kb/entry/90/" target="_blank" class="ext_link">about</a>&nbsp;)
   </td>
-  <td>
+  <td class="noborder nocol nobg">
     <% 
       dist_flag = false
       dist_flag = true if result[:emma] == "1"
     %>
-    <%= mouse_order_button( result[:mgi_accession_id], result[:marker_symbol], result[:sponsor], result[:ikmc_project_id], dist_flag ) %>
+    <%= mouse_order_button( result[:mgi_accession_id], result[:marker_symbol], result[:sponsor], result[:ikmc_project_id], dist_flag, result[:mi_centre], result[:distribution_centre] ) %>
   </td>
 </tr>
 <% if result[:qc_count] > 0 %>
   <tr class="ikmc-kermits_qc_details">
-    <td colspan="8">
+    <td colspan="9">
       <%= partial('dataviews/ikmc-mice/qc_data', :locals => { :result => result }) %>
     </td>
   </tr>

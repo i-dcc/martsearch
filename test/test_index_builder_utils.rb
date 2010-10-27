@@ -13,8 +13,8 @@ class MartSearchIndexBuilderUtilsTest < Test::Unit::TestCase
   
   def test_setup_and_move_to_work_directory
     setup_and_move_to_work_directory()
-    assert( File.directory?('datasource_dowloads') )
-    assert( File.directory?('datasource_dowloads/current') )
+    assert( File.directory?('dataset_dowloads') )
+    assert( File.directory?('dataset_dowloads/current') )
     assert( File.directory?('document_cache') )
     assert( File.directory?('solr_xml') )
     

@@ -1,0 +1,45 @@
+begin
+  require 'martsearch'
+  
+  @ms      = MartSearch::Controller.instance()
+  @builder = MartSearch::IndexBuilder.new()
+  
+  namespace :index do
+    
+    task :fetch_datasets do
+      @builder.fetch_datasets
+    end
+    
+    task :process_datasets do
+      @builder.process_datasets
+    end
+    
+    task :save_solr_document_xmls do
+      @builder.save_solr_document_xmls
+    end
+    
+    task :send_xml_to_solr do
+      @builder.send_xml_to_solr
+    end
+    
+    desc "Daily task to rebuild the Solr index"
+    task :rebuild_index => [:fetch_datasets, :process_datasets, :save_solr_document_xmls, :send_xml_to_solr]
+    
+    desc "Generates the Solr 'schema.xml' file in the current directory"
+    task :solr_schema_xml do
+      @index_config = @ms.config[:index]
+      
+      template_file = File.open( "#{File.dirname(__FILE__)}/../templates/solr_schema.xml.erubis", "r" )
+      template      = Erubis::Eruby.new( template_file.read )
+      template_file.close()
+    
+      file = File.open( 'schema.xml', 'w' )
+      file.print( template.result( binding ) )
+      file.close()
+    end
+    
+  end
+  
+rescue LoadError
+  puts "[ERROR] Unable to load 'index' tasks - please run 'bundle install'"
+end

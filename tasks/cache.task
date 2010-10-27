@@ -1,7 +1,7 @@
 begin
   require 'martsearch'
   
-  @url = 'http://loaclhost:3000/'
+  @url = 'http://localhost:3000/'
   @ms  = MartSearch::Controller.instance()
   
   # Set up a HTTP client

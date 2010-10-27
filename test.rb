@@ -1,6 +1,8 @@
-#!/usr/bin/env ruby -w
+#!/usr/bin/env ruby
 
-require 'lib/martsearch'
+$:.unshift( "#{File.expand_path(File.dirname(__FILE__))}/lib" )
+require 'martsearch'
 
 builder = MartSearch::IndexBuilder.new()
-builder.build_index()
+builder.fetch_datasets()
+builder.process_datasets()

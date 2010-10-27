@@ -29,20 +29,23 @@ module MartSearch
       self
     end
     
-    if RUBY_VERSION < '1.9'
-      def clean_hash
-        hash = {}
-        self.each do |key,value|
-          if value.is_a?(Hash)
-            hash[key] = value.clean_hash
-          elsif value.is_a?(Array)
-            hash[key] = value.clean_hashes
-          else
-            hash[key] = value
-          end
+    # Simple function to duplicate a hash.  This is useful if your current 
+    # object is something derived from the Hash class (i.e. BSON::OrderedHash) 
+    # and you just want a pure Hash.
+    #
+    # @return [Hash] a copy of the current object, but forced as a 'Hash' object
+    def clean_hash
+      hash = {}
+      self.each do |key,value|
+        if value.is_a?(Hash)
+          hash[key] = value.clean_hash
+        elsif value.is_a?(Array)
+          hash[key] = value.clean_hashes
+        else
+          hash[key] = value
         end
-        return hash
       end
+      return hash
     end
   end
 end
