@@ -16,7 +16,7 @@ class MartSearchIndexBuilderTest < Test::Unit::TestCase
     
     should 'correctly call the DataSource to fetch all data ready for indexing' do
       VCR.use_cassette( 'test_index_builder_fetch_dataset', :record => :new_episodes ) do
-        ret = @index_builder.fetch_dataset( 'ikmc-kermits', false )
+        ret = @index_builder.fetch_dataset_public( 'ikmc-kermits', false )
         
         assert( ret.is_a?(Hash), "fetch_all_terms_for_indexing() does not return a hash." )
         assert( ret[:headers] != nil, "the returned hash from fetch_all_terms_for_indexing() contains a nil value for :headers." )
@@ -34,8 +34,14 @@ class MartSearchIndexBuilderTest < Test::Unit::TestCase
           :status => ['Mice - Genotype confirmed','Mice - Germline transmission']
         }
         
+        setup_and_move_to_work_directory()
+        open_daily_directory( 'dataset_dowloads', false )
+        
         @index_builder.fetch_dataset_public( 'ikmc-dcc' )
         @index_builder.fetch_dataset_public( 'ikmc-kermits' )
+        
+        setup_and_move_to_work_directory()
+        Dir.chdir('dataset_dowloads/current')
         
         @index_builder.process_dataset_public( 'ikmc-dcc' )
         @index_builder.process_dataset_public( 'ikmc-kermits' )
@@ -53,7 +59,7 @@ class MartSearchIndexBuilderTest < Test::Unit::TestCase
         
         # And try saving the document_cache and xml files to disk...
         pwd = Dir.pwd
-        @index_builder.save_document_cache()
+        @index_builder.save_document_cache_public()
         assert_equal( pwd, Dir.pwd )
         
         open_daily_directory( 'document_cache', false )
@@ -83,6 +89,10 @@ class MartSearchIndexBuilderTest < Test::Unit::TestCase
     
     def builder.clean_document_cache_public(*args)
       clean_document_cache(*args)
+    end
+    
+    def builder.save_document_cache_public(*args)
+      save_document_cache(*args)
     end
   end
 end
