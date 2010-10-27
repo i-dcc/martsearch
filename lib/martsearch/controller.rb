@@ -87,7 +87,7 @@ module MartSearch
         end
       end
       
-      unless @index.current_results_total == 0
+      unless @search_data.empty?
         fresh_ds_queries_to_do = []
         
         @search_data.each do |data_key,data|
@@ -113,10 +113,12 @@ module MartSearch
         unless fresh_ds_queries_to_do.empty?
           if search_from_fresh_datasets( prepare_dataset_search_terms( fresh_ds_queries_to_do ) )
             fresh_ds_queries_to_do.each do |data_key|
-              if @cache.is_a?(MartSearch::MongoCache)
-                @cache.write( "datasets:#{data_key}", @search_data[data_key], { :expires_in => 12.hours } )
-              else
-                @cache.write( "datasets:#{data_key}", BSON.serialize(@search_data[data_key]), { :expires_in => 12.hours } )
+              unless @search_data[data_key].nil?
+                if @cache.is_a?(MartSearch::MongoCache)
+                  @cache.write( "datasets:#{data_key}", @search_data[data_key], { :expires_in => 12.hours } )
+                else
+                  @cache.write( "datasets:#{data_key}", BSON.serialize(@search_data[data_key]), { :expires_in => 12.hours } )
+                end
               end
             end
           end
