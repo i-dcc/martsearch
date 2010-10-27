@@ -23,7 +23,7 @@
     <br />
     (&nbsp;<a href="http://www.knockoutmouse.org/kb/entry/90/" target="_blank" class="ext_link">about</a>&nbsp;)
   </td>
-  <td>
+  <td class="noborder nocol nobg">
     <% 
       dist_flag = false
       dist_flag = true if result[:emma] == "1"
@@ -33,7 +33,7 @@
 </tr>
 <% if result[:qc_count] > 0 %>
   <tr class="ikmc-kermits_qc_details">
-    <td colspan="8">
+    <td colspan="9">
       <%= partial('dataviews/ikmc-mice/qc_data', :locals => { :result => result }) %>
     </td>
   </tr>

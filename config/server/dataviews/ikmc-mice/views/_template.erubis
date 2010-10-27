@@ -9,7 +9,7 @@
       <th>Microinjection Centre</th>
       <th>Distribution Centre</th>
       <th>QC/Screening Data</th>
-      <th></th>
+      <th class="noborder nocol nobg"></th>
     </tr>
   </thead>
   <tbody>
