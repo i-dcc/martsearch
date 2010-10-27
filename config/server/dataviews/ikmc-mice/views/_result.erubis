@@ -13,6 +13,7 @@
     <%= genetic_background.join(';') %>
   </td>
   <td><%= result[:mi_centre] %></td>
+  <td><%= result[:distribution_centre]%></td>
   <td>
     <% if result[:qc_count] > 0 %>
       <a class="ikmc-kermits_qc_details_toggle">view&nbsp;data</a>
