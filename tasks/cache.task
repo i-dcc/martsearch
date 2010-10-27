@@ -1,7 +1,7 @@
 begin
   require 'martsearch'
   
-  @url = 'http://localhost:3000/'
+  @url = 'http://www.knockoutmouse.org/martsearch/'
   @ms  = MartSearch::Controller.instance()
   
   # Set up a HTTP client
