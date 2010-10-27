@@ -27,14 +27,16 @@
             <tr>
               <td><%= orth.to_s.capitalize %></td>
               <td><%= orth_data[:symbol] %></td>
-              <td><%= link_to( orth_data[:entrez_gene_id], "http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&amp;cmd=Retrieve&amp;dopt=Graphics&amp;list_uids=#{orth_data[:entrez_gene_id]}", { :target => '_blank' } ) %></td>
+              <td><a href="<%= "http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&amp;cmd=Retrieve&amp;dopt=Graphics&amp;list_uids=#{orth_data[:entrez_gene_id]}" %>" target="_blank"><%= orth_data[:entrez_gene_id] %></a></td>
               <% if result_data[:'ensembl-mouse-homologs'] %>
                 <td>
                   <%
                     ensembl_ids   = result_data[:'ensembl-mouse-homologs'][:"#{orth}_ensembl_gene"]
                     ensembl_links = []
                     ensembl_ids.each do |ensembl_id|
-                      ensembl_links.push( link_to( ensembl_id, ensembl_link_url_from_gene( orth, ensembl_id ), { :target => '_blank' } ) )
+                      ensembl_links.push(
+                        "<a href=\"#{ensembl_link_url_from_gene( orth, ensembl_id )}\" target=\"_blank\">#{ensembl_id}</a>"
+                      )
                     end
                   %>
                   <%= ensembl_links.join(", ") %>
