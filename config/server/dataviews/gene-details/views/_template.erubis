@@ -18,7 +18,7 @@
     <th width="125px">Marker Name(s):</th>
     <td>
       <%= result_data[:'mgi-markers'][:marker_names].join(", ") %><br />
-      <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=markerDetail&id=<%= result_data[:'mgi-markers'][:mgi_accession_id] %>" class="ext_link">view&nbsp;this&nbsp;gene&nbsp;in&nbsp;MGI</a>
+      <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=markerDetail&id=<%= result_data[:'mgi-markers'][:mgi_accession_id] %>" target="_blank" class="ext_link">view&nbsp;this&nbsp;gene&nbsp;in&nbsp;MGI</a>
     </td>
   </tr>
   <tr>
@@ -67,7 +67,7 @@
           ensembl_links = []
           ensembl_ids.each do |ensembl_id|
             ensembl_links.push(
-              "<a href=\"#{ensembl_link_url_from_gene( :mouse, ensembl_id )}\">#{ensembl_id}</a>"
+              "<a href=\"#{ensembl_link_url_from_gene( :mouse, ensembl_id )}\" target=\"_blank\">#{ensembl_id}</a>"
             )
           end
         %>
@@ -79,7 +79,7 @@
           vega_links = []
           vega_ids.each do |vega_id|
             vega_links.push(
-              "<a href=\"#{vega_link_url_from_gene( :mouse, vega_id )}\">#{vega_id}</a>"
+              "<a href=\"#{vega_link_url_from_gene( :mouse, vega_id )}\" target=\"_blank\">#{vega_id}</a>"
             )
           end
         %>
@@ -92,7 +92,7 @@
           entrez_links = []
           entrez_ids.each do |entrez_id|
             entrez_links.push(
-              "<a href=\"http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&amp;cmd=Retrieve&amp;dopt=Graphics&amp;list_uids=#{entrez_id}\">#{entrez_id}</a>"
+              "<a href=\"http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&amp;cmd=Retrieve&amp;dopt=Graphics&amp;list_uids=#{entrez_id}\" target=\"_blank\">#{entrez_id}</a>"
             )
           end
         %>
@@ -104,7 +104,7 @@
           if result_data[:'ikmc-dcc-knockout_attempts'] and result_data[:'ikmc-dcc-knockout_attempts'][:ccds_ids]
             result_data[:'ikmc-dcc-knockout_attempts'][:ccds_ids].each do |ccds_id|
               ccds_links.push(
-                "<a href=\"http://www.ncbi.nlm.nih.gov/CCDS/CcdsBrowse.cgi?REQUEST=CCDS&amp;DATA=#{ccds_id}\">#{ccds_id}</a>"
+                "<a href=\"http://www.ncbi.nlm.nih.gov/CCDS/CcdsBrowse.cgi?REQUEST=CCDS&amp;DATA=#{ccds_id}\" target=\"_blank\">#{ccds_id}</a>"
               )
             end
           end
@@ -116,17 +116,6 @@
         <td></td>
       </tr>
     </table>
-    
-    <% if result_data[:'ikmc-dcc-knockout_attempts'] and result_data[:'ikmc-dcc-knockout_attempts'][:omim_ids] %>
-      <% if result_data[:'ikmc-dcc-knockout_attempts'][:omim_ids].size > 0 %>
-        <h6>OMIM Diseases</h6>
-        <ul>
-          <% result_data[:'ikmc-dcc-knockout_attempts'][:omim_ids].each do |omim_dis| %>
-            <li><%= omim_dis[:desc] %> (OMIM ID: <%= omim_dis[:id] %>)</li>
-          <% end %>
-        </ul>
-      <% end %>
-    <% end %>
     
     <%= partial( 'dataviews/gene-details/omim',          :locals => { :result_data => result_data } ) %>
     <%= partial( 'dataviews/gene-details/gene_ontology', :locals => { :result_data => result_data } ) %>
