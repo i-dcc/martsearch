@@ -1,8 +1,9 @@
 begin
   require 'martsearch'
   
-  @url = 'http://www.knockoutmouse.org/martsearch/'
-  @ms  = MartSearch::Controller.instance()
+  @url          = 'http://www.knockoutmouse.org/martsearch/'
+  @internal_url = 'http://htgt.internal.sanger.ac.uk:4003/martsearch/'
+  @ms           = MartSearch::Controller.instance()
   
   # Set up a HTTP client
   @client = Net::HTTP
@@ -52,6 +53,39 @@ begin
         @ms.config[:server][:cache][:extra_searches_to_prime].each do |search_term|
           puts "   - #{search_term}"
           @client.get( URI.parse("#{@url}search?query=#{CGI::escape(search_term)}") )
+        end
+      end
+    end
+    
+    desc "Primes EVERYTHING into the search cache"
+    task :uber_prime do
+      puts "Priming EVERYTHING... (on #{@internal_url})"
+      
+      conf         = @ms.config[:server][:browsable_content][:chromosome]
+      urls         = []
+      
+      conf[:options].each do |option_name|
+        opts = conf[:processed_options][option_name.to_sym]
+        
+        # First calc the total number of pages to request...
+        results     = @ms.index.search( opts[:solr_query] )
+        total_pages = (@ms.index.current_results_total.to_i / @ms.config[:index][:docs_per_page].to_i).round + 1
+        no_page_url = "#{@internal_url}browse?field=chromosome&query=#{opts[:link_arg]}"
+        
+        urls.push( no_page_url )
+        (1..total_pages).each do |page_no|
+          urls.push( "#{no_page_url}&page=#{page_no}" )
+        end
+      end
+      
+      puts "#{urls.size} requests to make..."
+      
+      Parallel.each( urls, :in_threads => 15 ) do |url|
+        begin
+          print " - #{url} \n"
+          @client.get( URI.parse(url) )
+        rescue Timeout::Error => error
+          urls.push(url)
         end
       end
     end
