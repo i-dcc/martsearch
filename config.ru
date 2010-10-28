@@ -9,10 +9,10 @@ require 'rack/contrib'
 
 use Rack::ETag
 
-log = File.new("#{File.dirname(__FILE__)}/lib/martsearch/server/log/martsearch.log", "a+")
-err = File.new("#{File.dirname(__FILE__)}/lib/martsearch/server/log/martsearch.err", "a+")
+log = File.new( "#{File.dirname(__FILE__)}/log/martsearch.log", "a+" )
 $stdout.reopen(log)
-$stderr.reopen(err)
+$stderr.reopen(log)
+MartSearch::Server.use Rack::CommonLogger, log
 
 map '/' do
   run MartSearch::Server
