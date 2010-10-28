@@ -11,6 +11,7 @@ module MartSearch
   #
   # @author Darren Oakley
   class Server < Sinatra::Base
+    include MartSearch::Utils
     include MartSearch::ProjectUtils
     register Sinatra::StaticAssets
     use HoptoadNotifier::Rack
@@ -152,14 +153,6 @@ module MartSearch
       end
       
     public
-    
-    configure :production, :staging do
-      unless File.exists?("#{MARTSEARCH_PATH}/lib/martsearch/server/public/css/martsearch-#{VERSION}.css")
-        @compressed_css     = compressed_css( VERSION )
-        @compressed_head_js = compressed_head_js( VERSION )
-        @compressed_base_js = compressed_base_js( VERSION )
-      end
-    end
     
     not_found do
       @martsearch_error = false
