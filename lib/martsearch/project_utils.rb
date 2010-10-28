@@ -338,6 +338,7 @@ module MartSearch
           "Vector Unsuccessful - Alternate Design in Progress"      => { :stage => "vectors", :stage_type => "warn"   },
           "Vector - Initial Attempt Unsuccessful"                   => { :stage => "vectors", :stage_type => "warn"   },
           "Vector Complete"                                         => { :stage => "vectors", :stage_type => "normal" },
+          "Vector Complete - Project Terminated"                    => { :stage => "vectors", :stage_type => "error"  },
           "Vector - DNA Not Suitable for Electroporation"           => { :stage => "vectors", :stage_type => "warn"   },
           "ES Cells - Electroporation in Progress"                  => { :stage => "cells",   :stage_type => "normal" },
           "ES Cells - Electroporation Unsuccessful"                 => { :stage => "cells",   :stage_type => "error"  },
