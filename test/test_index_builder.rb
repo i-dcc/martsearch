@@ -78,6 +78,8 @@ class MartSearchIndexBuilderTest < Test::Unit::TestCase
     
     should 'correctly fetch all of the datasets for indexing' do
       VCR.use_cassette( 'test_index_builder_fetch_datasets', :record => :new_episodes ) do
+        # Run twice to make sure we run the file aging code...
+        @index_builder.fetch_datasets()
         @index_builder.fetch_datasets()
         
         pwd = Dir.pwd
