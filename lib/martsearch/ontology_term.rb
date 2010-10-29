@@ -1,11 +1,19 @@
 module MartSearch
   
+  env    = ENV['RACK_ENV']
+  env    = 'development' if env.nil?
+  dbc    = YAML.load_file("#{MARTSEARCH_PATH}/config/ols_database.yml")[env]
+  OLS_DB = Sequel.connect({
+    :adapter  => 'mysql2',
+    :database => dbc['database'],
+    :host     => dbc['host'],
+    :port     => dbc['port'],
+    :user     => dbc['username'],
+    :password => dbc['password']
+  })
+  
   # Error class for when we can't find a given ontology term.
   class OntologyTermNotFoundError < StandardError; end
-
-  # Error class for when we get more than one ontology term found 
-  # for a given identifier.
-  class UnableToDefineOntologyTermError < StandardError; end
 
   # Class for handling ontology terms.  Simple wrapper around the a local copy 
   # of an OLS (Ontology Lookup Service - http://www.ebi.ac.uk/ontology-lookup/) 
@@ -13,8 +21,6 @@ module MartSearch
   # gem as a base class.
   #
   # @author Darren Oakley
-  #
-  # TODO: At the moment this object expects an OLS_DB constant to be present (as a sequel connection to the database) - this should really be handled by MartSearch::Controller.
   class OntologyTerm < Tree::TreeNode
     # @param [String] name the ontology term (id) i.e. GO00032
     # @param [String] content the ontology term name/description - optional this will be looked up in the OLS database
@@ -101,7 +107,7 @@ module MartSearch
           order by ontology.fully_loaded desc, ontology.load_date asc
         SQL
 
-        term_set = OLS_DB[ sql, @name ].all()
+        term_set = MartSearch::OLS_DB[ sql, @name ].all()
 
         if term_set.size == 0
           get_term_from_synonym
@@ -123,12 +129,13 @@ module MartSearch
           where term_synonym.synonym_value = ?
           order by ontology.fully_loaded desc, ontology.load_date asc
         SQL
-
-        term_set = OLS_DB[ sql, @name ].all()
-
-        raise OntologyTermNotFoundError, "Unable to find the term '#{@name}' in the OLS database." \
-          if term_set.size == 0
-
+        
+        term_set = MartSearch::OLS_DB[ sql, @name ].all()
+        
+        if term_set.size == 0
+          raise MartSearch::OntologyTermNotFoundError, "Unable to find the term '#{@name}' in the OLS database."
+        end
+        
         subject      = term_set.first
         @name        = subject[:identifier]
         @content     = subject[:term_name]
@@ -157,7 +164,7 @@ module MartSearch
             and subject_term.identifier = ?
         SQL
 
-        OLS_DB[ sql, node.term ].each do |row|
+        MartSearch::OLS_DB[ sql, node.term ].each do |row|
           parent = OntologyTerm.new( row[:parent_identifier], row[:parent_term] )
           parent << node
           get_parents( parent )
@@ -184,7 +191,7 @@ module MartSearch
             and object_term.identifier = ?
         SQL
 
-        OLS_DB[sql,node.term].each do |row|
+        MartSearch::OLS_DB[sql,node.term].each do |row|
           child = OntologyTerm.new( row[:child_identifier], row[:child_term] )
           node << child
         end

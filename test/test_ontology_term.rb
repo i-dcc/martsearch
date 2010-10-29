@@ -22,7 +22,7 @@ class MartSearchOntologyTermTest < Test::Unit::TestCase
     end
     
     should "raise appropriate errors" do
-      assert_raise(OntologyTermNotFoundError) { OntologyTerm.new("FLIBBLE:5") }
+      assert_raise(MartSearch::OntologyTermNotFoundError) { OntologyTerm.new("FLIBBLE:5") }
     end
     
     should "respond correctly to the .parentage method" do
