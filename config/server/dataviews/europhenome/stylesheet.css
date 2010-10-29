@@ -5,17 +5,22 @@
 	background: #fff;
 }
 
-.europhenome table.europhenome-data th {
+.csstransforms .europhenome table.europhenome-data th {
 	vertical-align:	bottom;
 	height: 188px;
 	min-width: 32px;
 	white-space: nowrap;
 }
 
-.europhenome table.europhenome-data .vertical_text {
+.csstransforms .europhenome table.europhenome-data .vertical_text {
 	text-align: center;
 	width: 32px;
 	margin-bottom: 10px;
+}
+
+.no-csstransforms .europhenome table.europhenome-data th {
+	vertical-align:	bottom;
+	min-width: 32px;
 }
 
 .europhenome table.europhenome-data td.no-data {

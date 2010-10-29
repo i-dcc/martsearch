@@ -12,10 +12,10 @@ jQuery("#search_results .europhenome").find("td[rel^='qtip']").each( function() 
   });
 });
 
-if ( ! jQuery.browser.msie ) {
-  jQuery("#search_results table.europhenome-data th .user_instructions").show();
-  jQuery("#search_results table.europhenome-data th").css({ "height": "30px", "overflow": "hidden" });
-  jQuery("#search_results table.europhenome-data th")
+if ( !jQuery.browser.msie ) {
+  jQuery(".csstransforms table.europhenome-data th .user_instructions").show();
+  jQuery(".csstransforms table.europhenome-data th").css({ "height": "30px", "overflow": "hidden" });
+  jQuery(".csstransforms table.europhenome-data th")
     .live( "mouseover", function() { jQuery(this).css({ "height": "188px" }); })
     .live( "mouseout", function()  { jQuery(this).css({ "height": "30px" });  });
 }

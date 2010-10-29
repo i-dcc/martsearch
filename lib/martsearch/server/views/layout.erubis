@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" class="no-js">
   <head>
     <% if @page_title %>
       <title><%= @page_title %> - <%= @portal_name %></title>
@@ -71,7 +71,7 @@
       </div>
       
       <noscript>
-        <div id="noscript_warning" class="error_msgs messages">
+        <div id="noscript_warning" class="messages serious_errors">
           <strong>WARNING:</strong> It appears that you do not have javascript 
           enabled in your browser.  This portal will still function correctly
           without javascript enabled, but the experience will not be as good 
@@ -80,8 +80,9 @@
           javascript</a> in your browser and refresh the page.
         </div>
       </noscript>
-
-      <div id="browser_warnings" class="error_msgs messages" style="display:none;"></div>
+      
+      <div id="browser_warnings" class="messages serious_errors" style="display:none;"></div>
+      
       
       <!--
       <div id="user_messages" class="messages">
@@ -90,7 +91,7 @@
       
       <% if @errors[:index] and !@errors[:index].empty? %>
         <!-- search engine errors -->
-        <div id="serious_errors" class="messages">
+        <div class="messages serious_errors">
           <h5>Sorry, an error occurred whilst querying the search engine...</h5>
           <% @errors[:index].each do |error| %>
             <div id="serious_error_wrapper">

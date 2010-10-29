@@ -22,7 +22,7 @@ module MartSearch
     # We're going to use the version number as a cache breaker for the CSS 
     # and javascript code. Update with each release of your portal (especially 
     # if you change the CSS or JS)!!!
-    VERSION = '0.1.0'
+    VERSION = '0.1.1'
     DEFAULT_CSS_FILES = [
       'reset.css',
       'jquery.prettyPhoto.css',
@@ -43,6 +43,7 @@ module MartSearch
       'jquery.fontResize.js',
       'jquery.scrollTo-1.4.2.js',
       'jquery-ui-1.8.1.min.js',
+      'modernizr-1.6.min.js',
       'martsearch-base.js'
     ]
     
