@@ -51,8 +51,9 @@ module MartSearch
     #
     # @param [String] query The query string to pass to the search index
     # @param [Integer] page The page of results to search for/return
+    # @param [Boolean] use_cache Use cached data if available
     # @return [Array] A list of the search results (primary index fields)
-    def search( query, page=1 )
+    def search( query, page=1, use_cache=true )
       page = 1 if page == 0
       clear_instance_variables
       
@@ -61,7 +62,7 @@ module MartSearch
         cached_index_data = @cache.fetch( "index:#{query}-page#{page}" )
       # end
       
-      if cached_index_data != nil
+      if cached_index_data != nil and use_cache
         # Marker.mark("de-serialising index JSON response") do
           cached_index_data = BSON.deserialize(cached_index_data) unless @cache.is_a?(MartSearch::MongoCache)
           cached_index_data = cached_index_data.clean_hash if RUBY_VERSION < '1.9'
@@ -95,7 +96,7 @@ module MartSearch
             cached_dataset_data = @cache.fetch( "datasets:#{data_key}" )
           # end
           
-          if cached_dataset_data != nil
+          if cached_dataset_data != nil and use_cache
             # Marker.mark("de-serialising dataset JSON response") do
               cached_dataset_data = BSON.deserialize(cached_dataset_data) unless @cache.is_a?(MartSearch::MongoCache)
               cached_dataset_data = cached_dataset_data.clean_hash if RUBY_VERSION < '1.9'

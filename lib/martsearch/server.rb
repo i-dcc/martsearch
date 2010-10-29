@@ -233,8 +233,10 @@ module MartSearch
       else
         @current    = 'home'
         @page_title = "Search Results for '#{params[:query]}'"
+        
         # Marker.mark("running search") do
-          @results    = @ms.search( params[:query], params[:page].to_i )
+          use_cache   = params[:fresh] == "true" ? false : true
+          @results    = @ms.search( params[:query], params[:page].to_i, use_cache )
         # end
         @data       = @ms.search_data
         @errors     = @ms.errors
@@ -282,11 +284,12 @@ module MartSearch
         else
           browser_field_conf = @config[:browsable_content][params[:field].to_sym]
           browser            = browser_field_conf[:processed_options][params[:query].to_sym]
+          use_cache          = params[:fresh] == "true" ? false : true
           
           @page_title    = "Browsing Data by #{browser_field_conf[:display_name]}: '#{browser[:display_arg]}'"
           @results_title = @page_title
           @solr_query    = browser[:solr_query]
-          @results       = @ms.search( @solr_query, params[:page].to_i )
+          @results       = @ms.search( @solr_query, params[:page].to_i, use_cache )
           @data          = @ms.search_data
           @errors        = @ms.errors
         end
