@@ -40,11 +40,9 @@ module MartSearch
     # @return [Hash] The configuration hash
     def build_index_builder_conf( config_dir )
       index_builder_conf = JSON.load( File.new( "#{config_dir}/index_builder.json", 'r' ) )
-      ['primary','secondary'].each do |pri_sec|
-        index_builder_conf['datasets_to_index'][pri_sec].each do |index_dataset|
-          datasource_conf = JSON.load( File.new( "#{config_dir}/datasets/#{index_dataset}.json", 'r' ) )
-          index_builder_conf['datasets'][index_dataset] = datasource_conf
-        end
+      index_builder_conf['datasets_to_index'].each do |index_dataset|
+        datasource_conf = JSON.load( File.new( "#{config_dir}/datasets/#{index_dataset}.json", 'r' ) )
+        index_builder_conf['datasets'][index_dataset] = datasource_conf
       end
       
       index_builder_conf.recursively_symbolize_keys!

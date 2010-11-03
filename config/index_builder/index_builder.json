@@ -1,12 +1,8 @@
 {
-  "datasets_to_index": {
-    "primary": [
-      "ikmc-dcc",
-      "ikmc-kermits"
-    ],
-    "secondary": [
-      "ikmc-omim"
-    ]
-  },
+  "datasets_to_index": [
+    "ikmc-dcc",
+    "ikmc-kermits",
+    "ikmc-omim"
+  ],
   "datasets": {}
 }
