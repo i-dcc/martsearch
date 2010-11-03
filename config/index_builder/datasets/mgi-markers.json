@@ -1,0 +1,24 @@
+{
+  "datasource": "mgi-markers",
+  "indexing": {
+    "allow_document_creation": true,
+    "days_between_downlads": 7,
+    "attribute_map": [
+      { "attr": "mgi_marker_id_att",        "idx": "mgi_accession_id_key", "use_to_map": true },
+      { "attr": "marker_symbol_107",        "idx": "marker_symbol" },
+      { "attr": "marker_name_107",          "idx": "marker_name" },
+      { "attr": "marker_type_107",          "idx": "marker_type" },
+      { "attr": "chromosome_107",           "idx": "chromosome" },
+      { "attr": "rep_genome_strand_102",    "idx": "strand" },
+      { "attr": "rep_genome_start_102",     "idx": "coord_start" },
+      { "attr": "rep_genome_end_102",       "idx": "coord_end" },
+      { "attr": "synonym_1010",             "idx": "synonym" },
+      { "attr": "ensembl_gene_id_103",      "idx": "ensembl_gene_id" },
+      { "attr": "vega_gene_id_1011",        "idx": "vega_gene_id" },
+      { "attr": "mouse_entrez_gene_id_108", "idx": "ncbi_gene_id" }
+    ],
+    "filters": {
+      "ancestor_term_1023_filter": ["gene"]
+    }
+  }
+}
