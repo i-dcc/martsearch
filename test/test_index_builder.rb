@@ -95,6 +95,10 @@ class MartSearchIndexBuilderTest < Test::Unit::TestCase
     
     should 'correctly process all of the datasets data for indexing' do
       VCR.use_cassette( 'test_index_builder_process_datasets' ) do
+        # Cut down the amount of data to process - takes too long...
+        original_ds_list = @index_builder.builder_config[:datasets_to_index].clone
+        @index_builder.builder_config[:datasets_to_index] = original_ds_list[0..1]
+        
         @index_builder.process_datasets()
         
         pwd = Dir.pwd
@@ -105,6 +109,7 @@ class MartSearchIndexBuilderTest < Test::Unit::TestCase
         assert( @index_builder.document_cache.size > 10 )
         assert_equal( 1, Dir.glob("document_cache.marshal").size )
         
+        @index_builder.builder_config[:datasets_to_index] = original_ds_list
         Dir.chdir(pwd)
       end
     end
