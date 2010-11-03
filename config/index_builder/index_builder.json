@@ -1,7 +1,8 @@
 {
   "datasets_to_index": [
     "mgi-markers",
-    "ikmc-dcc",
+    "ikmc-dcc-gene_details",
+    "ikmc-dcc-knockout_attempts",
     "ikmc-kermits",
     "ikmc-omim"
   ],
