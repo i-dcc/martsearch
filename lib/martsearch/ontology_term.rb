@@ -63,7 +63,7 @@ module MartSearch
     def child_tree
       child_check
       child_tree = self.clone
-      child_tree.removeFromParent!
+      child_tree.remove_from_parent!
       child_tree
     end
 

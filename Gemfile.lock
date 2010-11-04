@@ -117,7 +117,7 @@ GEM
       sexp_processor (~> 3.0)
     rubyforge (2.0.4)
       json_pure (>= 1.1.7)
-    rubytree (0.7.0)
+    rubytree (0.8.1)
     rubyzip (0.9.4)
     selenium-webdriver (0.0.28)
       ffi (>= 0.6.1)
