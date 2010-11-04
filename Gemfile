@@ -41,4 +41,5 @@ group :development, :test do
   gem 'rcov',                           :platforms => :ruby_18
   gem 'metric_fu',                      :platforms => :ruby_18
   gem 'awesome_print',                  :require => 'ap'
+  gem 'wirble'
 end
