@@ -106,6 +106,9 @@ module MartSearch
     
     # Class level function to build an OntologyTerm object from a serialized JSON hash
     #
+    # @example
+    #   emap = JSON.parse( File.read("emap.json"), :max_nesting => false )
+    #
     # @param [Hash] json_hash The parsed JSON hash to de-serialize
     # @return [OntologyTerm] The de-serialized object 
     def self.json_create(json_hash)
