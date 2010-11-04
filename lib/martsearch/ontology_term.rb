@@ -114,16 +114,26 @@ module MartSearch
     # @return [OntologyTerm] The de-serialized object 
     def self.json_create(json_hash)
       node = new(json_hash["name"], json_hash["content"])
+      node.already_fetched_parents  = true
       node.already_fetched_children = true
       
       json_hash["children"].each do |child|
+        child.already_fetched_parents  = true
         child.already_fetched_children = true
         node << child
       end if json_hash["children"]
       
-      node.build_tree
-      
       return node
+    end
+    
+    # Method to set the parent node for the receiver node.
+    # This method should *NOT* be invoked by client code.
+    #
+    # @param [Tree::TreeNode] parent The parent node.
+    #
+    # @return [Tree::TreeNode] The parent node.
+    def parent=(parent)         # :nodoc:
+      @parent = parent
     end
     
     protected
@@ -287,13 +297,19 @@ module MartSearch
     # @param [String] term The ontology term (id) i.e. GO:00032
     # @return [OntologyTerm] The OntologyTerm object
     def fetch( term )
-      obj    = nil
-      select = @dataset.first( :term => term )
+      obj        = nil
+      select_obj = @dataset.first( :term => term )
+      select_par = @dataset.first( :term => "#{term}-parents" )
       
-      if select.nil?
+      if select_obj.nil?
         obj = cache_term( term, true )
       else
-        obj = JSON.parse( select[:json], :max_nesting => false )
+        obj     = JSON.parse( select_obj[:json], :max_nesting => false )
+        parents = JSON.parse( select_par[:json], :max_nesting => false )
+        
+        parents.each do |parent|
+          obj.parent = parent
+        end
       end
       
       return obj
@@ -308,10 +324,10 @@ module MartSearch
     def cache_term( term, build=true )
       obj = MartSearch::OntologyTerm.new(term)
       obj.build_tree if build
-      MartSearch::OLS_DB.transaction do
-        @dataset.filter( :term => obj.term ).delete
-        @dataset.insert( :term => obj.term, :json => obj.to_json )
-      end
+      file = File.open("#{term}.json","w")
+      file.write obj.to_json
+      file.close
+      cache_obj( obj )
       return obj
     end
     
@@ -320,10 +336,13 @@ module MartSearch
     # @param [OntologyTerm] obj The OntologyTerm object to be stored
     # @return [OntologyTerm] The OntologyTerm object
     def cache_obj( obj )
-      MartSearch::OLS_DB.transaction do
+#      MartSearch::OLS_DB.transaction do
         @dataset.filter( :term => obj.term ).delete
+        @dataset.filter( :term => "#{obj.term}-parents" ).delete
+        
         @dataset.insert( :term => obj.term, :json => obj.to_json )
-      end
+        @dataset.insert( :term => "#{obj.term}-parents", :json => obj.parentage.to_json )
+#      end
       return obj
     end
     
@@ -332,6 +351,7 @@ module MartSearch
     # @param [String] term The ROOT ontology term (id) - i.e. EMAP:0
     def prepare_full_cache( term )
       obj = cache_term( term, true )
+      puts "   - caching #{obj.term}"
       recursively_cache_children( obj )
     end
     
@@ -343,6 +363,7 @@ module MartSearch
       def recursively_cache_children( obj )
         obj.children.each do |child|
           cache_obj( child )
+          puts "   - caching #{child.term}"
           recursively_cache_children( child ) if child.has_children?
         end
       end
