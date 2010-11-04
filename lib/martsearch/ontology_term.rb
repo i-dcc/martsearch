@@ -304,11 +304,13 @@ module MartSearch
       if select_obj.nil?
         obj = cache_term( term, true )
       else
-        obj     = JSON.parse( select_obj[:json], :max_nesting => false )
-        parents = JSON.parse( select_par[:json], :max_nesting => false )
+        obj = JSON.parse( select_obj[:json], :max_nesting => false )
         
-        parents.each do |parent|
-          obj.parent = parent
+        unless select_par[:json].nil?
+          parents = JSON.parse( select_par[:json], :max_nesting => false )
+          parents.each do |parent|
+            obj.parent = parent
+          end
         end
       end
       
