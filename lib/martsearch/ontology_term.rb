@@ -5,6 +5,7 @@ module MartSearch
   dbc    = YAML.load_file("#{MARTSEARCH_PATH}/config/ols_database.yml")[env]
   OLS_DB = Sequel.connect({
     :adapter  => 'mysql2',
+    :encoding => 'utf8',
     :database => dbc['database'],
     :host     => dbc['host'],
     :port     => dbc['port'],
@@ -25,7 +26,7 @@ module MartSearch
     attr_accessor :already_fetched_parents, :already_fetched_children
     protected     :already_fetched_parents, :already_fetched_children
     
-    # @param [String] name The ontology term (id) i.e. GO00032
+    # @param [String] name The ontology term (id) i.e. GO:00032
     # @param [String] content The ontology term name/description - optional this will be looked up in the OLS database
     def initialize( name, content=nil )
       super
@@ -113,14 +114,14 @@ module MartSearch
     # @return [OntologyTerm] The de-serialized object 
     def self.json_create(json_hash)
       node = new(json_hash["name"], json_hash["content"])
-      node.already_fetched_parents  = true
       node.already_fetched_children = true
       
       json_hash["children"].each do |child|
-        child.already_fetched_parents  = true
         child.already_fetched_children = true
         node << child
       end if json_hash["children"]
+      
+      node.build_tree
       
       return node
     end
@@ -154,15 +155,15 @@ module MartSearch
             parent << node
             get_parents( parent )
           end
+          
+          @already_fetched_parents = true
         end
-        
-        @already_fetched_parents = true
       end
       
       # Recursive function to query the OLS database and collect all of 
       # the child objects and build up a tree of OntologyTerm's.
       def get_children( node=self, recursively=false )
-        unless @already_fetched_children
+        unless @already_fetched_children or node.has_children?
           sql = <<-SQL
             select
               subject_term.identifier  as child_identifier,
@@ -185,9 +186,9 @@ module MartSearch
             child.get_children( child, true ) if recursively
             node << child
           end
+          
+          @already_fetched_children = true
         end
-        
-        @already_fetched_children = true
       end
       
     private
@@ -258,6 +259,91 @@ module MartSearch
 
           @all_child_terms = @all_child_terms.flatten.uniq
           @all_child_names = @all_child_names.flatten.uniq
+        end
+      end
+    
+  end
+  
+  class OntologyTermCache
+    
+    def initialize()
+      create_table = <<-SQL
+        CREATE TABLE martsearch_cache (
+          term varchar(255) NOT NULL PRIMARY KEY,
+          json longtext NOT NULL
+        ) ENGINE=MyISAM DEFAULT CHARSET=utf8
+      SQL
+      
+      unless MartSearch::OLS_DB.table_exists?( :martsearch_cache )
+        MartSearch::OLS_DB.run create_table
+      end
+      
+      @dataset = MartSearch::OLS_DB[:martsearch_cache]
+    end
+    
+    # Looks up a given term in the cache.  If not found, it creates it 
+    # before saving it.
+    # 
+    # @param [String] term The ontology term (id) i.e. GO:00032
+    # @return [OntologyTerm] The OntologyTerm object
+    def fetch( term )
+      obj    = nil
+      select = @dataset.first( :term => term )
+      
+      if select.nil?
+        obj = cache_term( term, true )
+      else
+        obj = JSON.parse( select[:json], :max_nesting => false )
+      end
+      
+      return obj
+    end
+    
+    # Save a cache entry for a given term.  First creates the OntologyTerm 
+    # object, then saves it to the cache.
+    # 
+    # @param [String] term The ontology term (id) i.e. GO:00032
+    # @param [Boolean] build Build the full OntologyTerm tree before save
+    # @return [OntologyTerm] The OntologyTerm object
+    def cache_term( term, build=true )
+      obj = MartSearch::OntologyTerm.new(term)
+      obj.build_tree if build
+      MartSearch::OLS_DB.transaction do
+        @dataset.filter( :term => obj.term ).delete
+        @dataset.insert( :term => obj.term, :json => obj.to_json )
+      end
+      return obj
+    end
+    
+    # Save an existing OntologyTerm object into the cache.
+    # 
+    # @param [OntologyTerm] obj The OntologyTerm object to be stored
+    # @return [OntologyTerm] The OntologyTerm object
+    def cache_obj( obj )
+      MartSearch::OLS_DB.transaction do
+        @dataset.filter( :term => obj.term ).delete
+        @dataset.insert( :term => obj.term, :json => obj.to_json )
+      end
+      return obj
+    end
+    
+    # Helper function to cache all the possible entries of an ontology tree.
+    # 
+    # @param [String] term The ROOT ontology term (id) - i.e. EMAP:0
+    def prepare_full_cache( term )
+      obj = cache_term( term, true )
+      recursively_cache_children( obj )
+    end
+    
+    private
+      
+      # Helper function to recursively cache the children of an OntologyTerm.
+      #
+      # @param [OntologyTerm] obj The OntologyTerm object to be processed
+      def recursively_cache_children( obj )
+        obj.children.each do |child|
+          cache_obj( child )
+          recursively_cache_children( child ) if child.has_children?
         end
       end
     

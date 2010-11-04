@@ -10,8 +10,8 @@ module MartSearch
     include MartSearch::Utils
     include MartSearch::ControllerUtils
     
-    attr_reader :config, :cache, :index, :errors, :search_data, :search_results
-    attr_reader :datasources, :datasets, :dataviews, :dataviews_by_name
+    attr_reader :config, :cache, :ontology_cache, :index, :errors, :search_data
+    attr_reader :search_results, :datasources, :datasets, :dataviews, :dataviews_by_name
     
     def initialize()
       config_dir = "#{MARTSEARCH_PATH}/config"
@@ -24,6 +24,7 @@ module MartSearch
       }
       
       @cache             = initialize_cache( @config[:server][:cache] )
+      @ontology_cache    = MartSearch::OntologyTermCache.new()
       @index             = MartSearch::Index.new( @config[:index] )
       @datasources       = @config[:datasources]
       @datasets          = @config[:server][:datasets]
