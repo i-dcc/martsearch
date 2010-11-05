@@ -137,6 +137,28 @@ module MartSearch
       get_children( self, true )
     end
     
+    # Creates a JSON representation of this node including all it's children.   This requires the JSON gem to be
+    # available, or else the operation fails with a warning message.
+    #
+    # @return The JSON representation of this subtree.
+    #
+    # @see {OntologyTerm#json_create}
+    def to_json(*a)
+      json_hash = {
+        "name"         => name,
+        "content"      => content,
+        "root_term"    => @root_term,
+        "leaf_node"    => @leaf_node,
+        JSON.create_id => self.class.name
+      }
+
+      if has_children?
+        json_hash["children"] = children
+      end
+
+      return json_hash.to_json
+    end
+    
     # Class level function to build an OntologyTerm object from a serialized JSON hash
     #
     # @example
@@ -147,6 +169,8 @@ module MartSearch
     def self.json_create(json_hash)
       node = new(json_hash["name"], json_hash["content"])
       node.already_fetched_children = true if json_hash["children"]
+      node.root_term = true if json_hash["root_term"]
+      node.leaf_node = true if json_hash["leaf_node"]
       
       json_hash["children"].each do |child|
         child.already_fetched_parents  = true
@@ -342,7 +366,7 @@ module MartSearch
       else
         obj = JSON.parse( select_obj[:json], :max_nesting => false )
         
-        unless select_par[:json].nil?
+        unless select_par[:json] == "null"
           parents = JSON.parse( select_par[:json], :max_nesting => false )
           obj.already_fetched_parents = true
           parents.each do |parent|
