@@ -257,8 +257,38 @@ module MartSearch
       end
     end
     
+    def merge( tree )
+      unless self.root.name == tree.root.name
+        raise ArgumentError, "Unable to merge trees as they do not share the same root!"
+      end
+      
+      new_tree = merge_subtrees( self.root, tree.root )
+    end
+    
     private
+      
+      # Utility function to recursivley merge two subtrees
+      #
+      # @param [OntologyTerm] tree1 The target tree to merge into
+      # @param [OntologyTerm] tree2 The donor tree (that will be merged into target)
+      def merge_subtrees( tree1, tree2 )
+        names1 = tree1.has_children? ? tree1.children.map { |child| child.name } : []
+        names2 = tree2.has_children? ? tree2.children.map { |child| child.name } : []
 
+        names_to_merge = names2 - names1
+        names_to_merge.each do |name|
+          tree1 << tree2[name].detached_subtree_copy
+        end
+
+        tree1.children.each do |child|
+          unless tree2[child.name].nil?
+            merge_subtrees( child, tree2[child.name] )
+          end
+        end
+
+        return tree1
+      end
+      
       # Helper function to query the OLS database and grab the full 
       # details of the ontology term.
       def get_term_details
