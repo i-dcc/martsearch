@@ -24,7 +24,9 @@ module MartSearch
   # @author Darren Oakley
   class OntologyTerm < Tree::TreeNode
     attr_accessor :already_fetched_parents, :already_fetched_children
-    protected     :already_fetched_parents, :already_fetched_children
+    
+    attr_accessor :root_term, :leaf_node
+    protected     :root_term, :leaf_node
     
     # @param [String] name The ontology term (id) i.e. GO:00032
     # @param [String] content The ontology term name/description - optional this will be looked up in the OLS database
@@ -33,6 +35,8 @@ module MartSearch
       
       @already_fetched_parents  = false
       @already_fetched_children = false
+      @root_term                = false
+      @leaf_node                = false
       
       get_term_details if @content.nil? or @content.empty?
     end
@@ -50,7 +54,35 @@ module MartSearch
     def term_name
       self.content
     end
-
+    
+    # Returns +true+ if the receiver is a root node.  Note that
+    # orphaned children will also be reported as root nodes.
+    #
+    # @return [Boolean] +true+ if this is a root node.
+    def is_root?
+      @root_term
+    end
+    
+    # Returns +true+ if the receiver node is a 'leaf' - i.e., one without
+    # any children.
+    #
+    # @return [Boolean] +true+ if this is a leaf node.
+    def is_leaf?
+      @leaf_node
+    end
+    
+    # Returns string representation of the receiver node.
+    # This method is primarily meant for debugging purposes.
+    #
+    # @return [String] A string representation of the node.
+    def to_s
+      "Term: #{@name}" +
+        " Term Name: " + (@content || "<Empty>") +
+        " Root Term?: #{is_root?}" +
+        " Leaf Node?: #{is_leaf?} " +
+        " Total Nodes Loaded: #{size()}"
+    end
+    
     # Returns an array of parent OntologyTerm objects.
     #
     # @return [Array] An array of parent OntologyTerm objects
@@ -114,12 +146,11 @@ module MartSearch
     # @return [OntologyTerm] The de-serialized object 
     def self.json_create(json_hash)
       node = new(json_hash["name"], json_hash["content"])
-      node.already_fetched_parents  = true
-      node.already_fetched_children = true
+      node.already_fetched_children = true if json_hash["children"]
       
       json_hash["children"].each do |child|
         child.already_fetched_parents  = true
-        child.already_fetched_children = true
+        child.already_fetched_children = true if child.has_children?
         node << child
       end if json_hash["children"]
       
@@ -129,78 +160,79 @@ module MartSearch
     # Method to set the parent node for the receiver node.
     # This method should *NOT* be invoked by client code.
     #
-    # @param [Tree::TreeNode] parent The parent node.
-    #
-    # @return [Tree::TreeNode] The parent node.
+    # @param [OntologyTerm] parent The parent node.
+    # @return [OntologyTerm] The parent node.
     def parent=(parent)         # :nodoc:
       @parent = parent
     end
     
-    protected
-      
-      # Recursive function to query the OLS database and collect all of 
-      # the parent objects and insert them into @parents in the correct 
-      # order.
-      def get_parents( node=self )
-        unless @already_fetched_parents
-          sql = <<-SQL
-            select
-              subject_term.identifier  as child_identifier,
-              subject_term.term_name   as child_term,
-              predicate_term.term_name as relation,
-              object_term.identifier   as parent_identifier,
-              object_term.term_name    as parent_term
-            from
-              term_relationship tr
-              join term as subject_term 	on tr.subject_term_pk   = subject_term.term_pk
-              join term as predicate_term on tr.predicate_term_pk = predicate_term.term_pk
-              join term as object_term    on tr.object_term_pk    = object_term.term_pk
-            where
-                  predicate_term.term_name in ('part_of','is_a','develops_from')
-              and subject_term.identifier = ?
-          SQL
-          
-          MartSearch::OLS_DB[ sql, node.term ].each do |row|
-            parent = OntologyTerm.new( row[:parent_identifier], row[:parent_term] )
-            parent << node
-            get_parents( parent )
-          end
-          
-          @already_fetched_parents = true
+    # Recursive function to query the OLS database and collect all of 
+    # the parent objects and insert them into @parents in the correct 
+    # order.
+    def get_parents( node=self )
+      unless @already_fetched_parents
+        sql = <<-SQL
+          select
+            subject_term.identifier  as child_identifier,
+            subject_term.term_name   as child_term,
+            predicate_term.term_name as relation,
+            object_term.identifier   as parent_identifier,
+            object_term.term_name    as parent_term,
+            object_term.is_root_term as parent_is_root
+          from
+            term_relationship tr
+            join term as subject_term 	on tr.subject_term_pk   = subject_term.term_pk
+            join term as predicate_term on tr.predicate_term_pk = predicate_term.term_pk
+            join term as object_term    on tr.object_term_pk    = object_term.term_pk
+          where
+                predicate_term.term_name in ('part_of','is_a','develops_from')
+            and subject_term.identifier = ?
+        SQL
+        
+        MartSearch::OLS_DB[ sql, node.term ].each do |row|
+          parent           = OntologyTerm.new( row[:parent_identifier], row[:parent_term] )
+          parent.root_term = true if row[:parent_is_root].to_i == 1
+          parent << node
+          get_parents( parent )
         end
+        
+        @already_fetched_parents = true
       end
-      
-      # Recursive function to query the OLS database and collect all of 
-      # the child objects and build up a tree of OntologyTerm's.
-      def get_children( node=self, recursively=false )
-        unless @already_fetched_children or node.has_children?
-          sql = <<-SQL
-            select
-              subject_term.identifier  as child_identifier,
-              subject_term.term_name   as child_term,
-              predicate_term.term_name as relation,
-              object_term.identifier   as parent_identifier,
-              object_term.term_name    as parent_term
-            from
-              term_relationship tr
-              join term as subject_term   on tr.subject_term_pk   = subject_term.term_pk
-              join term as predicate_term on tr.predicate_term_pk = predicate_term.term_pk
-              join term as object_term    on tr.object_term_pk    = object_term.term_pk
-            where
-                  predicate_term.term_name in ('part_of','is_a','develops_from')
-              and object_term.identifier = ?
-          SQL
-          
-          MartSearch::OLS_DB[sql,node.term].each do |row|
-            child = OntologyTerm.new( row[:child_identifier], row[:child_term] )
-            child.get_children( child, true ) if recursively
-            node << child
-          end
-          
-          @already_fetched_children = true
+    end
+    
+    # Recursive function to query the OLS database and collect all of 
+    # the child objects and build up a tree of OntologyTerm's.
+    def get_children( node=self, recursively=false )
+      unless @already_fetched_children or node.has_children?
+        sql = <<-SQL
+          select
+            subject_term.identifier  as child_identifier,
+            subject_term.term_name   as child_term,
+            subject_term.is_leaf     as child_is_leaf,
+            predicate_term.term_name as relation,
+            object_term.identifier   as parent_identifier,
+            object_term.term_name    as parent_term
+          from
+            term_relationship tr
+            join term as subject_term   on tr.subject_term_pk   = subject_term.term_pk
+            join term as predicate_term on tr.predicate_term_pk = predicate_term.term_pk
+            join term as object_term    on tr.object_term_pk    = object_term.term_pk
+          where
+                predicate_term.term_name in ('part_of','is_a','develops_from')
+            and object_term.identifier = ?
+        SQL
+        
+        MartSearch::OLS_DB[sql,node.term].each do |row|
+          child = OntologyTerm.new( row[:child_identifier], row[:child_term] )
+          child.leaf_node = true if row[:child_is_leaf].to_i == 1
+          child.get_children( child, true ) if recursively and !child.is_leaf?
+          node << child
         end
+        
+        @already_fetched_children = true
       end
-      
+    end
+    
     private
 
       # Helper function to query the OLS database and grab the full 
@@ -224,6 +256,8 @@ module MartSearch
           @content     = subject[:term_name]
           @term_pk     = subject[:term_pk]
           @ontology_id = subject[:ontology_id]
+          @root_term   = true if subject[:is_root_term].to_i == 1
+          @leaf_node   = true if subject[:is_leaf].to_i == 1
         end
       end
 
@@ -249,6 +283,8 @@ module MartSearch
         @content     = subject[:term_name]
         @term_pk     = subject[:term_pk]
         @ontology_id = subject[:ontology_id]
+        @root_term   = true if subject[:is_root_term].to_i == 1
+        @leaf_node   = true if subject[:is_leaf].to_i == 1
       end
 
       # Helper function to produce the flat lists of all the child
@@ -302,13 +338,15 @@ module MartSearch
       select_par = @dataset.first( :term => "#{term}-parents" )
       
       if select_obj.nil?
-        obj = cache_term( term, true )
+        obj = cache_term(term)
       else
         obj = JSON.parse( select_obj[:json], :max_nesting => false )
         
         unless select_par[:json].nil?
           parents = JSON.parse( select_par[:json], :max_nesting => false )
+          obj.already_fetched_parents = true
           parents.each do |parent|
+            parent.already_fetched_parents = true
             obj.parent = parent
           end
         end
@@ -323,12 +361,16 @@ module MartSearch
     # @param [String] term The ontology term (id) i.e. GO:00032
     # @param [Boolean] build Build the full OntologyTerm tree before save
     # @return [OntologyTerm] The OntologyTerm object
-    def cache_term( term, build=true )
+    def cache_term( term, build=false )
       obj = MartSearch::OntologyTerm.new(term)
-      obj.build_tree if build
-      file = File.open("#{term}.json","w")
-      file.write obj.to_json
-      file.close
+      
+      if build
+        obj.build_tree
+      else
+        obj.get_parents
+        obj.get_children
+      end
+      
       cache_obj( obj )
       return obj
     end
@@ -338,13 +380,18 @@ module MartSearch
     # @param [OntologyTerm] obj The OntologyTerm object to be stored
     # @return [OntologyTerm] The OntologyTerm object
     def cache_obj( obj )
-#      MartSearch::OLS_DB.transaction do
-        @dataset.filter( :term => obj.term ).delete
-        @dataset.filter( :term => "#{obj.term}-parents" ).delete
+      begin
+        MartSearch::OLS_DB.transaction do
+          @dataset.filter( :term => obj.term ).delete
+          @dataset.filter( :term => "#{obj.term}-parents" ).delete
         
-        @dataset.insert( :term => obj.term, :json => obj.to_json )
-        @dataset.insert( :term => "#{obj.term}-parents", :json => obj.parentage.to_json )
-#      end
+          @dataset.insert( :term => obj.term, :json => obj.to_json )
+          @dataset.insert( :term => "#{obj.term}-parents", :json => obj.parentage.to_json )
+        end
+      rescue Exception => error
+        puts "Unable to cace #{obj.term} - #{error}"
+      end
+      
       return obj
     end
     
