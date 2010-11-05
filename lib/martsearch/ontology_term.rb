@@ -369,9 +369,14 @@ module MartSearch
         unless select_par[:json] == "null"
           parents = JSON.parse( select_par[:json], :max_nesting => false )
           obj.already_fetched_parents = true
-          parents.each do |parent|
+          
+          target = obj
+          parent = parents.pop
+          while parent
             parent.already_fetched_parents = true
-            obj.parent = parent
+            target.parent                  = parent
+            target                         = parent
+            parent                         = parents.pop
           end
         end
       end
@@ -412,8 +417,8 @@ module MartSearch
           @dataset.insert( :term => obj.term, :json => obj.to_json )
           @dataset.insert( :term => "#{obj.term}-parents", :json => obj.parentage.to_json )
         end
-      rescue Exception => error
-        puts "Unable to cace #{obj.term} - #{error}"
+      rescue
+        puts "Unable to cace #{obj.term}"
       end
       
       return obj
