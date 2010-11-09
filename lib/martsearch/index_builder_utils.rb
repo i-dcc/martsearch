@@ -256,7 +256,7 @@ module MartSearch
         ontology_cache = MartSearch::Controller.instance().ontology_cache
         
         begin
-          ontolo_term  = ontology_cache.fetch( value_to_index )
+          ontolo_term  = ontology_cache.fetch_just_parents( value_to_index )
           parent_terms = ontolo_term.parentage
 
           terms_to_index = [ ontolo_term.term ]
