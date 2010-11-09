@@ -26,6 +26,7 @@ module MartSearch
     attr_accessor :already_fetched_parents, :already_fetched_children
     
     attr_accessor :root_term, :leaf_node
+    attr_writer   :all_child_terms, :all_child_names
     protected     :root_term, :leaf_node
     
     # @param [String] name The ontology term (id) i.e. GO:00032
@@ -37,6 +38,9 @@ module MartSearch
       @already_fetched_children = false
       @root_term                = false
       @leaf_node                = false
+      
+      @all_child_terms          = nil
+      @all_child_names          = nil
       
       get_term_details if @content.nil? or @content.empty?
     end
@@ -118,7 +122,7 @@ module MartSearch
       get_all_child_lists
       return @all_child_terms
     end
-
+    
     # Returns a flat array containing all the possible child term 
     # names for this given ontology term.
     #
@@ -145,18 +149,20 @@ module MartSearch
     # @see {OntologyTerm#json_create}
     def to_json(*a)
       json_hash = {
-        "name"         => name,
-        "content"      => content,
-        "root_term"    => @root_term,
-        "leaf_node"    => @leaf_node,
-        JSON.create_id => self.class.name
+        "name"            => name,
+        "content"         => content,
+        "root_term"       => @root_term,
+        "leaf_node"       => @leaf_node,
+        "all_child_terms" => @all_child_terms,
+        "all_child_names" => @all_child_names,
+        JSON.create_id    => self.class.name
       }
 
       if has_children?
         json_hash["children"] = children
       end
 
-      return json_hash.to_json
+      return JSON.generate( json_hash, :max_nesting => false )
     end
     
     # Class level function to build an OntologyTerm object from a serialized JSON hash
@@ -169,8 +175,11 @@ module MartSearch
     def self.json_create(json_hash)
       node = new(json_hash["name"], json_hash["content"])
       node.already_fetched_children = true if json_hash["children"]
-      node.root_term = true if json_hash["root_term"]
-      node.leaf_node = true if json_hash["leaf_node"]
+      
+      node.root_term       = true if json_hash["root_term"]
+      node.leaf_node       = true if json_hash["leaf_node"]
+      node.all_child_terms = json_hash["all_child_terms"]
+      node.all_child_names = json_hash["all_child_names"]
       
       json_hash["children"].each do |child|
         child.already_fetched_parents  = true
@@ -257,6 +266,21 @@ module MartSearch
       end
     end
     
+    # Returns a copy of the receiver node, with its parent and children links removed.
+    # The original node remains attached to its tree.
+    #
+    # @return [OntologyTerm] A copy of the receiver node.
+    def detached_copy
+      copy = MartSearch::OntologyTerm.new(@name, @content ? @content.clone : nil)
+      copy.root_term = @root_term
+      copy.leaf_node = @leaf_node
+      return copy
+    end
+    
+    # Function that merges one OntologyTerm tree into another.
+    #
+    # @param [OntologyTerm] tree The tree that is to be merged into self
+    # @return [OntologyTerm] The merged tree
     def merge( tree )
       unless self.root.name == tree.root.name
         raise ArgumentError, "Unable to merge trees as they do not share the same root!"
@@ -370,7 +394,7 @@ module MartSearch
       create_table = <<-SQL
         CREATE TABLE martsearch_cache (
           term varchar(255) NOT NULL PRIMARY KEY,
-          json longtext NOT NULL
+          compressed_json longblob NOT NULL
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8
       SQL
       
@@ -392,12 +416,12 @@ module MartSearch
       select_par = @dataset.first( :term => "#{term}-parents" )
       
       if select_obj.nil?
-        obj = cache_term(term)
+        obj = MartSearch::OntologyTerm.new(term)
       else
-        obj = JSON.parse( select_obj[:json], :max_nesting => false )
+        obj = JSON.parse( Zlib::Inflate.inflate(select_obj[:compressed_json]), :max_nesting => false )
         
-        unless select_par[:json] == "null"
-          parents = JSON.parse( select_par[:json], :max_nesting => false )
+        unless select_par.nil?
+          parents = JSON.parse( Zlib::Inflate.inflate(select_par[:compressed_json]), :max_nesting => false )
           obj.already_fetched_parents = true
           
           target = obj
@@ -414,6 +438,35 @@ module MartSearch
       return obj
     end
     
+    # Builds an OntologyTerm object for the given term and appeneds the 
+    # parent terms to it from the cache. - useful if you're not interested in 
+    # the children of a given term.
+    #
+    # @param [String] term The ontology term (id) i.e. GO:00032
+    # @return [OntologyTerm] The OntologyTerm object
+    def fetch_just_parents( term )
+      obj        = MartSearch::OntologyTerm.new(term)
+      select_par = @dataset.first( :term => "#{term}-parents" )
+      
+      unless select_par.nil?
+        parents = JSON.parse( Zlib::Inflate.inflate(select_par[:compressed_json]), :max_nesting => false )
+        obj.already_fetched_parents = true
+        
+        target = obj
+        parent = parents.pop
+        while parent
+          parent.already_fetched_parents = true
+          target.parent                  = parent
+          target                         = parent
+          parent                         = parents.pop
+        end
+      else
+        obj.get_parents
+      end
+      
+      return obj
+    end
+    
     # Save a cache entry for a given term.  First creates the OntologyTerm 
     # object, then saves it to the cache.
     # 
@@ -425,6 +478,7 @@ module MartSearch
       
       if build
         obj.build_tree
+        obj.all_child_terms
       else
         obj.get_parents
         obj.get_children
@@ -439,16 +493,21 @@ module MartSearch
     # @param [OntologyTerm] obj The OntologyTerm object to be stored
     # @return [OntologyTerm] The OntologyTerm object
     def cache_obj( obj )
-      begin
-        MartSearch::OLS_DB.transaction do
-          @dataset.filter( :term => obj.term ).delete
-          @dataset.filter( :term => "#{obj.term}-parents" ).delete
+      MartSearch::OLS_DB.transaction do
+        @dataset.filter( :term => obj.term ).delete
+        @dataset.filter( :term => "#{obj.term}-parents" ).delete
         
-          @dataset.insert( :term => obj.term, :json => obj.to_json )
-          @dataset.insert( :term => "#{obj.term}-parents", :json => obj.parentage.to_json )
+        @dataset.insert(
+          :term            => obj.term,
+          :compressed_json => Zlib::Deflate.deflate( JSON.generate( obj, :max_nesting => false ) )
+        )
+        
+        if obj.parentage and !obj.parentage.empty?
+          @dataset.insert(
+            :term            => "#{obj.term}-parents",
+            :compressed_json => Zlib::Deflate.deflate( JSON.generate( obj.parentage, :max_nesting => false ) )
+          )
         end
-      rescue
-        puts "Unable to cace #{obj.term}"
       end
       
       return obj
@@ -457,10 +516,11 @@ module MartSearch
     # Helper function to cache all the possible entries of an ontology tree.
     # 
     # @param [String] term The ROOT ontology term (id) - i.e. EMAP:0
-    def prepare_full_cache( term )
-      obj = cache_term( term, true )
+    # @param [Boolean] cache_full_tree Whether to build and store the full ontology tree (good for small ontologies - not so good for big ones)
+    def prepare_full_cache( term, cache_full_tree=true )
+      obj = cache_term( term, cache_full_tree )
       puts "   - caching #{obj.term}"
-      recursively_cache_children( obj )
+      recursively_cache_children( obj, cache_full_tree )
     end
     
     private
@@ -468,11 +528,18 @@ module MartSearch
       # Helper function to recursively cache the children of an OntologyTerm.
       #
       # @param [OntologyTerm] obj The OntologyTerm object to be processed
-      def recursively_cache_children( obj )
+      # @param [Boolean] cache_full_tree Whether to build and store the full ontology tree of the child terms (good for small ontologies - not so good for big ones)
+      def recursively_cache_children( obj, cache_full_tree=true )
         obj.children.each do |child|
+          if cache_full_tree
+            child.all_child_terms
+          else
+            child.get_children
+          end
+          
           cache_obj( child )
           puts "   - caching #{child.term}"
-          recursively_cache_children( child ) if child.has_children?
+          recursively_cache_children( child, cache_full_tree ) if child.has_children?
         end
       end
     

@@ -7,11 +7,18 @@ ontology_cache = MartSearch::Controller.instance().ontology_cache
 ontologies     = {
   'Mouse Gross Anatomy and Development (EMAP)' => 'EMAP:0',
   'Mouse Adult Gross Anatomy (MA)'             => 'MA:0000001',
-  'Mammalian Phenotype (MP)'                   => 'MP:0000001'
+  'Mammalian Phenotype (MP)'                   => 'MP:0000001',
+  'GO Biological Process'                      => 'GO:0008150',
+  'GO Cellular Component'                      => 'GO:0005575',
+  'GO Molecular Function'                      => 'GO:0003674'
 }
 
 puts "Preparing the OLS ontology cache..."
 ontologies.each do |name,root_term|
   puts " - #{name}"
-  ontology_cache.prepare_full_cache(root_term)
+  if name =~ /GO/
+    ontology_cache.prepare_full_cache(root_term, false)
+  else
+    ontology_cache.prepare_full_cache(root_term)
+  end
 end
