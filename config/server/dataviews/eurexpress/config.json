@@ -5,9 +5,9 @@
   "display":              true,
   "custom_css":           false,
   "custom_head_js":       false,
-  "custom_base_js":       false,
+  "custom_base_js":       true,
   "custom_view_helpers" : false,
-  "custom_routes":        false,
+  "custom_routes":        true,
   "datasets": {
     "required": [ "eurexpress" ],
     "optional": []
