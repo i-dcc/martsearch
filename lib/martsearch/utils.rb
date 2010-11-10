@@ -37,19 +37,5 @@ module MartSearch
       return converted_data
     end
     
-    # Utility function to read in a file and return the files 
-    # entire contents as a string.
-    #
-    # @param [String] filename The name of the file to read
-    # @return [String] The contents of the file
-    def get_file_as_string(filename)
-      data = ''
-      f = File.open( filename, "r" ) 
-      f.each_line do |line|
-        data += line
-      end
-      return data
-    end
-    
   end
 end
