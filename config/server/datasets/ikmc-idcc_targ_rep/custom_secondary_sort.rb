@@ -43,14 +43,12 @@ search_data.each do |key,result_data|
   # Sorting on mice, cells and vectors availability
   # (mouse availability is retrieved from 'ikmc-dcc-knockout_attempts')
   #
-  projects_with_mice    = []
-  projects_with_clones  = []
-  projects_with_vectors = []
-  projects_with_nothing = [] # ie. No available product
+  projects_with = { :mice => [], :clones => [], :vectors => [], :nothing => [] }
   
   unless result_data[:'ikmc-idcc_targ_rep'].nil?
     result_data[:'ikmc-idcc_targ_rep'].each do |pipeline, pipeline_projects|
-      displayed_project = nil
+      
+      pipeline_projects_with = { :mice => [], :clones => [], :vectors => [] }
       
       pipeline_projects.each do |project_key, project|
         
@@ -64,22 +62,37 @@ search_data.each do |key,result_data|
             project[:ensembl_gene_id] = ikmc_projects[:ensembl_gene_id]
           end
         end
-      
-        # Push the most advanced project of this pipeline to the right array depending 
-        # on its product availability
-        displayed_project = project_key if displayed_project.nil?
+        
+        # Sort the projects into the correct baskets...
         if project[:mouse_available] == '1'
-          projects_with_mice.push( project )
-          displayed_project = project_key unless pipeline_projects[displayed_project][:mouse_available] == '1'
+          pipeline_projects_with[:mice].push( project )
         elsif project[:escell_available] == '1' # From idcc-targ_rep custom sort
-          projects_with_clones.push( project )
-          displayed_project = project_key unless pipeline_projects[displayed_project][:mouse_available] == '1'
+          pipeline_projects_with[:clones].push( project )
         elsif project[:vector_available] == '1' # From idcc-targ_rep custom sort
-          projects_with_vectors.push( project )
+          pipeline_projects_with[:vectors].push( project )
         end
       end
       
-      pipeline_projects[displayed_project][:display] = true
+      # Now stamp the most advanced projects with the 'display' flag
+      display_stamped = false
+      ordered_groups  = [ :mice, :clones, :vectors ]
+      ordered_groups.each do |group|
+        project_group = pipeline_projects_with[group]
+        next if display_stamped
+        unless project_group.empty?
+          project_group.each do |project|
+            project[:display] = true
+          end
+          display_stamped = true
+        end
+      end
+      
+      ordered_groups.each do |group|
+        pipeline_projects_with[group].each do |project|
+          projects_with[group].push(project)
+        end
+      end
+      
     end
   end
   
@@ -105,7 +118,7 @@ search_data.each do |key,result_data|
       end
       next if projects_ids.empty? or projects_statuses.empty?
       
-      projects_with_nothing.push({
+      projects_with[:nothing].push({
         :no_products_available => true,
         :display               => true,
         :pipeline              => pipeline,
@@ -117,10 +130,10 @@ search_data.each do |key,result_data|
   end
   
   result_data[:'ikmc-idcc_targ_rep'] = (
-      projects_with_mice    \
-    + projects_with_clones  \
-    + projects_with_vectors \
-    + projects_with_nothing
+      projects_with[:mice]    \
+    + projects_with[:clones]  \
+    + projects_with[:vectors] \
+    + projects_with[:nothing]
   )
   
   #
