@@ -18,8 +18,36 @@
       <p>
         <a href="<%= "http://www.eurexpress.org/ee/databases/assay.jsp?assayID=#{result[:assay_id]}#top" %>" class="ext_link" target="_blank">View full Eurexpress report page</a>
       </p>
-      <div id="<%= "#{result_data[:index][:mgi_accession_id].gsub(':','')}-#{index}-EMAP0" %>" class="emap_ontology"></div>
+      
+      <h5>Expression Chart</h5>
+      <p>
+        Thie expression bar chart displays the average expression strength (top bar chart) 
+        and coverage (lower bar chart) of the anatomy tree.
+      </p>
+      <iframe src="<%= "http://www.eurexpress.org/ee/jsp/getExpressionLevels.jsp?assayID=#{result[:assay_id]}" %>" width="100%" height="140px" scrolling="no" style="overflow:hidden"></iframe>
+      
+      <h5>Assay Ontology Browser</h5>
+      <p>
+        This ontology tree only contains the parts of the mouse embryo anatomy 
+        that are relevant to this assay.  The numbers (in brackets) indicate the 
+        number of annotations recorded within the children of these terms.
+      </p>
+      <div>
+        <a href="#" class="eurexpress_assay_ontology_expand">expand tree</a> | 
+        <a href="#" class="eurexpress_assay_ontology_close">close tree</a>
+        <div class="clear"></div>
+        <div class="eurexpress_assay_ontology_key">
+          <table class="nocol nobg nopadding noborder">
+            <tr class=""><th>Expression</th><td></td></tr>
+            <tr><td>strong</td><td class="strong"></td><td>moderate</td><td class="moderate"></td></tr>
+            <tr><td>weak</td><td class="weak"></td><td>possible</td><td class="possible"></tr>
+            <tr><td>not detected</td><td class="not_detected"></td><td>not examined</td><td class="not_examined"></td></tr>
+            <tr></tr>
+          </table>
+        </div>
+        <div id="<%= "#{result_data[:index][:mgi_accession_id].gsub(':','')}-#{index}-EMAP0" %>" class="eurexpress_assay_ontology"></div>
+      </div>
+      
     </div>
   <% end %>
 </div>
-

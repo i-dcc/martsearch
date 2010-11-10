@@ -1,4 +1,6 @@
+
 sorted_results = {}
+# chart_config   = @config[:chart_config]
 
 results.each do |result|
   joined_attribute = @config[:searching][:joined_attribute].to_sym
@@ -11,6 +13,12 @@ results.each do |result|
   
   unless result_data[ result[:ass_assay_id_key] ]
     result_data[ result[:ass_assay_id_key] ] = {}
+    # chart_config.keys.each do |field|
+    #   result_data[ result[:ass_assay_id_key] ][:chart][field] = {
+    #     :score       => 0,
+    #     :found_terms => []
+    #   }
+    # end
   end
   
   result_data_for_assay = result_data[ result[:ass_assay_id_key] ]
@@ -30,6 +38,22 @@ results.each do |result|
     :ann_strength => result[:ann_strength]
   }
   
+  # # Add to the chart...
+  # result_data_for_assay[:chart].keys.each do |field|
+  #   if chart_config[field][:all_terms].include?(emap_id)
+  #     score = case result[:ann_strength]
+  #     when 'strong'   then 10
+  #     when 'moderate' then 5
+  #     when 'weak'     then 2
+  #     when 'possible' then 1
+  #     else                 0
+  #     end
+  #     
+  #     result_data_for_assay[:chart][field][:score] += score
+  #     result_data_for_assay[:chart][field][:found_terms].push(emap_id)
+  #   end
+  # end
+  
 end
 
 # Now sort the annotations into order of the ones with more 
@@ -44,10 +68,13 @@ sorted_results.each do |id,the_results|
   results_to_return[id] = assays.sort_by { |a| -1*(a[:annotations].size) }
 end
 
-# Then finally calculate the EMAP ontology trees for the annotations...
+# Now calculate the EMAP ontology trees for the annotations and 
+# do the final correction for the expression chart...
 ontology_cache = MartSearch::Controller.instance().ontology_cache
 sorted_results.each do |id,assays|
   assays.each do |assay_id,assay_data|
+    
+    # EMAP tree...
     emap_ids  = assay_data[:annotations].keys.map { |emap_id| emap_id.to_s }
     emap_tree = ontology_cache.fetch_just_parents( emap_ids.shift )
 
@@ -56,7 +83,20 @@ sorted_results.each do |id,assays|
       emap_tree = emap_tree.merge( new_tree )
     end
     
-    assay_data[:emap_tree] = emap_tree.to_json
+    assay_data[:emap_tree] = JSON.generate( emap_tree, :max_nesting => false )
+    
+    # # Expression chart...
+    # assay_data[:chart].each do |field,chart_data|
+    #   assay_data[:chart][field][:found_terms].uniq!
+    #   
+    #   # coverage
+    #   found_term_count = 0
+    #   assay_data[:chart][field][:found_terms].each do |term|
+    #     found_term_count += chart_config[field][:counts][term.to_sym]
+    #   end
+    #   assay_data[:chart][field][:coverage] = ( ( found_term_count * 100 ).to_f / chart_config[field][:all_terms].size.to_f ).round(2)
+    # end
+    
     assays[assay_id] = assay_data
   end
   

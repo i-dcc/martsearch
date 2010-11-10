@@ -1,0 +1,86 @@
+
+/* eurexpress custom css */
+
+.eurexpress_assay_ontology .strong,
+.eurexpress_assay_ontology .moderate,
+.eurexpress_assay_ontology .weak,
+.eurexpress_assay_ontology .possible,
+.eurexpress_assay_ontology .not_detected,
+.eurexpress_assay_ontology .not_examined {
+    font-weight: bold;
+}
+
+.eurexpress_assay_ontology .strong a {
+    color: #f00;
+}
+
+.eurexpress_assay_ontology .moderate a {
+    color: #d869ff;
+}
+
+.eurexpress_assay_ontology .weak a {
+    color: #00f;
+}
+
+.eurexpress_assay_ontology .possible a {
+    color: #3d9916;
+}
+
+.eurexpress_assay_ontology .not_detected a {
+    color: #f99131;
+}
+
+.eurexpress_assay_ontology .not_examined a {
+    color: #999;
+}
+
+.eurexpress_assay_ontology_key table td.strong,
+.eurexpress_assay_ontology_key td.moderate,
+.eurexpress_assay_ontology_key td.weak,
+.eurexpress_assay_ontology_key td.possible,
+.eurexpress_assay_ontology_key td.not_detected,
+.eurexpress_assay_ontology_key td.not_examined {
+	width: 10px;
+	height: 10px;
+	border: 1px solid #fff !important;
+}
+
+.eurexpress_assay_ontology_key table td.strong {
+    background-color: #f00 !important;
+}
+
+.eurexpress_assay_ontology_key td.moderate {
+    background-color: #d869ff !important;
+}
+
+.eurexpress_assay_ontology_key td.weak {
+    background-color: #00f !important;
+}
+
+.eurexpress_assay_ontology_key td.possible {
+    background-color: #3d9916 !important;
+}
+
+.eurexpress_assay_ontology_key td.not_detected {
+    background-color: #f99131 !important;
+}
+
+.eurexpress_assay_ontology_key td.not_examined {
+    background-color: #999 !important;
+}
+
+.eurexpress_assay_ontology_key {
+    float: right;
+	padding: 5px;
+}
+
+a.eurexpress_assay_ontology_expand,
+a.eurexpress_assay_ontology_close {
+    background: url(../images/silk/bullet_toggle_plus.png) no-repeat 0 center;
+    padding: 4px 2px 4px 16px;
+}
+
+a.eurexpress_assay_ontology_close {
+    background-image: url(../images/silk/bullet_toggle_minus.png);
+}
+

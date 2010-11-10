@@ -18,11 +18,11 @@ get "/eurexpress_browse/?" do
   if emap_id == 'EMAP:0'
     tree      = @ms.ontology_cache.fetch( 'EMAP:7148' )
     tree_data = [{
-      :data  => "Mouse_anatomy_by_time_xproduct (EMAP:0)",
+      :data  => "mouse anatomy",
       :state => "open",
       :children => [
         {
-          :data     => "TS23,embryo (EMAP:7148)",
+          :data     => "TS23, embryo",
           :attr     => { :id => "#{options[0]}-#{options[1]}-EMAP7148" },
           :state    => 'open',
           :children => calc_emap_tree( options, tree.children, data[:annotations], 3 )
@@ -47,7 +47,7 @@ def calc_emap_tree( get_options, children, annotations, node_depth )
     anns_recorded = anns_recorded + 1 if annotations.has_key?(child.term.to_sym)
     
     child_data = {
-      :data  => "#{child.term_name} (#{child.term}) - <em>#{anns_recorded} annotations recorded</em>",
+      :data  => "#{child.term_name.sub('TS23,','')} - (#{anns_recorded})",
       :attr  => { :id => "#{get_options[0]}-#{get_options[1]}-#{child.term.gsub(':','')}" },
       :state => 'closed'
     }
@@ -56,10 +56,11 @@ def calc_emap_tree( get_options, children, annotations, node_depth )
       child_data[:children] = calc_emap_tree( get_options, child.children, annotations, node_depth )
     elsif child_anns.size > 0
       child_data[:children] = []
-    else
-      child_data[:attr][:rel] = 'leaf_node' 
-      child_data[:state]      = 'open'
-      child_data[:children]   = []
+    elsif annotations.has_key?(child.term.to_sym)
+      child_data[:data]         = child.term_name.sub('TS23,','')
+      child_data[:attr][:class] = annotations[child.term.to_sym][:ann_strength].gsub(' ','_')
+      child_data[:attr][:rel]   = 'leaf_node' 
+      child_data[:state]        = 'open'
     end
     
     tree_data.push(child_data) if anns_recorded > 0
