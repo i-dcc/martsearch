@@ -25,6 +25,12 @@
         <li class="ext_link"><a href="<%= url %>" target="_blank">view allele details (<%= dest %>)</a></li>
         <li class="ext_link"><a href="http://www.knockoutmouse.org/martsearch/project/<%= ikmc_project_id %>" target="_blank">view allele details (IKMC)</a></li>
       <% end %>
+      
+      <% if pipeline == "KOMP-Regeneron" %>
+        <% velocigene_id = ikmc_project_id.gsub("VG","") %>
+        <li class="ext_link"><a href="http://www.velocigene.com/komp/detail/<%= velocigene_id %>" target="_blank">view allele details (Regeneron)</a></li>
+        <li class="ext_link"><a href="http://www.knockoutmouse.org/martsearch/project/<%= ikmc_project_id %>" target="_blank">view allele details (IKMC)</a></li>
+      <% end %>
     <% end %>
   </ul>
 </div>

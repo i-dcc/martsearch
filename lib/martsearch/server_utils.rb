@@ -4,7 +4,6 @@ module MartSearch
   #
   # @author Darren Oakley
   module ServerUtils
-    include MartSearch::Utils
     
     # Helper function - returns all of the javascript for the head
     # of the web app concatenated into one file and compressed using 
@@ -70,7 +69,7 @@ module MartSearch
         end
         
         defaults.each do |file|
-          compressed_code << get_file_as_string("#{MARTSEARCH_PATH}/lib/martsearch/server/public/#{short_str}/#{file}")
+          compressed_code << File.read("#{MARTSEARCH_PATH}/lib/martsearch/server/public/#{short_str}/#{file}")
         end
         
         MartSearch::Controller.instance().config[:server][:dataviews].each do |dv|

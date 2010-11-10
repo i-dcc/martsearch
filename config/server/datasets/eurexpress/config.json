@@ -21,7 +21,8 @@
       "ann_comments"
     ],
     "required_attributes": [
-      "ass_assay_id_key"
+      "ass_assay_id_key",
+      "emap_id"
     ],
     "filters": {}
   }

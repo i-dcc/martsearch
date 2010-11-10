@@ -22,7 +22,7 @@ class MartSearchOntologyTermTest < Test::Unit::TestCase
     end
     
     should "raise appropriate errors" do
-      assert_raise(OntologyTermNotFoundError) { OntologyTerm.new("FLIBBLE:5") }
+      assert_raise(MartSearch::OntologyTermNotFoundError) { OntologyTerm.new("FLIBBLE:5") }
     end
     
     should "respond correctly to the .parentage method" do
@@ -33,8 +33,7 @@ class MartSearchOntologyTermTest < Test::Unit::TestCase
     
     should "be able to generate its child tree" do
       assert( @ont.child_tree.is_a?(OntologyTerm), "OntologyTerm.child_tree does not return an OntologyTerm tree." )
-      assert( @ont.child_tree.root.is_a?(OntologyTerm), "OntologyTerm.child_tree.root does not return an OntologyTerm tree." )
-      assert_equal( @ont.term, @ont.child_tree.root.term, "OntologyTerm.child_tree.root is equal to self." )
+      assert_equal( @ont.term, @ont.child_tree.term, "OntologyTerm.child_tree.root is equal to self." )
     end
         
     should "respond correctly to the .children method" do

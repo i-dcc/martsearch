@@ -1,16 +1,16 @@
 <div class="accordion">
-  <% result_data[:eurexpress].each do |result| %>
+  <% result_data[:eurexpress].each_index do |index| %>
+    <% result = result_data[:eurexpress][index] %>
     <h6>
       <a href="">
         <%= result[:assay_id] %> - 
         <span class="header_annotation">
           <%= result[:annotations].size %> 
           <% if result[:annotations].size === 1 %>
-            annotation 
+            annotation recorded
           <% else %>
-            annotations 
+            annotations recorded
           <% end %>
-          recorded
         </span>
       </a>
     </h6>
@@ -18,32 +18,36 @@
       <p>
         <a href="<%= "http://www.eurexpress.org/ee/databases/assay.jsp?assayID=#{result[:assay_id]}#top" %>" class="ext_link" target="_blank">View full Eurexpress report page</a>
       </p>
-      <% if result[:annotations].size > 0 %>
-        <table class="tablesorter" width="100%">
-          <thead>
-            <tr>
-              <th>EMAP ID</th>
-              <th>EMAP Term</th>
-              <th>Pattern</th>
-              <th>Strength</th>
-              <th>Theiler Stage</th>
-              <th>Annotation Comments</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% result[:annotations].each do |ann| %>
-              <tr>
-                <td><%= ann[:emap_id] %></td>
-                <td><%= ann[:emap_term] %></td>
-                <td><%= ann[:ann_pattern] %></td>
-                <td><%= ann[:ann_strength] %></td>
-                <td><%= ann[:ann_stage] %></td>
-                <td><%= ann[:ann_comments] %></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      <% end %>
+      
+      <h5>Expression Chart</h5>
+      <p>
+        Thie expression bar chart displays the average expression strength (top bar chart) 
+        and coverage (lower bar chart) of the anatomy tree.
+      </p>
+      <iframe src="<%= "http://www.eurexpress.org/ee/jsp/getExpressionLevels.jsp?assayID=#{result[:assay_id]}" %>" width="100%" height="140px" scrolling="no" style="overflow:hidden"></iframe>
+      
+      <h5>Assay Ontology Browser</h5>
+      <p>
+        This ontology tree only contains the parts of the mouse embryo anatomy 
+        that are relevant to this assay.  The numbers (in brackets) indicate the 
+        number of annotations recorded within the children of these terms.
+      </p>
+      <div>
+        <a href="#" class="eurexpress_assay_ontology_expand">expand tree</a> | 
+        <a href="#" class="eurexpress_assay_ontology_close">close tree</a>
+        <div class="clear"></div>
+        <div class="eurexpress_assay_ontology_key">
+          <table class="nocol nobg nopadding noborder">
+            <tr class=""><th>Expression</th><td></td></tr>
+            <tr><td>strong</td><td class="strong"></td><td>moderate</td><td class="moderate"></td></tr>
+            <tr><td>weak</td><td class="weak"></td><td>possible</td><td class="possible"></tr>
+            <tr><td>not detected</td><td class="not_detected"></td><td>not examined</td><td class="not_examined"></td></tr>
+            <tr></tr>
+          </table>
+        </div>
+        <div id="<%= "#{result_data[:index][:mgi_accession_id].gsub(':','')}-#{index}-EMAP0" %>" class="eurexpress_assay_ontology"></div>
+      </div>
+      
     </div>
   <% end %>
 </div>

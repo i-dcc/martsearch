@@ -1,3 +1,4 @@
+
 /* Page Layout */
 
 * {
@@ -96,7 +97,7 @@ p,dl,hr,h1,h2,h3,h4,h5,h6,ol,ul,pre,table,address,fieldset {
 	margin-bottom: 20px
 }
 
-.vertical_text {
+.csstransforms .vertical_text {
 	display: block;
 	-webkit-transform: rotate(-90deg);
 	-webkit-transform-origin: 50% 50%;
@@ -211,7 +212,7 @@ a.button:hover, a.order:hover {
 	background-color: #fdfecc;
 }
 
-#serious_errors {
+.serious_errors {
 	color: #640808;
 	border-color: #640808;
 	background: #fdcccc url(../images/silk/exclamation.png) no-repeat 5px 10px;
@@ -220,11 +221,11 @@ a.button:hover, a.order:hover {
     margin-bottom: 10px;
 }
 
-#serious_errors h5 {
+.serious_errors h5 {
     margin-bottom: 5px;
 }
 
-.dataset_error {
+.dataset_error, .warning {
   	border-color: #b2a67b;
 	padding: 5px 5px 5px 25px;
 	margin-bottom: 10px;
@@ -233,7 +234,7 @@ a.button:hover, a.order:hover {
   	color: #333;
 }
 
-.dataset_error li {
+.dataset_error li, .warning li {
     margin-left: 20px;
 }
 
@@ -485,20 +486,20 @@ tr.odd td {
 	background: #f1f1f1;
 }
 
-.nobg, table.nobg th, table.nobg td {
+.nobg, .nobg th, .nobg td {
 	background: none !important;
 }
 
-.noborder, table.noborder th, table.noborder td {
+.noborder, .noborder th, .noborder td {
 	border: none !important;
 }
 
-table.nopadding th, table.nopadding td {
+.nopadding th, .nopadding td {
 	padding-top: 2px;
 	padding-bottom: 2px;
 }
 
-.border, table.border th, table.border td {
+.border, .border th, .border td {
 	border: 1px solid #999 !important;
 }
 

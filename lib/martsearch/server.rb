@@ -11,7 +11,7 @@ module MartSearch
   #
   # @author Darren Oakley
   class Server < Sinatra::Base
-    include MartSearch::Utils
+    include MartSearch::ServerUtils
     include MartSearch::ProjectUtils
     register Sinatra::StaticAssets
     use HoptoadNotifier::Rack
@@ -22,7 +22,7 @@ module MartSearch
     # We're going to use the version number as a cache breaker for the CSS 
     # and javascript code. Update with each release of your portal (especially 
     # if you change the CSS or JS)!!!
-    VERSION = '0.1.0'
+    VERSION = '0.1.2'
     DEFAULT_CSS_FILES = [
       'reset.css',
       'jquery.prettyPhoto.css',
@@ -43,6 +43,8 @@ module MartSearch
       'jquery.fontResize.js',
       'jquery.scrollTo-1.4.2.js',
       'jquery-ui-1.8.1.min.js',
+      'modernizr-1.6.min.js',
+      'jquery.jstree.js',
       'martsearch-base.js'
     ]
     
@@ -53,106 +55,6 @@ module MartSearch
       
       super
     end
-    
-    private
-      
-      # Helper function - returns all of the javascript for the head
-      # of the web app concatenated into one file and compressed using 
-      # the Google Closure Compiler.
-      #
-      # @param [String] version The version tag to put in the file name
-      # @return [String] The concatenated and compressed javascript code
-      def compressed_head_js( version )
-        text = compress_js_or_css('js-head')
-        save_to_disk( text, 'js', "martsearch-head-#{version}.js" )
-        text
-      end
-
-      # Helper function - returns all of the javascript for the base
-      # of the web app concatenated into one file and compressed using 
-      # the Google Closure Compiler.
-      #
-      # @param [String] version The version tag to put in the file name
-      # @return [String] The concatenated and compressed javascript code
-      def compressed_base_js( version )
-        text = compress_js_or_css('js-base')
-        save_to_disk( text, 'js', "martsearch-base-#{version}.js" )
-        text
-      end
-
-      # Helper function - returns all of the css for the web app 
-      # concatenated into one file and compressed using the YUI 
-      # CSS Compressor.
-      #
-      # @param [String] version The version tag to put in the file name
-      # @return [String] The concatenated and compressed css code
-      def compressed_css( version )
-        text = compress_js_or_css('css')
-        save_to_disk( text, 'css', "martsearch-#{version}.css" )
-        text
-      end
-      
-      # Utility function to do the actual javascript/css concatenation 
-      # and compression.
-      #
-      # @param [String] js_or_css Pass either 'js-head', 'js-base' or 'css'
-      # @return [String] The concatenated and compressed code
-      def compress_js_or_css( js_or_css )
-        compressed_code = ''
-        
-        if js_or_css == 'js-head'
-          defaults  = DEFAULT_HEAD_JS_FILES
-          short_str = 'js'
-          symbol    = :javascript_head
-          warn_str  = 'Closure::Compiler javascript'
-        elsif js_or_css == 'js-base'
-          defaults  = DEFAULT_BASE_JS_FILES
-          short_str = 'js'
-          symbol    = :javascript_base
-          warn_str  = 'Closure::Compiler javascript'
-        else
-          defaults  = DEFAULT_CSS_FILES
-          short_str = 'css'
-          symbol    = :stylesheet
-          warn_str  = 'YUI::CssCompressor CSS'
-        end
-        
-        defaults.each do |file|
-          compressed_code << get_file_as_string("#{MARTSEARCH_PATH}/lib/martsearch/server/public/#{short_str}/#{file}")
-        end
-        
-        MartSearch::Controller.instance().config[:server][:dataviews].each do |dv|
-           compressed_code << dv.send(symbol) unless dv.send(symbol).nil?
-        end
-        
-        begin
-          Dir.mktmpdir do |dir|
-            if js_or_css =~ /js/
-              compressed_code = Closure::Compiler.new(:compilation_level => 'SIMPLE_OPTIMIZATIONS').compress(compressed_code)
-            else
-              compressed_code = YUI::CssCompressor.new.compress(compressed_code)
-            end
-          end
-        rescue Exception => e
-          warn "[ERROR] - #{warn_str} compression failed - resorting to concatenated files"
-          puts e
-        end
-        
-        return compressed_code
-      end
-      
-      # Utility function to save a given text string to disk
-      #
-      # @param [String] content The file content
-      # @param [String] type The subdirectory in /public to save to
-      # @param [String] name The file name to save
-      def save_to_disk( content, type, name )
-        file = File.new("#{MARTSEARCH_PATH}/lib/martsearch/server/public/#{type}/#{name}",'w')
-        file.write content
-        file.close
-      end
-      
-    public
     
     not_found do
       @martsearch_error = false
@@ -232,8 +134,10 @@ module MartSearch
       else
         @current    = 'home'
         @page_title = "Search Results for '#{params[:query]}'"
+        
         # Marker.mark("running search") do
-          @results    = @ms.search( params[:query], params[:page].to_i )
+          use_cache   = params[:fresh] == "true" ? false : true
+          @results    = @ms.search( params[:query], params[:page].to_i, use_cache )
         # end
         @data       = @ms.search_data
         @errors     = @ms.errors
@@ -281,11 +185,12 @@ module MartSearch
         else
           browser_field_conf = @config[:browsable_content][params[:field].to_sym]
           browser            = browser_field_conf[:processed_options][params[:query].to_sym]
+          use_cache          = params[:fresh] == "true" ? false : true
           
           @page_title    = "Browsing Data by #{browser_field_conf[:display_name]}: '#{browser[:display_arg]}'"
           @results_title = @page_title
           @solr_query    = browser[:solr_query]
-          @results       = @ms.search( @solr_query, params[:page].to_i )
+          @results       = @ms.search( @solr_query, params[:page].to_i, use_cache )
           @data          = @ms.search_data
           @errors        = @ms.errors
         end
@@ -326,10 +231,12 @@ module MartSearch
         if cached_data.nil? or params[:fresh] == "true"
           @data = get_ikmc_project_page_data( project_id )
           
-          if cache.is_a?(MartSearch::MongoCache)
-            cache.write("project-report-#{project_id}", @data, :expires_in => 12.hours )
-          else
-            cache.write("project-report-#{project_id}", BSON.serialize(@data), :expires_in => 12.hours )
+          unless @data.nil?
+            if cache.is_a?(MartSearch::MongoCache)
+              cache.write("project-report-#{project_id}", @data, :expires_in => 12.hours )
+            else
+              cache.write("project-report-#{project_id}", BSON.serialize(@data), :expires_in => 12.hours )
+            end
           end
         else
           @data = cached_data
@@ -356,19 +263,19 @@ module MartSearch
     ## Dynamic CSS/Javascript 
     ##
     
-    get '/css/martsearch*.css' do
+    get '/css/martsearch-*.css' do
       content_type 'text/css', :charset => 'utf-8'
       @compressed_css = compressed_css( VERSION ) if @compressed_css.nil?
       return @compressed_css
     end
 
-    get '/js/martsearch-head*.js' do
+    get '/js/martsearch-head-*.js' do
       content_type 'text/javascript', :charset => 'utf-8'
       @compressed_head_js = compressed_head_js( VERSION ) if @compressed_head_js.nil?
       return @compressed_head_js
     end
     
-    get '/js/martsearch-base*.js' do
+    get '/js/martsearch-base-*.js' do
       content_type 'text/javascript', :charset => 'utf-8'
       @compressed_base_js = compressed_base_js( VERSION ) if @compressed_base_js.nil?
       return @compressed_base_js
@@ -398,7 +305,7 @@ module MartSearch
     
     MartSearch::Controller.instance().dataviews.each do |dv|
       if dv.use_custom_routes?
-        load "#{MARTSEARCH_PATH}/config/server/dataviews/#{dv.internal_name}/routes.rb"
+        eval File.read("#{MARTSEARCH_PATH}/config/server/dataviews/#{dv.internal_name}/routes.rb")
       end
     end
     

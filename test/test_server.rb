@@ -78,7 +78,7 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
             while page_no < 3
               visit "/browse/#{name}/#{opts[:link_arg]}/#{page_no}"
               assert_equal( '/browse', current_path )
-              assert( page.has_content?("Browsing Data by #{conf[:display_name]}: '#{opts[:display_arg]}'") )
+              assert( page.has_content?("Browsing Data by #{conf[:display_name]}: '#{opts[:display_arg]}'"), "A request to '/browse/#{name}/#{opts[:link_arg]}/#{page_no}' failed!" )
               
               if page.has_css?('.pagination a.next_page')
                 page_no = page_no + 1
@@ -94,7 +94,7 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
     should "render IKMC project pages" do
       VCR.use_cassette('test_server_project_page') do
         project_ids_to_test = ['35505','27042','42474']
-        
+
         project_ids_to_test.each do |project_id|
           visit "/project/#{project_id}"
           assert_equal( "/project/#{project_id}", current_path )
@@ -157,7 +157,7 @@ class MartSearchServerRackTest < Test::Unit::TestCase
       end
     end
     
-    should "render IKMC project pages as JSON..." do
+    should 'render IKMC project pages as JSON...' do
       VCR.use_cassette('test_server_project_page') do
         project_ids_to_test = ['35505','27042','42474']
         
@@ -167,8 +167,49 @@ class MartSearchServerRackTest < Test::Unit::TestCase
           json = JSON.parse( @browser.last_response.body )
           assert( json.is_a?(Hash) )
         end
+        
+        @browser.get "/project/foobar"
+        assert_equal( 404, @browser.last_response.status.to_i )
       end
     end
     
+    should 'generate compressed css and javascript...' do
+      @browser.get '/css/martsearch-foo.css'
+      assert( @browser.last_response.ok? )
+      assert_equal( 'text/css;charset=utf-8', @browser.last_response.headers["Content-Type"] )
+      
+      @browser.get '/js/martsearch-head-foo.js'
+      assert( @browser.last_response.ok? )
+      assert_equal( 'text/javascript;charset=utf-8', @browser.last_response.headers["Content-Type"] )
+      
+      @browser.get '/js/martsearch-base-foo.js'
+      assert( @browser.last_response.ok? )
+      assert_equal( 'text/javascript;charset=utf-8', @browser.last_response.headers["Content-Type"] )
+    end
+    
+    should 'render dataview css and javascript...' do
+      @controller.dataviews_by_name.each do |name,view|
+        unless view.stylesheet.nil?
+          @browser.get "/dataview-css/#{name}.css"
+          assert( @browser.last_response.ok?, "/dataview-css/#{name}.css failed." )
+          assert_equal( 'text/css;charset=utf-8', @browser.last_response.headers["Content-Type"], "/dataview-css/#{name}.css has the wrong content_type." )
+          assert_equal( view.stylesheet, @browser.last_response.body, "/dataview-css/#{name}.css is not as expected." )
+        end
+        
+        unless view.javascript_head.nil?
+          @browser.get "/dataview-head-js/#{name}.js"
+          assert( @browser.last_response.ok?, "/dataview-head-js/#{name}.js failed." )
+          assert_equal( 'text/javascript;charset=utf-8', @browser.last_response.headers["Content-Type"], "/dataview-head-js/#{name}.js has the wrong content_type." )
+          assert_equal( view.javascript_head, @browser.last_response.body, "/dataview-head-js/#{name}.js is not as expected." )
+        end
+        
+        unless view.javascript_base.nil?
+          @browser.get "/dataview-base-js/#{name}.js"
+          assert( @browser.last_response.ok?, "/dataview-base-js/#{name}.js failed." )
+          assert_equal( 'text/javascript;charset=utf-8', @browser.last_response.headers["Content-Type"], "/dataview-base-js/#{name}.js has the wrong content_type." )
+          assert_equal( view.javascript_base, @browser.last_response.body, "/dataview-base-js/#{name}.js is not as expected." )
+        end
+      end
+    end
   end
 end

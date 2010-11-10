@@ -8,13 +8,6 @@ CURR_PATH = File.expand_path(File.dirname(__FILE__))
 $:.unshift("#{CURR_PATH}/../../../../lib")
 require 'martsearch'
 
-# Setup the connection parameters for our OLS database...
-# FIXME: This should be internalised as part of the MartSearch::Controller setup
-env = ENV['RACK_ENV']
-env = 'development' if env.nil?
-dbc = YAML.load_file("#{CURR_PATH}/../../../ols_database.yml")[env]
-OLS_DB = Sequel.connect("mysql://#{dbc['username']}:#{dbc['password']}@#{dbc['host']}:#{dbc['port']}/#{dbc['database']}")
-
 # Setup the connection for the Europhenome biomart...
 mart = MartSearch::Controller.instance().config[:datasources][:europhenome].ds
 

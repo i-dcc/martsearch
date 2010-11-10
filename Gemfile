@@ -24,7 +24,7 @@ gem 'newrelic_rpm'
 # IndexBuilder
 gem 'rubytree',             '~>0.7',    :require => 'tree'
 gem 'sequel',               '~>3.0'
-gem 'mysql',                '>=2.8'
+gem 'mysql2'
 gem 'builder',              '~>2.1'
 
 group :development, :test do
@@ -41,4 +41,5 @@ group :development, :test do
   gem 'rcov',                           :platforms => :ruby_18
   gem 'metric_fu',                      :platforms => :ruby_18
   gem 'awesome_print',                  :require => 'ap'
+  gem 'wirble'
 end

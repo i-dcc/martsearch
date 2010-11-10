@@ -216,12 +216,14 @@ module MartSearch
           ##
         
           unless result['mutation_subtype'] == 'targeted_non_conditional'
-            data['intermediate_vectors'].push(
-              'name'        => result['intermediate_vector'],
-              'design_id'   => result['design_id'],
-              'design_type' => design_type,
-              'floxed_exon' => result['floxed_start_exon']
-            )
+            unless result['intermediate_vector'].nil?
+              data['intermediate_vectors'].push(
+                'name'        => result['intermediate_vector'],
+                'design_id'   => result['design_id'],
+                'design_type' => design_type,
+                'floxed_exon' => result['floxed_start_exon']
+              )
+            end
           end
         
           ##
@@ -229,21 +231,23 @@ module MartSearch
           ##
         
           unless result['mutation_subtype'] == 'targeted_non_conditional'
-            data['targeting_vectors'].push(
-              'name'         => result['targeting_vector'],
-              'design_id'    => result['design_id'],
-              'design_type'  => design_type,
-              'cassette'     => result['cassette'],
-              'backbone'     => result['backbone'],
-              'floxed_exon'  => result['floxed_start_exon']
-            )
+            unless result['targeting_vector'].nil?
+              data['targeting_vectors'].push(
+                'name'         => result['targeting_vector'],
+                'design_id'    => result['design_id'],
+                'design_type'  => design_type,
+                'cassette'     => result['cassette'],
+                'backbone'     => result['backbone'],
+                'floxed_exon'  => result['floxed_start_exon']
+              )
+            end
           end
         
           ##
           ## ES Cells
           ##
 
-          next if result['escell_clone'].nil? or result['escell_clone'].empty?
+          next if result['escell_clone'].nil?
 
           push_to = 'targeted non-conditional'
           push_to = 'conditional' if result['mutation_subtype'] == 'conditional_ready'

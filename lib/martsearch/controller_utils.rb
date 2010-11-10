@@ -4,7 +4,6 @@ module MartSearch
   #
   # @author Darren Oakley
   module ControllerUtils
-    include MartSearch::Utils
     
     # Helper function to read in and process the MartSearch::Index configuration.
     #
@@ -40,11 +39,9 @@ module MartSearch
     # @return [Hash] The configuration hash
     def build_index_builder_conf( config_dir )
       index_builder_conf = JSON.load( File.new( "#{config_dir}/index_builder.json", 'r' ) )
-      ['primary','secondary'].each do |pri_sec|
-        index_builder_conf['datasets_to_index'][pri_sec].each do |index_dataset|
-          datasource_conf = JSON.load( File.new( "#{config_dir}/datasets/#{index_dataset}.json", 'r' ) )
-          index_builder_conf['datasets'][index_dataset] = datasource_conf
-        end
+      index_builder_conf['datasets_to_index'].each do |index_dataset|
+        datasource_conf = JSON.load( File.new( "#{config_dir}/datasets/#{index_dataset}.json", 'r' ) )
+        index_builder_conf['datasets'][index_dataset] = datasource_conf
       end
       
       index_builder_conf.recursively_symbolize_keys!
@@ -122,9 +119,9 @@ module MartSearch
             dv_conf[:internal_name] = dv_name
             dataview                = MartSearch::DataView.new( dv_conf )
 
-            dataview.stylesheet      = get_file_as_string("#{dv_location}/stylesheet.css")     if dv_conf[:custom_css]
-            dataview.javascript_head = get_file_as_string("#{dv_location}/javascript_head.js") if dv_conf[:custom_head_js]
-            dataview.javascript_base = get_file_as_string("#{dv_location}/javascript_base.js") if dv_conf[:custom_base_js]
+            dataview.stylesheet      = File.read("#{dv_location}/stylesheet.css")     if dv_conf[:custom_css]
+            dataview.javascript_head = File.read("#{dv_location}/javascript_head.js") if dv_conf[:custom_head_js]
+            dataview.javascript_base = File.read("#{dv_location}/javascript_base.js") if dv_conf[:custom_base_js]
 
             dataviews.push( dataview )
             dataviews_by_name[dv_name] = dataview
@@ -148,12 +145,12 @@ module MartSearch
             dataset                 = MartSearch::DataSet.new( ds_conf )
             
             if ds_conf[:custom_sort]
-              sort    = get_file_as_string( "#{ds_location}/custom_sort.rb" )
+              sort    = File.read( "#{ds_location}/custom_sort.rb" )
               dataset = MartSearch::Mock.method( dataset, :sort_results ) { |results| eval(sort) }
             end
             
             if ds_conf[:custom_secondary_sort]
-              secondary_sort = get_file_as_string( "#{ds_location}/custom_secondary_sort.rb" )
+              secondary_sort = File.read( "#{ds_location}/custom_secondary_sort.rb" )
               dataset        = MartSearch::Mock.method( dataset, :secondary_sort ) { |search_data| eval(secondary_sort) }
             end
             

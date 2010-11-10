@@ -7,6 +7,12 @@
   mp_chunks    = EUROPHENOME_MP_CONF.chunk(europhenome_tests_per_row)
 %>
 
+<div class="messages warning csstransforms_warning" style="display:none;">
+  Warning: Your browser is not able to correctly draw vertical text (this is 
+  used in the headers of this display).  Your experience using this view 
+  will not be perfect.  Please consider upgrading or changing your browser.
+</div>
+
 <table class="europhenome-data">
   <% mp_chunks.each do |mp_group_chunks| %>
     <thead>

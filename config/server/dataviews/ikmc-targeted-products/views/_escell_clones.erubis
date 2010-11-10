@@ -7,7 +7,7 @@
   <table style="margin-bottom:5px">
     <thead>
       <tr>
-        <th>Design ID</th>
+        <th>Design</th>
         <th># Knockout First Clones</th>
         <th># Targeted Non-Conditional Clones</th>
       </tr>
@@ -38,9 +38,11 @@
             &nbsp;
             (
             <a href="http://www.i-dcc.org/targ_rep/alleles/<%= nonconditional_allele_id %>/escell-clone-genbank-file" class="file">genbank&nbsp;file</a>
-            <% unless ['KOMP-Regeneron','mirKO'].include?(pipeline) %>
+            <% unless pipeline == 'mirKO' %>
                | <a href="http://www.i-dcc.org/targ_rep/alleles/<%= nonconditional_allele_id %>/allele-image" class="image" rel="prettyPhoto">allele&nbsp;image</a>
-               | <a href="http://www.i-dcc.org/targ_rep/alleles/<%= nonconditional_allele_id %>/vector-image" class="image" rel="prettyPhoto">vector&nbsp;image</a>
+            <% end %>
+            <% unless pipeline == 'KOMP-Regeneron' %>
+              | <a href="http://www.i-dcc.org/targ_rep/alleles/<%= nonconditional_allele_id %>/vector-image" class="image" rel="prettyPhoto">vector&nbsp;image</a>
             <% end %>
             )
           <% end %>

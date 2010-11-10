@@ -15,21 +15,22 @@ module MartSearch
       check_conf_attrs
     end
     
-    # @return The display name for this DataView
+    # @return [String] The display name for this DataView
     def name
       @config[:name]
     end
     
-    # @return The internal_name for this DataView
+    # @return [String] The internal_name for this DataView
     def internal_name
       @config[:internal_name]
     end
     
-    # @return The short description for this DataView
+    # @return [String] The short description for this DataView
     def description
       @config[:description]
     end
     
+    # @return [Boolean] Whether to display this dataview or not
     def display
       @config[:display]
     end

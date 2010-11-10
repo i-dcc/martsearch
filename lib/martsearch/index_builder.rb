@@ -48,21 +48,19 @@ module MartSearch
       Dir.chdir('dataset_dowloads/current')
       datasets_to_download = []
       
-      [:primary,:secondary].each do |ds_type|
-        @builder_config[:datasets_to_index][ds_type].each do |ds|
-          ds_conf = @builder_config[:datasets][ds.to_sym]
+      @builder_config[:datasets_to_index].each do |ds|
+        ds_conf = @builder_config[:datasets][ds.to_sym]
+        
+        if File.exists?("#{ds}.marshal")
+          file_timestamp   = File.new("#{ds}.marshal").mtime
+          now_timestamp    = Time.now()
+          file_age_in_days = ( ( ( (now_timestamp - file_timestamp).round / 60 ) / 60 ) / 24 )
           
-          if File.exists?("#{ds}.marshal")
-            file_timestamp   = File.new("#{ds}.marshal").mtime
-            now_timestamp    = Time.now()
-            file_age_in_days = ( ( ( (now_timestamp - file_timestamp).round / 60 ) / 60 ) / 24 )
-            
-            if file_age_in_days > ds_conf[:indexing][:days_between_downlads]
-              datasets_to_download.push(ds)
-            end
-          else
+          if file_age_in_days > ds_conf[:indexing][:days_between_downlads]
             datasets_to_download.push(ds)
           end
+        else
+          datasets_to_download.push(ds)
         end
       end
       
@@ -86,14 +84,11 @@ module MartSearch
       setup_and_move_to_work_directory()
       Dir.chdir('dataset_dowloads/current')
       
-      datasets_to_index = @builder_config[:datasets_to_index]
-      [:primary,:secondary].each do |stage|
-        datasets_to_index[stage].each do |ds|
-          @log.info " - #{ds}: processing results"
-          process_dataset(ds)
-          clean_document_cache()
-          @log.info " - #{ds}: processing results complete"
-        end
+      @builder_config[:datasets_to_index].each do |ds|
+        @log.info " - #{ds}: processing results"
+        process_dataset(ds)
+        clean_document_cache()
+        @log.info " - #{ds}: processing results complete"
       end
       
       @log.info "Finished dataset processing."
@@ -261,7 +256,7 @@ module MartSearch
           # First check we have something to map back to the index with - if not, move along...
           if primary_attr_value
             # Find us a doc object to map to...
-            value_to_look_up_doc_on = extract_value_to_index( map_data[:primary_attribute], map_data[:attribute_map], data_row_obj, datasource )
+            value_to_look_up_doc_on = extract_value_to_index( map_data[:primary_attribute], map_data[:attribute_map], data_row_obj, datasource.ds )
             doc                     = find_document( map_data[:map_to_index_field], value_to_look_up_doc_on )
 
             # If we can't find one - see if we're allowed to create one
@@ -276,7 +271,7 @@ module MartSearch
             if doc
               data_row_obj.each do |attr_name,attr_value|
                 # Extract and index our initial data return
-                value_to_index = extract_value_to_index( attr_name, map_data[:attribute_map], data_row_obj, datasource )
+                value_to_index = extract_value_to_index( attr_name, map_data[:attribute_map], data_row_obj, datasource.ds )
 
                 if value_to_index and doc[ map_data[:attribute_map][attr_name][:idx] ]
                   if value_to_index.is_a?(Array)

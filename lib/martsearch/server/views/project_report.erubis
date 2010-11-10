@@ -36,12 +36,12 @@
     
     
     <!-- Targeting Vectors -->
-    <% unless @data[:targeting_vectors].nil? %>
+    <% unless @data[:targeting_vectors].empty? %>
       <%= partial("project_report/targeting_vectors") %>
     <% end %>
     
     <!-- Intermediate Vectors -->
-    <% unless @data[:intermediate_vectors].nil? %>
+    <% unless @data[:intermediate_vectors].empty? %>
       <%= partial("project_report/intermediate_vectors") %>
     <% end %>
   </div>

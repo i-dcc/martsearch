@@ -30,20 +30,20 @@ class MartSearchIndexBuilderTest < Test::Unit::TestCase
     
     should 'correctly process the results from a DataSource return' do
       VCR.use_cassette( 'test_index_builder_process_dataset' ) do
-        @index_builder.builder_config[:datasets][:'ikmc-dcc'][:indexing][:filters] = {
+        @index_builder.builder_config[:datasets][:'ikmc-dcc-gene_details'][:indexing][:filters] = {
           :status => ['Mice - Genotype confirmed','Mice - Germline transmission']
         }
         
         setup_and_move_to_work_directory()
         open_daily_directory( 'dataset_dowloads', false )
         
-        @index_builder.fetch_dataset_public( 'ikmc-dcc' )
+        @index_builder.fetch_dataset_public( 'ikmc-dcc-gene_details' )
         @index_builder.fetch_dataset_public( 'ikmc-kermits' )
         
         setup_and_move_to_work_directory()
         Dir.chdir('dataset_dowloads/current')
         
-        @index_builder.process_dataset_public( 'ikmc-dcc' )
+        @index_builder.process_dataset_public( 'ikmc-dcc-gene_details' )
         @index_builder.process_dataset_public( 'ikmc-kermits' )
         
         docs = @index_builder.document_cache
@@ -77,7 +77,9 @@ class MartSearchIndexBuilderTest < Test::Unit::TestCase
     end
     
     should 'correctly fetch all of the datasets for indexing' do
-      VCR.use_cassette( 'test_index_builder_fetch_datasets', :record => :new_episodes ) do
+      VCR.use_cassette( 'test_index_builder_fetch_datasets' ) do
+        # Run twice to make sure we run the file aging code...
+        @index_builder.fetch_datasets()
         @index_builder.fetch_datasets()
         
         pwd = Dir.pwd
@@ -92,17 +94,24 @@ class MartSearchIndexBuilderTest < Test::Unit::TestCase
     end
     
     should 'correctly process all of the datasets data for indexing' do
-      @index_builder.process_datasets()
-      
-      pwd = Dir.pwd
-      setup_and_move_to_work_directory()
-      open_daily_directory( 'document_cache', false )
-      
-      assert( @index_builder.document_cache != nil )
-      assert( @index_builder.document_cache.size > 10 )
-      assert_equal( 1, Dir.glob("document_cache.marshal").size )
-      
-      Dir.chdir(pwd)
+      VCR.use_cassette( 'test_index_builder_process_datasets' ) do
+        # Cut down the amount of data to process - takes too long...
+        original_ds_list = @index_builder.builder_config[:datasets_to_index].clone
+        @index_builder.builder_config[:datasets_to_index] = original_ds_list[0..1]
+        
+        @index_builder.process_datasets()
+        
+        pwd = Dir.pwd
+        setup_and_move_to_work_directory()
+        open_daily_directory( 'document_cache', false )
+        
+        assert( @index_builder.document_cache != nil )
+        assert( @index_builder.document_cache.size > 10 )
+        assert_equal( 1, Dir.glob("document_cache.marshal").size )
+        
+        @index_builder.builder_config[:datasets_to_index] = original_ds_list
+        Dir.chdir(pwd)
+      end
     end
   end
   
