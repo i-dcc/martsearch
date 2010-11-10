@@ -100,7 +100,7 @@ module MartSearch
     #
     # @return [OntologyTerm] The children of this term as a tree. Will include the current term as the 'root' of the tree.
     def child_tree
-      get_children
+      build_tree
       child_tree = self.clone
       child_tree.remove_from_parent!
       child_tree
