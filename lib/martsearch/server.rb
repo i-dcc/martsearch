@@ -83,6 +83,7 @@ module MartSearch
 
       halt 403, 'go away!' unless accept_request
 
+      @request               = request
       @current               = nil
       @page_title            = nil
       @hide_side_search_form = false
