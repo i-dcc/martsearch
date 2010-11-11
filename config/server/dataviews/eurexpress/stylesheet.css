@@ -74,7 +74,7 @@
 	padding: 5px;
 }
 
-a.eurexpress_assay_ontology_expand,
+a.eurexpress_assay_ontology_open,
 a.eurexpress_assay_ontology_close {
     background: url(../images/silk/bullet_toggle_plus.png) no-repeat 0 center;
     padding: 4px 2px 4px 16px;

@@ -1,27 +1,6 @@
 
 // Eurexpress custom javascript
 
-// jQuery("#search_results .eurexpress-accordion").accordion({
-//   collapsible: true,
-//   active:      false,
-//   autoHeight:  false,
-//   icons: {
-//     header: "ui-icon-circle-arrow-e",
-//     headerSelected: "ui-icon-circle-arrow-s"
-//   },
-//   change: function(event, ui) {
-//     jQuery(ui.newContent).find('table.tree').each( function() {
-//       if ( !jQuery(this).hasClass('treeTable') ) {
-//         jQuery(this).treeTable({
-//           clickableNodeNames: true,
-//           expandable: true,
-//           initialState: 'expanded'
-//         });
-//       }
-//     });
-//   }
-// });
-
 jQuery.jstree._themes = "css/jstree/"
 jQuery(document).ready(function() {
   
@@ -63,7 +42,7 @@ jQuery(document).ready(function() {
   
 });
 
-jQuery("a.eurexpress_assay_ontology_expand").live( "click", function() {
+jQuery("a.eurexpress_assay_ontology_open").live( "click", function() {
   jQuery(this).parent().find(".eurexpress_assay_ontology").jstree("open_all");
   return false;
 });
