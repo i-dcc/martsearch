@@ -432,7 +432,7 @@
        text << " indexed=\"#{details[:indexed]}\"" if details[:indexed]
        if details[:stored]; text << ' stored="true"'; else; ' stored="false"'; end
        text << " required=\"#{details[:required]}\"" if details[:required]
-       text << " multi_valued=\"#{details[:multi_valued]}\"" if details[:multi_valued]
+       text << " multiValued=\"#{details[:multi_valued]}\"" if details[:multi_valued]
        text << " />"
      -%>
      <%= text %>
