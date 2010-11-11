@@ -24,7 +24,7 @@ gem 'newrelic_rpm'
 # IndexBuilder
 gem 'rubytree',             '~>0.7',    :require => 'tree'
 gem 'sequel',               '~>3.0'
-gem 'mysql2'
+gem 'mysql'
 gem 'builder',              '~>2.1'
 
 group :development, :test do

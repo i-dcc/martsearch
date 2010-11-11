@@ -4,7 +4,7 @@ module MartSearch
   env    = 'development' if env.nil?
   dbc    = YAML.load_file("#{MARTSEARCH_PATH}/config/ols_database.yml")[env]
   OLS_DB = Sequel.connect({
-    :adapter  => 'mysql2',
+    :adapter  => 'mysql',
     :encoding => 'utf8',
     :database => dbc['database'],
     :host     => dbc['host'],
