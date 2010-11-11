@@ -10,7 +10,7 @@ jQuery(document).ready(function() {
     jQuery("#"+id_arg).jstree({
       "json_data": {
         "ajax": {
-          "url": "http://localhost:3000/eurexpress_browse",
+          "url": martsearch_url + "/eurexpress_browse",
           "data": function (n) {
             return { id : n.attr ? n.attr("id") : id_arg };
           }
@@ -28,7 +28,7 @@ jQuery(document).ready(function() {
             "valid_children": [ "default", "leaf_node" ]
           },
           "leaf_node": {
-            "icon": { "image": "http://localhost:3000/images/silk/page_white.png" },
+            "icon": { "image": martsearch_url + "/images/silk/page_white.png" },
             "valid_children": "none",
             "hover_node": false
           }
