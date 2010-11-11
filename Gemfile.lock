@@ -82,7 +82,7 @@ GEM
     mongo_store (0.3.0)
       activesupport (>= 2.2)
       mongo (>= 1.0)
-    mysql2 (0.2.3)
+    mysql2 (0.2.6)
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
     net-sftp (2.0.5)
@@ -123,7 +123,7 @@ GEM
       ffi (>= 0.6.1)
       json_pure
       rubyzip
-    sequel (3.15.0)
+    sequel (3.17.0)
     sexp_processor (3.0.5)
     shoulda (2.11.3)
     simplecov (0.3.6)
