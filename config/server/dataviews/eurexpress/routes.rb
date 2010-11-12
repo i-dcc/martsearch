@@ -25,10 +25,25 @@ get "/eurexpress_browse/?" do
           :data     => "TS23, embryo",
           :attr     => { :id => "#{options[0]}-#{options[1]}-EMAP7148" },
           :state    => 'open',
-          :children => calc_emap_tree( options, tree.children, data[:annotations], 3 )
+          :children => calc_emap_tree( options, tree.children, data[:annotations], 2 )
         }
       ]
     }]
+    
+    if data[:annotations].has_key?(:'EMAP:7148') and data[:annotations].size == 1
+      tree_data[0][:children] = [
+        {
+          :data     => "TS23, embryo",
+          :attr     => {
+            :id     => "#{options[0]}-#{options[1]}-EMAP7148",
+            :class  => data[:annotations][:'EMAP:7148'][:ann_strength].gsub(' ','_'),
+            :rel    => 'leaf_node'
+          },
+          :state    => 'open',
+          :children => []
+        }
+      ]
+    end
   else
     tree      = @ms.ontology_cache.fetch( emap_id )
     tree_data = calc_emap_tree( options, tree.children, data[:annotations], tree.node_depth+1 )
@@ -52,7 +67,7 @@ def calc_emap_tree( get_options, children, annotations, node_depth )
       :state => 'closed'
     }
     
-    if child_anns.size > 0 and child.node_depth < node_depth
+    if child_anns.size > 0 and child.node_depth <= node_depth
       child_data[:children] = calc_emap_tree( get_options, child.children, annotations, node_depth )
     elsif child_anns.size > 0
       child_data[:children] = []
