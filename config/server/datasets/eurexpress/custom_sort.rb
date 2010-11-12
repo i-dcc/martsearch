@@ -70,37 +70,37 @@ end
 
 # Now calculate the EMAP ontology trees for the annotations and 
 # do the final correction for the expression chart...
-ontology_cache = MartSearch::Controller.instance().ontology_cache
-sorted_results.each do |id,assays|
-  assays.each do |assay_id,assay_data|
-    
-    # EMAP tree...
-    emap_ids  = assay_data[:annotations].keys.map { |emap_id| emap_id.to_s }
-    emap_tree = ontology_cache.fetch_just_parents( emap_ids.shift )
-
-    emap_ids.each do |emap_id|
-      new_tree  = ontology_cache.fetch_just_parents( emap_id )
-      emap_tree = emap_tree.merge( new_tree )
-    end
-    
-    assay_data[:emap_tree] = JSON.generate( emap_tree, :max_nesting => false )
-    
-    # # Expression chart...
-    # assay_data[:chart].each do |field,chart_data|
-    #   assay_data[:chart][field][:found_terms].uniq!
-    #   
-    #   # coverage
-    #   found_term_count = 0
-    #   assay_data[:chart][field][:found_terms].each do |term|
-    #     found_term_count += chart_config[field][:counts][term.to_sym]
-    #   end
-    #   assay_data[:chart][field][:coverage] = ( ( found_term_count * 100 ).to_f / chart_config[field][:all_terms].size.to_f ).round(2)
-    # end
-    
-    assays[assay_id] = assay_data
-  end
-  
-  sorted_results[id] = assays
-end
+# ontology_cache = MartSearch::Controller.instance().ontology_cache
+# sorted_results.each do |id,assays|
+#   assays.each do |assay_id,assay_data|
+#     
+#     # EMAP tree...
+#     emap_ids  = assay_data[:annotations].keys.map { |emap_id| emap_id.to_s }
+#     emap_tree = ontology_cache.fetch_just_parents( emap_ids.shift )
+# 
+#     emap_ids.each do |emap_id|
+#       new_tree  = ontology_cache.fetch_just_parents( emap_id )
+#       emap_tree = emap_tree.merge( new_tree )
+#     end
+#     
+#     assay_data[:emap_tree] = JSON.generate( emap_tree, :max_nesting => false )
+#     
+#     # # Expression chart...
+#     # assay_data[:chart].each do |field,chart_data|
+#     #   assay_data[:chart][field][:found_terms].uniq!
+#     #   
+#     #   # coverage
+#     #   found_term_count = 0
+#     #   assay_data[:chart][field][:found_terms].each do |term|
+#     #     found_term_count += chart_config[field][:counts][term.to_sym]
+#     #   end
+#     #   assay_data[:chart][field][:coverage] = ( ( found_term_count * 100 ).to_f / chart_config[field][:all_terms].size.to_f ).round(2)
+#     # end
+#     
+#     assays[assay_id] = assay_data
+#   end
+#   
+#   sorted_results[id] = assays
+# end
 
 return results_to_return

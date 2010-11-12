@@ -25,8 +25,8 @@ namespace :deploy do
     run "ln -nfs #{shared_path}/ols_database.yml #{release_path}/config/ols_database.yml"
     
     # /log
-    run "rm -rf #{release_path}/lib/martsearch/server/log"
-    run "ln -nfs #{shared_path}/log #{release_path}/lib/martsearch/server/log"
+    run "rm -rf #{release_path}/log"
+    run "ln -nfs #{shared_path}/log #{release_path}/log"
     
     # /tmp
     run "mkdir -m 777 -p #{var_run_path}/tmp"
@@ -35,14 +35,14 @@ namespace :deploy do
     
     # /public/js - the server needs write access...
     run "rm -rf #{var_run_path}/js"
-    run "mv #{release_path}/lib/martsearch/server/public/js #{var_run_path}/js"
-    run "ln -nfs #{var_run_path}/js #{release_path}/lib/martsearch/server/public/js"
+    run "mv #{release_path}/public/js #{var_run_path}/js"
+    run "ln -nfs #{var_run_path}/js #{release_path}/public/js"
     run "chgrp team87 #{var_run_path}/js && chmod g+w #{var_run_path}/js"
     
     # /public/css - the server needs write access...
     run "rm -rf #{var_run_path}/css"
-    run "mv #{release_path}/lib/martsearch/server/public/css #{var_run_path}/css"
-    run "ln -nfs #{var_run_path}/css #{release_path}/lib/martsearch/server/public/css"
+    run "mv #{release_path}/public/css #{var_run_path}/css"
+    run "ln -nfs #{var_run_path}/css #{release_path}/public/css"
     run "chgrp team87 #{var_run_path}/css && chmod g+w #{var_run_path}/css"
   end
   

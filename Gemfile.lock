@@ -82,7 +82,7 @@ GEM
     mongo_store (0.3.0)
       activesupport (>= 2.2)
       mongo (>= 1.0)
-    mysql (2.8.1)
+    mysql2 (0.2.6)
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
     net-sftp (2.0.5)
@@ -164,7 +164,7 @@ DEPENDENCIES
   memcache-client (>= 1.8)
   metric_fu
   mongo_store
-  mysql
+  mysql2
   newrelic_rpm
   parallel
   rack (>= 1.0)
