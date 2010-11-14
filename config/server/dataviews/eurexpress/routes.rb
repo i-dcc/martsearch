@@ -8,45 +8,53 @@ get "/eurexpress_browse/?" do
   emap_id     = options[2].gsub('EMAP','EMAP:')
   
   cached_dataset_data = @ms.cache.fetch( "datasets:#{mgi_acc_id}" )
-  cached_dataset_data = BSON.deserialize(cached_dataset_data) unless @ms.cache.is_a?(MartSearch::MongoCache)
-  cached_dataset_data = cached_dataset_data.clean_hash if RUBY_VERSION < '1.9'
-  cached_dataset_data.recursively_symbolize_keys!
+  if cached_dataset_data.nil?
+    @ms.search( mgi_acc_id )
+    cached_dataset_data = @ms.search_data
+  else
+    cached_dataset_data = BSON.deserialize(cached_dataset_data) unless @ms.cache.is_a?(MartSearch::MongoCache)
+    cached_dataset_data = cached_dataset_data.clean_hash if RUBY_VERSION < '1.9'
+    cached_dataset_data.recursively_symbolize_keys!
+  end
   
-  data      = cached_dataset_data[:eurexpress][assay_index]
   tree_data = []
   
-  if emap_id == 'EMAP:0'
-    tree      = @ms.ontology_cache.fetch( 'EMAP:7148' )
-    tree_data = [{
-      :data  => "mouse anatomy",
-      :state => "open",
-      :children => [
-        {
-          :data     => "TS23, embryo",
-          :attr     => { :id => "#{options[0]}-#{options[1]}-EMAP7148" },
-          :state    => 'open',
-          :children => calc_emap_tree( options, tree.children, data[:annotations], 2 )
-        }
-      ]
-    }]
+  unless cached_dataset_data[:eurexpress].nil?
+    data = cached_dataset_data[:eurexpress][assay_index]
     
-    if data[:annotations].has_key?(:'EMAP:7148') and data[:annotations].size == 1
-      tree_data[0][:children] = [
-        {
-          :data     => "TS23, embryo",
-          :attr     => {
-            :id     => "#{options[0]}-#{options[1]}-EMAP7148",
-            :class  => data[:annotations][:'EMAP:7148'][:ann_strength].gsub(' ','_'),
-            :rel    => 'leaf_node'
-          },
-          :state    => 'open',
-          :children => []
-        }
-      ]
+    if emap_id == 'EMAP:0'
+      tree      = @ms.ontology_cache.fetch( 'EMAP:7148' )
+      tree_data = [{
+        :data  => "mouse anatomy",
+        :state => "open",
+        :children => [
+          {
+            :data     => "TS23, embryo",
+            :attr     => { :id => "#{options[0]}-#{options[1]}-EMAP7148" },
+            :state    => 'open',
+            :children => calc_emap_tree( options, tree.children, data[:annotations], 2 )
+          }
+        ]
+      }]
+      
+      if data[:annotations].has_key?(:'EMAP:7148') and data[:annotations].size == 1
+        tree_data[0][:children] = [
+          {
+            :data     => "TS23, embryo",
+            :attr     => {
+              :id     => "#{options[0]}-#{options[1]}-EMAP7148",
+              :class  => data[:annotations][:'EMAP:7148'][:ann_strength].gsub(' ','_'),
+              :rel    => 'leaf_node'
+            },
+            :state    => 'open',
+            :children => []
+          }
+        ]
+      end
+    else
+      tree      = @ms.ontology_cache.fetch( emap_id )
+      tree_data = calc_emap_tree( options, tree.children, data[:annotations], tree.node_depth+1 )
     end
-  else
-    tree      = @ms.ontology_cache.fetch( emap_id )
-    tree_data = calc_emap_tree( options, tree.children, data[:annotations], tree.node_depth+1 )
   end
   
   return JSON.generate( tree_data, :max_nesting => false )
