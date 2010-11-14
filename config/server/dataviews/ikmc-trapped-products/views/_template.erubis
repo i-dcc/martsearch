@@ -30,6 +30,7 @@
     <td></td>
   </tr>
   <% unitraps.each do |unitrap| %>
+    <% unitrap_js_id = unitrap.to_s.sub('#','-') %>
     <tr>
       <th><%= unitrap %></th>
       <% projects.each do |project| %>
@@ -40,8 +41,8 @@
       <% end %>
       <td>
         <% if result_data[:'ikmc-unitrap'][:unitrap_counts_total][unitrap] > 0 %>
-          <% anchor_ref = [ mgi_acc_id_for_ref, 'traps-by-unitrap', unitrap ].join('-') %>
-          <a href="#<%= anchor_ref %>" class="unitraps_by_link" rel="<%= unitrap %>">
+          <% anchor_ref = [ mgi_acc_id_for_ref, 'traps-by-unitrap', unitrap_js_id ].join('-') %>
+          <a href="#<%= anchor_ref %>" class="unitraps_by_link" rel="<%= unitrap_js_id %>">
             <%= result_data[:'ikmc-unitrap'][:unitrap_counts_total][unitrap] %>
             <% if result_data[:'ikmc-unitrap'][:unitrap_counts_total][unitrap] > 1 %>
               traps
@@ -104,8 +105,11 @@
   <!-- Traps by UniTrap -->
   <% unitraps.each do |unitrap| %>
     <% if traps_by[unitrap].size > 0 %>
-      <% anchor_ref = [ mgi_acc_id_for_ref, 'traps-by-unitrap', unitrap ].join('-') %>
-      <div id="<%= anchor_ref %>" class="<%= unitrap %>">
+      <%
+        unitrap_js_id = unitrap.to_s.sub('#','-')
+        anchor_ref    = [ mgi_acc_id_for_ref, 'traps-by-unitrap', unitrap_js_id ].join('-')
+      %>
+      <div id="<%= anchor_ref %>" class="<%= unitrap_js_id %>">
         <%=
           partial(
             'dataviews/ikmc-trapped-products/trap_table',
