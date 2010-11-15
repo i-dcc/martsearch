@@ -61,20 +61,22 @@ module MartSearch
       # @return [Hash] The data relating to this project
       def get_top_level_project_info( datasources, project_id )
         dcc_mart = datasources[:'ikmc-dcc'].ds
-        results  = dcc_mart.search({
-          :process_results => true,
-          :filters         => {'ikmc_project_id' => project_id },
-          :attributes      => [ 
-            'marker_symbol',   'mgi_accession_id', 'ensembl_gene_id', 
-            'vega_gene_id',    'ikmc_project',     'status', 
-            'mouse_available', 'escell_available', 'vector_available'
-          ]
-        })
+        results  = handle_biomart_errors("ikmc-dcc") do
+          dcc_mart.search({
+            :process_results => true,
+            :filters         => {'ikmc_project_id' => project_id },
+            :attributes      => [
+              'marker_symbol',   'mgi_accession_id', 'ensembl_gene_id',
+              'vega_gene_id',    'ikmc_project',     'status',
+              'mouse_available', 'escell_available', 'vector_available'
+            ]
+          })
+        end
         
-        if results.empty? or results.nil?
+        if results[:data].empty? or results[:data].nil?
           return nil
         else
-          return results[0].symbolize_keys!
+          return results[:data][0].symbolize_keys!
         end
       end
       
@@ -85,18 +87,15 @@ module MartSearch
       # @return [Hash] The data relating to the human orthalog
       def get_human_orthalog( datasources, ensembl_gene_id )
         ens_mart = datasources[:'ensembl-mouse'].ds
-        begin
-          results  = ens_mart.search({
+        results  = handle_biomart_errors("ensembl-mouse") do
+          ens_mart.search({
             :process_results     => true,
             :filters             => { 'ensembl_gene_id' => ensembl_gene_id },
             :attributes          => [ 'human_ensembl_gene' ],
             :required_attributes => [ 'human_ensembl_gene' ]
           })
-        rescue Biomart::BiomartError => error
-          return {}
         end
-      
-        results.empty? ? {} : { :human_ensembl_gene => results[0]['human_ensembl_gene'] }
+        results[:data].empty? ? {} : { :human_ensembl_gene => results[:data][0]['human_ensembl_gene'] }
       end
       
       # This function hits the ikmc-kermits mart for data on mice.
@@ -121,23 +120,25 @@ module MartSearch
         ]
       
         kermits_mart = datasources[:'ikmc-kermits'].ds
-        results      = kermits_mart.search({
-          :process_results => true,
-          :filters         => {
-            'marker_symbol' => marker_symbol,
-            'status'        => 'Genotype Confirmed',
-            'emma'          => '1'
-          },
-          :attributes      => [
-              'status', 'allele_name', 'escell_clone', 'emma',
-              'escell_strain', 'escell_line', 'mi_centre', 'distribution_centre',
-              qc_metrics
-          ].flatten,
-          :required_attributes => ['status']
-        }).recursively_symbolize_keys!
+        results      = handle_biomart_errors("ikmc-kermits") do
+          kermits_mart.search({
+            :process_results => true,
+            :filters         => {
+              'marker_symbol' => marker_symbol,
+              'status'        => 'Genotype Confirmed',
+              'emma'          => '1'
+            },
+            :attributes      => [
+                'status', 'allele_name', 'escell_clone', 'emma',
+                'escell_strain', 'escell_line', 'mi_centre', 'distribution_centre',
+                qc_metrics
+            ].flatten,
+            :required_attributes => ['status']
+          })        end
+        results[:data].recursively_symbolize_keys!
 
         # Test for QC data - set each empty qc_metric to '-' or count it
-        results.each do |result|
+        results[:data].each do |result|
           result[:qc_count] = 0
           qc_metrics.each do |metric|
             if result[metric].nil?
@@ -148,7 +149,7 @@ module MartSearch
           end
         end
       
-        results.empty? ? {} : { :mice => results }
+        results[:data].empty? ? {} : { :mice => results[:data] }
       end
       
       # This function hits the ikmc-idcc_targ_rep mart for data on the vectors and cells.
@@ -185,30 +186,32 @@ module MartSearch
           'user_qc_three_prime_lr_pcr'
         ]
         targ_rep_mart = datasources[:'ikmc-idcc_targ_rep'].ds
-        results       = targ_rep_mart.search({
-          :process_results => true,
-          :filters         => { 'ikmc_project_id' => project_id },
-          :attributes      => [
-            'allele_id',
-            'design_id',
-            'mutation_subtype',
-            'cassette',
-            'backbone',
-            'allele_gb_file',
-            'vector_gb_file',
-            'intermediate_vector',
-            'targeting_vector',
-            'allele_symbol_superscript',
-            'escell_clone',
-            'floxed_start_exon',
-            'parental_cell_line',
-            qc_metrics
-          ].flatten
-        })
+        results       = handle_biomart_errors("ikmc-ikmc-targ_rep") do
+          targ_rep_mart.search({
+            :process_results => true,
+            :filters         => { 'ikmc_project_id' => project_id },
+            :attributes      => [
+              'allele_id',
+              'design_id',
+              'mutation_subtype',
+              'cassette',
+              'backbone',
+              'allele_gb_file',
+              'vector_gb_file',
+              'intermediate_vector',
+              'targeting_vector',
+              'allele_symbol_superscript',
+              'escell_clone',
+              'floxed_start_exon',
+              'parental_cell_line',
+              qc_metrics
+            ].flatten
+          })
+        end
       
         data = {}
       
-        results.each do |result|
+        results[:data].each do |result|
           if data.empty?
             data = {
               'intermediate_vectors' => [],
