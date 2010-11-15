@@ -30,6 +30,27 @@ module MartSearch
       return data
     end
     
+    # Wrapper function to handle Biomart::BiomartErrors
+    #
+    # @param  [String] data_source - the biomart data source name
+    # @param  [Block]  A block that queries the biomart
+    # @return [Hash]   A hash containing the data and any errors
+    def handle_biomart_errors( data_source )
+      results = {}
+      begin
+        results[:data] = yield
+      rescue Biomart::BiomartError => error
+        puts "Project page error with '#{data_source}' biomart: #{error}"
+        results[:error] = {
+          :text  => "Error occured interacting with the '#{data_source}' biomart",
+          :error => error.to_s,
+          :type  => error.class
+        }
+      # rescue Timeout::Error => error
+      end
+      return results
+    end
+
     private
       
       # This function hits the ikmc-dcc mart for top level information
