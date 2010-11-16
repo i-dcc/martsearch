@@ -1,10 +1,4 @@
-$LOAD_PATH.unshift( File.dirname( __FILE__ ) + "/../lib" )
-
-require "rubygems"
-require "biomart"
-require "pp"
-require "shoulda"
-require "martsearch"
+require "test_helper"
 
 include MartSearch::ProjectUtils
 
@@ -23,6 +17,7 @@ end
 class TestHandleBiomartErrors < Test::Unit::TestCase
   context "A wrapped function" do
     setup do
+      VCR.insert_cassette( "HandleBiomartErrors" )
       @biomart = Biomart::Dataset.new( "http://www.i-dcc.org/biomart", { :name => "dcc" } )
     end
 
@@ -38,6 +33,10 @@ class TestHandleBiomartErrors < Test::Unit::TestCase
           puts raises_exception[:error]
         end
       end
+    end
+
+    teardown do
+      VCR.eject_cassette
     end
   end
 end
