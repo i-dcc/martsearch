@@ -1,20 +1,21 @@
 require "test_helper"
-include MartSearch::ProjectUtils
-public  :handle_biomart_errors
-
-def some_biomart_query_function
-  handle_biomart_errors "ikmc-dcc", do
-    @biomart.count( :filters => { "mgi_accession_id" => ["MGI:101757", "MGI:101758"] } )
-  end
-end
-
-def raises_exception
-  handle_biomart_errors "dodgy-mart", do
-    raise Biomart::BiomartError.new("some Biomart::BiomartError we want to handle")
-  end
-end
 
 class TestHandleBiomartErrors < Test::Unit::TestCase
+  include MartSearch::ProjectUtils
+  public  :handle_biomart_errors
+
+  def does_not_raise_exception
+    handle_biomart_errors "ikmc-dcc", do
+      @biomart.count( :filters => { "mgi_accession_id" => ["MGI:101757", "MGI:101758"] } )
+    end
+  end
+
+  def raises_exception
+    handle_biomart_errors "dodgy-mart", do
+      raise Biomart::BiomartError.new("some Biomart::BiomartError we want to handle")
+    end
+  end
+
   context "A wrapped function" do
     setup do
       VCR.insert_cassette( "HandleBiomartErrors" )
@@ -22,15 +23,17 @@ class TestHandleBiomartErrors < Test::Unit::TestCase
     end
 
     context "that does not raise exceptions" do
-      should "return data" do
-        assert_equal 2, some_biomart_query_function[:data]
+      should "not raise Biomart::BiomartError exceptions" do
+        assert_nothing_raised do
+          does_not_raise_exception
+        end
       end
     end
 
     context "that does raise exceptions" do
-      should "not raise Biomart::BiomartError exceptions" do
+      should "catch all Biomart::BiomartError exceptions" do
         assert_nothing_raised do
-          puts raises_exception[:error]
+          raises_exception
         end
       end
     end
