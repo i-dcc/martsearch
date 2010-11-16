@@ -1,6 +1,6 @@
 require "test_helper"
-
 include MartSearch::ProjectUtils
+public  :handle_biomart_errors
 
 def some_biomart_query_function
   handle_biomart_errors "ikmc-dcc", do
