@@ -23,14 +23,16 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
         :vector_available => "1"
       }
       assert_nothing_raised do
-        assert_equal expected, get_top_level_project_info( @datasources, @project_id )
+        assert_equal expected,
+         get_top_level_project_info( @datasources, @project_id )[:data][0]
       end
     end
 
     should "have the correct human orthalog" do
       expected = { :human_ensembl_gene => "ENSG00000108468" }
       assert_nothing_raised do
-        assert_equal expected, get_human_orthalog( @datasources, "ENSMUSG00000018666" )
+        assert_equal expected,
+         get_human_orthalog( @datasources, "ENSMUSG00000018666" )[:data][0]
       end
     end
 
@@ -830,7 +832,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
          :stage_type => "normal"
       }
       assert_nothing_raised do
-        assert_equal expected, get_ikmc_project_page_data( @project_id )
+        assert_equal expected, get_ikmc_project_page_data( @project_id )[:data]
       end
     end
 

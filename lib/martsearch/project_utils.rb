@@ -15,19 +15,36 @@ module MartSearch
     def get_ikmc_project_page_data( project_id )
       datasources = MartSearch::Controller.instance().datasources
       data        = { :project_id => project_id }
-      
+      errors      = []
+
       top_level_data = get_top_level_project_info( datasources, project_id )
-      if top_level_data.nil?
+
+      if top_level_data[:data].nil?
         return nil
       else
-        data.merge!( top_level_data )
-        data.merge!( get_human_orthalog( datasources, data[:ensembl_gene_id] ) ) if data[:ensembl_gene_id]
-        data.merge!( get_mice( datasources, data[:marker_symbol] ) ) if data[:marker_symbol]
-        data.merge!( get_vectors_and_cells( datasources, project_id, data[:mice] ) )
+        data.merge!( top_level_data[:data][0] )
+        errors.push( top_level_data[:error] ) unless top_level_data[:error].empty?
+
+        if data[:ensembl_gene_id]
+          human_orthalogs = get_human_orthalog( datasources, data[:ensembl_gene_id] )
+          data.merge!( human_orthalogs[:data][0] )
+          errors.push( human_orthalogs[:error] ) unless human_orthalogs[:error].empty?
+        end
+
+        if data[:marker_symbol]
+          mice = get_mice( datasources, data[:marker_symbol] )
+          data.merge!( mice[:data] )
+          errors.push( mice[:error] ) unless mice[:error].empty?
+        end
+
+        vectors_and_cells = get_vectors_and_cells( datasources, project_id, data[:mice] )
+        data.merge!( vectors_and_cells[:data] )
+        errors.push( vectors_and_cells[:error] ) unless vectors_and_cells[:error].empty?
+
         data.merge!( get_pipeline_stage( data[:status]) ) if data[:status]
       end
-      
-      return data
+
+      return { :data => data, :errors => errors }
     end
 
     private
@@ -78,12 +95,12 @@ module MartSearch
             ]
           })
         end
-        
-        if results[:data].empty? or results[:data].nil?
-          return nil
-        else
-          return results[:data][0].symbolize_keys!
+
+        unless results[:data].empty? or results[:data].nil?
+          results[:data][0].symbolize_keys!
         end
+
+        return results
       end
       
       # This function hits the Ensembl (mouse) mart and looks for a human orthalog.
@@ -101,7 +118,10 @@ module MartSearch
             :required_attributes => [ 'human_ensembl_gene' ]
           })
         end
-        results[:data].empty? ? {} : { :human_ensembl_gene => results[:data][0]['human_ensembl_gene'] }
+        unless results[:data].empty?
+          results[:data][0] = { :human_ensembl_gene => results[:data][0]['human_ensembl_gene'] }
+        end
+        return results
       end
       
       # This function hits the ikmc-kermits mart for data on mice.
@@ -124,7 +144,7 @@ module MartSearch
           'qc_loxp_confirmation',
           'qc_three_prime_lr_pcr'
         ]
-      
+
         kermits_mart = datasources[:'ikmc-kermits'].ds
         results      = handle_biomart_errors("ikmc-kermits") do
           kermits_mart.search({
@@ -154,8 +174,12 @@ module MartSearch
             end
           end
         end
-      
-        results[:data].empty? ? {} : { :mice => results[:data] }
+
+        unless results[:data].empty?
+          results[:data] = { :mice => results[:data] }
+        end
+
+        return results
       end
       
       # This function hits the ikmc-idcc_targ_rep mart for data on the vectors and cells.
@@ -347,7 +371,9 @@ module MartSearch
           end
         end
 
-        return data.recursively_symbolize_keys!
+        results[:data] = data.recursively_symbolize_keys!
+
+        return results
       end
       
       # Helper function to determine how to draw the progress bar at the top of the 
