@@ -10,9 +10,15 @@ class TestHandleBiomartErrors < Test::Unit::TestCase
     end
   end
 
-  def raises_exception
+  def raises_biomart_exception
     handle_biomart_errors "dodgy-mart", do
       raise Biomart::BiomartError.new("some Biomart::BiomartError we want to handle")
+    end
+  end
+
+  def raises_timeout_exception
+    handle_biomart_errors "slow-mart", do
+      raise Timeout::Error.new("fake a timeout error")
     end
   end
 
@@ -33,7 +39,13 @@ class TestHandleBiomartErrors < Test::Unit::TestCase
     context "that does raise exceptions" do
       should "catch all Biomart::BiomartError exceptions" do
         assert_nothing_raised do
-          raises_exception
+          raises_biomart_exception
+        end
+      end
+
+      should "catch all Timeout::Error exceptions" do
+        assert_nothing_raised do
+          raises_timeout_exception
         end
       end
     end

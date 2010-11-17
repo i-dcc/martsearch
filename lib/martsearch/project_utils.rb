@@ -42,13 +42,19 @@ module MartSearch
         begin
           results[:data] = yield
         rescue Biomart::BiomartError => error
-          puts "Project page error with '#{data_source}' biomart: #{error}"
+          puts "Project page #{error.class} error with '#{data_source}' biomart: #{error}"
           results[:error] = {
             :text  => "Error occured interacting with the '#{data_source}' biomart",
             :error => error.to_s,
             :type  => error.class
           }
-        # rescue Timeout::Error => error
+        rescue Timeout::Error => error
+          puts "Project page #{error.class} error with '#{data_source}' biomart: #{error}"
+          results[:error] = {
+            :text  => "Timed out waiting for response from '#{data_source}' biomart",
+            :error => error.to_s,
+            :type  => error.class
+          }
         end
         return results
       end
