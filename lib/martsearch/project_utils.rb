@@ -38,7 +38,7 @@ module MartSearch
       # @param  [Block]  A block that queries the biomart
       # @return [Hash]   A hash containing the data and any errors
       def handle_biomart_errors( data_source )
-        results = {}
+        results = { :data => {}, :error => {} }
         begin
           results[:data] = yield
         rescue Biomart::BiomartError => error
