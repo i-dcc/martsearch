@@ -1,7 +1,4 @@
 require "test_helper"
-require "pp"
-
-# What do we want to do with the errors?
 
 class TestMartSearchProjectUtils < Test::Unit::TestCase
   include MartSearch::ProjectUtils
