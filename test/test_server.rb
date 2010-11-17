@@ -115,7 +115,7 @@ class MartSearchServerRackTest < Test::Unit::TestCase
     @browser     = Rack::Test::Session.new( Rack::MockSession.new( MartSearch::Server ) )
   end
   
-  context 'A MartSearch::Server web app inatance' do
+  context 'A MartSearch::Server web app instance' do
     should 'handle people trying to make up urls...' do
       @browser.get '/foo'
       assert_equal( 404, @browser.last_response.status )
