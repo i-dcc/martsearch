@@ -12,6 +12,7 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
     Capybara.app            = MartSearch::Server.new
     @controller             = MartSearch::Controller.instance()
     @server_conf            = @controller.config[:server]
+    @project_ids_to_test     = ['35505','27042','42474']
   end
   
   context "A MartSearch::Server web app instance" do
@@ -93,9 +94,7 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
     
     should "render IKMC project pages" do
       VCR.use_cassette('test_server_project_page') do
-        project_ids_to_test = ['35505','27042','42474']
-
-        project_ids_to_test.each do |project_id|
+        @project_ids_to_test.each do |project_id|
           visit "/project/#{project_id}"
           assert_equal( "/project/#{project_id}", current_path )
           assert( page.has_content?("(ID: #{project_id})") )
@@ -159,9 +158,7 @@ class MartSearchServerRackTest < Test::Unit::TestCase
     
     should 'render IKMC project pages as JSON...' do
       VCR.use_cassette('test_server_project_page') do
-        project_ids_to_test = ['35505','27042','42474']
-        
-        project_ids_to_test.each do |project_id|
+        @project_ids_to_test.each do |project_id|
           @browser.get "/project/#{project_id}?wt=json"
           assert( @browser.last_response.ok?, "A request to '/project/#{project_id}?wt=json' failed!" )
           json = JSON.parse( @browser.last_response.body )

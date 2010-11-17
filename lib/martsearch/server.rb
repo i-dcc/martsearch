@@ -230,7 +230,7 @@ module MartSearch
         
         cached_data = cache.fetch("project-report-#{project_id}")
         if cached_data.nil? or params[:fresh] == "true"
-          @data = get_ikmc_project_page_data( project_id )
+          @data = get_ikmc_project_page_data( project_id )[:data]
           
           unless @data.nil?
             if cache.is_a?(MartSearch::MongoCache)
