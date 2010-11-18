@@ -39,7 +39,7 @@
       
       // Google Analytics
       var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-317752-9']);
+      _gaq.push(['_setAccount', 'UA-6140792-1']);
       _gaq.push(['_trackPageview']);
       
       (function() {
