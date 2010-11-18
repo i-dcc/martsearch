@@ -160,22 +160,26 @@ module MartSearch
                 qc_metrics
             ].flatten,
             :required_attributes => ['status']
-          })        end
-        results[:data].recursively_symbolize_keys!
-
-        # Test for QC data - set each empty qc_metric to '-' or count it
-        results[:data].each do |result|
-          result[:qc_count] = 0
-          qc_metrics.each do |metric|
-            if result[metric].nil?
-              result[metric] = '-'
-            else
-              result[:qc_count] = result[:qc_count] + 1
-            end
-          end
+          })
         end
 
-        unless results[:data].empty?
+        if results[:data].empty?
+          results[:data] = {}
+        else
+          results[:data].recursively_symbolize_keys!
+
+          # Test for QC data - set each empty qc_metric to '-' or count it
+          results[:data].each do |result|
+            result[:qc_count] = 0
+            qc_metrics.each do |metric|
+              if result[metric].nil?
+                result[metric] = '-'
+              else
+                result[:qc_count] = result[:qc_count] + 1
+              end
+            end
+          end
+
           results[:data] = { :mice => results[:data] }
         end
 

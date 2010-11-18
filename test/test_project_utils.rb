@@ -2,7 +2,7 @@ require "test_helper"
 
 class TestMartSearchProjectUtils < Test::Unit::TestCase
   include MartSearch::ProjectUtils
-  public  :get_top_level_project_info, :get_human_orthalog
+  public  :get_top_level_project_info, :get_human_orthalog, :get_mice
   context "A valid MartSearch Project" do
     setup do
       VCR.insert_cassette( "MartSearchProjectUtils" )
@@ -833,6 +833,18 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
       }
       assert_nothing_raised do
         assert_equal expected, get_ikmc_project_page_data( @project_id )[:data]
+      end
+    end
+
+    context "with no mice" do
+      setup do
+        @project_id = 42474
+      end
+
+      should "not throw any exceptions" do
+        assert_nothing_raised do
+          get_ikmc_project_page_data( @project_id )
+        end
       end
     end
 
