@@ -1,6 +1,3 @@
-unless Module.const_defined?(:EUROPHENOME_MP_CONF)
-  require "#{MARTSEARCH_PATH}/config/server/dataviews/europhenome/routes.rb"
-end
 
 sorted_results                  = {}
 europhenome_significance_cutoff = 0.0001
@@ -49,7 +46,7 @@ results.each do |result|
   
   # First, determine which MP group (top-level term) it belongs to
   mp_group = nil
-  EUROPHENOME_MP_CONF.each do |mp_conf|
+  @config[:mp_heatmap_config].each do |mp_conf|
     next unless mp_group.nil?
     
     if result[:mp_term]
@@ -99,5 +96,7 @@ results.each do |result|
   
   sorted_results[ result[ joined_attribute ] ][ "#{result[:europhenome_id]}-#{het_hom}" ] = result_data
 end
+
+sorted_results.recursively_symbolize_keys!
 
 return sorted_results
