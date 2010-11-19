@@ -58,21 +58,13 @@ module MartSearch
       page = 1 if page == 0
       clear_instance_variables
       
-      
-      # Marker.mark("checking index cache") do
-        cached_index_data = @cache.fetch( "index:#{query}-page#{page}" )
-      # end
-      
+      cached_index_data = @cache.fetch( "index:#{query}-page#{page}" )
       if cached_index_data != nil and use_cache
-        # Marker.mark("de-serialising index JSON response") do
-          cached_index_data = BSON.deserialize(cached_index_data) unless @cache.is_a?(MartSearch::MongoCache)
-          cached_index_data = cached_index_data.clean_hash if RUBY_VERSION < '1.9'
-          cached_index_data.recursively_symbolize_keys!
-        # end
+        cached_index_data = BSON.deserialize(cached_index_data) unless @cache.is_a?(MartSearch::MongoCache)
+        cached_index_data = cached_index_data.clean_hash if RUBY_VERSION < '1.9'
+        cached_index_data.recursively_symbolize_keys!
         
-        # Marker.mark("preparing index response") do
-          search_from_cached_index( cached_index_data )
-        # end
+        search_from_cached_index( cached_index_data )
       else
         if search_from_fresh_index( query, page )
           obj_to_cache    = {
@@ -81,10 +73,11 @@ module MartSearch
             :current_page          => @index.current_page,
             :current_results_total => @index.current_results_total
           }
+          @cache.delete( "index:#{query}-page#{page}" )
           if @cache.is_a?(MartSearch::MongoCache)
-            @cache.write( "index:#{query}-page#{page}", obj_to_cache, { :expires_in => 12.hours } )
+            @cache.write( "index:#{query}-page#{page}", obj_to_cache, { :expires_in => 36.hours } )
           else
-            @cache.write( "index:#{query}-page#{page}", BSON.serialize(obj_to_cache), { :expires_in => 12.hours } )
+            @cache.write( "index:#{query}-page#{page}", BSON.serialize(obj_to_cache), { :expires_in => 36.hours } )
           end
         end
       end
@@ -93,20 +86,14 @@ module MartSearch
         fresh_ds_queries_to_do = []
         
         @search_data.each do |data_key,data|
-          # Marker.mark("checking dataset cache") do
-            cached_dataset_data = @cache.fetch( "datasets:#{data_key}" )
-          # end
+          cached_dataset_data = @cache.fetch( "datasets:#{data_key}" )
           
           if cached_dataset_data != nil and use_cache
-            # Marker.mark("de-serialising dataset JSON response") do
-              cached_dataset_data = BSON.deserialize(cached_dataset_data) unless @cache.is_a?(MartSearch::MongoCache)
-              cached_dataset_data = cached_dataset_data.clean_hash if RUBY_VERSION < '1.9'
-              cached_dataset_data.recursively_symbolize_keys!
-            # end
+            cached_dataset_data = BSON.deserialize(cached_dataset_data) unless @cache.is_a?(MartSearch::MongoCache)
+            cached_dataset_data = cached_dataset_data.clean_hash if RUBY_VERSION < '1.9'
+            cached_dataset_data.recursively_symbolize_keys!
             
-            # Marker.mark("preparing dataset response") do
-              @search_data[data_key] = cached_dataset_data.merge(data)
-            # end
+            @search_data[data_key] = cached_dataset_data.merge(data)
           else
             fresh_ds_queries_to_do.push(data_key)
           end
@@ -116,10 +103,11 @@ module MartSearch
           if search_from_fresh_datasets( prepare_dataset_search_terms( fresh_ds_queries_to_do ) )
             fresh_ds_queries_to_do.each do |data_key|
               unless @search_data[data_key].nil?
+                @cache.delete( "datasets:#{data_key}" )
                 if @cache.is_a?(MartSearch::MongoCache)
-                  @cache.write( "datasets:#{data_key}", @search_data[data_key], { :expires_in => 12.hours } )
+                  @cache.write( "datasets:#{data_key}", @search_data[data_key], { :expires_in => 36.hours } )
                 else
-                  @cache.write( "datasets:#{data_key}", BSON.serialize(@search_data[data_key]), { :expires_in => 12.hours } )
+                  @cache.write( "datasets:#{data_key}", BSON.serialize(@search_data[data_key]), { :expires_in => 36.hours } )
                 end
               end
             end
