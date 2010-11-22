@@ -5,7 +5,6 @@
       <%
         cell_class = 'no-data'
         unless line_data[:mp_groups][mp_group[:term].to_sym].nil?
-          ap line_data[:mp_groups][mp_group[:term].to_sym]
           if line_data[:mp_groups][mp_group[:term].to_sym][:"is_#{sex}_significant"] == true
             cell_class = 'significant'
           elsif line_data[:mp_groups][mp_group[:term].to_sym][:"is_#{sex}_significant"] == false
