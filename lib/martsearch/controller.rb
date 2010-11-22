@@ -71,7 +71,8 @@ module MartSearch
             :search_data           => @search_data,
             :search_results        => @search_results,
             :current_page          => @index.current_page,
-            :current_results_total => @index.current_results_total
+            :current_results_total => @index.current_results_total,
+            :cache_timestamp       => DateTime.now.to_s
           }
           @cache.delete( "index:#{query}-page#{page}" )
           if @cache.is_a?(MartSearch::MongoCache)
@@ -104,6 +105,7 @@ module MartSearch
             fresh_ds_queries_to_do.each do |data_key|
               unless @search_data[data_key].nil?
                 @cache.delete( "datasets:#{data_key}" )
+                @search_data[data_key][:cache_timestamp] = DateTime.now.to_s
                 if @cache.is_a?(MartSearch::MongoCache)
                   @cache.write( "datasets:#{data_key}", @search_data[data_key], { :expires_in => 36.hours } )
                 else
