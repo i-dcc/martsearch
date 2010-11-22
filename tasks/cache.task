@@ -1,97 +1,39 @@
 begin
   require 'martsearch'
   
-  @url          = 'http://localhost:8080/'
-  @internal_url = 'http://localhost:8080/'
-  @ms           = MartSearch::Controller.instance()
-  
-  # Set up a HTTP client
-  @client = Net::HTTP
-  if ENV['http_proxy'] or ENV['HTTP_PROXY']
-    proxy = URI.parse( ENV['http_proxy'] ) || URI.parse( ENV['HTTP_PROXY'] )
-    @client = Net::HTTP::Proxy( proxy.host, proxy.port )
-  end
+  @ms = MartSearch::Controller.instance()
   
   namespace :cache do
     
     desc "Clears the search cache"
     task :clear do
       puts "Clearing cache..."
-      res = @client.get( URI.parse("#{@url}clear_cache") )
+      @ms.cache.clear
     end
     
     desc "Primes the search cache"
     task :prime do
-      puts "Priming cache... (on #{@url})"
+      no_genes_to_hit_at_once            = 250
+      @ms.config[:index][:docs_per_page] = no_genes_to_hit_at_once
+      conf                               = @ms.config[:server][:browsable_content][:chromosome]
       
-      # Hit the home page first
-      puts " - home page"
-      @client.get( URI.parse(@url) )
-      
-      # Prime the browsable content (the first three pages of each option)
-      @ms.config[:server][:browsable_content].each do |name,conf|
-        puts " - browsable_content: #{conf[:display_name]}"
-
-        Parallel.each( conf[:options], :in_threads => 10 ) do |option_name|
-          opts = conf[:processed_options][option_name.to_sym]
-          
-          no_page_url = "#{@url}browse?field=#{name}&query=#{opts[:link_arg]}"
-          @client.get( URI.parse(no_page_url) )
-          print "   - #{no_page_url} \n"
-          
-          (1..5).each do |page_no|
-            browse_url = "#{no_page_url}&page=#{page_no}"
-            print "   - #{browse_url} \n"
-            @client.get( URI.parse(browse_url) )
-          end
-        end
-      end
-      
-      # Any extra URLs to prime?
-      unless @ms.config[:server][:cache][:extra_searches_to_prime].empty?
-        puts " - extra_searches_to_prime:"
-        @ms.config[:server][:cache][:extra_searches_to_prime].each do |search_term|
-          puts "   - #{search_term}"
-          @client.get( URI.parse("#{@url}search?query=#{CGI::escape(search_term)}") )
-        end
-      end
-    end
-    
-    desc "Primes EVERYTHING into the search cache"
-    task :uber_prime do
-      puts "Priming EVERYTHING... (on #{@internal_url})"
-      
-      conf         = @ms.config[:server][:browsable_content][:chromosome]
-      urls         = []
+      puts "Priming the search cache (#{no_genes_to_hit_at_once} genes at a time)..."
       
       conf[:options].each do |option_name|
         opts = conf[:processed_options][option_name.to_sym]
         
-        # First calc the total number of pages to request...
+        # First calc the total number of 'pages' to request...
         results     = @ms.index.search( opts[:solr_query] )
-        total_pages = (@ms.index.current_results_total.to_i / @ms.config[:index][:docs_per_page].to_i).round + 1
-        no_page_url = "#{@internal_url}browse?field=chromosome&query=#{opts[:link_arg]}"
+        total_pages = ( @ms.index.current_results_total.to_i / @ms.config[:index][:docs_per_page].to_i ).round + 1
         
-        urls.push( no_page_url )
         (1..total_pages).each do |page_no|
-          urls.push( "#{no_page_url}&page=#{page_no}" )
+          puts "   - chromosome #{opts[:display_arg]}: batch #{page_no} / #{total_pages}"
+          @ms.search( opts[:solr_query], page_no, false )
+          
+          # Don't leave the index entry in the cache - this will screw up the site...
+          @ms.cache.delete( "index:#{opts[:solr_query]}-page#{page_no}" )
         end
       end
-      
-      puts "#{urls.size} requests to make..."
-      
-      Parallel.each( urls, :in_threads => 15 ) do |url|
-        begin
-          print " - #{url} \n"
-          @client.get( URI.parse(url) )
-        rescue Timeout::Error => error
-          urls.push(url)
-        end
-      end
-    end
-    
-    desc "Both clears and primes the search cache"
-    task :refresh => [ :clear, :prime ] do
     end
     
   end
