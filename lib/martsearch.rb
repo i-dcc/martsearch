@@ -36,6 +36,8 @@ require "#{MARTSEARCH_PATH}/lib/martsearch/file_store_patch"
 # @author Darren Oakley
 module MartSearch
   
+  ENVIRONMENT = ENV['RACK_ENV'] ? ENV['RACK_ENV'] : 'development'
+  
   # Error class raised when there is an error with the supplied configuration files.
   class InvalidConfigError < StandardError; end
   

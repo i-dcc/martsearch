@@ -7,7 +7,7 @@
   "custom_head_js":       false,
   "custom_base_js":       true,
   "custom_view_helpers" : true,
-  "custom_routes":        true,
+  "custom_routes":        false,
   "datasets": {
     "required": [ "europhenome" ],
     "optional": []
