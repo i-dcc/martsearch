@@ -2,7 +2,7 @@ HoptoadNotifier.configure do |config|
   config.api_key          = ''
   config.host             = 'htgt.internal.sanger.ac.uk'
   config.port             = 4007 # Note: Deployment notifications only work on port 80
-  config.environment_name = ENV['RACK_ENV'] ? ENV['RACK_ENV'] : 'development'
+  config.environment_name = MartSearch::ENVIRONMENT
 end
 
 module MartSearch

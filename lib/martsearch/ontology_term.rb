@@ -1,8 +1,6 @@
 module MartSearch
   
-  env    = ENV['RACK_ENV']
-  env    = 'development' if env.nil?
-  dbc    = YAML.load_file("#{MARTSEARCH_PATH}/config/ols_database.yml")[env]
+  dbc    = YAML.load_file("#{MARTSEARCH_PATH}/config/ols_database.yml")[MartSearch::ENVIRONMENT]
   OLS_DB = Sequel.connect({
     :adapter  => 'mysql2',
     :encoding => 'utf8',
