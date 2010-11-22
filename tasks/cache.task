@@ -47,10 +47,7 @@ begin
           
           (1..total_pages).each do |page_no|
             puts "   - chromosome #{opts[:display_arg]}: batch #{page_no} / #{total_pages}"
-            @ms.search( opts[:solr_query], page_no, false )
-            
-            # Don't leave the index entry in the cache - this will screw up the site...
-            @ms.cache.delete( "index:#{opts[:solr_query]}-page#{page_no}" )
+            @ms.search( opts[:solr_query], page_no, false, false )
           end
         else
           raise "Unable to proceed!"
