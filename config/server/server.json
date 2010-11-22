@@ -6,11 +6,8 @@
     "from": "team87@sanger.ac.uk"
   },
   "cache": {
-    "type": "file",
-    "extra_searches_to_prime":  [
-      "Cbx1",
-      "EPD0027_2_A01"
-    ]
+    "type": "mongo",
+    "db":   "ikmc_portal"
   },
   "datasets": [
     "emma-strains",
