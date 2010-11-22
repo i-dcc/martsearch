@@ -79,6 +79,7 @@ module MartSearch
         
         servers          = config[:servers]   if config[:servers]
         opts[:namespace] = config[:namespace] if config[:namespace]
+        opts[:namespace] = "#{opts[:namespace]}-#{MartSearch::ENVIRONMENT}"
         
         return ActiveSupport::Cache::MemCacheStore.new( servers, opts )
       when /file/
@@ -90,10 +91,9 @@ module MartSearch
         server     = config[:server]     ? config[:server]     : 'localhost'
         port       = config[:port]       ? config[:port].to_i  : 27017
         db         = config[:db]         ? config[:db]         : 'martsearch'
-        collection = config[:collection] ? config[:collection] : 'martsearch_cache'
-        mongo      = Mongo::Connection.new(server, port).db(db)
+        mongo      = Mongo::Connection.new(server, port).db("#{db}-#{MartSearch::ENVIRONMENT}")
         
-        return MartSearch::MongoCache.new( :db => mongo, :collection_name => collection )
+        return MartSearch::MongoCache.new( :db => mongo, :collection_name => 'martsearch_cache' )
       else
         return ActiveSupport::Cache::MemoryStore.new()
       end
