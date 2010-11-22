@@ -3,6 +3,24 @@ begin
   
   @ms = MartSearch::Controller.instance()
   
+  def its_okay_to_run
+    okay = true
+    
+    unless @ms.index.is_alive?
+      okay = false
+      puts "[ERROR] - the search index is NOT alive!"
+    end
+    
+    @ms.datasources.each do |name,datasource|
+      unless datasource.is_alive?
+        okay = false
+        puts "[ERROR] - the datasource '#{datasource[:internal_name]}' is NOT alive!"
+      end
+    end
+    
+    return okay
+  end
+  
   namespace :cache do
     
     desc "Clears the search cache"
@@ -20,18 +38,22 @@ begin
       puts "Priming the search cache (#{no_genes_to_hit_at_once} genes at a time)..."
       
       conf[:options].each do |option_name|
-        opts = conf[:processed_options][option_name.to_sym]
-        
-        # First calc the total number of 'pages' to request...
-        results     = @ms.index.search( opts[:solr_query] )
-        total_pages = ( @ms.index.current_results_total.to_i / @ms.config[:index][:docs_per_page].to_i ).round + 1
-        
-        (1..total_pages).each do |page_no|
-          puts "   - chromosome #{opts[:display_arg]}: batch #{page_no} / #{total_pages}"
-          @ms.search( opts[:solr_query], page_no, false )
+        if its_okay_to_run
+          opts = conf[:processed_options][option_name.to_sym]
           
-          # Don't leave the index entry in the cache - this will screw up the site...
-          @ms.cache.delete( "index:#{opts[:solr_query]}-page#{page_no}" )
+          # First calc the total number of 'pages' to request...
+          results     = @ms.index.search( opts[:solr_query] )
+          total_pages = ( @ms.index.current_results_total.to_i / @ms.config[:index][:docs_per_page].to_i ).round + 1
+          
+          (1..total_pages).each do |page_no|
+            puts "   - chromosome #{opts[:display_arg]}: batch #{page_no} / #{total_pages}"
+            @ms.search( opts[:solr_query], page_no, false )
+            
+            # Don't leave the index entry in the cache - this will screw up the site...
+            @ms.cache.delete( "index:#{opts[:solr_query]}-page#{page_no}" )
+          end
+        else
+          raise "Unable to proceed!"
         end
       end
     end
