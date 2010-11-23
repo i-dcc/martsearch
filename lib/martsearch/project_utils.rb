@@ -19,8 +19,8 @@ module MartSearch
 
       top_level_data = get_top_level_project_info( datasources, project_id )
 
-      if top_level_data[:data].nil?
-        return nil
+      if top_level_data[:data].nil? or top_level_data[:data].empty?
+        return { :data => nil }
       else
         data.merge!( top_level_data[:data][0] )
         errors.push( top_level_data[:error] ) unless top_level_data[:error].empty?
