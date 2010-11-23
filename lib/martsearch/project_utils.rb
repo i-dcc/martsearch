@@ -52,23 +52,26 @@ module MartSearch
       # Wrapper function to handle Biomart::BiomartErrors
       #
       # @param  [String] data_source - the biomart data source name
+      # @param  [String] error_string - a brief explanation of potential errors
       # @param  [Block]  A block that queries the biomart
       # @return [Hash]   A hash containing the data and any errors
-      def handle_biomart_errors( data_source )
-        results = { :data => {}, :error => {} }
+      def handle_biomart_errors( data_source, error_string )
+        results      = { :data => {}, :error => {} }
+        error_prefix = "There was a problem querying the '#{data_source}' biomart."
+        error_suffix = "Try refreshing your browser or come back in 10 minutes."
         begin
           results[:data] = yield
         rescue Biomart::BiomartError => error
           puts "Project page #{error.class} error with '#{data_source}' biomart: #{error}"
           results[:error] = {
-            :text  => "Error occured interacting with the '#{data_source}' biomart",
+            :text  => error_prefix + " " + error_string + " " + error_suffix,
             :error => error.to_s,
             :type  => error.class
           }
         rescue Timeout::Error => error
           puts "Project page #{error.class} error with '#{data_source}' biomart: #{error}"
           results[:error] = {
-            :text  => "Timed out waiting for response from '#{data_source}' biomart",
+            :text  => error_prefix + " " + error_string + " " + error_suffix,
             :error => error.to_s,
             :type  => error.class
           }
@@ -83,8 +86,9 @@ module MartSearch
       # @param [String] project_id The IKMC project ID
       # @return [Hash] The data relating to this project
       def get_top_level_project_info( datasources, project_id )
-        dcc_mart = datasources[:'ikmc-dcc'].ds
-        results  = handle_biomart_errors("ikmc-dcc") do
+        dcc_mart     = datasources[:'ikmc-dcc'].ds
+        error_string = "This supplies information on gene identifiers and IKMC tracking information. This page will not work without this datasource."
+        results      = handle_biomart_errors( "ikmc-dcc", error_string ) do
           dcc_mart.search({
             :process_results => true,
             :filters         => {'ikmc_project_id' => project_id },
@@ -109,8 +113,9 @@ module MartSearch
       # @param [String] ensembl_gene_id The (mouse) Ensembl ID to look for Human orthalogs of
       # @return [Hash] The data relating to the human orthalog
       def get_human_orthalog( datasources, ensembl_gene_id )
-        ens_mart = datasources[:'ensembl-mouse'].ds
-        results  = handle_biomart_errors("ensembl-mouse") do
+        ens_mart     = datasources[:'ensembl-mouse'].ds
+        error_string = "This supplies information on the human ensembl gene orthalog. As a result this data will not be available on the page."
+        results      = handle_biomart_errors( "ensembl-mouse", error_string ) do
           ens_mart.search({
             :process_results     => true,
             :filters             => { 'ensembl_gene_id' => ensembl_gene_id },
@@ -146,7 +151,8 @@ module MartSearch
         ]
 
         kermits_mart = datasources[:'ikmc-kermits'].ds
-        results      = handle_biomart_errors("ikmc-kermits") do
+        error_string = "This supplies information on mouse breeding. As a result this data will not be available on the page."
+        results      = handle_biomart_errors( "ikmc-kermits", error_string ) do
           kermits_mart.search({
             :process_results => true,
             :filters         => {
@@ -220,7 +226,8 @@ module MartSearch
           'user_qc_three_prime_lr_pcr'
         ]
         targ_rep_mart = datasources[:'ikmc-idcc_targ_rep'].ds
-        results       = handle_biomart_errors("ikmc-ikmc-targ_rep") do
+        error_string  = "This data source provides information on Targeting Vectors and ES Cells. As a result this data will not be available on the page."
+        results       = handle_biomart_errors( "ikmc-ikmc-targ_rep", error_string ) do
           targ_rep_mart.search({
             :process_results => true,
             :filters         => { 'ikmc_project_id' => project_id },
