@@ -149,6 +149,7 @@ module MartSearch
           'distribution_qc_five_prime_lr_pcr',
           'distribution_qc_five_prime_sr_pcr',
           'distribution_qc_three_prime_sr_pcr',
+          'distribution_qc_thawing',
           'user_qc_southern_blot',
           'user_qc_map_test',
           'user_qc_karyotype',
