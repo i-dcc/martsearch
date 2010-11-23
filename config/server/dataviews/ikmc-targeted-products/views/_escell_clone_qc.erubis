@@ -30,8 +30,8 @@
     </td>
     <th width="20%">Copy Number</th>
     <td><%= clone[:distribution_qc_copy_number] %></td>
-    <td width="20%" class="noborder nocol"></td>
-    <td class="noborder nocol"></td>
+    <th width="20%">Cells Thawed Correctly</th>
+    <td><%= clone[:distribution_qc_thawing] %></td>
   </tr>
   <tr>
     <th>5' LR-PCR</th>
