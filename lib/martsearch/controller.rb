@@ -53,8 +53,9 @@ module MartSearch
     # @param [String] query The query string to pass to the search index
     # @param [Integer] page The page of results to search for/return
     # @param [Boolean] use_cache Use cached data if available
+    # @param [Boolean] save_index_data Try to save the index return to the cache
     # @return [Array] A list of the search results (primary index fields)
-    def search( query, page=1, use_cache=true )
+    def search( query, page=1, use_cache=true, save_index_data=true )
       page = 1 if page == 0
       clear_instance_variables
       
@@ -66,7 +67,7 @@ module MartSearch
         
         search_from_cached_index( cached_index_data )
       else
-        if search_from_fresh_index( query, page )
+        if search_from_fresh_index( query, page ) and save_index_data
           obj_to_cache    = {
             :search_data           => @search_data,
             :search_results        => @search_results,
