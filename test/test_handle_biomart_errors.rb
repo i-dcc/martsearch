@@ -5,19 +5,19 @@ class TestHandleBiomartErrors < Test::Unit::TestCase
   public  :handle_biomart_errors
 
   def does_not_raise_exception
-    handle_biomart_errors "ikmc-dcc", do
+    handle_biomart_errors( "ikmc-dcc", "" ) do
       @biomart.count( :filters => { "mgi_accession_id" => ["MGI:101757", "MGI:101758"] } )
     end
   end
 
   def raises_biomart_exception
-    handle_biomart_errors "dodgy-mart", do
+    handle_biomart_errors( "dodgy-mart", "" ) do
       raise Biomart::BiomartError.new("some Biomart::BiomartError we want to handle")
     end
   end
 
   def raises_timeout_exception
-    handle_biomart_errors "slow-mart", do
+    handle_biomart_errors( "slow-mart", "" ) do
       raise Timeout::Error.new("fake a timeout error")
     end
   end
