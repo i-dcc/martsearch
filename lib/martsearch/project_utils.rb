@@ -119,8 +119,8 @@ module MartSearch
         results.each do |result|
           result[:qc_count] = 0
           qc_metrics.each do |metric|
-            if result[metric].nil?
-              result[metric] = '-'
+            if result[metric.to_sym].nil?
+              result[metric.to_sym] = '-'
             else
               result[:qc_count] = result[:qc_count] + 1
             end
