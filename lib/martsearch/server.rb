@@ -71,7 +71,7 @@ module MartSearch
 
       # TODO: We need a better way of configuring idiots to block
       accept_request = true
-      blocked_hosts  = ['picmole.com']
+      blocked_hosts  = ['picmole.com','YandexBot']
 
       blocked_hosts.each do |host|
         if \
