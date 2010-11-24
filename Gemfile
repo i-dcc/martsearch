@@ -39,7 +39,7 @@ group :development, :test do
   gem 'railsless-deploy'
   gem 'simplecov',                      :platforms => :ruby_19
   gem 'rcov',                           :platforms => :ruby_18
-  gem 'metric_fu',                      :platforms => :ruby_18
+  gem 'metric_fu'
   gem 'awesome_print',                  :require => 'ap'
   gem 'wirble'
 end

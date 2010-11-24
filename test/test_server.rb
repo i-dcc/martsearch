@@ -115,7 +115,7 @@ class MartSearchServerRackTest < Test::Unit::TestCase
     @browser     = Rack::Test::Session.new( Rack::MockSession.new( MartSearch::Server ) )
   end
   
-  context 'A MartSearch::Server web app inatance' do
+  context 'A MartSearch::Server web app instance' do
     should 'handle people trying to make up urls...' do
       @browser.get '/foo'
       assert_equal( 404, @browser.last_response.status )
@@ -160,16 +160,16 @@ class MartSearchServerRackTest < Test::Unit::TestCase
     should 'render IKMC project pages as JSON...' do
       VCR.use_cassette('test_server_project_page') do
         project_ids_to_test = ['35505','27042','42474']
-        
+
         project_ids_to_test.each do |project_id|
           @browser.get "/project/#{project_id}?wt=json"
           assert( @browser.last_response.ok?, "A request to '/project/#{project_id}?wt=json' failed!" )
           json = JSON.parse( @browser.last_response.body )
           assert( json.is_a?(Hash) )
         end
-        
+
         @browser.get "/project/foobar"
-        assert_equal( 404, @browser.last_response.status.to_i )
+        assert_equal( 404, @browser.last_response.status )
       end
     end
     
