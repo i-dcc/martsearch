@@ -169,7 +169,7 @@ class MartSearchServerRackTest < Test::Unit::TestCase
         end
 
         @browser.get "/project/foobar"
-        assert_equal( 404, @browser.last_response.status.to_i )
+        assert_equal( 404, @browser.last_response.status )
       end
     end
     

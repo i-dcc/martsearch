@@ -24,7 +24,7 @@ class TestHandleBiomartErrors < Test::Unit::TestCase
 
   context "A wrapped function" do
     setup do
-      VCR.insert_cassette( "HandleBiomartErrors" )
+      VCR.insert_cassette( "test_handle_biomart_errors" )
       @biomart = Biomart::Dataset.new( "http://www.i-dcc.org/biomart", { :name => "dcc" } )
     end
 

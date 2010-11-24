@@ -3,9 +3,10 @@ require "test_helper"
 class TestMartSearchProjectUtils < Test::Unit::TestCase
   include MartSearch::ProjectUtils
   public  :get_top_level_project_info, :get_human_orthalog, :get_mice
+  
   context "A valid MartSearch Project" do
     setup do
-      VCR.insert_cassette( "MartSearchProjectUtils" )
+      VCR.insert_cassette( "test_project_utils" )
       @datasources = MartSearch::Controller.instance().datasources
       @project_id  = 35505
     end
@@ -22,18 +23,12 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
         :escell_available => "1",
         :vector_available => "1"
       }
-      assert_nothing_raised do
-        assert_equal expected,
-         get_top_level_project_info( @datasources, @project_id )[:data][0]
-      end
+      assert_equal( expected, get_top_level_project_info( @datasources, @project_id )[:data][0] )
     end
 
     should "have the correct human orthalog" do
       expected = { :human_ensembl_gene => "ENSG00000108468" }
-      assert_nothing_raised do
-        assert_equal expected,
-         get_human_orthalog( @datasources, "ENSMUSG00000018666" )[:data][0]
-      end
+      assert_equal( expected, get_human_orthalog( @datasources, "ENSMUSG00000018666" )[:data][0] )
     end
 
     should "have the expected results" do
@@ -916,9 +911,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
         :stage                => "mice",
         :stage_type           => "normal"
       }
-      assert_nothing_raised do
-        assert_equal expected, get_ikmc_project_page_data( @project_id )[:data]
-      end
+      assert_equal( expected, get_ikmc_project_page_data( @project_id )[:data] )
     end
 
     context "with no mice" do
