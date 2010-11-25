@@ -1,9 +1,9 @@
 {
-  "portal_name": "MartSearch",
+  "portal_name": "WTSI Mouse Resources Portal",
   "debug":       false,
   "email": {
-    "from": "",
-    "to":   ""
+    "from": "do2@sanger.ac.uk",
+    "to":   "team87@sanger.ac.uk"
   },
   "cache": {
     "type": "file",
@@ -12,14 +12,10 @@
   "datasets": [
     "emma-strains",
     "ensembl-mouse-homologs",
-    "eurexpress",
-    "europhenome",
     "ikmc-dcc-knockout_attempts",
-    "ikmc-dcc-other_mutants",
     "ikmc-idcc_targ_rep",
     "ikmc-kermits",
     "ikmc-omim",
-    "ikmc-unitrap",
     "mgi-markers",
     "wtsi-bacs",
     "wtsi-expression-ticklist",
@@ -32,15 +28,11 @@
   "dataviews": [
     "gene-details",
     "wtsi-phenotyping",
-    "europhenome",
-    "eurexpress",
     "mice",
     "ikmc-mice",
     "emma-mice",
     "ikmc-targeted-products",
-    "ikmc-trapped-products",
-    "wtsi-dna-clone-resources",
-    "other-mutant-resources"
+    "wtsi-dna-clone-resources"
   ],
   "browsable_content": {
     "marker-symbol": {
@@ -62,6 +54,51 @@
         "1","2","3","4","5","6","7","8","9","10",
         "11","12","13","14","15","16","17","18","19",
         "X","Y"
+      ]
+    },
+    "phenotyping": {
+      "index_field":  "phenotype",
+      "display_name": "Positive Phenotyping Test",
+      "exact_search": true,
+      "options": [
+        { "text": "Adult Expression", "query": "adult_expression", "slug": "adult-expression" },
+        { "text": "Auditory Brainstem Response (ABR)", "query": "abr", "slug": "abr" },
+        { "text": "Blood Pressure", "query": "blood_pressure", "slug": "blood-pressure" },
+        { "text": "Body Weight Curve (High Fat Diet)", "query": "body_weight_curve_high_fat_diet", "slug": "body-weight-curve-high-fat-diet" },
+        { "text": "Body Weight Curve (Normal Chow)", "query": "body_weight_curve_normal_chow", "slug": "body-weight-curve-normal-chow" },
+        { "text": "Brain Histology", "query": "brain_histology", "slug": "brain-histology" },
+        { "text": "Citrobacter Challenge", "query": "citrobacter_challenge", "slug": "citrobacter-challenge" },
+        { "text": "Core Temp/Stress Induced Hyperthermia", "query": "core_temperature", "slug": "core-temperature" },
+        { "text": "Dual Energy X-Ray Absorptiometry (DEXA)", "query": "dexa", "slug": "dexa" },
+        { "text": "Dysmorphology", "query": "dysmorphology", "slug": "dysmorphology" },
+        { "text": "Embryo Expression", "query": "embryo_expression", "slug": "embryo-expression" },
+        { "text": "Eye Morphology", "query": "eye_morphology", "slug": "eye-morphology" },
+        { "text": "Fasted Clinical Chemistry", "query": "fasted_clinical_chemistry", "slug": "fasted-clinical-chemistry" },
+        { "text": "Fertility", "query": "fertility", "slug": "fertility" },
+        { "text": "Full Clinical Chemistry", "query": "full_clinical_chemistry", "slug": "full-clinical-chemistry" },
+        { "text": "Grip Strength", "query": "grip_strength", "slug": "grip-strength" },
+        { "text": "Haematology", "query": "haematology", "slug": "haematology" },
+        { "text": "Hair Follicle", "query": "hair_follicle", "slug": "hair-follicle" },
+        { "text": "Heart Histology", "query": "heart_histology", "slug": "heart-histology" },
+        { "text": "Heart Weight", "query": "heart_weight", "slug": "heart-weight" },
+        { "text": "Histology", "query": "histology", "slug": "histology" },
+        { "text": "Homozygote Viability", "query": "homozygote_viability", "slug": "homozygote-viability" },
+        { "text": "Hot Plate", "query": "hot_plate", "slug": "hot-plate" },
+        { "text": "Indirect Calorimetry", "query": "indirect_calorimetry", "slug": "indirect-calorimetry" },
+        { "text": "Insulin", "query": "insulin", "slug": "insulin" },
+        { "text": "ip-GTT", "query": "ip-gtt", "slug": "ip-gtt" },
+        { "text": "Micronuclei Irradiated", "query": "micronuclei_irradiated", "slug": "micronuclei-irradiated" },
+        { "text": "Micronuclei Naive", "query": "micronuclei_naive", "slug": "micronuclei-naive" },
+        { "text": "Modified SHIRPA", "query": "modified_shirpa", "slug": "modified-shirpa" },
+        { "text": "Open Field", "query": "open_field", "slug": "open-field" },
+        { "text": "Peripheral Blood Lymphocytes", "query": "peripheral_blood_lymphocytes", "slug": "peripheral-blood-lymphocytes" },
+        { "text": "Plasma Immunoglobulins", "query": "plasma_immunoglobulins", "slug": "plasma-immunoglobulins" },
+        { "text": "Prepulse Inhibition", "query": "prepulse_inhibition", "slug": "prepulse-inhibition" },
+        { "text": "Recessive Lethal", "query": "recessive_lethal", "slug": "recessive-lethal" },
+        { "text": "Rotarod", "query": "rotarod", "slug": "rotarod" },
+        { "text": "Salmonella Challenge", "query": "salmonella_challenge", "slug": "salmonella-challenge" },
+        { "text": "Skin Screen", "query": "skin_screen", "slug": "skin-screen" },
+        { "text": "X-Ray Imaging", "query": "x_ray_imaging", "slug": "x-ray-imaging" }
       ]
     }
   }
