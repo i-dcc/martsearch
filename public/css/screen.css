@@ -694,6 +694,25 @@ ul.ensembl_link_list li {
   margin: 0 5px;
 }
 
+/* WTSI Header Customizations */
+ 
+#wrapper {
+	padding-top: 0;
+}
+
+#header {
+	height: 66px;
+	text-align: left;
+	margin-top: 5px;
+}
+
+#header h1 {
+	background: url(../images/sanger-logo.png) no-repeat left top;
+	height: 60px;
+	text-align: right;
+	padding-top: 41px;
+}
+
 /* jQuery UI Overrides */
 
 .ui-widget {

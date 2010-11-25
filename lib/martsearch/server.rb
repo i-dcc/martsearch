@@ -105,6 +105,35 @@ module MartSearch
     get '/?' do
       @current               = 'home'
       @hide_side_search_form = true
+      
+      @counts = @ms.cache.fetch("wtsi_front_page_counts")
+      if @counts
+        @counts = BSON.deserialize(@counts) unless @ms.cache.is_a?(MartSearch::MongoCache)
+        @counts = @counts.clean_hash if RUBY_VERSION < '1.9'
+        @counts.recursively_symbolize_keys!
+      else
+        @counts = {
+          :phenotyping        => { :query => 'sanger_phenotype:*' },
+          :mice               => { :query => 'microinjection_centre_status:"WTSI - Genotype Confirmed"' },
+          :escells            => { :query => 'ikmc_project_product_status_str:"KOMP-CSD ES Cell Available" OR ikmc_project_product_status_str:"EUCOMM ES Cell Available"' },
+          :targ_vectors       => { :query => 'ikmc_project_product_status_str:"KOMP-CSD Vector Available" OR ikmc_project_product_status_str:"EUCOMM Vector Available"' },
+          :micer_clones       => { :query => 'dna_library:"MICER"' },
+          :c57_bacs           => { :query => 'dna_library:"C57Bl/6J"' },
+          :one_two_nine_bacs  => { :query => 'dna_library:"129S7"' }
+        }
+
+        @counts.each do |param,details|
+          details[:count] = @ms.index.count( details[:query] )
+          details[:query] = details[:query].gsub('"','&quot;')
+        end
+        
+        if @ms.cache.is_a?(MartSearch::MongoCache)
+          @ms.cache.write("wtsi_front_page_counts", @counts, :expires_in => 12.hours )
+        else
+          @ms.cache.write("wtsi_front_page_counts", BSON.serialize(@counts), :expires_in => 12.hours )
+        end
+      end
+      
       erubis :main
     end
     
