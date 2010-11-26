@@ -27,13 +27,13 @@ module MartSearch
 
         if data[:ensembl_gene_id]
           human_orthalogs = get_human_orthalog( datasources, data[:ensembl_gene_id] )
-          data.merge!( human_orthalogs[:data][0] )
+          data.merge!( human_orthalogs[:data][0] ) unless human_orthalogs[:data].empty?
           errors.push( human_orthalogs[:error] ) unless human_orthalogs[:error].empty?
         end
 
         if data[:marker_symbol]
           mice = get_mice( datasources, data[:marker_symbol] )
-          data.merge!( mice[:data] )
+          data.merge!( mice[:data] ) unless mice[:data].empty?
           errors.push( mice[:error] ) unless mice[:error].empty?
         end
 
@@ -167,9 +167,7 @@ module MartSearch
           })
         end
 
-        if results[:data].empty?
-          results[:data] = {}
-        else
+        unless results[:data].empty?
           results[:data].recursively_symbolize_keys!
 
           # Test for QC data - set each empty qc_metric to '-' or count it
