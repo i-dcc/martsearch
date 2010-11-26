@@ -31,6 +31,8 @@ begin
     
     desc "Primes the search cache"
     task :prime do
+      @ms.cache.clean_expired if @ms.cache.is_a?(MartSearch::MongoCache)
+      
       no_genes_to_hit_at_once            = 250
       @ms.config[:index][:docs_per_page] = no_genes_to_hit_at_once
       conf                               = @ms.config[:server][:browsable_content][:chromosome]
