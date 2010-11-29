@@ -7,7 +7,7 @@
   "custom_head_js":       false,
   "custom_base_js":       true,
   "custom_view_helpers" : true,
-  "custom_routes":        false,
+  "custom_routes":        true,
   "datasets": {
     "required": [
       "wtsi-phenotyping-heatmap"

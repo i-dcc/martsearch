@@ -108,7 +108,7 @@ search_data.each do |key,result_data|
           end
         end
         
-        if related_targ_rep_clone[:allele_symbol_superscript] and result_data[:'index'][:marker_symbol]
+        if related_targ_rep_clone[:allele_symbol_superscript] and result_data[:index][:marker_symbol]
           result[:allele_name] = "#{result_data[:'index'][:marker_symbol]}<sup>#{related_targ_rep_clone[:allele_symbol_superscript]}</sup>"
         end
         
@@ -164,12 +164,12 @@ search_data.each do |key,result_data|
           if result_data[:'wtsi-mgp_images-wholemount_expression']
             images = result_data[:'wtsi-mgp_images-wholemount_expression'][result[:colony_prefix].to_sym]
             
-            if images and images[:adult]
+            if images and ( images[:adult] and !images[:adult].empty? )
               result[:'adult_expression_data'] = {} if result[:'adult_expression_data'].nil?
               result[:'adult_expression_data'][:images] = images[:adult]
             end
             
-            if images and images[:embryo]
+            if images and ( images[:embryo] and !images[:embryo].empty? )
               result[:'embryo_expression_data'] = {} if result[:'embryo_expression_data'].nil?
               result[:'embryo_expression_data'][:images] = images[:embryo]
             end
@@ -186,4 +186,44 @@ search_data.each do |key,result_data|
   end
   
   result_data[:'wtsi-phenotyping-heatmap-processed'] = heatmap_data
+end
+
+##
+## Run through the data one last time to cache the results details 
+## ready for the report pages...
+##
+
+search_data.each do |key,result_data|
+  heatmap_data  = result_data[:'wtsi-phenotyping-heatmap']
+  marker_symbol = result_data[:index][:marker_symbol]
+  cache_data    = {}
+  
+  heatmap_data.each do |result|
+    cache_data[result[:colony_prefix]] = {} if cache_data[result[:colony_prefix]].nil?
+    
+    result.keys.select{ |name| name.to_s =~ /_data$/ }.each do |key|
+      test_data = result[key].clone
+      
+      if test_data.is_a?(Hash)
+        test_data[:marker_symbol] = marker_symbol
+      elsif test_data.is_a?(Array)
+        test_data.map!{ |elm| elm[:marker_symbol] = marker_symbol; elm }
+      end
+      
+      cache_data[result[:colony_prefix]][key] = test_data
+    end
+    
+  end
+  
+  cache_data.each do |colony_prefix,obj_to_cache|
+    cache_id = "wtsi-pheno-data:#{colony_prefix.upcase}"
+    ms.cache.delete(cache_id)
+    if ms.cache.is_a?(MartSearch::MongoCache)
+      ms.cache.write( cache_id, obj_to_cache, { :expires_in => 36.hours } )
+    else
+      ms.cache.write( cache_id, BSON.serialize(obj_to_cache), { :expires_in => 36.hours } )
+    end
+  end
+  
+  result_data[:'cached_pheno_data'] = cache_data
 end

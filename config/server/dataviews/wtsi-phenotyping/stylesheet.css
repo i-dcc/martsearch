@@ -43,6 +43,10 @@
   text-align: center;
 }
 
+#wtsi-phenotyping-report #test-images img {
+	margin-bottom: 7px;
+}
+
 #wtsi-phenotyping-report .test-descriptor {  
 	border: 1px solid #ccc;
 	padding: 10px;
