@@ -79,6 +79,11 @@ search_data.each do |key,result_data|
         
         if related_kermits_entry and related_kermits_entry[:allele_name]
           result[:allele_name] = related_kermits_entry[:allele_name]
+          result[:allele_type] = related_kermits_entry[:allele_type]
+        end
+        
+        if related_kermits_entry and related_kermits_entry[:escell_clone]
+          result[:escell_clone] = related_kermits_entry[:escell_clone]
         end
         
         ##

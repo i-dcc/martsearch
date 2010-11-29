@@ -3,9 +3,9 @@
   "description":          "Phenotyping assay data from the Mouse Genetics Program (MGP) at the Wellcome Trust Sanger Institute.",
   "enabled":              true,
   "display":              true,
-  "custom_css":           false,
+  "custom_css":           true,
   "custom_head_js":       false,
-  "custom_base_js":       false,
+  "custom_base_js":       true,
   "custom_view_helpers" : true,
   "custom_routes":        false,
   "datasets": {
