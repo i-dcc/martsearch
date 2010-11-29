@@ -120,7 +120,7 @@ search_data.each do |key,result_data|
           test_display_name = group_data[:tests][test.to_sym]
           
           # wtsi-mgp_graphs
-          unless result_data[:'wtsi-mgp_graphs'].nil?
+          if result_data[:'wtsi-mgp_graphs']
             mgp_graphs = result_data[:'wtsi-mgp_graphs'][result[:colony_prefix].to_sym]
             unless mgp_graphs.nil?
               mgp_graphs.each do |test_name,image_data|
@@ -131,7 +131,44 @@ search_data.each do |key,result_data|
             end
           end
           
+          # wtsi-phenotyping-fertility
+          if result_data[:'wtsi-phenotyping-fertility']
+            fertility = result_data[:'wtsi-phenotyping-fertility'][result[:colony_prefix].to_sym]
+            result[:'fertility_data'] = fertility unless fertility.nil?
+          end
           
+          # wtsi-phenotyping-hom_viability
+          if result_data[:'wtsi-phenotyping-hom_viability']
+            viability = result_data[:'wtsi-phenotyping-hom_viability'][result[:colony_prefix].to_sym]
+            result[:'homozygote_viability_data'] = viability unless viability.nil?
+          end
+          
+          # wtsi-expression-ticklist
+          if result_data[:'wtsi-expression-ticklist']
+            ticklist = result_data[:'wtsi-expression-ticklist'][result[:colony_prefix].to_sym]
+            
+            if ticklist
+              result[:'adult_expression_data']  = {} if result[:'adult_expression_data'].nil?
+              # result[:'embryo_expression_data'] = {} if result[:'embryo_expression_data'].nil?
+              result[:'adult_expression_data'][:ticklist]  = ticklist
+              # result[:'embryo_expression_data'][:ticklist] = ticklist
+            end
+          end
+          
+          # wtsi-mgp_images-wholemount_expression
+          if result_data[:'wtsi-mgp_images-wholemount_expression']
+            images = result_data[:'wtsi-mgp_images-wholemount_expression'][result[:colony_prefix].to_sym]
+            
+            if images and images[:adult]
+              result[:'adult_expression_data'] = {} if result[:'adult_expression_data'].nil?
+              result[:'adult_expression_data'][:images] = images[:adult]
+            end
+            
+            if images and images[:embryo]
+              result[:'embryo_expression_data'] = {} if result[:'embryo_expression_data'].nil?
+              result[:'embryo_expression_data'][:images] = images[:embryo]
+            end
+          end
           
         end
         

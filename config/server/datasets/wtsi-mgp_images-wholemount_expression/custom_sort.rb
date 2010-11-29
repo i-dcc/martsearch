@@ -7,14 +7,14 @@ results.sort{ |a,b| "#{a[:tissue]}-#{a[:gender]}" <=> "#{b[:tissue]}-#{b[:gender
     sorted_results[ result[ joined_attribute ] ] = {}
   end
   
-  unless sorted_results[ result[ joined_attribute ] ][ result[:colony_prefix] ]
-    sorted_results[ result[ joined_attribute ] ][ result[:colony_prefix] ] = {
+  unless sorted_results[ result[ joined_attribute ] ][ result[:colony_prefix].to_sym ]
+    sorted_results[ result[ joined_attribute ] ][ result[:colony_prefix].to_sym ] = {
       :adult  => [],
       :embryo => []
     }
   end
   
-  result_data = sorted_results[ result[ joined_attribute ] ][ result[:colony_prefix] ]
+  result_data = sorted_results[ result[ joined_attribute ] ][ result[:colony_prefix].to_sym ]
   
   # work out the thumbnail URL (as the one in the mart can be flakey...)
   result[:thumbnail_url] = result[:url].sub("\.(\w+)$","thumb.\1")

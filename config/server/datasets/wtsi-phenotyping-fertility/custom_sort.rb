@@ -8,7 +8,7 @@ results.each do |result|
   end
   
   data = sorted_results[ result[ joined_attribute ] ]
-  data[ result[ joined_attribute ] ] = result
+  data[ result[ joined_attribute ].to_sym ] = result
   
 end
 
