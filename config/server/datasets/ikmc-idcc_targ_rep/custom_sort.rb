@@ -28,6 +28,8 @@ results.each do |result|
       :mgi_accession_id        => result[:mgi_accession_id],
       :design_id               => result[:design_id],
       :design_type             => result[:design_type],
+      :cassette                => result[:cassette],
+      :backbone                => result[:backbone],
       :targeting_vectors       => [],
       :conditional_clones      => [],
       :nonconditional_clones   => [],
@@ -53,8 +55,6 @@ results.each do |result|
     targ_vec = {
       :ikmc_project_id     => ikmc_project_id,
       :allele_id           => result[:allele_id],
-      :cassette            => result[:cassette],
-      :backbone            => result[:backbone],
       :targeting_vector    => result[:targeting_vector],
       :intermediate_vector => result[:intermediate_vector]
     }

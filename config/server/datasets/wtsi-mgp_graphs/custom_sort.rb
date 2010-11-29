@@ -27,6 +27,8 @@ sorted_results.each do |colony,data|
   sorted_results[colony][colony].each do |test,images|
     sorted_results[colony][colony][test] = images.sort{ |a,b| a[:order_by] <=> b[:order_by] }
   end
+  
+  sorted_results[colony].recursively_symbolize_keys!
 end
 
 return sorted_results
