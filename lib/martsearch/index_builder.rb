@@ -56,7 +56,7 @@ module MartSearch
           now_timestamp    = Time.now()
           file_age_in_days = ( ( ( (now_timestamp - file_timestamp).round / 60 ) / 60 ) / 24 )
           
-          if file_age_in_days > ds_conf[:indexing][:days_between_downlads]
+          if file_age_in_days >= ds_conf[:indexing][:days_between_downlads]
             datasets_to_download.push(ds)
           end
         else
