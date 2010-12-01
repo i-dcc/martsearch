@@ -36,34 +36,36 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
     
     should "allow you to do a simple search..." do
       VCR.use_cassette('test_server_simple_search') do
-        visit '/'
+        search_terms_to_test = ['Mysm1','Cbx1','Arid4a','Art4']
         
-        search_term = @controller.index.config[:test][:single_return_search]
-        
-        fill_in( 'query', :with => search_term )
-        click_button('Search')
-        
-        assert_equal( '/search', current_path )
-        assert( page.has_content?( @server_conf[:portal_name] ) )
-        assert( page.has_content?( "Search Results for '#{search_term}'" ) )
-        assert( page.has_css?('#search_results div.doc_content h4.dataset_title') )
-        assert( page.has_css?('#search_results div.doc_content div.dataset_content') )
-        
-        ##
-        ## Test redirects for the old rest style urls...
-        ##
-        
-        visit "/search/#{search_term}"
-        assert_equal( '/search', current_path )
-        assert( page.has_content?( "Search Results for '#{search_term}'" ) )
-        assert( page.has_css?('#search_results div.doc_content h4.dataset_title') )
-        assert( page.has_css?('#search_results div.doc_content div.dataset_content') )
-        
-        visit "/search/#{search_term}/1"
-        assert_equal( '/search', current_path )
-        assert( page.has_content?( "Search Results for '#{search_term}'" ) )
-        assert( page.has_css?('#search_results div.doc_content h4.dataset_title') )
-        assert( page.has_css?('#search_results div.doc_content div.dataset_content') )
+        search_terms_to_test.each do |search_term|
+          visit '/'
+          
+          fill_in( 'query', :with => search_term )
+          click_button('Search')
+          
+          assert_equal( '/search', current_path, "Simple search for '#{search_term}': The home page form didn't forward to /search." )
+          assert( page.has_content?( @server_conf[:portal_name] ), "Simple search for '#{search_term}': /search doesn't have the portal title." )
+          assert( page.has_content?( "Search Results for '#{search_term}'" ), "Simple search for '#{search_term}': /search doesn't show the search term we've just looked for..." )
+          assert( page.has_css?('#search_results div.doc_content h4.dataset_title'), "Simple search for '#{search_term}': /search doesn't have the HTML for '#search_results div.doc_content h4.dataset_title'." )
+          assert( page.has_css?('#search_results div.doc_content div.dataset_content'), "Simple search for '#{search_term}': /search doesn't have the HTML for '#search_results div.doc_content div.dataset_content'." )
+          
+          ##
+          ## Test redirects for the old rest style urls...
+          ##
+
+          visit "/search/#{search_term}"
+          assert_equal( '/search', current_path, "Simple search for '#{search_term}': The home page form didn't forward to /search." )
+          assert( page.has_content?( "Search Results for '#{search_term}'" ), "Simple search for '#{search_term}': /search doesn't show the search term we've just looked for..." )
+          assert( page.has_css?('#search_results div.doc_content h4.dataset_title'), "Simple search for '#{search_term}': /search doesn't have the HTML for '#search_results div.doc_content h4.dataset_title'." )
+          assert( page.has_css?('#search_results div.doc_content div.dataset_content'), "Simple search for '#{search_term}': /search doesn't have the HTML for '#search_results div.doc_content div.dataset_content'." )
+
+          visit "/search/#{search_term}/1"
+          assert_equal( '/search', current_path, "Simple search for '#{search_term}': The home page form didn't forward to /search." )
+          assert( page.has_content?( "Search Results for '#{search_term}'" ), "Simple search for '#{search_term}': /search doesn't show the search term we've just looked for..." )
+          assert( page.has_css?('#search_results div.doc_content h4.dataset_title'), "Simple search for '#{search_term}': /search doesn't have the HTML for '#search_results div.doc_content h4.dataset_title'." )
+          assert( page.has_css?('#search_results div.doc_content div.dataset_content'), "Simple search for '#{search_term}': /search doesn't have the HTML for '#search_results div.doc_content div.dataset_content'." )
+        end
       end
     end
     
@@ -77,7 +79,7 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
             page_no = 1
             while page_no < 3
               visit "/browse/#{name}/#{opts[:link_arg]}/#{page_no}"
-              assert_equal( '/browse', current_path )
+              assert_equal( '/browse', current_path, "A request to '/browse/#{name}/#{opts[:link_arg]}/#{page_no}' failed!" )
               assert( page.has_content?("Browsing Data by #{conf[:display_name]}: '#{opts[:display_arg]}'"), "A request to '/browse/#{name}/#{opts[:link_arg]}/#{page_no}' failed!" )
               
               if page.has_css?('.pagination a.next_page')
@@ -129,15 +131,16 @@ class MartSearchServerRackTest < Test::Unit::TestCase
     
     should 'allow you to do a simple search and retrieve a JSON response...' do
       VCR.use_cassette('test_server_simple_search') do
-        search_term = @controller.index.config[:test][:single_return_search]
+        search_terms_to_test = ['Mysm1','Cbx1','Arid4a','Art4']
         
-        @browser.get "/search?query=#{search_term}&wt=json"
-        assert( @browser.last_response.ok? )
-        
-        json = JSON.parse( @browser.last_response.body )
-        
-        assert( json.is_a?(Hash) )
-        assert( json[ json.keys.first ]['index'] != nil )
+        search_terms_to_test.each do |search_term|
+          @browser.get "/search?query=#{search_term}&wt=json"
+          assert( @browser.last_response.ok?, "Simple search for '#{search_term}': last_response not ok." )
+          
+          json = JSON.parse( @browser.last_response.body )
+          assert( json.is_a?(Hash), "Simple search for '#{search_term}': the parsed JSON is not a hash." )
+          assert( json[ json.keys.first ]['index'] != nil, "Simple search for '#{search_term}': the parsed JSON has 'nil' in the first 'index' entry." )
+        end
       end
     end
     
