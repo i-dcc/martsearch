@@ -25,10 +25,10 @@
   </tr>
   <tr>
     <td class="noborder"></td>
+    <td class="pheno_result noborder"><%= image_tag( '/images/silk/chart_bar.png', :alt => 'Link to a Test Report Page' ) %></td>
+    <td class="noborder">link to a test report page</td>
     <td class="noborder"></td>
-    <td class="noborder"></td>
-    <td class="noborder"></td>
-    <td class="pheno_result noborder"><%= image_tag( '/images/silk/chart_bar.png', :alt => 'Link to a Phenotyping Test Report Page' ) %></td>
-    <td class="noborder">link to a phenotyping test report page</td>
+    <td class="pheno_result noborder"><%= image_tag( '/images/silk/page_white_acrobat.png', :alt => 'Link to a PDF Report' ) %></td>
+    <td class="noborder">link to a pdf report</td>
   </tr>
 </table>

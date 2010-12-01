@@ -33,12 +33,18 @@
                     title="<%= partial( 'dataviews/wtsi-phenotyping/heatmap_tooltip', :locals => { :result => result, :test_name => test_name, :test_display_name => test_display_name } ) %>" 
                     rel="qtip">
                   <% if result["#{test_name}_data".to_sym] %>
-                    <%=
-                      link_to(
-                        image_tag( '/images/silk/chart_bar.png', :alt => 'view' ),
-                        "/phenotyping/#{result[:colony_prefix]}/#{test_name.to_s.gsub('_','-')}/"
-                      )
-                    %>
+                    <% if test_name == :eye_histopathology %>
+                      <% pdf = result["#{test_name}_data".to_sym][0] %>
+                      <a href="<%= pdf[:url] %>" class="pdf_report"><%= image_tag( '/images/silk/page_white_acrobat.png', :alt => 'view pdf' ) %></a>
+                    <% else %>
+                      <%=
+                        link_to(
+                          image_tag( '/images/silk/chart_bar.png', :alt => 'view' ),
+                          "/phenotyping/#{result[:colony_prefix]}/#{test_name.to_s.gsub('_','-')}/",
+                          :class => 'html_report'
+                        )
+                      %>
+                    <% end %>
                   <% end %>
                   </td>
                 <% end %>

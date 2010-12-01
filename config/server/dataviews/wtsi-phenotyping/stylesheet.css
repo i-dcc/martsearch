@@ -14,10 +14,15 @@
 	width: 22px;
 }
 
-.wtsi-phenotyping table td.pheno_result img {
-  background-color: #fff;
+.wtsi-phenotyping table td.pheno_result a img {
 	border: 1px solid #999;
+	background-color: #fff;
 	padding: 1px;
+}
+
+.wtsi-phenotyping table td.test_pending.pheno_result a img {
+	border: none;
+	background-color: transparent;
 }
 
 .wtsi-phenotyping_heatmap th {
