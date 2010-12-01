@@ -113,7 +113,7 @@ module MartSearch
                 end
               end
               
-              if related_targ_rep_clone[:allele_symbol_superscript] and result_data[:index][:marker_symbol]
+              if (related_targ_rep_clone and related_targ_rep_clone[:allele_symbol_superscript]) and result_data[:index][:marker_symbol]
                 result[:allele_name] = "#{result_data[:'index'][:marker_symbol]}<sup>#{related_targ_rep_clone[:allele_symbol_superscript]}</sup>"
               end
               
@@ -208,8 +208,8 @@ module MartSearch
         heatmap_data.each do |result|
           cache_data[result[:colony_prefix]] = {} if cache_data[result[:colony_prefix]].nil?
           
-          result.keys.select{ |name| name.to_s =~ /_data$/ }.each do |key|
-            test_data = result[key].clone
+          result.keys.select{ |name| name.to_s =~ /_data$/ }.each do |result_key|
+            test_data = result[result_key].clone
             
             if test_data.is_a?(Hash)
               test_data[:marker_symbol] = marker_symbol
@@ -217,7 +217,7 @@ module MartSearch
               test_data.map!{ |elm| elm[:marker_symbol] = marker_symbol; elm }
             end
             
-            cache_data[result[:colony_prefix]][key] = test_data
+            cache_data[result[:colony_prefix]][result_key] = test_data
           end
           
         end
