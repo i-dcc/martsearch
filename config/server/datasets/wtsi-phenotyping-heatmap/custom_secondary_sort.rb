@@ -12,6 +12,8 @@ module MartSearch
       test_groups = @config[:test_groups]
 
       search_data.each do |key,result_data|
+        next if result_data[:'wtsi-phenotyping-heatmap'].nil?
+        
         heatmap_raw_data = result_data[:'wtsi-phenotyping-heatmap']
         heatmap_data     = {}
         
@@ -197,6 +199,8 @@ module MartSearch
       ##
       
       search_data.each do |key,result_data|
+        next if result_data[:'wtsi-phenotyping-heatmap'].nil?
+        
         heatmap_data  = result_data[:'wtsi-phenotyping-heatmap']
         marker_symbol = result_data[:index][:marker_symbol]
         cache_data    = {}
