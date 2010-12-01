@@ -145,8 +145,11 @@ module MartSearch
             dataset                 = MartSearch::DataSet.new( ds_conf )
             
             if ds_conf[:custom_sort]
-              sort    = File.read( "#{ds_location}/custom_sort.rb" )
-              dataset = MartSearch::Mock.method( dataset, :sort_results ) { |results| eval(sort) }
+              require "#{ds_location}/custom_sort.rb"
+              dataset.instance_eval {
+                alias :old_sort_results :sort_results
+                alias :sort_results :"#{@config[:internal_name].gsub('-','_')}_sort_results"
+              }
             end
             
             if ds_conf[:custom_secondary_sort]
