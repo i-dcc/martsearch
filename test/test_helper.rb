@@ -6,6 +6,9 @@ if /^1.9/ === RUBY_VERSION
     require 'simplecov'
     SimpleCov.start do
       coverage_dir 'simplecov'
+      add_group 'Core MartSearch',      './lib'
+      add_group 'Custom DataSet Code',  './config/server/datasets'
+      add_group 'Custom DataView Code', './config/server/dataviews'
     end
   rescue LoadError
     puts "[ERROR] Unable to load 'simplecov' - please run 'bundle install'"
