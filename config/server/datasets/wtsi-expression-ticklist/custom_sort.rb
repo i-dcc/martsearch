@@ -11,8 +11,12 @@ results.each do |result|
     sorted_results[ result[ joined_attribute ] ] = {}
   end
   
-  data = sorted_results[ result[ joined_attribute ] ]
-  data[ result[ joined_attribute ].to_sym ] = result
+  unless sorted_results[ result[ joined_attribute ] ][ result[ joined_attribute ].to_sym ]
+    sorted_results[ result[ joined_attribute ] ][ result[ joined_attribute ].to_sym ] = []
+  end
+  
+  data = sorted_results[ result[ joined_attribute ] ][ result[ joined_attribute ].to_sym ]
+  data.push(result)
   
 end
 

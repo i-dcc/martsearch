@@ -1,0 +1,17 @@
+<li>
+  <span class="gender <%= img[:gender].downcase %>"></span>
+  <div>
+    <strong>Tissue:</strong> <%= img[:tissue] %><br />
+    <strong>Description:</strong> <%= img[:description] ? img[:description] : '-' %><br />
+    <strong>Genotype:</strong> <%= img[:genotype] %><br />
+  </div>
+  <div style="text-align:center">
+    <a 
+      href="<%= img[:url] %>" 
+      title="<%= partial( "dataviews/wtsi-phenotyping/adult_expression_image_legend", :locals => { :img => img } ) %>" 
+      rel="prettyPhoto[<%= gallery_name %>]"
+    >
+      <img src="<%= img[:thumbnail_url] %>" alt="<%= img[:tissue] %> (<%= img[:gender] %> / <%= img[:genotype] %>)" />
+    </a>
+  </div>
+</li>

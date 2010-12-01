@@ -4,6 +4,20 @@
 ## templates so need to be handled differently.
 ##
 
+get "/phenotyping/:colony_prefix/adult-expression/?" do
+  @colony_prefix = params[:colony_prefix].upcase
+  @data          = wtsi_phenotyping_fetch_report_data( @colony_prefix, 'adult_expression' )
+  
+  if @data.nil?
+    status 404
+    erubis :not_found
+  else
+    @page_title       = "#{@data[:marker_symbol]} (#{@colony_prefix}): Adult Expression"
+    @bg_staining_imgs = @ms.dataviews_by_name[:'wtsi-phenotyping'].config[:wt_lacz_background_staining_adult]
+    erubis :"dataviews/wtsi-phenotyping/adult_expression_details"
+  end
+end
+
 get "/phenotyping/:colony_prefix/homozygote-viability/?" do
   @colony_prefix = params[:colony_prefix].upcase
   @data          = wtsi_phenotyping_fetch_report_data( @colony_prefix, 'homozygote_viability' )
@@ -12,8 +26,8 @@ get "/phenotyping/:colony_prefix/homozygote-viability/?" do
     status 404
     erubis :not_found
   else
-    @page_title    = "#{@data[:marker_symbol]} (#{@colony_prefix}): Homozygote Viability"
-    erubis :"dataviews/wtsi-phenotyping/homviable_test_details"
+    @page_title = "#{@data[:marker_symbol]} (#{@colony_prefix}): Homozygote Viability"
+    erubis :"dataviews/wtsi-phenotyping/homviable_details"
   end
 end
 
@@ -27,7 +41,7 @@ get "/phenotyping/:colony_prefix/fertility/?" do
   else
     @marker_symbol = @data[0][:marker_symbol]
     @page_title    = "#{@marker_symbol} (#{@colony_prefix}): Fertility"
-    erubis :"dataviews/wtsi-phenotyping/fertility_test_details"
+    erubis :"dataviews/wtsi-phenotyping/fertility_details"
   end
 end
 

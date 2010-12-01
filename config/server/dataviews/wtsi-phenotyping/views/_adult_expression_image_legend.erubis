@@ -1,0 +1,23 @@
+<table class='nobg noborder nopadding'>
+  <tr>
+    <td colspan='2'>
+      <a href='<%= img[:url] %>' class='ext_link' target='_blank'>open image in a new tab/window</a>
+    </td>
+  </tr>
+  <tr>
+    <th>Sex</th><td><%= img[:gender] %></td>
+    <th>Tissue</th><td><%= img[:tissue] %></td>
+  </tr>
+  <tr>
+    <th>Genotype</th><td><%= img[:genotype] %></td>
+    <th>Description</th><td><%= img[:description] ? img[:description] : '-' %></td>
+  </tr>
+  <tr>
+    <th>Mouse ID</th><td><%= img[:mouse_id] %></td>
+    <th>Age at Death</th><td><%= img[:age_at_death].gsub(" (at death)","") %></td>
+  </tr>
+  <tr>
+    <th>Comments</th><td><%= img[:comments] ? img[:comments] : '-' %></td>
+    <th>Annotations</th><td><%= img[:annotations] ? img[:annotations] : '-' %></td>
+  </tr>
+</table>

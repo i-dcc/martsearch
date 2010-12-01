@@ -152,7 +152,7 @@ search_data.each do |key,result_data|
           if result_data[:'wtsi-expression-ticklist']
             ticklist = result_data[:'wtsi-expression-ticklist'][result[:colony_prefix].to_sym]
             
-            if ticklist
+            if ticklist and !ticklist.empty?
               result[:'adult_expression_data']  = {} if result[:'adult_expression_data'].nil?
               # result[:'embryo_expression_data'] = {} if result[:'embryo_expression_data'].nil?
               result[:'adult_expression_data'][:ticklist]  = ticklist
