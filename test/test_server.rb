@@ -36,7 +36,7 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
     
     should "allow you to do a simple search..." do
       VCR.use_cassette('test_server_simple_search') do
-        search_terms_to_test = ['Mysm1','Cbx1','Arid4a','Art4']
+        search_terms_to_test = ['Mysm1','Cbx1','Arid4a','Art4','Myo7a']
         
         search_terms_to_test.each do |search_term|
           visit '/'
@@ -131,7 +131,7 @@ class MartSearchServerRackTest < Test::Unit::TestCase
     
     should 'allow you to do a simple search and retrieve a JSON response...' do
       VCR.use_cassette('test_server_simple_search') do
-        search_terms_to_test = ['Mysm1','Cbx1','Arid4a','Art4']
+        search_terms_to_test = ['Mysm1','Cbx1','Arid4a','Art4','Myo7a']
         
         search_terms_to_test.each do |search_term|
           @browser.get "/search?query=#{search_term}&wt=json"
