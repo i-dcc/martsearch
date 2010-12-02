@@ -3,7 +3,7 @@ require 'test_helper'
 class MartSearchFileSystemDataSourceTest < Test::Unit::TestCase
   def setup
     @conf_obj      = MartSearch::Controller.instance()
-    @fs_datasource = MartSearch::FileSystemDataSource.new( :location => "#{MARTSEARCH_PATH}/tmp/pheno_abr" )
+    @fs_datasource = MartSearch::FileSystemDataSource.new( :location => "/tmp/pheno_abr" )
   end
   
   context 'A MartSearch::FileSystemDataSource object' do
@@ -23,7 +23,7 @@ class MartSearchFileSystemDataSourceTest < Test::Unit::TestCase
     should 'return the expeced data structure for search()' do
       unless @conf_obj.datasets[:'wtsi-phenotyping-abr'].nil?
         dataset_conf = @conf_obj.datasets[:'wtsi-phenotyping-abr'].config()
-        results = @fs_datasource.search( ['MAMH','MAMJ'], dataset_conf )
+        ret          = @fs_datasource.search( ['MAMH','MAMJ'], dataset_conf[:searching] )
         
         assert( ret.is_a?(Array), 'search() does not return an array.' )
         assert( ret.size > 0, 'the return from search() is empty - it should have data...' )
@@ -32,6 +32,8 @@ class MartSearchFileSystemDataSourceTest < Test::Unit::TestCase
         ret.each do |data_return|
           assert( data_return.keys.include?( :file ), "The attribute :file is missing from the data hash." )
         end
+      else
+        assert( true, "If true is not true, we're screwed..." )
       end
     end
     
