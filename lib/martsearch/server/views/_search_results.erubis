@@ -116,6 +116,7 @@
                     <div class="dataset_original_data_links single_parent_toggler_content" style="display:none;">
                       <ul>
                         <% view.data_origin_links( result_data ).each do |link| %>
+                          <% next if link[1].nil? %>
                           <li>
                             <a href="<%= link[1] %>" target="_blank"><%= link[0] %></a>
                           </li>
