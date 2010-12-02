@@ -73,6 +73,11 @@
 
 #wtsi-phenotyping-report .test-descriptor .help {
 	background-color: #fff;
+	border: 1px solid #ccc;
+	border-radius: 2px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	-o-border-radius: 2px;
 }
 
 #wtsi-phenotyping-report .test-descriptor .gchart {
