@@ -144,13 +144,13 @@ module MartSearch
                 # wtsi-phenotyping-fertility
                 if result_data[:'wtsi-phenotyping-fertility']
                   fertility = result_data[:'wtsi-phenotyping-fertility'][result[:colony_prefix].to_sym]
-                  result[:'fertility_data'] = fertility unless fertility.nil?
+                  result[:fertility_data] = fertility unless fertility.nil?
                 end
                 
                 # wtsi-phenotyping-hom_viability
                 if result_data[:'wtsi-phenotyping-hom_viability']
                   viability = result_data[:'wtsi-phenotyping-hom_viability'][result[:colony_prefix].to_sym]
-                  result[:'homozygote_viability_data'] = viability unless viability.nil?
+                  result[:homozygote_viability_data] = viability unless viability.nil?
                 end
                 
                 # wtsi-expression-ticklist
@@ -158,10 +158,10 @@ module MartSearch
                   ticklist = result_data[:'wtsi-expression-ticklist'][result[:colony_prefix].to_sym]
                   
                   if ticklist and !ticklist.empty?
-                    result[:'adult_expression_data']  = {} if result[:'adult_expression_data'].nil?
-                    # result[:'embryo_expression_data'] = {} if result[:'embryo_expression_data'].nil?
-                    result[:'adult_expression_data'][:ticklist]  = ticklist
-                    # result[:'embryo_expression_data'][:ticklist] = ticklist
+                    result[:adult_expression_data]  = {} if result[:adult_expression_data].nil?
+                    # result[:embryo_expression_data] = {} if result[:embryo_expression_data].nil?
+                    result[:adult_expression_data][:ticklist]  = ticklist
+                    # result[:embryo_expression_data][:ticklist] = ticklist
                   end
                 end
                 
@@ -170,14 +170,20 @@ module MartSearch
                   images = result_data[:'wtsi-mgp_images-wholemount_expression'][result[:colony_prefix].to_sym]
                   
                   if images and ( images[:adult] and !images[:adult].empty? )
-                    result[:'adult_expression_data'] = {} if result[:'adult_expression_data'].nil?
-                    result[:'adult_expression_data'][:images] = images[:adult]
+                    result[:adult_expression_data] = {} if result[:adult_expression_data].nil?
+                    result[:adult_expression_data][:images] = images[:adult]
                   end
                   
                   if images and ( images[:embryo] and !images[:embryo].empty? )
-                    result[:'embryo_expression_data'] = {} if result[:'embryo_expression_data'].nil?
-                    result[:'embryo_expression_data'][:images] = images[:embryo]
+                    result[:embryo_expression_data] = {} if result[:embryo_expression_data].nil?
+                    result[:embryo_expression_data][:images] = images[:embryo]
                   end
+                end
+                
+                # wtsi-phenotyping-abr
+                if result_data[:'wtsi-phenotyping-abr']
+                  abr_page = result_data[:'wtsi-phenotyping-abr'][result[:colony_prefix].to_sym]
+                  result[:abr_data] = { :page => abr_page } unless abr_page.nil?
                 end
                 
               end

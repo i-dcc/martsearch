@@ -27,7 +27,8 @@
     "wtsi-mgp_images-wholemount_expression",
     "wtsi-phenotyping-fertility",
     "wtsi-phenotyping-heatmap",
-    "wtsi-phenotyping-hom_viability"
+    "wtsi-phenotyping-hom_viability",
+    "wtsi-phenotyping-abr"
   ],
   "dataviews": [
     "gene-details",
