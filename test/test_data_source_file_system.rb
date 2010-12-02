@@ -21,7 +21,9 @@ class MartSearchFileSystemDataSourceTest < Test::Unit::TestCase
     end
     
     should 'return the expeced data structure for search()' do
-      unless @conf_obj.datasets[:'wtsi-phenotyping-abr'].nil?
+      if @conf_obj.datasets[:'wtsi-phenotyping-abr'].nil?
+        skip( "Can't run a FileSystemDataSource.search() test without a configure dataset." )
+      else
         dataset_conf = @conf_obj.datasets[:'wtsi-phenotyping-abr'].config()
         ret          = @fs_datasource.search( ['MAMH','MAMJ'], dataset_conf[:searching] )
         
@@ -32,8 +34,6 @@ class MartSearchFileSystemDataSourceTest < Test::Unit::TestCase
         ret.each do |data_return|
           assert( data_return.keys.include?( :file ), "The attribute :file is missing from the data hash." )
         end
-      else
-        assert( true, "If true is not true, we're screwed..." )
       end
     end
     
