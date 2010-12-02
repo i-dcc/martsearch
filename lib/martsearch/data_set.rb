@@ -97,7 +97,7 @@ module MartSearch
             required_attrs   = @config[:searching][:required_attributes]
             unless required_attrs.nil?
               required_attrs.each do |req_attr|
-                save_this_result = false if result[req_attr].nil?
+                save_this_result = false if result[req_attr].nil? and result[req_attr.to_sym].nil?
               end
             end
           end

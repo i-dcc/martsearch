@@ -246,7 +246,9 @@ module MartSearch
       
       file_list.each do |file|
         query.each do |string|
-          results.push(file) if file.include?(string)
+          if file.include?(string)
+            results.push({ conf[:joined_index_field].to_sym => string, :file => file })
+          end
         end
       end
       

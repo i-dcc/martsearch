@@ -182,8 +182,11 @@ module MartSearch
                 
                 # wtsi-phenotyping-abr
                 if result_data[:'wtsi-phenotyping-abr']
-                  abr_page = result_data[:'wtsi-phenotyping-abr'][result[:colony_prefix].to_sym]
-                  result[:abr_data] = { :page => abr_page } unless abr_page.nil?
+                  result_data[:'wtsi-phenotyping-abr'].each do |abr_result|
+                    if abr_result[:colony_prefix] == result[:colony_prefix]
+                      result[:abr_data] = abr_result
+                    end
+                  end
                 end
                 
               end

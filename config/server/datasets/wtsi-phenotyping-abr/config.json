@@ -1,12 +1,14 @@
 {
   "datasource":            "wtsi-phenotyping-abr",
   "enabled":               true,
-  "custom_sort":           true,
+  "custom_sort":           false,
   "custom_secondary_sort": false,
   "attribution":           "The Wellcome Trust Sanger Institute (WTSI)",
   "attribution_link":      "http://www.sanger.ac.uk/",
   "searching":            {
-    "joined_index_field": "colony_prefix",
+    "joined_index_field":  "colony_prefix",
+    "joined_attribute":    "colony_prefix",
+    "required_attributes": [ "file" ],
     "file_globs":          ["**/ABR/index.shtml"]
   }
 }

@@ -17,7 +17,8 @@
       "wtsi-mgp_graphs",
       "wtsi-mgp_images-wholemount_expression",
       "wtsi-phenotyping-fertility",
-      "wtsi-phenotyping-hom_viability"
+      "wtsi-phenotyping-hom_viability",
+      "wtsi-phenotyping-abr"
     ]
   },
   "wt_lacz_background_staining_adult": [
