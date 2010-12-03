@@ -110,7 +110,7 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
         skip("Skipping WTSI Phenotyping report tests as the DataView is not active.")
       else
         VCR.use_cassette('test_server_wtsi_phenotyping_report_pages') do
-          colonies_to_test = ['MAHN','MAMH','MAMJ','MAAD']
+          colonies_to_test = ['MAHN','MAMH','MAMJ','MAAD','MAAJ']
           
           colonies_to_test.each do |colony_prefix|
             visit '/'
@@ -125,6 +125,8 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
             cached_data = cached_data.clean_hash if RUBY_VERSION < '1.9'
             cached_data.recursively_symbolize_keys!
             assert( !cached_data.nil?, "There is no cached phenotyping data for '#{colony_prefix}'!" )
+            
+            urls_to_hit = []
             
             cached_data.each do |cached_data_key,test_data|
               test_url = cached_data_key.to_s.gsub('_data','').gsub('_','-')
@@ -142,14 +144,25 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
                 test_data[0][:heatmap_group]
               end
               
-              visit "/phenotyping/#{colony_prefix}/#{test_url}/"
-              assert_equal( "/phenotyping/#{colony_prefix}/#{test_url}/", current_path, "WTSI Phenotyping - can't visit '/phenotyping/#{colony_prefix}/#{test_url}/'!" )
-              assert( page.has_content?(test_title) )
+              urls_to_hit.push({
+                :url   => "/phenotyping/#{colony_prefix}/#{test_url}/",
+                :title => test_title
+              })
+            end
+            
+            # Clear the cache so we test the full stack...
+            @controller.cache.delete("wtsi-pheno-data:#{colony_prefix}/")
+            
+            urls_to_hit.each do |test_conf|
+              visit test_conf[:url]
+              assert_equal( "#{test_conf[:url]}", current_path, "WTSI Phenotyping - can't visit '#{test_conf[:url]}'!" )
+              assert( page.has_content?(test_conf[:title]) )
             end
           end
         end
       end
     end
+    
   end
   
 end
@@ -259,5 +272,41 @@ class MartSearchServerRackTest < Test::Unit::TestCase
         end
       end
     end
+    
+    should "render WTSI Phenotyping (ABR) report pages with a redirect" do
+      if @controller.dataviews_by_name[:'wtsi-phenotyping'].nil?
+        skip("Skipping WTSI Phenotyping report tests as the DataView is not active.")
+      else
+        VCR.use_cassette('test_server_wtsi_phenotyping_report_pages') do
+          colonies_to_test = ['MAIG','MAKH','MBAD']
+          
+          colonies_to_test.each do |colony_prefix|
+            @browser.get "/phenotyping/#{colony_prefix}/abr"
+            @browser.follow_redirect!
+            assert( @browser.last_response.ok?, "/phenotyping/#{colony_prefix}/abr failed." )
+            assert( @browser.last_response.body.include?('Auditory Brainstem Response'), "/phenotyping/#{colony_prefix}/abr doesn't have the title 'Auditory Brainstem Response'." )
+          end
+        end
+      end
+    end
+    
+    should "cope gracefully when monkeys start visiting WTSI Phenotyping report pages" do
+      if @controller.dataviews_by_name[:'wtsi-phenotyping'].nil?
+        skip("Skipping WTSI Phenotyping report tests as the DataView is not active.")
+      else
+        VCR.use_cassette('test_server_wtsi_phenotyping_report_pages') do
+          tests_to_test    = ['abr','homozygote-viability','fertility','adult-expression','embryo-expression','dexa','hot-plate']
+          colonies_to_test = ['FOOO','BAAR','BAAZ','ARRR']
+          
+          colonies_to_test.each do |colony_prefix|
+            tests_to_test.each do |test|
+              @browser.get "/phenotyping/#{colony_prefix}/#{test}/"
+              assert_equal( 404, @browser.last_response.status, "WTF?!? '/phenotyping/#{colony_prefix}/#{test}/' is an ok url..." )
+            end
+          end
+        end
+      end
+    end
+    
   end
 end
