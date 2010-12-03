@@ -60,7 +60,7 @@
       <% unless @data[:images].nil? or @data[:images].empty? %>
         <ul class="wtsi-phenotyping-adult-expression-image-list">
           <% @data[:images].each do |img| %>
-            <%= partial( "dataviews/wtsi-phenotyping/adult_expression_images", :locals => { :img => img, :gallery_name => "adultexp" } ) %>
+            <%= partial( "dataviews/wtsi-phenotyping/expression_images", :locals => { :img => img, :gallery_name => "adultexp" } ) %>
           <% end %>
         </ul>
       <% else %>
@@ -99,7 +99,7 @@
     
       <ul class="wtsi-phenotyping-adult-expression-image-list">
         <% @bg_staining_imgs.each do |img| %>
-          <%= partial( "dataviews/wtsi-phenotyping/adult_expression_images", :locals => { :img => img, :gallery_name => "bgstain" } ) %>
+          <%= partial( "dataviews/wtsi-phenotyping/expression_images", :locals => { :img => img, :gallery_name => "bgstain" } ) %>
         <% end %>
       </ul>
     </div>

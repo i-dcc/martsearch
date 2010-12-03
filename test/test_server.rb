@@ -105,6 +105,51 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
       end
     end
     
+    should "render WTSI Phenotyping report pages" do
+      if @controller.dataviews_by_name[:'wtsi-phenotyping'].nil?
+        skip("Skipping WTSI Phenotyping report tests as the DataView is not active.")
+      else
+        VCR.use_cassette('test_server_wtsi_phenotyping_report_pages') do
+          colonies_to_test = ['MAHN','MAMH','MAMJ','MAAD']
+          
+          colonies_to_test.each do |colony_prefix|
+            visit '/'
+            fill_in( 'query', :with => "#{colony_prefix}" )
+            click_button('Search')
+            
+            assert_equal( '/search', current_path, "WTSI Phenotyping search for '#{colony_prefix}': The home page form didn't forward to /search." )
+            assert( page.has_content?( "Search Results for '#{colony_prefix}'" ), "WTSI Phenotyping search for '#{colony_prefix}': /search doesn't show the search term we've just looked for..." )
+            
+            cached_data = @controller.cache.fetch("wtsi-pheno-data:#{colony_prefix}")
+            cached_data = BSON.deserialize(cached_data) unless @controller.cache.is_a?(MartSearch::MongoCache)
+            cached_data = cached_data.clean_hash if RUBY_VERSION < '1.9'
+            cached_data.recursively_symbolize_keys!
+            assert( !cached_data.nil?, "There is no cached phenotyping data for '#{colony_prefix}'!" )
+            
+            cached_data.each do |cached_data_key,test_data|
+              test_url = cached_data_key.to_s.gsub('_data','').gsub('_','-')
+              
+              # Don't test PDF downloads...
+              next if test_url == 'eye-histopathology'
+              
+              test_title = case test_url
+              when 'abr'                   then 'Auditory Brainstem Response'
+              when 'adult-expression'      then 'Adult Expression'
+              when 'embryo-expression'     then 'Embryo Expression'
+              when 'homozygote-viability'  then 'Homozygote Viability'
+              when 'fertility'             then 'Fertility'
+              else
+                test_data[0][:heatmap_group]
+              end
+              
+              visit "/phenotyping/#{colony_prefix}/#{test_url}/"
+              assert_equal( "/phenotyping/#{colony_prefix}/#{test_url}/", current_path, "WTSI Phenotyping - can't visit '/phenotyping/#{colony_prefix}/#{test_url}/'!" )
+              assert( page.has_content?(test_title) )
+            end
+          end
+        end
+      end
+    end
   end
   
 end

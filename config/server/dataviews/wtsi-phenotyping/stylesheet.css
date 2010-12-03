@@ -111,7 +111,7 @@
 	border: 1px solid #999;
 }
 
-/* Adult Expression Pages */
+/* Expression Pages */
 
 table.expression_ticklist {
 	margin: 0 auto;
@@ -138,12 +138,12 @@ table.expression_ticklist td.ambiguous {
 	text-transform: lowercase;
 }
 
-.wtsi-phenotyping-adult-expression-images {
+.wtsi-phenotyping-expression-images {
 	margin: 0 auto;
 	text-align: center;
 }
 
-.wtsi-phenotyping-adult-expression-image-list li {
+.wtsi-phenotyping-expression-image-list li {
 	list-style-type: none;
 	margin: 5px;
 	padding: 5px;
@@ -164,7 +164,7 @@ table.expression_ticklist td.ambiguous {
 	_height: 190px;
 }
 
-.wtsi-phenotyping-adult-expression-image-list li img {
+.wtsi-phenotyping-expression-image-list li img {
 	padding: 2px;
 	border: 1px solid #ccc;
 	background-color: #fff;
@@ -176,20 +176,20 @@ table.expression_ticklist td.ambiguous {
 	width: 180px;
 }
 
-.wtsi-phenotyping-adult-expression-image-list li img:hover {
+.wtsi-phenotyping-expression-image-list li img:hover {
 	background-color: #fcf9b2;
 }
 
-.wtsi-phenotyping-adult-expression-image-list .gender {
+.wtsi-phenotyping-expression-image-list .gender {
 	width: 16px;
 	height: 16px;
 	float: right;
 }
 
-.wtsi-phenotyping-adult-expression-image-list .male {
+.wtsi-phenotyping-expression-image-list .male {
 	background-image: url(../images/silk/male.png);
 }
 
-.wtsi-phenotyping-adult-expression-image-list .female {
+.wtsi-phenotyping-expression-image-list .female {
 	background-image: url(../images/silk/female.png);
 }

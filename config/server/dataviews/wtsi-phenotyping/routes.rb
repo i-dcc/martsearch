@@ -65,6 +65,20 @@ module MartSearch
       end
     end
     
+    get "/phenotyping/:colony_prefix/embryo-expression/?" do
+      @colony_prefix = params[:colony_prefix].upcase
+      @data          = wtsi_phenotyping_fetch_report_data( @colony_prefix, 'embryo_expression' )
+      
+      if @data.nil?
+        status 404
+        erubis :not_found
+      else
+        @page_title       = "#{@data[:marker_symbol]} (#{@colony_prefix}): Embryo Expression"
+        # @bg_staining_imgs = @ms.dataviews_by_name[:'wtsi-phenotyping'].config[:wt_lacz_background_staining_embryo]
+        erubis :"dataviews/wtsi-phenotyping/embryo_expression_details"
+      end
+    end
+    
     get "/phenotyping/:colony_prefix/homozygote-viability/?" do
       @colony_prefix = params[:colony_prefix].upcase
       @data          = wtsi_phenotyping_fetch_report_data( @colony_prefix, 'homozygote_viability' )
