@@ -1,7 +1,14 @@
 <form id="martsearchr" action="<%= url_for '/search' %>" method="get" accept-charset="utf-8">
   <input type="text" name="query" value="" size="50" />&nbsp;
   <input type="submit" value="Search" /><br />
-  <small>Enter gene symbols, gene or product identifiers or any other search term described in the <%= link_to 'help', '/help' %> section.</small>
+  <small>
+    Enter gene/product identifiers or phenotyping test names 
+    (e.g. <%= link_to 'Mysm1', '/search?query=mysm1' %>, 
+    <%= link_to 'EPD0019_1_A05', '/search?query=EPD0019_1_A05' %> or 
+    <%= link_to 'Dexa', '/search?query=dexa' %>) 
+    or any other search term described in the 
+    <%= link_to 'help', '/help' %> section.
+  </small>
 </form>
 
 <div class="clear"></div>
