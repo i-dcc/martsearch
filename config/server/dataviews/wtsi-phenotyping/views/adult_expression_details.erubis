@@ -56,9 +56,9 @@
     </div>
 
     <h6><a href="">Images</a></h6>
-    <div class="wtsi-phenotyping-adult-expression-images">
+    <div class="wtsi-phenotyping-expression-images">
       <% unless @data[:images].nil? or @data[:images].empty? %>
-        <ul class="wtsi-phenotyping-adult-expression-image-list">
+        <ul class="wtsi-phenotyping-expression-image-list">
           <% @data[:images].each do |img| %>
             <%= partial( "dataviews/wtsi-phenotyping/expression_images", :locals => { :img => img, :gallery_name => "adultexp" } ) %>
           <% end %>
@@ -69,7 +69,7 @@
     </div>
   
     <h6><a href="">Background LacZ Staining in Adult</a></h6>
-    <div class="wtsi-phenotyping-adult-expression-images">
+    <div class="wtsi-phenotyping-expression-images">
       <p style="text-align:left">
          The adult wholemount LacZ expression protocol has been refined to minimize
          background staining however, it can still occur. We have systematically
@@ -97,7 +97,7 @@
         Examples of the pattern and level of background stain are presented below.
       </p>
     
-      <ul class="wtsi-phenotyping-adult-expression-image-list">
+      <ul class="wtsi-phenotyping-expression-image-list">
         <% @bg_staining_imgs.each do |img| %>
           <%= partial( "dataviews/wtsi-phenotyping/expression_images", :locals => { :img => img, :gallery_name => "bgstain" } ) %>
         <% end %>

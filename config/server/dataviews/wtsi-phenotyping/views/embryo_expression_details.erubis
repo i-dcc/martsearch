@@ -26,7 +26,7 @@
     </div>
 
     <h6><a href="">Images</a></h6>
-    <div class="wtsi-phenotyping-adult-expression-images">
+    <div class="wtsi-phenotyping-expression-images">
       <% unless @data[:images].nil? or @data[:images].empty? %>
         <ul class="wtsi-phenotyping-expression-image-list">
           <% @data[:images].each do |img| %>
