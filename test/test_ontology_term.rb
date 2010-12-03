@@ -25,6 +25,15 @@ class MartSearchOntologyTermTest < Test::Unit::TestCase
       assert_raise(MartSearch::OntologyTermNotFoundError) { OntologyTerm.new("FLIBBLE:5") }
     end
     
+    should "be able to represent itself as a String" do
+      string = @ont.to_s
+      
+      assert( string.include?('Term Name'), "OntologyTerm.to_s does not include 'Term Name'." )
+      assert( string.include?(@ont.content), "OntologyTerm.to_s does not include '@content'." )
+      assert( string.include?('Root Term?'), "OntologyTerm.to_s does not include 'Root Term?'." )
+      assert( string.include?('Leaf Node?'), "OntologyTerm.to_s does not include 'Leaf Node?'." )
+    end
+    
     should "respond correctly to the .parentage method" do
       assert( @ont.parentage.is_a?(Array), "OntologyTerm.parentage is not an Array when we have parents." )
       assert( @ont.parentage[0].is_a?(OntologyTerm), "OntologyTerm.parentage[0] does not return an OntologyTerm tree." )
@@ -60,6 +69,56 @@ class MartSearchOntologyTermTest < Test::Unit::TestCase
       
       assert_equal( 'GO:0023034', ont.term, "A synonym search for GO:0007242 has not found GO:0023034." )
       assert_equal( 'intracellular signaling pathway', ont.term_name, "A synonym search for GO:0007242 has not found 'intracellular signaling pathway'." )
+    end
+    
+    should "be able to serialize/deserialize itself as a JSON string" do
+      @ont.build_tree()
+      
+      json_string = nil
+      assert_nothing_raised(Exception) { json_string = @ont.to_json }
+      assert( json_string.is_a?(String) )
+      
+      duplicate = nil
+      assert_nothing_raised(Exception) { duplicate = JSON.parse(json_string) }
+      assert( duplicate.is_a?(OntologyTerm) )
+      assert_equal( @ont.term, duplicate.term )
+      assert_equal( @ont.term_name, duplicate.term_name )
+      assert_equal( @ont.is_root?, duplicate.is_root? )
+      assert_equal( @ont.is_leaf?, duplicate.is_leaf? )
+    end
+    
+    should "be able to produce a detached copy of itself" do
+      @ont.build_tree()
+      duplicate = @ont.detached_copy
+      
+      assert_equal( @ont.term, duplicate.term )
+      assert_equal( @ont.term_name, duplicate.term_name )
+      assert_equal( @ont.is_root?, duplicate.is_root? )
+      assert_equal( @ont.is_leaf?, duplicate.is_leaf? )
+      
+      assert_equal( false, duplicate.send(:already_fetched_parents) )
+      assert_equal( false, duplicate.send(:already_fetched_children) )
+    end
+    
+    should "be able to merge two ontology trees" do
+      @ont2 = OntologyTerm.new('EMAP:3003')
+      
+      @ont.build_tree
+      @ont2.build_tree
+      
+      merged_tree = @ont.merge(@ont2)
+      
+      assert( merged_tree['EMAP:2636']['EMAP:2822']['EMAP:2987'].is_a?(OntologyTerm) )
+      assert_equal( 2, merged_tree['EMAP:2636']['EMAP:2822']['EMAP:2987'].children.size )
+      assert_equal( 34, merged_tree.size )
+      
+      another_ont     = OntologyTerm.new('GO:0023034')
+      yet_another_ont = OntologyTerm.new('EMAP:3003')
+      another_ont.build_tree
+      yet_another_ont.build_tree
+      
+      assert_raise(ArgumentError) { foo = another_ont.merge(yet_another_ont) }
+      assert_raise(TypeError) { bar = another_ont.merge('EMAP:3003') }
     end
   end
 end

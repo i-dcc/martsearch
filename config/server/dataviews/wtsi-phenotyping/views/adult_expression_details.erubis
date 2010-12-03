@@ -1,0 +1,107 @@
+<div id="wtsi-phenotyping-report">
+  <h2>Adult Expression Data for <%= @data[:marker_symbol] %> (<%= @colony_prefix %>)</h2>
+
+  <div id="test-overview" class="test-descriptor"> 
+    <h4>Overview</h4> 
+    <div class="test-descriptor-content">
+      <p style="margin-bottom:0">
+        Adult expression (&ge; 6 weeks):  The lacZ reporter gene within 
+        the targeting vector was used to determine the wholemount expression 
+        profile of the targeted gene.  Mice were fixed by cardiac perfusion 
+        using 4% paraformaldehyde (PFA).  Following dissection, the tissues 
+        to be stained were fixed an additional 30 min in 4% PFA before being 
+        rinsed in phosphate buffered saline and transferred to lacZ staining 
+        solution, containing 0.1% X-gal, for up to 48 hours.  After an 
+        additional overnight post-staining fixation in 4% PFA, tissues were 
+        cleared with 50% glycerol then transferred to 70% glycerol for long-term 
+        storage.
+      </p>
+    </div> 
+  </div> 
+
+  <div id="test-display-criteria" class="test-descriptor"> 
+    <h4>Display Criteria</h4> 
+    <div class="test-descriptor-content"> 
+      <p style="margin-bottom:5px">
+        A tick-list of 41 tissues and organs was scored for the presence (green 
+        tick) or absence (red cross) of lacZ expression.
+      </p>
+      <ul style="margin-bottom:5px">
+        <li>
+          The term 'Ambiguous' was assigned when there was uncertainty as to 
+          the validity of the observed pattern e.g. staining may be very faint, 
+          background or an artefact due to trapping.
+        </li>
+        <li>
+          The term 'No Data' was assigned if the stained entity was not available 
+          to assess.
+        </li>
+      </ul>
+      <p style="margin-bottom:0">
+        By default, up to 27 standard images may be taken using a Leica MZ16A 
+        microscope and Imagic software.  These images were only collected when 
+        X-gal staining was present. If information or images that you are interested 
+        in are not presented, please send details to 
+        <a href="mailto:MGPenquiries@sanger.ac.uk">MGPenquiries@sanger.ac.uk</a> 
+        and, on a limited, first come first served basis, we will process your 
+        request.
+      </p>
+    </div> 
+  </div>
+
+  <div class="accordion">
+    <h6><a href="">Tick-List</a></h6>
+    <div>
+      <%= partial( "dataviews/wtsi-phenotyping/adult_expression_ticklist" ) %>
+    </div>
+
+    <h6><a href="">Images</a></h6>
+    <div class="wtsi-phenotyping-adult-expression-images">
+      <% unless @data[:images].nil? or @data[:images].empty? %>
+        <ul class="wtsi-phenotyping-adult-expression-image-list">
+          <% @data[:images].each do |img| %>
+            <%= partial( "dataviews/wtsi-phenotyping/expression_images", :locals => { :img => img, :gallery_name => "adultexp" } ) %>
+          <% end %>
+        </ul>
+      <% else %>
+        <div style="text-align:center;"><em>no data reported</em></div>
+      <% end %>
+    </div>
+  
+    <h6><a href="">Background LacZ Staining in Adult</a></h6>
+    <div class="wtsi-phenotyping-adult-expression-images">
+      <p style="text-align:left">
+         The adult wholemount LacZ expression protocol has been refined to minimize
+         background staining however, it can still occur. We have systematically
+         documented the sites and intensities of this background stain in male and
+         female wildtype C57BL/6 (C57BL/6J-Tyr&lt;c-Brd&gt;; C57BL/6NTac/Den) mice. 
+         The major locations where background staining may be observed are:
+         <ul style="text-align:left">
+           <li>Nasal cavity</li>
+           <li>Thyroid gland</li>
+           <li>Glandular stomach</li>
+           <li>Kidney</li>
+           <li>Male genitals</li>
+         </ul>
+      </p>
+      <p style="text-align:left">
+        Additional background staining is observed occasionally in:
+        <ul style="text-align:left">
+          <li>Rib cage</li>
+          <li>Thymus</li>
+          <li>Mesenteric lymph nodes</li>
+          <li>Ovaries</li>
+        </ul>
+      </p>
+      <p style="text-align:left">
+        Examples of the pattern and level of background stain are presented below.
+      </p>
+    
+      <ul class="wtsi-phenotyping-adult-expression-image-list">
+        <% @bg_staining_imgs.each do |img| %>
+          <%= partial( "dataviews/wtsi-phenotyping/expression_images", :locals => { :img => img, :gallery_name => "bgstain" } ) %>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>

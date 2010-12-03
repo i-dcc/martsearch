@@ -3,7 +3,6 @@ require 'test_helper'
 class MartSearchControllerTest < Test::Unit::TestCase
   def setup
     @controller = MartSearch::Controller.instance()
-    setup_access_to_private_methods( @controller )
   end
   
   context "A MartSearch::Controller object" do
@@ -62,10 +61,10 @@ class MartSearchControllerTest < Test::Unit::TestCase
         ##
         
         # Hit the 'fresh' searches first
-        bad_result = @controller.search_from_fresh_index_public( @controller.config[:index][:test][:bad_search], 1 )
+        bad_result = @controller.send( :search_from_fresh_index, @controller.config[:index][:test][:bad_search], 1 )
         assert_equal( false, bad_result )
         
-        good_result = @controller.search_from_fresh_index_public( @controller.config[:index][:test][:single_return_search], 1 )
+        good_result = @controller.send( :search_from_fresh_index, @controller.config[:index][:test][:single_return_search], 1 )
         assert_equal( true, good_result )
         
         # Now check the 'cachability' of the data
@@ -79,10 +78,10 @@ class MartSearchControllerTest < Test::Unit::TestCase
         ##
         
         # First prepare the search terms to drive the dataset searches
-        grouped_search_terms = @controller.prepare_dataset_search_terms_public( @controller.search_data.keys )
+        grouped_search_terms = @controller.send( :prepare_dataset_search_terms, @controller.search_data.keys )
         
         # Now drive the dataset searches
-        dataset_results = @controller.search_from_fresh_datasets_public( grouped_search_terms )
+        dataset_results = @controller.send( :search_from_fresh_datasets, grouped_search_terms )
         assert( dataset_results.is_a?(TrueClass) || dataset_results.is_a?(FalseClass) )
         
         @controller.search_data.each do |key,value|
@@ -93,7 +92,7 @@ class MartSearchControllerTest < Test::Unit::TestCase
     
     should "allow us to perform end-to-end searches" do
       VCR.use_cassette('test_controller_search') do
-        @controller.clear_instance_variables_public()
+        @controller.send( :clear_instance_variables )
         @controller.cache.clear
         
         fresh_results  = @controller.search( @controller.config[:index][:test][:single_return_search], 1 )
@@ -105,25 +104,4 @@ class MartSearchControllerTest < Test::Unit::TestCase
     
   end
   
-  def setup_access_to_private_methods( controller )
-    def controller.search_from_fresh_index_public(*args)
-      search_from_fresh_index(*args)
-    end
-    
-    def controller.search_from_cached_index_public(*args)
-      search_from_cached_index(*args)
-    end
-    
-    def controller.prepare_dataset_search_terms_public(*args)
-      prepare_dataset_search_terms(*args)
-    end
-    
-    def controller.search_from_fresh_datasets_public(*args)
-      search_from_fresh_datasets(*args)
-    end
-    
-    def controller.clear_instance_variables_public(*args)
-      clear_instance_variables(*args)
-    end
-  end
 end

@@ -49,9 +49,10 @@ module MartSearch
 end
 
 require "#{MARTSEARCH_PATH}/lib/martsearch/utils"
-require "#{MARTSEARCH_PATH}/lib/martsearch/mock"
 require "#{MARTSEARCH_PATH}/lib/martsearch/index"
 require "#{MARTSEARCH_PATH}/lib/martsearch/data_source"
+require "#{MARTSEARCH_PATH}/lib/martsearch/data_source_biomart"
+require "#{MARTSEARCH_PATH}/lib/martsearch/data_source_file_system"
 require "#{MARTSEARCH_PATH}/lib/martsearch/data_set_utils"
 require "#{MARTSEARCH_PATH}/lib/martsearch/data_set"
 require "#{MARTSEARCH_PATH}/lib/martsearch/data_view"

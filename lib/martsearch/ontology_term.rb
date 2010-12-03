@@ -280,6 +280,10 @@ module MartSearch
     # @param [OntologyTerm] tree The tree that is to be merged into self
     # @return [OntologyTerm] The merged tree
     def merge( tree )
+      unless tree.is_a?(MartSearch::OntologyTerm)
+        raise TypeError, "You can only merge in another OntologyTerm tree!"
+      end
+      
       unless self.root.name == tree.root.name
         raise ArgumentError, "Unable to merge trees as they do not share the same root!"
       end

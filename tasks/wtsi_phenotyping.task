@@ -1,0 +1,76 @@
+begin
+  require 'martsearch'
+  
+  @ms            = MartSearch::Controller.instance()
+  @json_datafile = '/tmp/wtsi_heatmap_data.json'
+  @xls_file      = '/software/team87/brave_new_world/data/generated/pheno_overview.xls'
+  
+  namespace :wtsi do
+    
+    desc "Rebuilds the pheno_heatmap.xls file of all the WTSI data"
+    task :build_pheno_heatmap_xls => [ :build_pheno_heatmap_data ] do
+      puts 'Calling Perl script to write spreadsheet...'
+      system "perl #{MARTSEARCH_PATH}/script/wtsi_phenotyping_spreadsheet.pl --data_file=#{@json_datafile} --xls_name=#{@xls_file}"
+    end
+    
+    desc "Rebuild the wtsi_heatmap_data cache in #{@json_datafile}"
+    task :build_pheno_heatmap_data do
+      if @ms.datasources[:'wtsi-phenotyping'].nil?
+        raise MartSearch::InvalidConfigError, "The 'wtsi-phenotyping' DataSource is not enabled."
+      end
+      
+      mgp_pheno_mart  = @ms.datasources[:'wtsi-phenotyping'].ds
+      attributes      = @ms.datasets[:'wtsi-phenotyping-heatmap'].config[:searching][:attributes]
+      
+      puts 'Getting headers for spreadsheet...'
+      mart_attributes = mgp_pheno_mart.attributes
+      heatmap_headers = []
+      heatmap_columns = []
+      attributes.each do |attrib|
+        next if attrib =~ /_comments$/
+        heatmap_headers.push( mart_attributes[attrib].display_name )
+        heatmap_columns.push(attrib)
+      end
+      
+      puts 'Collecting top-level heatmap data from the WTSI biomart...'
+      heatmap_data   = mgp_pheno_mart.search( :attributes => attributes, :process_results => true )
+      heatmap_data.sort!{ |a,b| a["marker_symbol"] <=> b["marker_symbol"] }
+      
+      puts 'Gathering data for links to report pages...'
+      count = 0
+      heatmap_data.map! do |heatmap_row|
+        count = count + 1
+        puts "  - #{heatmap_row["colony_prefix"]} [ #{count} / #{heatmap_data.size} ]"
+        
+        report_data = @ms.cache.fetch("wtsi-pheno-data:#{heatmap_row["colony_prefix"]}")
+        if report_data.nil?
+          @ms.search( heatmap_row["colony_prefix"] )
+          report_data = @ms.cache.fetch("wtsi-pheno-data:#{heatmap_row["colony_prefix"]}")
+        end
+        
+        unless report_data.nil?
+          report_data = BSON.deserialize(report_data) unless @ms.cache.is_a?(MartSearch::MongoCache)
+          report_data = report_data.clean_hash if RUBY_VERSION < '1.9'
+          heatmap_row.merge!(report_data)
+        end
+        
+        heatmap_row
+      end
+      
+      puts 'Saving data to disk...'
+      File.open( @json_datafile, 'w' ) do |file|
+        data_to_print = {
+          :headers => heatmap_headers,
+          :columns => heatmap_columns,
+          :data => heatmap_data
+        }
+        file.write( data_to_print.to_json )
+      end
+    end
+    
+    
+  end
+  
+rescue LoadError
+  puts "[ERROR] Unable to load 'wtsi_phenotyping' tasks - please run 'bundle install'"
+end

@@ -1,0 +1,16 @@
+<div id="wtsi-phenotyping-report">
+  <h2><%= @test_name %> Data for <%= @marker_symbol %> (<%= @colony_prefix %>)</h2>
+
+  <div id="test-overview" class="test-descriptor">
+    <h4>Overview</h4>
+    <div class="test-descriptor-content">
+      <%= @test_desc %>
+    </div>
+  </div>
+
+  <div id="test-images">
+    <% @data.each do |img| %>
+      <img src="<%= img[:url] %>" alt="<%= img[:test] %>" />
+    <% end %>
+  </div>
+</div>

@@ -337,7 +337,7 @@ module MartSearch
     
     MartSearch::Controller.instance().dataviews.each do |dv|
       if dv.use_custom_routes?
-        eval File.read("#{MARTSEARCH_PATH}/config/server/dataviews/#{dv.internal_name}/routes.rb")
+        load "#{MARTSEARCH_PATH}/config/server/dataviews/#{dv.internal_name}/routes.rb"
       end
     end
     

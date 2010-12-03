@@ -1,0 +1,46 @@
+<div id="wtsi-phenotyping-report">
+  <h2>Fertility Data for <%= @marker_symbol %> (<%= @colony_prefix %>)</h2>
+
+  <div class="test-descriptor">
+    <table class="tablesorter" width="100%">
+      <thead>
+        <tr>
+          <th>Father Genotype Status</th>
+          <th>Mother Genotype Status</th>
+          <th>Father Age at Setup (weeks)</th>
+          <th>Mother Age at Setup (weeks)</th>
+          <th>Setup Date</th>
+          <th>End Date</th>
+          <th>Length of Mating (weeks)</th>
+          <th># Pups Born</th>
+          <th># Pups Weaned</th>
+          <th>Total # Litters Born</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @data.each do |mating| %>
+          <tr>
+            <td><%= mating[:father_genotype] %></td>
+            <td><%= mating[:mother_genotype] %></td>
+            <td><%= mating[:father_age_at_setup].to_f %></td>
+            <td><%= mating[:mother_age_at_setup].to_f %></td>
+            <td>
+              <% if mating[:setup_date] %>
+                <%= DateTime.strptime( str=mating[:setup_date].to_s, fmt="%Y-%m-%d %H:%M:%S").strftime( fmt="%d/%m/%Y" ) %>
+              <% end %>
+            </td>
+            <td>
+              <% if mating[:separation_date] %>
+                <%= DateTime.strptime( str=mating[:separation_date].to_s, fmt="%Y-%m-%d %H:%M:%S").strftime( fmt="%d/%m/%Y" ).to_s %>
+              <% end %>
+            </td>
+            <td><%= mating[:length_of_mating_weeks] %></td>
+            <td><%= mating[:number_of_pups_born].to_i %></td>
+            <td><%= mating[:number_of_pups_weaned].to_i %></td>
+            <td><%= mating[:total_number_of_litters_born].to_i %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

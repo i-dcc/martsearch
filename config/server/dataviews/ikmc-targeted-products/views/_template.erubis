@@ -59,6 +59,8 @@
                 'dataviews/ikmc-targeted-products/targeting_vectors',
                 :locals => {
                   :pipeline          => project[:pipeline],
+                  :cassette          => project[:cassette],
+                  :backbone          => project[:backbone],
                   :targeting_vectors => project[:targeting_vectors]
                 }
               )
