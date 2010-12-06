@@ -16,22 +16,28 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
   
   context "A MartSearch::Server web app instance" do
     should "have 'home', 'about' and 'help' pages" do
-      ['/','/about','/help'].each do |path|
-        visit path
-        assert_equal( path, current_path )
-        assert( page.has_content?( @server_conf[:portal_name] ) )
+      VCR.use_cassette('test_server_basic_pages') do
+        ['/','/about','/help'].each do |path|
+          visit path
+          assert_equal( path, current_path )
+          assert( page.has_selector?( 'h1', :text => @server_conf[:portal_name], :visible => true ) )
+        end
       end
     end
     
     should "allow you to manually clear the cache by visiting 'clear_cache'" do
-      visit '/clear_cache'
-      assert_equal( '/', current_path )
-      assert( page.has_content?( @server_conf[:portal_name] ) )
+      VCR.use_cassette('test_server_basic_pages') do
+        visit '/clear_cache'
+        assert_equal( '/', current_path )
+        assert( page.has_selector?( 'h1', :text => @server_conf[:portal_name], :visible => true ) )
+      end
     end
     
     should "dump you back on the home page if a user tries to search without parameters" do
-      visit '/search'
-      assert_equal( '/', current_path )
+      VCR.use_cassette('test_server_basic_pages') do
+        visit '/search'
+        assert_equal( '/', current_path )
+      end
     end
     
     should "allow you to do a simple search..." do
@@ -80,7 +86,6 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
             while page_no < 3
               visit "/browse/#{name}/#{opts[:link_arg]}/#{page_no}"
               assert_equal( '/browse', current_path, "A request to '/browse/#{name}/#{opts[:link_arg]}/#{page_no}' failed!" )
-              assert( page.has_content?("Browsing Data by #{conf[:display_name]}: '#{opts[:display_arg]}'"), "A request to '/browse/#{name}/#{opts[:link_arg]}/#{page_no}' failed!" )
               
               if page.has_css?('.pagination a.next_page')
                 page_no = page_no + 1

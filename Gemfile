@@ -33,7 +33,7 @@ group :development, :test do
   gem 'vcr',                '>=1.1'
   gem 'webmock'
   gem 'rack-test',          '>=0.5'
-  gem 'capybara',           '>=0.3.9'
+  gem 'capybara',           '>=0.4.0'
   gem 'capistrano',         '>=2.5'
   gem 'capistrano-ext'
   gem 'railsless-deploy'
