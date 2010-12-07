@@ -263,6 +263,7 @@ sub write_test_results {
     # if we have a test details page to link to...
     my $test_name = $column_key; $test_name =~ s/\_/\-/g;
     my $pheno_details_url = "$PORTAL_URL/phenotyping/$colony_prefix/$test_name/";
+    if ( $test_name eq 'eye-histopathology' ) { $pheno_details_url = $data->[0]->{url}; }
     
     if ( $worksheet->get_name() =~ /Sort/ ) {
       $worksheet->write_url( $row, $col, $pheno_details_url, _xls_test_result_format( $sorted_test_mapping, $result ), _xls_test_result_format( $formats->{linked_tests}, $result ) );
