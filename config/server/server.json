@@ -6,8 +6,9 @@
     "to":   "team87@sanger.ac.uk"
   },
   "cache": {
-    "type": "file",
-    "extra_searches_to_prime":  []
+    "type":   "mongo",
+    "server": "htgt.internal.sanger.ac.uk",
+    "db":     "wtsi_portal"
   },
   "datasets": [
     "emma-strains",
