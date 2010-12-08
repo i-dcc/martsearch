@@ -37,7 +37,10 @@ module MartSearch
           errors.push( mice[:error] ) unless mice[:error].empty?
         end
 
-        vectors_and_cells = get_vectors_and_cells( datasources, project_id, data[:mice] )
+        mouse_data = nil
+        mouse_data = data[:mice][:genotype_confirmed] if data[:mice] and data[:mice][:genotype_confirmed]
+
+        vectors_and_cells = get_vectors_and_cells( datasources, project_id, mouse_data )
         data.merge!( vectors_and_cells[:data] )
         errors.push( vectors_and_cells[:error] ) unless vectors_and_cells[:error].empty?
 
@@ -155,8 +158,7 @@ module MartSearch
             :process_results => true,
             :filters         => {
               'marker_symbol' => marker_symbol,
-              'status'        => 'Genotype Confirmed',
-              'emma'          => '1'
+              'status'        => ['Genotype Confirmed','Germline transmission achieved','Chimera mating complete','Recipient Littered','Micro-injected','Pending']
             },
             :attributes      => [
                 'status', 'allele_name', 'escell_clone', 'emma',
@@ -169,20 +171,31 @@ module MartSearch
 
         unless results[:data].empty?
           results[:data].recursively_symbolize_keys!
+          
+          mouse_results = {
+            :genotype_confirmed => [],
+            :mi_in_progress     => []
+          }
 
           # Test for QC data - set each empty qc_metric to '-' or count it
           results[:data].each do |result|
             result[:qc_count] = 0
             qc_metrics.each do |metric|
-              if result[metric].nil?
-                result[metric] = '-'
+              if result[metric.to_sym].nil?
+                result[metric.to_sym] = '-'
               else
                 result[:qc_count] = result[:qc_count] + 1
               end
             end
+            
+            if result[:status] == 'Genotype Confirmed'
+              mouse_results[:genotype_confirmed].push(result)
+            else
+              mouse_results[:mi_in_progress].push(result)
+            end
           end
 
-          results[:data] = { :mice => results[:data] }
+          results[:data] = { :mice => mouse_results }
         end
 
         return results

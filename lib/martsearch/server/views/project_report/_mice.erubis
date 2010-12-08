@@ -15,7 +15,7 @@
         <th class="noborder nocol nobg hide_on_print"></th>
       </thead>
       <tbody>
-        <% @data[:mice].each do |mouse| %>
+        <% @data[:mice][:genotype_confirmed].each do |mouse| %>
           <tr>
             <td><%= @data[:marker_symbol] %></td>
             <td><%= mouse[:allele_name] %></td>

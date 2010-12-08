@@ -1,0 +1,46 @@
+<div id="wtsi-phenotyping-report">
+  <h2>Embryo Expression Data for <%= @data[:marker_symbol] %> (<%= @colony_prefix %>)</h2>
+
+  <div id="test-overview" class="test-descriptor"> 
+    <h4>Overview</h4> 
+    <div class="test-descriptor-content">
+      <p style="margin-bottom:0">
+        
+      </p>
+    </div> 
+  </div> 
+
+  <div id="test-display-criteria" class="test-descriptor"> 
+    <h4>Display Criteria</h4> 
+    <div class="test-descriptor-content"> 
+      <p style="margin-bottom:0">
+        
+      </p>
+    </div> 
+  </div>
+
+  <div class="accordion">
+    <h6><a href="">Tick-List</a></h6>
+    <div>
+      
+    </div>
+
+    <h6><a href="">Images</a></h6>
+    <div class="wtsi-phenotyping-expression-images">
+      <% unless @data[:images].nil? or @data[:images].empty? %>
+        <ul class="wtsi-phenotyping-expression-image-list">
+          <% @data[:images].each do |img| %>
+            <%= partial( "dataviews/wtsi-phenotyping/expression_images", :locals => { :img => img, :gallery_name => "embryoexp" } ) %>
+          <% end %>
+        </ul>
+      <% else %>
+        <div style="text-align:center;"><em>no data reported</em></div>
+      <% end %>
+    </div>
+  
+    <h6><a href="">Background LacZ Staining in Embryo</a></h6>
+    <div class="wtsi-phenotyping-expression-images">
+      
+    </div>
+  </div>
+</div>

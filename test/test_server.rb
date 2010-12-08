@@ -16,54 +16,62 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
   
   context "A MartSearch::Server web app instance" do
     should "have 'home', 'about' and 'help' pages" do
-      ['/','/about','/help'].each do |path|
-        visit path
-        assert_equal( path, current_path )
-        assert( page.has_content?( @server_conf[:portal_name] ) )
+      VCR.use_cassette('test_server_basic_pages') do
+        ['/','/about','/help'].each do |path|
+          visit path
+          assert_equal( path, current_path )
+          assert( page.has_selector?( 'h1', :text => @server_conf[:portal_name], :visible => true ) )
+        end
       end
     end
     
     should "allow you to manually clear the cache by visiting 'clear_cache'" do
-      visit '/clear_cache'
-      assert_equal( '/', current_path )
-      assert( page.has_content?( @server_conf[:portal_name] ) )
+      VCR.use_cassette('test_server_basic_pages') do
+        visit '/clear_cache'
+        assert_equal( '/', current_path )
+        assert( page.has_selector?( 'h1', :text => @server_conf[:portal_name], :visible => true ) )
+      end
     end
     
     should "dump you back on the home page if a user tries to search without parameters" do
-      visit '/search'
-      assert_equal( '/', current_path )
+      VCR.use_cassette('test_server_basic_pages') do
+        visit '/search'
+        assert_equal( '/', current_path )
+      end
     end
     
     should "allow you to do a simple search..." do
       VCR.use_cassette('test_server_simple_search') do
-        visit '/'
+        search_terms_to_test = ['Mysm1','Cbx1','Arid4a','Art4','Myo7a']
         
-        search_term = @controller.index.config[:test][:single_return_search]
-        
-        fill_in( 'query', :with => search_term )
-        click_button('Search')
-        
-        assert_equal( '/search', current_path )
-        assert( page.has_content?( @server_conf[:portal_name] ) )
-        assert( page.has_content?( "Search Results for '#{search_term}'" ) )
-        assert( page.has_css?('#search_results div.doc_content h4.dataset_title') )
-        assert( page.has_css?('#search_results div.doc_content div.dataset_content') )
-        
-        ##
-        ## Test redirects for the old rest style urls...
-        ##
-        
-        visit "/search/#{search_term}"
-        assert_equal( '/search', current_path )
-        assert( page.has_content?( "Search Results for '#{search_term}'" ) )
-        assert( page.has_css?('#search_results div.doc_content h4.dataset_title') )
-        assert( page.has_css?('#search_results div.doc_content div.dataset_content') )
-        
-        visit "/search/#{search_term}/1"
-        assert_equal( '/search', current_path )
-        assert( page.has_content?( "Search Results for '#{search_term}'" ) )
-        assert( page.has_css?('#search_results div.doc_content h4.dataset_title') )
-        assert( page.has_css?('#search_results div.doc_content div.dataset_content') )
+        search_terms_to_test.each do |search_term|
+          visit '/'
+          
+          fill_in( 'query', :with => search_term )
+          click_button('Search')
+          
+          assert_equal( '/search', current_path, "Simple search for '#{search_term}': The home page form didn't forward to /search." )
+          assert( page.has_content?( @server_conf[:portal_name] ), "Simple search for '#{search_term}': /search doesn't have the portal title." )
+          assert( page.has_content?( "Search Results for '#{search_term}'" ), "Simple search for '#{search_term}': /search doesn't show the search term we've just looked for..." )
+          assert( page.has_css?('#search_results div.doc_content h4.dataset_title'), "Simple search for '#{search_term}': /search doesn't have the HTML for '#search_results div.doc_content h4.dataset_title'." )
+          assert( page.has_css?('#search_results div.doc_content div.dataset_content'), "Simple search for '#{search_term}': /search doesn't have the HTML for '#search_results div.doc_content div.dataset_content'." )
+          
+          ##
+          ## Test redirects for the old rest style urls...
+          ##
+
+          visit "/search/#{search_term}"
+          assert_equal( '/search', current_path, "Simple search for '#{search_term}': The home page form didn't forward to /search." )
+          assert( page.has_content?( "Search Results for '#{search_term}'" ), "Simple search for '#{search_term}': /search doesn't show the search term we've just looked for..." )
+          assert( page.has_css?('#search_results div.doc_content h4.dataset_title'), "Simple search for '#{search_term}': /search doesn't have the HTML for '#search_results div.doc_content h4.dataset_title'." )
+          assert( page.has_css?('#search_results div.doc_content div.dataset_content'), "Simple search for '#{search_term}': /search doesn't have the HTML for '#search_results div.doc_content div.dataset_content'." )
+
+          visit "/search/#{search_term}/1"
+          assert_equal( '/search', current_path, "Simple search for '#{search_term}': The home page form didn't forward to /search." )
+          assert( page.has_content?( "Search Results for '#{search_term}'" ), "Simple search for '#{search_term}': /search doesn't show the search term we've just looked for..." )
+          assert( page.has_css?('#search_results div.doc_content h4.dataset_title'), "Simple search for '#{search_term}': /search doesn't have the HTML for '#search_results div.doc_content h4.dataset_title'." )
+          assert( page.has_css?('#search_results div.doc_content div.dataset_content'), "Simple search for '#{search_term}': /search doesn't have the HTML for '#search_results div.doc_content div.dataset_content'." )
+        end
       end
     end
     
@@ -77,8 +85,7 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
             page_no = 1
             while page_no < 3
               visit "/browse/#{name}/#{opts[:link_arg]}/#{page_no}"
-              assert_equal( '/browse', current_path )
-              assert( page.has_content?("Browsing Data by #{conf[:display_name]}: '#{opts[:display_arg]}'"), "A request to '/browse/#{name}/#{opts[:link_arg]}/#{page_no}' failed!" )
+              assert_equal( '/browse', current_path, "A request to '/browse/#{name}/#{opts[:link_arg]}/#{page_no}' failed!" )
               
               if page.has_css?('.pagination a.next_page')
                 page_no = page_no + 1
@@ -99,6 +106,64 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
           visit "/project/#{project_id}"
           assert_equal( "/project/#{project_id}", current_path )
           assert( page.has_content?("(ID: #{project_id})") )
+        end
+      end
+    end
+    
+    should "render WTSI Phenotyping report pages" do
+      if @controller.dataviews_by_name[:'wtsi-phenotyping'].nil?
+        skip("Skipping WTSI Phenotyping report tests as the DataView is not active.")
+      else
+        VCR.use_cassette('test_server_wtsi_phenotyping_report_pages') do
+          colonies_to_test = ['MAHN','MAMH','MAMJ','MAAD','MAAJ']
+          
+          colonies_to_test.each do |colony_prefix|
+            visit '/'
+            fill_in( 'query', :with => "#{colony_prefix}" )
+            click_button('Search')
+            
+            assert_equal( '/search', current_path, "WTSI Phenotyping search for '#{colony_prefix}': The home page form didn't forward to /search." )
+            assert( page.has_content?( "Search Results for '#{colony_prefix}'" ), "WTSI Phenotyping search for '#{colony_prefix}': /search doesn't show the search term we've just looked for..." )
+            
+            cached_data = @controller.cache.fetch("wtsi-pheno-data:#{colony_prefix}")
+            cached_data = BSON.deserialize(cached_data) unless @controller.cache.is_a?(MartSearch::MongoCache)
+            cached_data = cached_data.clean_hash if RUBY_VERSION < '1.9'
+            cached_data.recursively_symbolize_keys!
+            assert( !cached_data.nil?, "There is no cached phenotyping data for '#{colony_prefix}'!" )
+            
+            urls_to_hit = []
+            
+            cached_data.each do |cached_data_key,test_data|
+              test_url = cached_data_key.to_s.gsub('_data','').gsub('_','-')
+              
+              # Don't test PDF downloads...
+              next if test_url == 'eye-histopathology'
+              
+              test_title = case test_url
+              when 'abr'                   then 'Auditory Brainstem Response'
+              when 'adult-expression'      then 'Adult Expression'
+              when 'embryo-expression'     then 'Embryo Expression'
+              when 'homozygote-viability'  then 'Homozygote Viability'
+              when 'fertility'             then 'Fertility'
+              else
+                test_data[0][:heatmap_group]
+              end
+              
+              urls_to_hit.push({
+                :url   => "/phenotyping/#{colony_prefix}/#{test_url}/",
+                :title => test_title
+              })
+            end
+            
+            # Clear the cache so we test the full stack...
+            @controller.cache.delete("wtsi-pheno-data:#{colony_prefix}/")
+            
+            urls_to_hit.each do |test_conf|
+              visit test_conf[:url]
+              assert_equal( "#{test_conf[:url]}", current_path, "WTSI Phenotyping - can't visit '#{test_conf[:url]}'!" )
+              assert( page.has_content?(test_conf[:title]) )
+            end
+          end
         end
       end
     end
@@ -129,15 +194,16 @@ class MartSearchServerRackTest < Test::Unit::TestCase
     
     should 'allow you to do a simple search and retrieve a JSON response...' do
       VCR.use_cassette('test_server_simple_search') do
-        search_term = @controller.index.config[:test][:single_return_search]
+        search_terms_to_test = ['Mysm1','Cbx1','Arid4a','Art4','Myo7a']
         
-        @browser.get "/search?query=#{search_term}&wt=json"
-        assert( @browser.last_response.ok? )
-        
-        json = JSON.parse( @browser.last_response.body )
-        
-        assert( json.is_a?(Hash) )
-        assert( json[ json.keys.first ]['index'] != nil )
+        search_terms_to_test.each do |search_term|
+          @browser.get "/search?query=#{search_term}&wt=json"
+          assert( @browser.last_response.ok?, "Simple search for '#{search_term}': last_response not ok." )
+          
+          json = JSON.parse( @browser.last_response.body )
+          assert( json.is_a?(Hash), "Simple search for '#{search_term}': the parsed JSON is not a hash." )
+          assert( json[ json.keys.first ]['index'] != nil, "Simple search for '#{search_term}': the parsed JSON has 'nil' in the first 'index' entry." )
+        end
       end
     end
     
@@ -211,5 +277,41 @@ class MartSearchServerRackTest < Test::Unit::TestCase
         end
       end
     end
+    
+    should "render WTSI Phenotyping (ABR) report pages with a redirect" do
+      if @controller.dataviews_by_name[:'wtsi-phenotyping'].nil?
+        skip("Skipping WTSI Phenotyping report tests as the DataView is not active.")
+      else
+        VCR.use_cassette('test_server_wtsi_phenotyping_report_pages') do
+          colonies_to_test = ['MAIG','MAKH','MBAD']
+          
+          colonies_to_test.each do |colony_prefix|
+            @browser.get "/phenotyping/#{colony_prefix}/abr"
+            @browser.follow_redirect!
+            assert( @browser.last_response.ok?, "/phenotyping/#{colony_prefix}/abr failed." )
+            assert( @browser.last_response.body.include?('Auditory Brainstem Response'), "/phenotyping/#{colony_prefix}/abr doesn't have the title 'Auditory Brainstem Response'." )
+          end
+        end
+      end
+    end
+    
+    should "cope gracefully when monkeys start visiting WTSI Phenotyping report pages" do
+      if @controller.dataviews_by_name[:'wtsi-phenotyping'].nil?
+        skip("Skipping WTSI Phenotyping report tests as the DataView is not active.")
+      else
+        VCR.use_cassette('test_server_wtsi_phenotyping_report_pages') do
+          tests_to_test    = ['abr','homozygote-viability','fertility','adult-expression','embryo-expression','dexa','hot-plate']
+          colonies_to_test = ['FOOO','BAAR','BAAZ','ARRR']
+          
+          colonies_to_test.each do |colony_prefix|
+            tests_to_test.each do |test|
+              @browser.get "/phenotyping/#{colony_prefix}/#{test}/"
+              assert_equal( 404, @browser.last_response.status, "WTF?!? '/phenotyping/#{colony_prefix}/#{test}/' is an ok url..." )
+            end
+          end
+        end
+      end
+    end
+    
   end
 end

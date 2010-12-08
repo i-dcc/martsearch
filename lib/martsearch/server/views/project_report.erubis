@@ -36,7 +36,11 @@
     
     <!-- Mice -->
     <% unless @data[:mice].nil? %>
-      <%= partial("project_report/mice") %>
+      <% unless @data[:mice][:genotype_confirmed].empty? %>
+        <%= partial("project_report/mice") %>
+      <% else %>
+        <%= partial("project_report/mice_in_progress") %>
+      <% end %>
     <% end %>
     
     

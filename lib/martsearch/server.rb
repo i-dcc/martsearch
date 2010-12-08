@@ -22,7 +22,7 @@ module MartSearch
     # We're going to use the version number as a cache breaker for the CSS 
     # and javascript code. Update with each release of your portal (especially 
     # if you change the CSS or JS)!!!
-    VERSION = '0.1.2'
+    VERSION = '0.1.3'
     DEFAULT_CSS_FILES = [
       'reset.css',
       'jquery.prettyPhoto.css',
@@ -308,7 +308,7 @@ module MartSearch
     
     MartSearch::Controller.instance().dataviews.each do |dv|
       if dv.use_custom_routes?
-        eval File.read("#{MARTSEARCH_PATH}/config/server/dataviews/#{dv.internal_name}/routes.rb")
+        load "#{MARTSEARCH_PATH}/config/server/dataviews/#{dv.internal_name}/routes.rb"
       end
     end
     

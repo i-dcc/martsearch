@@ -25,8 +25,8 @@
             <%= targ_vec[:intermediate_vector] %>
           <% end %>
         </td>
-        <td><%= targ_vec[:cassette] %></td>
-        <td><%= targ_vec[:backbone] %></td>
+        <td><%= cassette %></td>
+        <td><%= backbone %></td>
         <td>
           <% if targ_vec[:gb_file] %>
             <a href="http://www.i-dcc.org/targ_rep/alleles/<%= targ_vec[:allele_id] %>/targeting-vector-genbank-file" class="file ext_link">view</a>

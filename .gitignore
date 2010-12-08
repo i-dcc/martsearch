@@ -12,3 +12,5 @@ schema.xml
 simplecov/*
 test/vcr_cassettes*
 tmp/index_builder*
+tmp/pheno_abr*
+pheno_heatmap.xls

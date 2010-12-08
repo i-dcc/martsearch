@@ -1,0 +1,87 @@
+<%
+  headings_to_display = [
+    "colony_name",
+    "genotype",
+    "gender",
+    "age_in_weeks"
+  ]
+  
+  tests_to_display = [
+    "adrenal_gland",
+    "bone",
+    "brain",
+    "brown_adipose_tissue",
+    "cartilage",
+    "colon",
+    "eye",
+    "gall_bladder",
+    "heart",
+    "kidney",
+    "large_intestine",
+    "liver",
+    "lung",
+    "mammary_gland",
+    "mesenteric_lymph_node",
+    "nasal_epithelia",
+    "oesophagus",
+    "oral_epithelia",
+    "ovaries",
+    "oviduct",
+    "pancreas",
+    "parathyroid",
+    "peripheral_nervous_system",
+    "peyers_patch",
+    "pituitary_gland",
+    "prostate",
+    "skeletal_muscle",
+    "skin",
+    "small_intestine",
+    "spinal_cord",
+    "spleen",
+    "stomach",
+    "testis",
+    "thymus",
+    "thyroid",
+    "trachea",
+    "urinary_system",
+    "uterus",
+    "vas_deferens",
+    "vascular_system",
+    "white_adipose_tissue"
+  ]
+  
+  unused_headers = [
+    "mouse_id",
+    "mouse_name",
+    "cohort_name",
+    "birth_date",
+    "strain",
+    "pipeline",
+    "comments",
+    "anaesthetic"
+  ]
+-%>
+
+<% unless @data[:ticklist].nil? or @data[:ticklist].empty? %>
+  <table class="expression_ticklist">
+    <% headings_to_display.each do |header| %>
+      <tr>
+        <th><%= header.gsub("_"," ").titlecase %></th>
+        <% @data[:ticklist].each do |data| %>
+          <td><%= data[header.to_sym] %></td>
+        <% end %>
+      </tr>
+    <% end %>
+    <% tests_to_display.each do |header| %>
+      <tr>
+        <th><%= header.gsub("_"," ").titlecase %></th>
+        <% @data[:ticklist].each do |data| %>
+          <% data[header.to_sym] = "no data" if data[header.to_sym].nil? %>
+          <td class="<%= data[header.to_sym].gsub(" ","_").downcase %>" title="<%= data[header.to_sym] %>"><%= data[header.to_sym] %></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </table>
+<% else %>
+  <div style="text-align:center;"><em>no data reported</em></div>
+<% end %>

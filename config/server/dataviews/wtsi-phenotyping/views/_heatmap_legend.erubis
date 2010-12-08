@@ -1,0 +1,34 @@
+<table class="wtsi-phenotyping_heatmap_legend">
+  <tr>
+    <td class="noborder"><strong>Legend:</strong></td>
+    <td class="completed_data_available pheno_result"></td>
+    <td class="noborder">Test complete and data/resources available</td>
+    <td class="noborder"></td>
+    <td class="significant_difference pheno_result"></td>
+    <td class="noborder">Test complete and considered interesting</td>
+  </tr>
+  <tr>
+    <td class="noborder"></td>
+    <td class="early_indication_of_possible_phenotype pheno_result"></td>
+    <td class="noborder">Early indication of possible phenotype</td>
+    <td class="noborder"></td>
+    <td class="no_significant_difference pheno_result"></td>
+    <td class="noborder">Test complete but not considered interesting</td>
+  </tr>
+  <tr>
+    <td class="noborder"></td>
+    <td class="not_applicable pheno_result"></td>
+    <td class="noborder">Test not performed or applicable e.g. no lacZ reporter therefore no expression</td>
+    <td class="noborder"></td>
+    <td class="test_pending pheno_result"></td>
+    <td class="noborder">Test pending</td>
+  </tr>
+  <tr>
+    <td class="noborder"></td>
+    <td class="pheno_result noborder"><%= image_tag( '/images/silk/chart_bar.png', :alt => 'Link to a Test Report Page' ) %></td>
+    <td class="noborder">link to a test report page</td>
+    <td class="noborder"></td>
+    <td class="pheno_result noborder"><%= image_tag( '/images/silk/page_white_acrobat.png', :alt => 'Link to a PDF Report' ) %></td>
+    <td class="noborder">link to a pdf report</td>
+  </tr>
+</table>
