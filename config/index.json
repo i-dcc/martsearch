@@ -80,7 +80,8 @@
       "pubmed_id":                   { "type": "text", "indexed": true, "stored": true, "multi_valued": true },
       "PMID":                        { "type": "textTight", "indexed": true, "stored": false, "multi_valued": true },
       "pmid":                        { "type": "textTight", "indexed": true, "stored": false, "multi_valued": true },
-      "dna_library":                 { "type": "string", "indexed": true, "stored": false, "multi_valued": true }
+      "dna_library":                 { "type": "string", "indexed": true, "stored": false, "multi_valued": true },
+      "ikmc_targ_rep_allele_id":     { "type": "sint", "indexed": false, "stored": true, "multi_valued": true }
     },
     "copy_fields": [
       { "source": "mgi_accession_id_key",       "dest": "mgi_accession_id" },

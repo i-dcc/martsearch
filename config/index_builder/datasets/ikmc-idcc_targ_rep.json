@@ -8,7 +8,8 @@
       { "attr": "intermediate_vector",       "idx": "intermediate_vector" },
       { "attr": "targeting_vector",          "idx": "targeting_vector" },
       { "attr": "escell_clone",              "idx": "escell" },
-      { "attr": "allele_symbol_superscript", "idx": "allele" }
+      { "attr": "allele_symbol_superscript", "idx": "allele" },
+      { "attr": "allele_id",                 "idx": "ikmc_targ_rep_allele_id" }
     ]
   }
 }
