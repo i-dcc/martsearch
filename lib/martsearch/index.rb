@@ -73,7 +73,9 @@ module MartSearch
           "rows"                    => @config[:docs_per_page],
           "hl"                      => true,
           "hl.fl"                   => '*',
-          "hl.usePhraseHighlighter" => true
+          "hl.usePhraseHighlighter" => true,
+          "hl.simple.pre"           => '<span class="highlight">',
+          "hl.simple.post"          => '</span>'
         }
       )
       
