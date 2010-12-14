@@ -9,7 +9,14 @@
       { "attr": "targeting_vector",          "idx": "targeting_vector" },
       { "attr": "escell_clone",              "idx": "escell" },
       { "attr": "allele_symbol_superscript", "idx": "allele" },
-      { "attr": "allele_id",                 "idx": "ikmc_targ_rep_allele_id" }
+      { "attr": "ikmc_project_id",           "idx": "ikmc_project_id" },
+      { "attr": "allele_id",                 "idx": "ignore_me" }
+    ],
+    "grouped_attributes": [
+      {
+        "attrs": ["ikmc_project_id","allele_id"],
+        "idx":   "ikmc_targ_rep_allele_id"
+      }
     ]
   }
 }
