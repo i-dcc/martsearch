@@ -21,7 +21,7 @@ jQuery("a.dataset_link_bubble").live( "click", function () {
     jQuery(target_id).parent().parent().find(".doc_title").toggleClass("toggle-close");
   }
   jQuery(this).qtip("hide");
-  jQuery.scrollTo( target_id, 800 );
+  jQuery.scrollTo( target_id, { duration: 800 } );
   return false;
 });
 
