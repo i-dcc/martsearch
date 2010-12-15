@@ -28,11 +28,11 @@ module MartSearch
       'jquery.prettyPhoto.css',
       'jquery.tablesorter.css',
       'jquery.fontresize.css',
-      'jquery-ui-1.8.1.redmond.css',
+      'jquery-ui-1.8.7.redmond.css',
       'screen.css'
     ]
     DEFAULT_HEAD_JS_FILES  = [
-      'jquery-1.4.2.min.js',
+      'jquery-1.4.4.min.js',
       'martsearch-head.js'
     ]
     DEFAULT_BASE_JS_FILES  = [
@@ -42,7 +42,7 @@ module MartSearch
       'jquery.cookie.js',
       'jquery.fontResize.js',
       'jquery.scrollTo-1.4.2.js',
-      'jquery-ui-1.8.1.min.js',
+      'jquery-ui-1.8.7.min.js',
       'modernizr-1.6.min.js',
       'jquery.jstree.js',
       'martsearch-base.js'
