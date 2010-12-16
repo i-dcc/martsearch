@@ -98,12 +98,18 @@ p,dl,hr,h1,h2,h3,h4,h5,h6,ol,ul,pre,table,address,fieldset {
 
 .csstransforms .vertical_text {
 	display: block;
+	transform: rotate(-90deg);
+	transform-origin: 50% 50%;
 	-webkit-transform: rotate(-90deg);
 	-webkit-transform-origin: 50% 50%;
 	-moz-transform: rotate(-90deg);
 	-moz-transform-origin: 50% 50%;
 	-o-transform: rotate(-90deg);
 	-o-transform-origin: 50% 50%;
+}
+
+.no-csstransforms .vertical_text {
+	-ms-writing-mode: tb-rl;
 	writing-mode: tb-rl;
 	filter: flipv fliph;
 }
