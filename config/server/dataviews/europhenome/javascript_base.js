@@ -1,16 +1,38 @@
 
 // europhenome custom javascript
 
-jQuery("#search_results .europhenome").find("td[rel^='qtip']").each( function() {
-  jQuery(this).attr( "tooltip", jQuery(this).attr("title") );
-  jQuery(this).attr( "title", "" );
-  jQuery(this).qtip({
-     content:  jQuery(this).attr("tooltip"),
-     style:    { tip: "topMiddle", border: { radius: 5 }, width: 400, name: "light" },
-     position: { corner: { target: "bottomMiddle", tooltip: "topMiddle" } },
-     hide:     { when: 'mouseout', fixed: true }
-  });
-});
+jQuery(".europhenome table.europhenome-data").delegate(
+  "td[rel^='qtip']",
+  'mouseover',
+  function(event) {
+    jQuery(this).attr( "tooltip", jQuery(this).attr("title") );
+    jQuery(this).attr( "title", "" );
+    jQuery(this).qtip({
+      content:   jQuery(this).attr("tooltip"),
+      overwrite: false,
+      style: {
+        tip: false,
+        classes: "ui-tooltip-light ui-tooltip-rounded ui-tooltip-shadow europhenome-tooltip"
+      },
+      position: {
+        at: "bottom center",
+        my: "top center",
+        adjust: {
+           screen: true
+        }
+      },
+      hide: {
+        fixed: true,
+        event: "mouseout"
+      },
+      show: {
+        event: event.type,
+        ready: true
+      }
+    });
+  },
+  event
+);
 
 if ( !jQuery.browser.msie ) {
   jQuery(".csstransforms table.europhenome-data th .user_instructions").show();
