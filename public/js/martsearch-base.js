@@ -8,15 +8,31 @@ jQuery(document).ready(function() {
   check_browser_compatibility();
   
   // Add tooltips for the returned dataset links.
-  jQuery(".dataset_link_bubble").each( function() {
-    jQuery(this).attr( "tooltip", jQuery(this).attr("title") );
-    jQuery(this).attr( "title", "" );
-    jQuery(this).qtip({
-      content:  jQuery(this).attr("tooltip"),
-      style:    { tip: "topRight", border: { radius: 5 }, name: "light" },
-      position: { corner: { target: "bottomLeft", tooltip: "topRight" } }
-    });
-  });
+  jQuery('div.doc_datasets_returned').delegate(
+    '.dataset_link_bubble',
+    'mouseover',
+    function(event) {
+      jQuery(this).attr( "tooltip", jQuery(this).attr("title") );
+      jQuery(this).attr( "title", "" );
+      jQuery(this).qtip({
+        content:   jQuery(this).attr("tooltip"),
+        overwrite: false,
+        style: {
+          tip: "topRight",
+          classes: "ui-tooltip-light ui-tooltip-shadow"
+        },
+        position: {
+          at: "bottom left",
+          my: "top right"
+        },
+        show: {
+          event: event.type,
+          ready: true
+        }
+      });
+    },
+    event
+  );
   
   // Add prettyPhoto to anything with the property 'rel="prettyPhoto"'
   jQuery("a[rel^='prettyPhoto']").prettyPhoto({ theme: 'facebook', show_title: false });
@@ -43,7 +59,6 @@ jQuery(document).ready(function() {
   // Add font resizing buttons
   jQuery("#fontresize").fontResize();
 });
-
 
 function setup_toggles() {
   // Single parent togglers...

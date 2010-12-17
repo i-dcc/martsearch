@@ -58,15 +58,21 @@
 	background-image: url('../images/silk/female.png') !important;
 }
 
-.qtip table.pheno-result-details {
-	font-size: 0.9em !important;
-	width: 100%;
-	margin: 0;
-	padding: 0;
+/* Tooltips */
+
+.europhenome-tooltip .ui-tooltip-wrapper {
+  width: 400px !important;
 }
 
-.qtip table.pheno-result-details th,
-.qtip table.pheno-result-details td {
-	padding: 3px;
-	vertical-align: middle;
+.europhenome-tooltip .ui-tooltip-content table.pheno-result-details {
+  font-size: 0.9em !important;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.europhenome-tooltip .ui-tooltip-content table.pheno-result-details th,
+.europhenome-tooltip .ui-tooltip-content table.pheno-result-details td {
+  padding: 3px;
+  vertical-align: middle;
 }

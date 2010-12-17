@@ -25,12 +25,19 @@ module MartSearch
         data.merge!( top_level_data[:data][0] )
         errors.push( top_level_data[:error] ) unless top_level_data[:error].empty?
 
+        # Look for human orthalog's
         if data[:ensembl_gene_id]
           human_orthalogs = get_human_orthalog( datasources, data[:ensembl_gene_id] )
           data.merge!( human_orthalogs[:data][0] ) unless human_orthalogs[:data].empty?
           errors.push( human_orthalogs[:error] ) unless human_orthalogs[:error].empty?
         end
 
+        # Search Kermits for mice
+        
+        ## FIXME: 
+        ##   We shouldn't be searching for mice by marker_symbol - we should be searching for them by ES Cell Clone.
+        ##   This needs to come AFTER the targ_rep grab...
+        
         if data[:marker_symbol]
           mice = get_mice( datasources, data[:marker_symbol] )
           data.merge!( mice[:data] ) unless mice[:data].empty?
@@ -40,10 +47,23 @@ module MartSearch
         mouse_data = nil
         mouse_data = data[:mice][:genotype_confirmed] if data[:mice] and data[:mice][:genotype_confirmed]
 
+        # Now search the targ_rep for vectors and es cells
+        
+        ## FIXME:
+        ##   We shouldn't need to have the mouse data here to grab the vectors and cell as it's only used for sorting the clones.
+        ##   Extract the sorting code (and saying whether a clone has been made into a mouse) into a seperate function that comes
+        ##   after this then the mice grab. (By default - sort the clones on qc_count - i.e. more QC'd clones go to the top of the list).
+        
         vectors_and_cells = get_vectors_and_cells( datasources, project_id, mouse_data )
         data.merge!( vectors_and_cells[:data] )
         errors.push( vectors_and_cells[:error] ) unless vectors_and_cells[:error].empty?
+        
+        ## FIXME:
+        ##  So here we should have the mouse (kermits) grab, then if we have mice...
+        ##  Ammend the es cells data to say which cells have been made into a mouse, then sort the cells as 
+        ##  we do in the current code (by mice, followed by qc count).
 
+        # Finally, categorize the stage of the pipeline that we are in
         data.merge!( get_pipeline_stage( data[:status]) ) if data[:status]
       end
 
