@@ -32,21 +32,6 @@ module MartSearch
           errors.push( human_orthalogs[:error] ) unless human_orthalogs[:error].empty?
         end
 
-        # Search Kermits for mice
-        
-        ## FIXME: 
-        ##   We shouldn't be searching for mice by marker_symbol - we should be searching for them by ES Cell Clone.
-        ##   This needs to come AFTER the targ_rep grab...
-        
-        if data[:marker_symbol]
-          mice = get_mice( datasources, data[:marker_symbol] )
-          data.merge!( mice[:data] ) unless mice[:data].empty?
-          errors.push( mice[:error] ) unless mice[:error].empty?
-        end
-
-        mouse_data = nil
-        mouse_data = data[:mice][:genotype_confirmed] if data[:mice] and data[:mice][:genotype_confirmed]
-
         # Now search the targ_rep for vectors and es cells
         
         ## FIXME:
@@ -54,9 +39,28 @@ module MartSearch
         ##   Extract the sorting code (and saying whether a clone has been made into a mouse) into a seperate function that comes
         ##   after this then the mice grab. (By default - sort the clones on qc_count - i.e. more QC'd clones go to the top of the list).
         
-        vectors_and_cells = get_vectors_and_cells( datasources, project_id, mouse_data )
+        vectors_and_cells = get_vectors_and_cells( datasources, project_id )
         data.merge!( vectors_and_cells[:data] )
         errors.push( vectors_and_cells[:error] ) unless vectors_and_cells[:error].empty?
+
+        # Search Kermits for mice
+        
+        ## FIXME: 
+        ##   We shouldn't be searching for mice by marker_symbol - we should be searching for them by ES Cell Clone.
+        ##   This needs to come AFTER the targ_rep grab...
+        es_cell_names = []
+        es_cell_names.push( data[:es_cells][':targeted non-conditional'][:cells] )
+        es_cell_names.push( data[:es_cells][:conditional][:cells] ] )
+        es_cell_names.flatten!
+        es_cell_names.map! { |es_cell| es_cell[:name] }
+        unless es_cell_names.empty?
+          mice = get_mice( datasources, es_cell_names )
+          data.merge!( mice[:data] ) unless mice[:data].empty?
+          errors.push( mice[:error] ) unless mice[:error].empty?
+        end
+
+        mouse_data = nil
+        mouse_data = data[:mice][:genotype_confirmed] if data[:mice] and data[:mice][:genotype_confirmed]
         
         ## FIXME:
         ##  So here we should have the mouse (kermits) grab, then if we have mice...
@@ -153,9 +157,9 @@ module MartSearch
       # This function hits the ikmc-kermits mart for data on mice.
       #
       # @param [Hash] datasources The hash of prepared datasources from {MartSearch::Controller#datasources}
-      # @param [String] marker_symbol The marker_symbol to search the mart by
+      # @param [String] escell_clones The escell clone names to search the mart by
       # @return [Hash] The data relating to mice for this project
-      def get_mice( datasources, marker_symbol )
+      def get_mice( datasources, escell_clones )
         qc_metrics  = [
           'qc_southern_blot',
           'qc_tv_backbone_assay',
@@ -177,7 +181,7 @@ module MartSearch
           kermits_mart.search({
             :process_results => true,
             :filters         => {
-              'marker_symbol' => marker_symbol,
+              'escell_clone' => escell_clones,
               'status'        => ['Genotype Confirmed','Germline transmission achieved','Chimera mating complete','Recipient Littered','Micro-injected','Pending']
             },
             :attributes      => [
@@ -225,9 +229,8 @@ module MartSearch
       #
       # @param [Hash] datasources The hash of prepared datasources from {MartSearch::Controller#datasources}
       # @param [String] project_id The IKMC project ID
-      # @param [Hash] mouse_data The resulting data from {#get_mice}
       # @return [Hash] The data relating to this project
-      def get_vectors_and_cells( datasources, project_id, mouse_data )
+      def get_vectors_and_cells( datasources, project_id )
         qc_metrics = [
           'production_qc_five_prime_screen',
           'production_qc_loxp_screen',
@@ -358,10 +361,12 @@ module MartSearch
             end
           end
 
-          do_i_have_a_mouse = 'no'
-          unless mouse_data.nil?
-            do_i_have_a_mouse = 'yes' if mouse_data.any?{ |mouse| mouse[:escell_clone] == result['escell_clone'] }
-          end
+          # XXX - NOTE - #4139
+          # we should not need to do any mouse stuff in here
+          # do_i_have_a_mouse = 'no'
+          # unless mouse_data.nil?
+          #   do_i_have_a_mouse = 'yes' if mouse_data.any?{ |mouse| mouse[:escell_clone] == result['escell_clone'] }
+          # end
 
           if result['allele_gb_file'] == 'yes'
             data['es_cells'][push_to]['allele_img'] = "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/allele-image"
@@ -373,7 +378,7 @@ module MartSearch
               'allele_symbol_superscript' => result['allele_symbol_superscript'],
               'parental_cell_line'        => result['parental_cell_line'],
               'targeting_vector'          => result['targeting_vector'],
-              'mouse?'                    => do_i_have_a_mouse
+              # 'mouse?'                    => do_i_have_a_mouse
             }.merge(qc_data)
           )
 
