@@ -885,10 +885,25 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
         ],
         :mi_in_progress => []
       }
-      
+
+      # sort the es cells ...
+      [ ':targeted non-conditional', :conditional ].each do |symbol|
+        unless expected_cells[symbol].nil?
+          expected_cells[symbol][:cells].sort! { |x,y| x[:name] <=> y[:name] }
+        end
+      end
+
       assert_equal( expected_int_vectors, get_ikmc_project_page_data( @project_id )[:data][:intermediate_vectors] )
       assert_equal( expected_targ_vectors, get_ikmc_project_page_data( @project_id )[:data][:targeting_vectors] )
-      assert_equal( expected_cells, get_ikmc_project_page_data( @project_id )[:data][:es_cells] )
+
+      # sort the es cells here as well ...
+      observed_cells = get_ikmc_project_page_data( @project_id )[:data][:es_cells]
+      [ ':targeted non-conditional', :conditional ].each do |symbol|
+        unless expected_cells[symbol].nil?
+          observed_cells[symbol][:cells].sort! { |x,y| x[:name] <=> y[:name] }
+        end
+      end
+      assert_equal( expected_cells, observed_cells )
       assert_equal( expected_mice, get_ikmc_project_page_data( @project_id )[:data][:mice] )
     end
 
