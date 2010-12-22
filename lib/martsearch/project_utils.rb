@@ -49,8 +49,9 @@ module MartSearch
         ##   We shouldn't be searching for mice by marker_symbol - we should be searching for them by ES Cell Clone.
         ##   This needs to come AFTER the targ_rep grab...
         es_cell_names = []
-        es_cell_names.push( data[:es_cells][':targeted non-conditional'][:cells] )
-        es_cell_names.push( data[:es_cells][:conditional][:cells] ] )
+        [ ':targeted non-conditional', :conditional ].each do |symbol|
+          es_cell_names.push( data[:es_cells][symbol][:cells] ) unless data[:es_cells][symbol].nil?
+        end
         es_cell_names.flatten!
         es_cell_names.map! { |es_cell| es_cell[:name] }
         unless es_cell_names.empty?
