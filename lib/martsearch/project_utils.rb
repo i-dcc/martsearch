@@ -67,6 +67,17 @@ module MartSearch
         ##  So here we should have the mouse (kermits) grab, then if we have mice...
         ##  Ammend the es cells data to say which cells have been made into a mouse, then sort the cells as 
         ##  we do in the current code (by mice, followed by qc count).
+        unless mouse_data.nil?
+          mouse_data.each do |mouse|
+            [ ':targeted non-conditional', :conditional ].each do |symbol|
+              unless data[:es_cells][symbol].nil?
+                data[:es_cells][symbol][:cells].each do |es_cell|
+                  es_cell.merge!({ ":mouse?" => "yes" }) if mouse[:escell_clone] == es_cell[:name]
+                end
+              end
+            end
+          end
+        end
 
         # Finally, categorize the stage of the pipeline that we are in
         data.merge!( get_pipeline_stage( data[:status]) ) if data[:status]
