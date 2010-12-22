@@ -373,13 +373,6 @@ module MartSearch
             end
           end
 
-          # XXX - NOTE - #4139
-          # we should not need to do any mouse stuff in here
-          # do_i_have_a_mouse = 'no'
-          # unless mouse_data.nil?
-          #   do_i_have_a_mouse = 'yes' if mouse_data.any?{ |mouse| mouse[:escell_clone] == result['escell_clone'] }
-          # end
-
           if result['allele_gb_file'] == 'yes'
             data['es_cells'][push_to]['allele_img'] = "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/allele-image"
             data['es_cells'][push_to]['allele_gb']  = "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/escell-clone-genbank-file"
@@ -390,7 +383,7 @@ module MartSearch
               'allele_symbol_superscript' => result['allele_symbol_superscript'],
               'parental_cell_line'        => result['parental_cell_line'],
               'targeting_vector'          => result['targeting_vector'],
-              # 'mouse?'                    => do_i_have_a_mouse
+              'mouse?'                    => 'no' # default to no
             }.merge(qc_data)
           )
 
