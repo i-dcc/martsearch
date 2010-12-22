@@ -72,7 +72,7 @@ module MartSearch
             [ ':targeted non-conditional', :conditional ].each do |symbol|
               unless data[:es_cells][symbol].nil?
                 data[:es_cells][symbol][:cells].each do |es_cell|
-                  es_cell.merge!({ ":mouse?" => "yes" }) if mouse[:escell_clone] == es_cell[:name]
+                  es_cell.merge!({ :"mouse?" => "yes" }) if mouse[:escell_clone] == es_cell[:name]
                 end
               end
             end
