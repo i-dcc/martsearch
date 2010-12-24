@@ -1,4 +1,5 @@
 require "test_helper"
+require "json"
 
 class TestMartSearchProjectUtils < Test::Unit::TestCase
   include MartSearch::ProjectUtils
@@ -917,6 +918,18 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
         assert_nothing_raised do
           get_ikmc_project_page_data( @project_id )
         end
+      end
+    end
+
+    context "with more than one mouse" do
+      setup do
+        @project_id    = 40343
+        @expected_data = JSON.parse( File.read( File.dirname( __FILE__ ) + "/../tmp/40343.json" ) )
+        @expected_data.recursively_symbolize_keys!()
+      end
+
+      should "return the correct data" do
+        assert_equal @expected_data, get_ikmc_project_page_data( @project_id )[:data]
       end
     end
 
