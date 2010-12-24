@@ -906,8 +906,6 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
 
       assert_equal( expected_cells, observed_cells )
       assert_equal( expected_mice, get_ikmc_project_page_data( @project_id )[:data][:mice] )
-
-      ap get_ikmc_project_page_data( @project_id )
     end
 
     context "with no mice" do
