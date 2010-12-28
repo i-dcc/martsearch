@@ -30,8 +30,8 @@ jQuery(document).ready(function() {
           ready: true
         }
       });
-    },
-    event
+      event
+    }
   );
   
   // Add prettyPhoto to anything with the property 'rel="prettyPhoto"'
