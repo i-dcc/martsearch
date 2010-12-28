@@ -30,8 +30,8 @@ jQuery(".europhenome table.europhenome-data").delegate(
         ready: true
       }
     });
-  },
-  event
+    event
+  }
 );
 
 if ( !jQuery.browser.msie ) {

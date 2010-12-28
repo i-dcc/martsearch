@@ -26,6 +26,6 @@ jQuery(".wtsi-phenotyping table.wtsi-phenotyping_heatmap").delegate(
         ready: true
       }
     });
-  },
-  event
+    event
+  }
 );
