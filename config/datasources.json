@@ -13,5 +13,6 @@
   "wtsi-expression":      { "type": "Biomart", "url": "http://www.sanger.ac.uk/htgt/biomart", "dataset": "wholemount_expression" },
   "wtsi-mgp_graphs":      { "type": "Biomart", "url": "http://www.sanger.ac.uk/htgt/biomart", "dataset": "mgp_graphs" },
   "wtsi-mgp_images":      { "type": "Biomart", "url": "http://www.sanger.ac.uk/htgt/biomart", "dataset": "mgp_images" },
-  "wtsi-phenotyping":     { "type": "Biomart", "url": "http://www.sanger.ac.uk/htgt/biomart", "dataset": "phenotyping" }
+  "wtsi-phenotyping":     { "type": "Biomart", "url": "http://www.sanger.ac.uk/htgt/biomart", "dataset": "phenotyping" },
+  "wtsi-phenotyping-abr": { "type": "FileSystem", "location": "/tmp/pheno_abr" }
 }
