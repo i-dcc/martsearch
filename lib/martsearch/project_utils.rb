@@ -231,6 +231,15 @@ module MartSearch
             end
           end
 
+          # sort the mice (by qc_count > escell_clone)
+          [:genotype_confirmed, :mi_in_progress].each do |symbol|
+            mouse_results[symbol].sort! do |a, b|
+              res = a[:qc_count]     <=> b[:qc_count]
+              res = a[:escell_clone] <=> b[:escell_clone] if res == 0
+              res
+            end
+          end
+
           results[:data] = { :mice => mouse_results }
         end
 
