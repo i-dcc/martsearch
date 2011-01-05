@@ -69,10 +69,19 @@ module MartSearch
         ##  we do in the current code (by mice, followed by qc count).
         unless mouse_data.nil?
           mouse_data.each do |mouse|
-            [ ':targeted non-conditional', :conditional ].each do |symbol|
+            [ :"targeted non-conditional", :conditional ].each do |symbol|
               unless data[:es_cells][symbol].nil?
+                # update the mouse status
                 data[:es_cells][symbol][:cells].each do |es_cell|
                   es_cell.merge!({ :"mouse?" => "yes" }) if mouse[:escell_clone] == es_cell[:name]
+                end
+
+                # then sort (by mice > qc_count > name)
+                data[:es_cells][symbol][:cells].sort! do |a, b|
+                  res = b[:"mouse?"] <=> a[:"mouse?"]
+                  res = b[:qc_count] <=> a[:qc_count] if res == 0
+                  res = a[:name]     <=> b[:name]     if res == 0
+                  res
                 end
               end
             end
@@ -405,29 +414,9 @@ module MartSearch
           data['intermediate_vectors'].uniq!
           data['targeting_vectors'].uniq!
 
-          # Uniqify and sort the ES Cells...
-          ['conditional','targeted non-conditional'].each do |cond_vs_non|
-            data['es_cells'][cond_vs_non]['cells'].uniq!
-            data['es_cells'][cond_vs_non]['cells'].sort! do |elm1,elm2|
-              compstr1 = ''
-              compstr2 = ''
-
-              if elm1['mouse?'] == 'yes' then compstr1 = 'A '
-              else                            compstr1 = 'Z '
-              end
-
-              if elm2['mouse?'] == 'yes' then compstr2 = 'A '
-              else                            compstr2 = 'Z '
-              end
-
-              compstr1 << "#{elm1['qc_count']} "
-              compstr1 << elm1['name']
-
-              compstr2 << "#{elm2['qc_count']} "
-              compstr2 << elm2['name']
-
-              compstr1 <=> compstr2
-            end
+          # Uniqify the ES Cells...
+          ["conditional", "targeted non-conditional"].each do |cond_vs_non|
+            data["es_cells"][cond_vs_non]["cells"].uniq!
           end
         end
 
