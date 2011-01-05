@@ -14,7 +14,7 @@ module MartSearch
     # @return [Hash] A hash containing all the data for the given project
     def get_ikmc_project_page_data( project_id )
       datasources = MartSearch::Controller.instance().datasources
-      data        = { :project_id => project_id }
+      data        = { :project_id => project_id.to_s }
       errors      = []
 
       top_level_data = get_top_level_project_info( datasources, project_id )
