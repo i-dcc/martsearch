@@ -1,4 +1,5 @@
 require "test_helper"
+require "json"
 
 class TestMartSearchProjectUtils < Test::Unit::TestCase
   include MartSearch::ProjectUtils
@@ -90,7 +91,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_symbol_superscript             => "tm1a(EUCOMM)Wtsi",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
-              :mouse?                                => "yes",
+              :"mouse?"                              => "yes",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
               :production_qc_loxp_screen             => "pass",
@@ -123,7 +124,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_symbol_superscript             => "tm1a(EUCOMM)Wtsi",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
-              :mouse?                                => "no",
+              :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
               :production_qc_loxp_screen             => "pass",
@@ -156,7 +157,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_symbol_superscript             => "tm1a(EUCOMM)Wtsi",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
-              :mouse?                                => "no",
+              :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
               :production_qc_loxp_screen             => "pass",
@@ -189,7 +190,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_symbol_superscript             => "tm1a(EUCOMM)Wtsi",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
-              :mouse?                                => "no",
+              :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
               :production_qc_loxp_screen             => "pass",
@@ -222,7 +223,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_symbol_superscript             => "tm1a(EUCOMM)Wtsi",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
-              :mouse?                                => "no",
+              :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
               :production_qc_loxp_screen             => "pass",
@@ -255,7 +256,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_symbol_superscript             => "tm1a(EUCOMM)Wtsi",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
-              :mouse?                                => "no",
+              :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
               :production_qc_loxp_screen             => "pass",
@@ -288,7 +289,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_symbol_superscript             => "tm1a(EUCOMM)Wtsi",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
-              :mouse?                                => "no",
+              :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
               :production_qc_loxp_screen             => "pass",
@@ -321,7 +322,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_symbol_superscript             => "tm1a(EUCOMM)Wtsi",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
-              :mouse?                                => "no",
+              :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
               :production_qc_loxp_screen             => "pass",
@@ -354,7 +355,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_symbol_superscript             => "tm1a(EUCOMM)Wtsi",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
-              :mouse?                                => "no",
+              :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
               :production_qc_loxp_screen             => "pass",
@@ -387,7 +388,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_symbol_superscript             => "tm1a(EUCOMM)Wtsi",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
-              :mouse?                                => "no",
+              :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
               :production_qc_loxp_screen             => "pass",
@@ -420,7 +421,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_symbol_superscript             => "tm1a(EUCOMM)Wtsi",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
-              :mouse?                                => "no",
+              :"mouse?"                              => "no",
               :qc_count                              => 4,
               :production_qc_five_prime_screen       => "pass",
               :production_qc_loxp_screen             => "pass",
@@ -453,7 +454,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_symbol_superscript             => "tm1a(EUCOMM)Wtsi",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
-              :mouse?                                => "no",
+              :"mouse?"                              => "no",
               :qc_count                              => 5,
               :production_qc_five_prime_screen       => "pass",
               :production_qc_loxp_screen             => "pass",
@@ -486,7 +487,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_symbol_superscript             => "tm1a(EUCOMM)Wtsi",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
-              :mouse?                                => "no",
+              :"mouse?"                              => "no",
               :qc_count                              => 5,
               :production_qc_five_prime_screen       => "pass",
               :production_qc_loxp_screen             => "pass",
@@ -519,7 +520,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_symbol_superscript             => "tm1a(EUCOMM)Wtsi",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
-              :mouse?                                => "no",
+              :"mouse?"                              => "no",
               :qc_count                              => 5,
               :production_qc_five_prime_screen       => "pass",
               :production_qc_loxp_screen             => "pass",
@@ -559,7 +560,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_symbol_superscript             => "tm1e(EUCOMM)Wtsi",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
-              :mouse?                                => "no",
+              :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
               :production_qc_loxp_screen             => "fail",
@@ -592,7 +593,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_symbol_superscript             => "tm1e(EUCOMM)Wtsi",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
-              :mouse?                                => "no",
+              :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
               :production_qc_loxp_screen             => "fail",
@@ -625,7 +626,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_symbol_superscript             => "tm1e(EUCOMM)Wtsi",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
-              :mouse?                                => "no",
+              :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
               :production_qc_loxp_screen             => "fail",
@@ -658,7 +659,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_symbol_superscript             => "tm1e(EUCOMM)Wtsi",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
-              :mouse?                                => "no",
+              :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
               :production_qc_loxp_screen             => "fail",
@@ -691,7 +692,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_symbol_superscript             => "tm1e(EUCOMM)Wtsi",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
-              :mouse?                                => "no",
+              :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
               :production_qc_loxp_screen             => "fail",
@@ -724,7 +725,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_symbol_superscript             => "tm1e(EUCOMM)Wtsi",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
-              :mouse?                                => "no",
+              :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
               :production_qc_loxp_screen             => "fail",
@@ -757,7 +758,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_symbol_superscript             => "tm1e(EUCOMM)Wtsi",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
-              :mouse?                                => "no",
+              :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
               :production_qc_loxp_screen             => "fail",
@@ -790,7 +791,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_symbol_superscript             => "tm1e(EUCOMM)Wtsi",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
-              :mouse?                                => "no",
+              :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
               :production_qc_loxp_screen             => "fail",
@@ -823,7 +824,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_symbol_superscript             => "tm1e(EUCOMM)Wtsi",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
-              :mouse?                                => "no",
+              :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
               :production_qc_loxp_screen             => "fail",
@@ -885,10 +886,26 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
         ],
         :mi_in_progress => []
       }
-      
+
+      # sort the es cells ...
+      [ ':targeted non-conditional', :conditional ].each do |symbol|
+        unless expected_cells[symbol].nil?
+          expected_cells[symbol][:cells].sort! { |x,y| x[:name] <=> y[:name] }
+        end
+      end
+
       assert_equal( expected_int_vectors, get_ikmc_project_page_data( @project_id )[:data][:intermediate_vectors] )
       assert_equal( expected_targ_vectors, get_ikmc_project_page_data( @project_id )[:data][:targeting_vectors] )
-      assert_equal( expected_cells, get_ikmc_project_page_data( @project_id )[:data][:es_cells] )
+
+      # sort the es cells here as well ...
+      observed_cells = get_ikmc_project_page_data( @project_id )[:data][:es_cells]
+      [ ':targeted non-conditional', :conditional ].each do |symbol|
+        unless expected_cells[symbol].nil?
+          observed_cells[symbol][:cells].sort! { |x,y| x[:name] <=> y[:name] }
+        end
+      end
+
+      assert_equal( expected_cells, observed_cells )
       assert_equal( expected_mice, get_ikmc_project_page_data( @project_id )[:data][:mice] )
     end
 
@@ -900,6 +917,61 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
       should "not throw any exceptions" do
         assert_nothing_raised do
           get_ikmc_project_page_data( @project_id )
+        end
+      end
+    end
+
+    context "with more than one mouse" do
+      setup do
+        @project_id    = 40343
+        @expected_data = JSON.parse( File.read( File.dirname( __FILE__ ) + "/../tmp/40343.json" ) )
+        @expected_data.recursively_symbolize_keys!()
+        @observed_data = get_ikmc_project_page_data( @project_id )[:data]
+        @valid_keys    = [
+            :project_id,
+            :marker_symbol,
+            :mgi_accession_id,
+            :ensembl_gene_id,
+            :vega_gene_id,
+            :ikmc_project,
+            :status,
+            :mouse_available,
+            :escell_available,
+            :vector_available,
+            :human_ensembl_gene,
+            :mice,
+            :intermediate_vectors,
+            :targeting_vectors,
+            :es_cells,
+            :vector_image,
+            :vector_gb,
+            :stage,
+            :stage_type
+        ]
+
+        # sort the relevant bits of data
+        [:conditional, :"targeted non-conditional"].each do |symbol|
+          @expected_data[:es_cells][symbol][:cells].uniq!
+          @expected_data[:es_cells][symbol][:cells].sort! do |a, b|
+            res = b[:"mouse?"] <=> a[:"mouse?"]
+            res = b[:qc_count] <=> a[:qc_count] if res == 0
+            res = a[:name]     <=> b[:name]     if res == 0
+            res
+          end
+        end
+
+        [ :genotype_confirmed, :mi_in_progress ].each do |symbol|
+          @expected_data[:mice][symbol].sort! do |a, b|
+            res = a[:qc_count]     <=> b[:qc_count]
+            res = a[:escell_clone] <=> b[:escell_clone] if res == 0
+            res
+          end
+        end
+      end
+
+      should "return the correct data" do
+        @valid_keys.each do |valid_key|
+          assert_equal @expected_data[valid_key], @observed_data[valid_key]
         end
       end
     end

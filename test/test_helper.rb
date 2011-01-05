@@ -18,6 +18,7 @@ end
 # Add the lib directory to the search path
 $:.unshift( "#{File.expand_path(File.dirname(__FILE__))}/../lib" )
 
+require 'ap'
 require 'test/unit'
 require 'vcr'
 require 'shoulda'

@@ -14,7 +14,7 @@ module MartSearch
     # @return [Hash] A hash containing all the data for the given project
     def get_ikmc_project_page_data( project_id )
       datasources = MartSearch::Controller.instance().datasources
-      data        = { :project_id => project_id }
+      data        = { :project_id => project_id.to_s }
       errors      = []
 
       top_level_data = get_top_level_project_info( datasources, project_id )
@@ -32,21 +32,6 @@ module MartSearch
           errors.push( human_orthalogs[:error] ) unless human_orthalogs[:error].empty?
         end
 
-        # Search Kermits for mice
-        
-        ## FIXME: 
-        ##   We shouldn't be searching for mice by marker_symbol - we should be searching for them by ES Cell Clone.
-        ##   This needs to come AFTER the targ_rep grab...
-        
-        if data[:marker_symbol]
-          mice = get_mice( datasources, data[:marker_symbol] )
-          data.merge!( mice[:data] ) unless mice[:data].empty?
-          errors.push( mice[:error] ) unless mice[:error].empty?
-        end
-
-        mouse_data = nil
-        mouse_data = data[:mice][:genotype_confirmed] if data[:mice] and data[:mice][:genotype_confirmed]
-
         # Now search the targ_rep for vectors and es cells
         
         ## FIXME:
@@ -54,14 +39,54 @@ module MartSearch
         ##   Extract the sorting code (and saying whether a clone has been made into a mouse) into a seperate function that comes
         ##   after this then the mice grab. (By default - sort the clones on qc_count - i.e. more QC'd clones go to the top of the list).
         
-        vectors_and_cells = get_vectors_and_cells( datasources, project_id, mouse_data )
+        vectors_and_cells = get_vectors_and_cells( datasources, project_id )
         data.merge!( vectors_and_cells[:data] )
         errors.push( vectors_and_cells[:error] ) unless vectors_and_cells[:error].empty?
+
+        # Search Kermits for mice
+        
+        ## FIXME: 
+        ##   We shouldn't be searching for mice by marker_symbol - we should be searching for them by ES Cell Clone.
+        ##   This needs to come AFTER the targ_rep grab...
+        es_cell_names = []
+        [ :"targeted non-conditional", :conditional ].each do |symbol|
+          es_cell_names.push( data[:es_cells][symbol][:cells] ) unless data[:es_cells][symbol].nil?
+        end
+        es_cell_names.flatten!
+        es_cell_names.map! { |es_cell| es_cell[:name] }
+        unless es_cell_names.empty?
+          mice = get_mice( datasources, es_cell_names )
+          data.merge!( mice[:data] ) unless mice[:data].empty?
+          errors.push( mice[:error] ) unless mice[:error].empty?
+        end
+
+        mouse_data = nil
+        mouse_data = data[:mice][:genotype_confirmed] if data[:mice] and data[:mice][:genotype_confirmed]
         
         ## FIXME:
         ##  So here we should have the mouse (kermits) grab, then if we have mice...
         ##  Ammend the es cells data to say which cells have been made into a mouse, then sort the cells as 
         ##  we do in the current code (by mice, followed by qc count).
+        unless mouse_data.nil?
+          mouse_data.each do |mouse|
+            [ :"targeted non-conditional", :conditional ].each do |symbol|
+              unless data[:es_cells][symbol].nil?
+                # update the mouse status
+                data[:es_cells][symbol][:cells].each do |es_cell|
+                  es_cell.merge!({ :"mouse?" => "yes" }) if mouse[:escell_clone] == es_cell[:name]
+                end
+
+                # then sort (by mice > qc_count > name)
+                data[:es_cells][symbol][:cells].sort! do |a, b|
+                  res = b[:"mouse?"] <=> a[:"mouse?"]
+                  res = b[:qc_count] <=> a[:qc_count] if res == 0
+                  res = a[:name]     <=> b[:name]     if res == 0
+                  res
+                end
+              end
+            end
+          end
+        end
 
         # Finally, categorize the stage of the pipeline that we are in
         data.merge!( get_pipeline_stage( data[:status]) ) if data[:status]
@@ -153,9 +178,9 @@ module MartSearch
       # This function hits the ikmc-kermits mart for data on mice.
       #
       # @param [Hash] datasources The hash of prepared datasources from {MartSearch::Controller#datasources}
-      # @param [String] marker_symbol The marker_symbol to search the mart by
+      # @param [String] escell_clones The escell clone names to search the mart by
       # @return [Hash] The data relating to mice for this project
-      def get_mice( datasources, marker_symbol )
+      def get_mice( datasources, escell_clones )
         qc_metrics  = [
           'qc_southern_blot',
           'qc_tv_backbone_assay',
@@ -177,7 +202,7 @@ module MartSearch
           kermits_mart.search({
             :process_results => true,
             :filters         => {
-              'marker_symbol' => marker_symbol,
+              'escell_clone' => escell_clones,
               'status'        => ['Genotype Confirmed','Germline transmission achieved','Chimera mating complete','Recipient Littered','Micro-injected','Pending']
             },
             :attributes      => [
@@ -215,6 +240,15 @@ module MartSearch
             end
           end
 
+          # sort the mice (by qc_count > escell_clone)
+          [:genotype_confirmed, :mi_in_progress].each do |symbol|
+            mouse_results[symbol].sort! do |a, b|
+              res = a[:qc_count]     <=> b[:qc_count]
+              res = a[:escell_clone] <=> b[:escell_clone] if res == 0
+              res
+            end
+          end
+
           results[:data] = { :mice => mouse_results }
         end
 
@@ -225,9 +259,8 @@ module MartSearch
       #
       # @param [Hash] datasources The hash of prepared datasources from {MartSearch::Controller#datasources}
       # @param [String] project_id The IKMC project ID
-      # @param [Hash] mouse_data The resulting data from {#get_mice}
       # @return [Hash] The data relating to this project
-      def get_vectors_and_cells( datasources, project_id, mouse_data )
+      def get_vectors_and_cells( datasources, project_id )
         qc_metrics = [
           'production_qc_five_prime_screen',
           'production_qc_loxp_screen',
@@ -358,11 +391,6 @@ module MartSearch
             end
           end
 
-          do_i_have_a_mouse = 'no'
-          unless mouse_data.nil?
-            do_i_have_a_mouse = 'yes' if mouse_data.any?{ |mouse| mouse[:escell_clone] == result['escell_clone'] }
-          end
-
           if result['allele_gb_file'] == 'yes'
             data['es_cells'][push_to]['allele_img'] = "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/allele-image"
             data['es_cells'][push_to]['allele_gb']  = "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/escell-clone-genbank-file"
@@ -373,7 +401,7 @@ module MartSearch
               'allele_symbol_superscript' => result['allele_symbol_superscript'],
               'parental_cell_line'        => result['parental_cell_line'],
               'targeting_vector'          => result['targeting_vector'],
-              'mouse?'                    => do_i_have_a_mouse
+              'mouse?'                    => 'no' # default to no
             }.merge(qc_data)
           )
 
@@ -386,29 +414,9 @@ module MartSearch
           data['intermediate_vectors'].uniq!
           data['targeting_vectors'].uniq!
 
-          # Uniqify and sort the ES Cells...
-          ['conditional','targeted non-conditional'].each do |cond_vs_non|
-            data['es_cells'][cond_vs_non]['cells'].uniq!
-            data['es_cells'][cond_vs_non]['cells'].sort! do |elm1,elm2|
-              compstr1 = ''
-              compstr2 = ''
-
-              if elm1['mouse?'] == 'yes' then compstr1 = 'A '
-              else                            compstr1 = 'Z '
-              end
-
-              if elm2['mouse?'] == 'yes' then compstr2 = 'A '
-              else                            compstr2 = 'Z '
-              end
-
-              compstr1 << "#{elm1['qc_count']} "
-              compstr1 << elm1['name']
-
-              compstr2 << "#{elm2['qc_count']} "
-              compstr2 << elm2['name']
-
-              compstr1 <=> compstr2
-            end
+          # Uniqify the ES Cells...
+          ["conditional", "targeted non-conditional"].each do |cond_vs_non|
+            data["es_cells"][cond_vs_non]["cells"].uniq!
           end
         end
 
