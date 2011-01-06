@@ -976,6 +976,20 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
       end
     end
 
+    context "with status *Redesign Requested*" do
+      setup do
+        @project_ids = [ 80797, 92475 ]
+      end
+
+      should "not crash with *NoMethodError* when data is requested" do
+        @project_ids.each do |project_id|
+          assert_nothing_raised do
+            get_ikmc_project_page_data( project_id )
+          end
+        end
+      end
+    end
+
     teardown do
       VCR.eject_cassette
     end
