@@ -313,20 +313,16 @@ module MartSearch
           })
         end
       
-        data = {}
+        data = {
+          'intermediate_vectors' => [],
+          'targeting_vectors'    => [],
+          'es_cells'             => {
+            'conditional'              => { 'cells' => [], 'allele_img' => nil, 'allele_gb' => nil },
+            'targeted non-conditional' => { 'cells' => [], 'allele_img' => nil, 'allele_gb' => nil }
+          }
+        }
       
         results[:data].each do |result|
-          if data.empty?
-            data = {
-              'intermediate_vectors' => [],
-              'targeting_vectors'    => [],
-              'es_cells'             => {
-                'conditional'              => { 'cells' => [], 'allele_img' => nil, 'allele_gb' => nil }, 
-                'targeted non-conditional' => { 'cells' => [], 'allele_img' => nil, 'allele_gb' => nil }
-              }
-            }
-          end
-          
           if result['vector_gb_file'] == 'yes'
             data['vector_image'] = "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/vector-image"
             data['vector_gb']    = "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/targeting-vector-genbank-file"
@@ -457,6 +453,7 @@ module MartSearch
           "Mice - Microinjection in progress"                       => { :stage => "mice",    :stage_type => "normal" },
           "Mice - Germline transmission"                            => { :stage => "mice",    :stage_type => "normal" },
           "Mice - Genotype confirmed"                               => { :stage => "mice",    :stage_type => "normal" },
+          "Redesign Requested"                                      => { :stage => "designs", :stage_type => "normal" },
 
           # KOMP-Regeneron
           "Regeneron Selected"                                      => { :stage => "pre",     :stage_type => "normal" },
