@@ -92,6 +92,9 @@ module MartSearch
           end
         end
 
+        # Add the mutagenesis predictions
+        data[:mutagenesis_predictions] = get_mutagenesis_predictions( project_id )
+
         # Finally, categorize the stage of the pipeline that we are in
         data.merge!( get_pipeline_stage( data[:status]) ) if data[:status]
       end
