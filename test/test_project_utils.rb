@@ -3,7 +3,7 @@ require "json"
 
 class TestMartSearchProjectUtils < Test::Unit::TestCase
   include MartSearch::ProjectUtils
-  public  :get_top_level_project_info, :get_human_orthalog, :get_mice
+  public  :get_top_level_project_info, :get_human_orthalog, :get_mice, :get_mutagenesis_predictions
   
   context "A valid MartSearch Project" do
     setup do
@@ -907,6 +907,12 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
 
       assert_equal( expected_cells, observed_cells )
       assert_equal( expected_mice, get_ikmc_project_page_data( @project_id )[:data][:mice] )
+    end
+
+    should "have mutagenesis predictions" do
+      assert_nothing_raised do
+        get_mutagenesis_predictions @project_id
+      end
     end
 
     context "with no mice" do
