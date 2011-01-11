@@ -9,10 +9,12 @@
       <tbody>
         <!-- Process the transcripts -->
         <% @data[:mutagenesis_predictions].each do |transcript| %>
-          <tr>
-           <td><%= transcript[:ensembl_transcript_id] %></td>
-           <td><%= transcript[:floxed_transcript_description] %></td>
-           </tr>
+          <% if transcript.class == Hash %>
+            <tr>
+             <td><%= transcript[:ensembl_transcript_id] %></td>
+             <td><%= transcript[:floxed_transcript_description] %></td>
+            </tr>
+          <% end %>
         <% end %>
       </tbody>
     </table>
