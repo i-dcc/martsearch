@@ -481,7 +481,7 @@ module MartSearch
       # @param  [String] project_id
       # @return [Hash]
       def get_mutagenesis_predictions( project_id )
-        JSON.parse( Net::HTTP.get( URI.parse("http://www.sanger.ac.uk/htgt/tools/mutagenesis_prediction/project/#{project_id}/detail") ) )
+        JSON.parse( Net::HTTP.get( URI.parse("http://www.sanger.ac.uk/htgt/tools/mutagenesis_prediction/project/#{project_id}/detail") ) ).recursively_symbolize_keys!
       end
   end
   
