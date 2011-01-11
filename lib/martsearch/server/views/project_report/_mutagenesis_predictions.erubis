@@ -43,7 +43,13 @@
                             "no"
                           <% end %>
                         </td>
-                        <td><%= exon[:phase].to_s == exon[:floxed_phase].to_s ? "no" : "yes" %></td>
+                        <td>
+                          <% if exon.include?(:floxed_translation) and exon[:floxed_translation].length > 0 %>
+                            <%= exon[:phase].to_s == exon[:floxed_phase].to_s ? "no" : "yes" %>
+                          <% else %>
+                            n/a
+                          <% end %>
+                        </td>
                       </tr>
                     <% end %>
                   </tbody>
