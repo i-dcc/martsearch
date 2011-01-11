@@ -1,0 +1,15 @@
+<div class="dataset">
+  <h4 class="dataset_title toggle-open">Mutagenesis Prediction</h4>
+  <div class="dataset_content">
+    <table>
+      <thead>
+        <th>Gene</th>
+      </thead>
+      <tbody>
+        <!-- Process the predictions -->
+        <td>test</td>
+      </tbody>
+    </table>
+    <div class="clear"></div>
+  </div>
+</div>

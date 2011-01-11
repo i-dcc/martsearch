@@ -73,6 +73,11 @@
     <% unless @data[:intermediate_vectors].nil? or @data[:intermediate_vectors].empty? %>
       <%= partial("project_report/intermediate_vectors") %>
     <% end %>
+
+    <!-- Mutagenesis Predictions -->
+    <% unless @data[:mutagenesis_predictions].nil? or @data[:mutagenesis_predictions].empty? %>
+      <%= partial("project_report/mutagenesis_predictions") %>
+    <% end %>
   </div>
 </div>
 
