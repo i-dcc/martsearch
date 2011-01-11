@@ -5,6 +5,7 @@
       <thead>
         <th>ensembl_transcript_id</th>
         <th>floxed_transcript_description</th>
+        <th>Exons</th>
       </thead>
       <tbody>
         <!-- Process the transcripts -->
@@ -13,6 +14,7 @@
             <tr>
              <td><%= transcript[:ensembl_transcript_id] %></td>
              <td><%= transcript[:floxed_transcript_description] %></td>
+             <td><a class="">view</a></td>
             </tr>
           <% end %>
         <% end %>
