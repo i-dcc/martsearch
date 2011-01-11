@@ -3,11 +3,17 @@
   <div class="dataset_content">
     <table>
       <thead>
-        <th>Gene</th>
+        <th>ensembl_transcript_id</th>
+        <th>floxed_transcript_description</th>
       </thead>
       <tbody>
-        <!-- Process the predictions -->
-        <td>test</td>
+        <!-- Process the transcripts -->
+        <% @data[:mutagenesis_predictions].each do |transcript| %>
+          <tr>
+           <td><%= transcript[:ensembl_transcript_id] %></td>
+           <td><%= transcript[:floxed_transcript_description] %></td>
+           </tr>
+        <% end %>
       </tbody>
     </table>
     <div class="clear"></div>
