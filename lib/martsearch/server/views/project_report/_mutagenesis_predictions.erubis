@@ -38,9 +38,9 @@
                         <td><%= exon[:translation].length > 0 ? "yes" : "no" %></td>
                         <td>
                           <% if exon.include?(:floxed_translation) and exon[:floxed_translation].length > 0 %>
-                            "yes"
+                            yes
                           <% else %>
-                            "no"
+                            no
                           <% end %>
                         </td>
                         <td>
