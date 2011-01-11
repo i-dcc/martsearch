@@ -3,8 +3,8 @@
   <div class="dataset_content">
     <table>
       <thead>
-        <th>ensembl_transcript_id</th>
-        <th>floxed_transcript_description</th>
+        <th>Ensembl transcript id</th>
+        <th>Floxed transcript description</th>
         <th>Exons</th>
       </thead>
       <tbody>
