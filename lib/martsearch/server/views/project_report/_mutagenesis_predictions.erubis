@@ -16,6 +16,14 @@
              <td><%= transcript[:floxed_transcript_description] %></td>
              <td><a class="">view</a></td>
             </tr>
+            <!-- Process the exon details -->
+            <tr class="">
+              <td colspan="3">
+                <!-- should move this into a partial perhaps -->
+                <table width="100%" style="margin-bottom:5px;">
+                </table>
+              </td>
+            </tr>
           <% end %>
         <% end %>
       </tbody>
