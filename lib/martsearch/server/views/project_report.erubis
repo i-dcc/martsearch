@@ -93,6 +93,26 @@
   jQuery(".exons_toggle").removeClass("toggle-open");
   jQuery(".exons_toggle").addClass("toggle-close");
 
+  // Transcripts toggles
+  jQuery("a.transcripts_toggle").live("click", function () {
+    var rows      = jQuery(this).parent().find("tbody.transcripts").children().not(".exons").slice(1);
+    var exon_rows = jQuery(this).parent().find("tbody.transcripts .exons");
+
+    if ( rows.first().is(":visible") ) { exon_rows.hide(); rows.hide(); }
+    else                               { rows.show(); }
+
+    jQuery(this).toggleClass("toggle-up");
+    jQuery(this).toggleClass("toggle-close");
+  });
+
+  jQuery("tbody.transcripts").each( function () {
+    var rows = jQuery(this).children().not(".exons");
+    rows.slice(1, rows.size()).hide();
+  });
+
+  jQuery(".transcripts_toggle").addClass("toggle-close");
+  jQuery(".transcripts_toggle").removeClass("toggle-up");
+
   // QC results toggles
   jQuery(".qc_results_toggle").live("click", function () {
     jQuery(this).parent().parent().next(".qc_results").toggle();

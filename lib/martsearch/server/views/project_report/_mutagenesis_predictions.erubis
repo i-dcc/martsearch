@@ -32,6 +32,7 @@
 
       </tbody>
     </table>
+    <a class="transcripts_toggle toggle-close">show/hide more Transcripts</a>
     <div class="clear"></div>
   </div>
 </div>
