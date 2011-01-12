@@ -15,7 +15,7 @@
             <tr class="transcript">
              <td><%= transcript[:ensembl_transcript_id] %></td>
              <td><%= transcript[:floxed_transcript_description] %></td>
-             <td><a class="">view</a></td>
+             <td><a class="exons_toggle toggle-close">view</a></td>
             </tr>
 
             <!-- Process the exon details -->

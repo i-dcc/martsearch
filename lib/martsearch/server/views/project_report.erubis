@@ -82,6 +82,17 @@
 </div>
 
 <script type="text/javascript" charset="utf-8">
+  // Exons toggles
+  jQuery(".exons_toggle").live("click", function () {
+    jQuery(this).parent().parent().next(".exons").toggle();
+    jQuery(this).toggleClass("toggle-open");
+    jQuery(this).toggleClass("toggle-close");
+  });
+
+  jQuery(".exons").hide();
+  jQuery(".exons_toggle").removeClass("toggle-open");
+  jQuery(".exons_toggle").addClass("toggle-close");
+
   // QC results toggles
   jQuery(".qc_results_toggle").live("click", function () {
     jQuery(this).parent().parent().next(".qc_results").toggle();
