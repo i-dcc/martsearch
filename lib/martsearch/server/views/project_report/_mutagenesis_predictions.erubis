@@ -7,12 +7,12 @@
         <th>Floxed transcript description</th>
         <th>Exons</th>
       </thead>
-      <tbody>
+      <tbody class="transcripts">
 
         <!-- Process the transcripts -->
         <% @data[:mutagenesis_predictions].each do |transcript| %>
           <% if transcript.class == Hash %>
-            <tr>
+            <tr class="transcript">
              <td><%= transcript[:ensembl_transcript_id] %></td>
              <td><%= transcript[:floxed_transcript_description] %></td>
              <td><a class="">view</a></td>
@@ -20,7 +20,7 @@
 
             <!-- Process the exon details -->
             <% unless transcript[:exons].nil? or transcript[:exons].empty? %>
-              <tr class="">
+              <tr class="exons">
                 <td colspan="3">
                   <%= partial("project_report/transcript", :locals => { :transcript => transcript } ) %>
                 </td>
