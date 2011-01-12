@@ -887,3 +887,19 @@ table.ikmc-pipeline-progress-bar td.end_error {
 table.ikmc-pipeline-progress-bar td.end_warn {
   background-image: url('../images/progress-bar/progress-end-warn.png');
 }
+
+td.exon_deleted {
+	background-color: #FF0000;
+}
+
+td.exon_frameshifted {
+	background-color: #FBB917;
+}
+
+td.exon_upstream {
+	background-color: #00FF00;
+}
+
+td.exon_downstream {
+	background-color: #00FF00;
+}
