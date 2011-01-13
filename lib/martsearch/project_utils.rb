@@ -1,3 +1,7 @@
+require "uri"
+require "net/http"
+require "json"
+
 module MartSearch
   
   # Utility module to house all of the data gathering logic for the IKMC 
@@ -87,6 +91,9 @@ module MartSearch
             end
           end
         end
+
+        # Add the mutagenesis predictions
+        data[:mutagenesis_predictions] = get_mutagenesis_predictions( project_id )
 
         # Finally, categorize the stage of the pipeline that we are in
         data.merge!( get_pipeline_stage( data[:status]) ) if data[:status]
@@ -470,6 +477,14 @@ module MartSearch
         }
 
         return status_definitions[ status ]
+      end
+
+      # Retrieve the mutagenesis predictions for the project_id
+      #
+      # @param  [String] project_id
+      # @return [Hash]
+      def get_mutagenesis_predictions( project_id )
+        JSON.parse( Net::HTTP.get( URI.parse("http://www.sanger.ac.uk/htgt/tools/mutagenesis_prediction/project/#{project_id}/detail") ) ).recursively_symbolize_keys!
       end
   end
   

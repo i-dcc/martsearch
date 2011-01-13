@@ -1,0 +1,15 @@
+<div class="dataset">
+  <h4 class="dataset_title toggle-open">Mutagenesis Predictions</h4>
+  <div class="dataset_content">
+
+    <!-- Insert the key explaining the predictions (may have to be a partial) -->
+    <div class="mutagenesis_prediction_key">
+      <h4>Typical transcript only (view "Details" for actual)</h4>
+      <img src="/images/mutagenesis_prediction_key.png" width="400"/>
+    </div>
+
+    <%= partial("project_report/transcripts") %>
+
+    <div class="clear"></div>
+  </div>
+</div>

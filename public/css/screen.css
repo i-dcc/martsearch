@@ -144,6 +144,11 @@ a:active, .ui-widget-content a:acitve {
 	padding: 4px 0 4px 24px;
 }
 
+.mutagenesis_prediction_key {
+	float: right;
+	background-position: right top;
+}
+
 a.feed {
 	background: url(../images/feed.png) no-repeat left center;
 	padding: 4px 2px 4px 20px;
@@ -886,4 +891,20 @@ table.ikmc-pipeline-progress-bar td.end_error {
 
 table.ikmc-pipeline-progress-bar td.end_warn {
   background-image: url('../images/progress-bar/progress-end-warn.png');
+}
+
+td.exon_deleted {
+	background-color: #FF0000;
+}
+
+td.exon_frameshifted {
+	background-color: #FBB917;
+}
+
+td.exon_upstream {
+	background-color: #00FF00;
+}
+
+td.exon_downstream {
+	background-color: #00FF00;
 }

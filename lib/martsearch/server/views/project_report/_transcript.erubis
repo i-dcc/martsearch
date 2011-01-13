@@ -1,0 +1,18 @@
+<!-- Display the exon details -->
+<table width="100%" style="margin-bottom:5px;">
+  <thead>
+    <th>Ensembl Exon ID</th>
+    <th>WildType</th>
+    <th>Floxed</th>
+  </thead>
+  <tbody>
+    <% transcript[:exons].each do |exon| %>
+      <tr>
+        <td><%= exon[:ensembl_stable_id] %></td>
+        <td><%= exon[:structure] %></td>
+        <!-- this can surely be written better -->
+        <td class="<%= 'exon_' + exon[:description] %>"><%= exon.include?(:floxed_structure) ? exon[:floxed_structure] : "D" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
