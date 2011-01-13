@@ -1,42 +1,7 @@
 <div class="dataset">
   <h4 class="dataset_title toggle-open">Mutagenesis Predictions</h4>
   <div class="dataset_content">
-    <table>
-      <thead>
-        <th>Ensembl transcript id</th>
-        <th>Floxed transcript description</th>
-        <th>Exons</th>
-      </thead>
-      <tbody class="transcripts">
-
-        <!-- Process the transcripts -->
-        <% @data[:mutagenesis_predictions].each do |transcript| %>
-          <% if transcript.class == Hash %>
-            <tr class="transcript">
-             <td><%= transcript[:ensembl_transcript_id] %></td>
-             <td><%= transcript[:floxed_transcript_description] %></td>
-             <td>
-               <% unless transcript[:exons].nil? or transcript[:exons].empty? %>
-                 <a class="exons_toggle toggle-close">view</a>
-               <% end %>
-             </td>
-            </tr>
-
-            <!-- Process the exon details -->
-            <% unless transcript[:exons].nil? or transcript[:exons].empty? %>
-              <tr class="exons">
-                <td colspan="3">
-                  <%= partial("project_report/transcript", :locals => { :transcript => transcript } ) %>
-                </td>
-              </tr>
-            <% end %>
-
-          <% end %>
-        <% end %>
-
-      </tbody>
-    </table>
-    <a class="transcripts_toggle toggle-close">show/hide more Transcripts</a>
+    <%= partial("project_report/transcripts") %>
     <div class="clear"></div>
   </div>
 </div>
