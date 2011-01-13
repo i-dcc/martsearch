@@ -2,7 +2,7 @@
   <thead>
     <th>Ensembl transcript id</th>
     <th>Floxed transcript description</th>
-    <th>Exons</th>
+    <th>Details</th>
   </thead>
   <tbody class="transcripts">
 
