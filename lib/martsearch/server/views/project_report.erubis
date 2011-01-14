@@ -46,6 +46,7 @@
       <%= partial("project_report/mutagenesis_predictions") %>
     <% end %>
     
+    
     <!-- Mice -->
     <% unless @data[:mice].nil? %>
       <% unless @data[:mice][:genotype_confirmed].empty? %>

@@ -37,21 +37,11 @@ module MartSearch
         end
 
         # Now search the targ_rep for vectors and es cells
-        
-        ## FIXME:
-        ##   We shouldn't need to have the mouse data here to grab the vectors and cell as it's only used for sorting the clones.
-        ##   Extract the sorting code (and saying whether a clone has been made into a mouse) into a seperate function that comes
-        ##   after this then the mice grab. (By default - sort the clones on qc_count - i.e. more QC'd clones go to the top of the list).
-        
         vectors_and_cells = get_vectors_and_cells( datasources, project_id )
         data.merge!( vectors_and_cells[:data] )
         errors.push( vectors_and_cells[:error] ) unless vectors_and_cells[:error].empty?
 
         # Search Kermits for mice
-        
-        ## FIXME: 
-        ##   We shouldn't be searching for mice by marker_symbol - we should be searching for them by ES Cell Clone.
-        ##   This needs to come AFTER the targ_rep grab...
         es_cell_names = []
         [ :"targeted non-conditional", :conditional ].each do |symbol|
           es_cell_names.push( data[:es_cells][symbol][:cells] ) unless data[:es_cells][symbol].nil?
@@ -67,10 +57,8 @@ module MartSearch
         mouse_data = nil
         mouse_data = data[:mice][:genotype_confirmed] if data[:mice] and data[:mice][:genotype_confirmed]
         
-        ## FIXME:
-        ##  So here we should have the mouse (kermits) grab, then if we have mice...
-        ##  Ammend the es cells data to say which cells have been made into a mouse, then sort the cells as 
-        ##  we do in the current code (by mice, followed by qc count).
+        # Ammend the es cells data to say which cells have been made into a mouse, then sort the cells as 
+        # we do in the current code (by mice, followed by qc count).
         unless mouse_data.nil?
           mouse_data.each do |mouse|
             [ :"targeted non-conditional", :conditional ].each do |symbol|
@@ -484,6 +472,7 @@ module MartSearch
       # @param  [String] project_id
       # @return [Hash]
       def get_mutagenesis_predictions( project_id )
+        # FIXME: Where's the error handling?!?!
         JSON.parse( Net::HTTP.get( URI.parse("http://www.sanger.ac.uk/htgt/tools/mutagenesis_prediction/project/#{project_id}/detail") ) ).recursively_symbolize_keys!
       end
   end
