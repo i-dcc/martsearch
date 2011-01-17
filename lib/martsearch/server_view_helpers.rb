@@ -170,9 +170,11 @@ module MartSearch
     # @param [String] marker_symbol The marker symbol for the gene
     # @param [String] project The IKMC project name ['KOMP/KOMP-CSD','KOMP-Regeneron','NorCOMM','EUCOMM','mirKO']
     # @param [String] project_id The IKMC project ID
+    # @param [String] escell_clone The ES Cell to order
     # @return [String] The html markup for a button
-    def escell_order_button( mgi_accession_id, marker_symbol, project, project_id )
+    def escell_order_button( mgi_accession_id, marker_symbol, project, project_id, escell_clone=nil )
       order_url   = ikmc_product_order_url( :escell, project, project_id, mgi_accession_id, marker_symbol )
+      order_url   = "#{order_url}&comments1=#{escell_clone}" if project == "TIGM"
       button_text = generic_order_button( project, order_url )
       return button_text
     end
@@ -334,6 +336,7 @@ module MartSearch
         when "KOMP-CSD"       then "http://www.komp.org/geneinfo.php?project=CSD#{project_id}"
         when "KOMP-Regeneron" then "http://www.komp.org/geneinfo.php?project=#{project_id}"
         when "NorCOMM"        then "http://www.phenogenomics.ca/services/cmmr/escell_services.html"
+        when "TIGM"           then "http://www.tigm.org/cgi-bin/tigminfo.cgi?survey=IKMC%20Website&mgi1=MGI:#{mgi_accession_id}&gene1=#{marker_symbol}"
         when "EUCOMM"
           case product_type
           when :vector  then "http://www.eummcr.org/final_vectors.php?mgi_id=#{mgi_accession_id}"

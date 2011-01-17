@@ -1,8 +1,5 @@
 <%
-  ikmc_projects     = [ :'TIGM', :'ESCells', :'Stanford', :'EUCOMM' ]
-  non_ikmc_projects = result_data[:'ikmc-unitrap'][:project_counts_total].keys.sort{ |a,b| a.to_s <=> b.to_s } - ikmc_projects
-  
-  projects = ikmc_projects + non_ikmc_projects
+  projects = [ :TIGM, :EUCOMM, :NorCOMM ]
   unitraps = result_data[:'ikmc-unitrap'][:unitrap_counts_total].keys.sort{ |a,b| a.to_s <=> b.to_s }
   traps    = result_data[:'ikmc-unitrap'][:traps]
   traps_by = result_data[:'ikmc-unitrap'][:traps_by]
@@ -16,12 +13,6 @@
 </div>
 
 <table class="unitrap_matrix">
-  <tr>
-    <th></th>
-    <th colspan="<%= ikmc_projects.size %>">IKMC Projects</th>
-    <th colspan="<%= non_ikmc_projects.size %>">Non IKMC Projects</th>
-    <td></td>
-  </tr>
   <tr>
     <th></th>
     <% projects.each do |project| %>
@@ -114,7 +105,7 @@
           partial(
             'dataviews/ikmc-trapped-products/trap_table',
             :locals => {
-              :traps              => traps_by[unitrap].sort{ |a,b| projects.index(a[:project].to_sym) <=> projects.index(b[:project].to_sym) },
+              :traps              => traps_by[unitrap],
               :caption            => "Traps clustered as #{unitrap}",
               :first_cell_header  => 'Project',
               :first_cell_content => 'project',
