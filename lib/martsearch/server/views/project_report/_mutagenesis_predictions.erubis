@@ -2,6 +2,13 @@
   <h4 class="dataset_title toggle-open">Mutagenesis Predictions</h4>
   <div class="dataset_content">
 
+    <p>
+      This tool shows the predicted structure of the gene transcripts after successful
+      mutation. The image below shows what a typical transcript may look like (this is
+      an example only).  Click the 'view' button for each transcript to see the full
+      prediction for that transcript.
+    </p>
+
     <table class="noborder">
       <tbody class="">
         <tr>
@@ -49,13 +56,6 @@
           <td style="vertical-align:top">
             <table>
               <tbody>
-                <tr>
-                  This tool shows the predicted structure of the gene transcripts after successful
-                  mutation. The image below shows what a typical transcript may look like (this is
-                  an example only).  Click the 'view' button for each transcript to see the full
-                  prediction for that transcript.
-                </tr>
-
                 <!-- Insert the key explaining the predictions (may have to be a partial) -->
                 <tr>
                   <div class="">
