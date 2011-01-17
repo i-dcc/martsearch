@@ -22,7 +22,7 @@
       "project"
     ],
     "filters": {
-      "project": "Bay Genomics,EGTC,ESCells,EUCOMM,FHCRC,GGTC,Lexicon,Stanford,TIGEM,TIGM,Vanderbilt,WTSI"
+      "project": "TIGM,EUCOMM,Stanford,ESCells,CMHD"
     }
   }
 }
