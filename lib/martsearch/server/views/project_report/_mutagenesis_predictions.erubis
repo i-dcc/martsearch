@@ -14,7 +14,7 @@
         <tr>
 
           <!-- Display the mutagenesis predictions -->
-          <td style="vertical-align:top" width="55%">
+          <td style="vertical-align:top" width="65%">
             <table class="border" width="100%">
               <thead>
                 <th>Ensembl transcript id</th>
