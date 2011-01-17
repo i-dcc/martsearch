@@ -2,13 +2,13 @@
   <h4 class="dataset_title toggle-open">Mutagenesis Predictions</h4>
   <div class="dataset_content">
 
-    <table>
+    <table class="noborder">
       <tbody class="">
         <tr>
 
           <!-- Display the mutagenesis predictions -->
           <td width="55%">
-            <table>
+            <table class="border" width="100%">
               <thead>
                 <th>Ensembl transcript id</th>
                 <th>Floxed transcript description</th>
