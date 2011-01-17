@@ -68,7 +68,7 @@
                     <tr>
                       <td class="noborder"><strong>Legend:</strong></td>
                       <td class="noborder"><strong>C</strong></td>
-                      <td class="noborder">coding exon</td>
+                      <td class="noborder">CDS</td>
                       <td class="noborder"><strong>D</strong></td>
                       <td class="noborder">deleted exon</td>
                       <td class="noborder"><strong>U</strong></td>
