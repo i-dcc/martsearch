@@ -7,7 +7,7 @@
         <tr>
 
           <!-- Display the mutagenesis predictions -->
-          <td>
+          <td width="55%">
             <table>
               <thead>
                 <th>Ensembl transcript id</th>
