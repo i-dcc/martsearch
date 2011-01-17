@@ -4,7 +4,7 @@
 
     <!-- Insert the key explaining the predictions (may have to be a partial) -->
     <div class="mutagenesis_prediction_key">
-      <h4>Typical transcript only (view "Details" for actual)</h4>
+      <h6>Typical transcript only (view "Details" for actual)</h6>
       <%= image_tag '/images/mutagenesis_prediction_key.png', { :width => 350 } %>
     </div>
 
