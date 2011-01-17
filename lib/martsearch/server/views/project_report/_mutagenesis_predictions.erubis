@@ -63,7 +63,28 @@
                   </div>
                 </tr>
 
-                <tr></tr>
+                <tr>
+                  <table>
+                    <tr>
+                      <td class="noborder"><strong>Legend:</strong></td>
+                      <td class="noborder"><strong>C</strong></td>
+                      <td class="noborder">coding exon</td>
+                      <td class="noborder"><strong>D</strong></td>
+                      <td class="noborder">deleted exon</td>
+                      <td class="noborder"><strong>U</strong></td>
+                      <td class="noborder">UTR</td>
+                    </tr>
+                    <tr>
+                      <td class="noborder"></td>
+                      <td class=""><%= image_tag '/images/inframe.png', { :width => 20 } %></td>
+                      <td class="noborder">in frame</td>
+                      <td class=""><%= image_tag '/images/deleted.png', { :width => 20 } %></td>
+                      <td class="noborder">deleted</td>
+                      <td class=""><%= image_tag '/images/frameshifted.png', { :width => 20 } %></td>
+                      <td class="noborder">frameshifted</td>
+                    </tr>
+                  </table>
+                </tr>
               </tbody>
             </table>
           </td>
