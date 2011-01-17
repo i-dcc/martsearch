@@ -27,7 +27,11 @@
                 <% @data[:mutagenesis_predictions].each do |transcript| %>
                   <% if transcript.class == Hash or transcript.class == BSON::OrderedHash %>
                     <tr class="transcript">
-                     <td><%= transcript[:ensembl_transcript_id] %></td>
+                     <td>
+                      <a href="<%= ensembl_link_url_from_transcript( :transcript, @data[:ensembl_gene_id], transcript[:ensembl_transcript_id] ) %>">
+                        <%= transcript[:ensembl_transcript_id] %>
+                      </a>
+                     </td>
                      <td><%= transcript[:floxed_transcript_description] %></td>
                      <td>
                        <% unless transcript[:exons].nil? or transcript[:exons].empty? %>
@@ -40,7 +44,7 @@
                     <% unless transcript[:exons].nil? or transcript[:exons].empty? %>
                       <tr class="exons">
                         <td colspan="3">
-                          <%= partial("project_report/transcript", :locals => { :transcript => transcript } ) %>
+                          <%= partial("project_report/transcript", :locals => { :transcript => transcript, :transcript_id => transcript[:ensembl_transcript_id] } ) %>
                         </td>
                       </tr>
                     <% end %>

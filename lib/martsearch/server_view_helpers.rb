@@ -110,7 +110,24 @@ module MartSearch
     def ensembl_link_url_from_gene( species, gene, das_tracks=[] )
       ensembl_vega_link_url( :ensembl, species, "?g=#{gene}", das_tracks )
     end
-    
+
+    # Helper function to construct a url for linking to Ensembl from an
+    # Ensembl Transcript ID.
+    #
+    # @param [String/Symbol] view - The display to view (exon|transcript)
+    # @param [String] gene The Ensembl Gene ID
+    # @param [String] transcript the Ensembl Transcript ID
+    # @raise TypeError if an unkown view is specified
+    def ensembl_link_url_from_transcript( view, gene, transcript )
+      display = case view.to_sym
+        when :exon       then 'Exons'
+        when :transcript then 'Summary'
+        else
+          raise TypeError, "Unkown display #{view}, try ':exon' or ':transcript'"
+      end
+      "http://www.ensembl.org/Mus_musculus/Transcript/#{display}?db=core;g=#{gene};t=#{transcript}"
+    end
+
     # Helper function to construct a url for linking to Ensembl from a 
     # series of co-ordinates.
     #
