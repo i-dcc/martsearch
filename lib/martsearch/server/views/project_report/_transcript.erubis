@@ -1,4 +1,12 @@
 <!-- Display the exon details -->
+<%
+  label = {
+    "UC" => "UTR + start codon + CDS",
+    "CU" => "CDS + stop codon + UTR",
+    "C"  => "CDS",
+    "U"  => "UTR"
+  }
+%>
 <table width="100%" style="margin-bottom:5px;">
   <thead>
     <th>Ensembl Exon ID</th>
@@ -9,9 +17,14 @@
     <% transcript[:exons].each do |exon| %>
       <tr>
         <td><%= exon[:ensembl_stable_id] %></td>
-        <td><%= exon[:structure] %></td>
-        <!-- this can surely be written better -->
-        <td class="<%= 'exon_' + exon[:description] %>"><%= exon.include?(:floxed_structure) ? exon[:floxed_structure] : "D" %></td>
+        <td><%= label[ exon[:structure] ] %></td>
+        <td class="<%= 'exon_' + exon[:description] %>">
+          <% if exon.include?(:floxed_structure) %>
+            <%= label[ exon[:floxed_structure] ] %>
+          <% else %>
+            Deleted
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>
