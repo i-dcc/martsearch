@@ -76,11 +76,11 @@
                     </tr>
                     <tr>
                       <td class="noborder"></td>
-                      <td class=""><%= image_tag '/images/inframe.png', { :width => 20 } %></td>
+                      <td class="exon_upstream"/>
                       <td class="noborder">in frame</td>
-                      <td class=""><%= image_tag '/images/deleted.png', { :width => 20 } %></td>
+                      <td class="exon_deleted"/>
                       <td class="noborder">deleted</td>
-                      <td class=""><%= image_tag '/images/frameshifted.png', { :width => 20 } %></td>
+                      <td class="exon_frameshifted"/>
                       <td class="noborder">frameshifted</td>
                     </tr>
                   </table>
