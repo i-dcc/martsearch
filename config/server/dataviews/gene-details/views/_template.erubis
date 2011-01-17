@@ -54,6 +54,8 @@
   </tr>
 </table>
 
+<%= partial( 'dataviews/gene-details/omim', :locals => { :result_data => result_data } ) %>
+
 <div style="clear:both;">
   <h5 class="single_parent_toggler_toggle">More Information</h5>
   <div class="single_parent_toggler_content">
@@ -117,7 +119,6 @@
       </tr>
     </table>
     
-    <%= partial( 'dataviews/gene-details/omim',          :locals => { :result_data => result_data } ) %>
     <%= partial( 'dataviews/gene-details/gene_ontology', :locals => { :result_data => result_data } ) %>
     <%= partial( 'dataviews/gene-details/interpro',      :locals => { :result_data => result_data } ) %>
     <%= partial( 'dataviews/gene-details/orthalogs',     :locals => { :result_data => result_data } ) %>
