@@ -118,7 +118,7 @@ module MartSearch
     # @param [String] gene The Ensembl Gene ID
     # @param [String] transcript the Ensembl Transcript ID
     # @raise TypeError if an unkown view is specified
-    def ensembl_link_url_from_transcript( view, gene, transcript )
+    def ensembl_link_url_from_transcript( gene, transcript, view=:transcript )
       display = case view.to_sym
         when :exon       then 'Exons'
         when :transcript then 'Summary'

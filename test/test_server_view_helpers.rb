@@ -45,16 +45,16 @@ class MartSearchServerViewHelpersTest < Test::Unit::TestCase
   end
 
   def test_ensembl_link_url_from_transcript
-    link = ensembl_link_url_from_transcript( :transcript, 'ENSMUSG00000018666', 'ENSMUST00000093943' )
+    link = ensembl_link_url_from_transcript('ENSMUSG00000018666', 'ENSMUST00000093943' )
     assert_match( /Mus_musculus/, link )
     assert_match( /Summary/, link )
 
-    link = ensembl_link_url_from_transcript( :exon, 'ENSMUSG00000018666', 'ENSMUST00000093943' )
+    link = ensembl_link_url_from_transcript( 'ENSMUSG00000018666', 'ENSMUST00000093943', :exon )
     assert_match( /Mus_musculus/, link )
     assert_match( /Exons/, link )
 
     assert_raise(TypeError) do
-      ensembl_link_url_from_transcript( :foo, 'ENSMUSG00000018666', 'ENSMUST00000093943' )
+      ensembl_link_url_from_transcript( 'ENSMUSG00000018666', 'ENSMUST00000093943', :foo )
     end
   end
   # DataView Helper Tests...

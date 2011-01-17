@@ -28,7 +28,7 @@
                   <% if transcript.class == Hash or transcript.class == BSON::OrderedHash %>
                     <tr class="transcript">
                      <td>
-                      <a href="<%= ensembl_link_url_from_transcript( :transcript, @data[:ensembl_gene_id], transcript[:ensembl_transcript_id] ) %>">
+                      <a href="<%= ensembl_link_url_from_transcript( @data[:ensembl_gene_id], transcript[:ensembl_transcript_id] ) %>">
                         <%= transcript[:ensembl_transcript_id] %>
                       </a>
                      </td>
