@@ -895,6 +895,7 @@ table.ikmc-pipeline-progress-bar td.end_warn {
 
 td.exon_deleted {
 	background-color: #99000f;
+	color: #fff;
 }
 
 td.exon_frameshifted {
@@ -903,8 +904,10 @@ td.exon_frameshifted {
 
 td.exon_upstream {
 	background-color: #185394;
+	color: #fff;
 }
 
 td.exon_downstream {
 	background-color: #185394;
+	color: #fff;
 }
