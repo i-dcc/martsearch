@@ -81,7 +81,11 @@ module MartSearch
         end
 
         # Add the mutagenesis predictions
-        data[:mutagenesis_predictions] = get_mutagenesis_predictions( project_id )
+        mutagenesis_predictions        = get_mutagenesis_predictions( project_id )
+        data[:mutagenesis_predictions] = mutagenesis_predictions[:data]
+        unless mutagenesis_predictions[:error].empty?
+          errors.push( mutagenesis_predictions[:error] )
+        end
 
         # Finally, categorize the stage of the pipeline that we are in
         data.merge!( get_pipeline_stage( data[:status]) ) if data[:status]
@@ -472,8 +476,19 @@ module MartSearch
       # @param  [String] project_id
       # @return [Hash]
       def get_mutagenesis_predictions( project_id )
-        # FIXME: Where's the error handling?!?!
-        JSON.parse( Net::HTTP.get( URI.parse("http://www.sanger.ac.uk/htgt/tools/mutagenesis_prediction/project/#{project_id}/detail") ) ).recursively_symbolize_keys!
+        result       = { :data => [], :error => {} }
+        error_prefix = "There was a problem retrieving predictions for project #{project_id}."
+        error_suffix = "Try refreshing your browser or come back in 10 minutes."
+        begin
+          result[:data] = JSON.parse( Net::HTTP.get( URI.parse( "http://www.sanger.ac.uk/htgt/tools/mutagenesis_prediction/project/#{project_id}/detail" ) ) ).recursively_symbolize_keys!
+        rescue Exception => error
+          results[:error] = {
+            :text  => error_prefix + " " + error_suffix,
+            :error => error.to_s,
+            :type  => error.class
+          }
+        end
+        return result
       end
   end
   
