@@ -35,14 +35,14 @@
                      <td><%= transcript[:floxed_transcript_description] %></td>
                      <td>
                        <% unless transcript[:exons].nil? or transcript[:exons].empty? %>
-                         <a class="qc_results_toggle toggle-close">view</a>
+                         <a class="details_toggle toggle-close">view</a>
                        <% end %>
                      </td>
                     </tr>
 
                     <!-- Process the exon details -->
                     <% unless transcript[:exons].nil? or transcript[:exons].empty? %>
-                      <tr class="qc_results">
+                      <tr class="details">
                         <td colspan="3">
                           <%= partial("project_report/transcript", :locals => { :transcript => transcript, :transcript_id => transcript[:ensembl_transcript_id] } ) %>
                         </td>

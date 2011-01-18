@@ -84,20 +84,20 @@
 
 <script type="text/javascript" charset="utf-8">
   // QC results toggles
-  jQuery(".qc_results_toggle").live("click", function () {
-    jQuery(this).parent().parent().next(".qc_results").toggle();
+  jQuery(".details_toggle").live("click", function () {
+    jQuery(this).parent().parent().next(".details").toggle();
     jQuery(this).toggleClass("toggle-open");
     jQuery(this).toggleClass("toggle-close");
   });
   
-  jQuery(".qc_results").hide();
-  jQuery(".qc_results_toggle").removeClass("toggle-open");
-  jQuery(".qc_results_toggle").addClass("toggle-close");
+  jQuery(".details").hide();
+  jQuery(".details_toggle").removeClass("toggle-open");
+  jQuery(".details_toggle").addClass("toggle-close");
   
   // Products toggles
   jQuery("a.products_toggle").live("click", function () {
-    var rows    = jQuery(this).parent().find("tbody.products").children().not(".qc_results").slice(1);
-    var qc_rows = jQuery(this).parent().find("tbody.products .qc_results");
+    var rows    = jQuery(this).parent().find("tbody.products").children().not(".details").slice(1);
+    var qc_rows = jQuery(this).parent().find("tbody.products .details");
     
     if ( rows.first().is(":visible") ) { qc_rows.hide(); rows.hide(); }
     else                               { rows.show(); }
@@ -107,7 +107,7 @@
   });
 
   jQuery("tbody.products").each( function () {
-    var rows = jQuery(this).children().not(".qc_results");
+    var rows = jQuery(this).children().not(".details");
     rows.slice(1, rows.size()).hide();
   });
 

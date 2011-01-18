@@ -27,7 +27,7 @@
             <td><%= mouse[:distribution_centre]%></td>
             <td>
               <% if mouse[:qc_count] > 0 %>
-                <a class="qc_results_toggle">view</a>
+                <a class="details_toggle">view</a>
               <% else %>
                 <em style="color:#999;">no&nbsp;data&nbsp;reported</em>
               <% end %>
@@ -43,7 +43,7 @@
             </td>
           </tr>
           <% if mouse[:qc_count] > 0 %>
-            <tr class="qc_results">
+            <tr class="details">
               <td colspan="9">
                 <%= partial('dataviews/ikmc-mice/qc_data', :locals => { :result => mouse }) %>
               </td>
