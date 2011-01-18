@@ -480,8 +480,8 @@ module MartSearch
         begin
           result[:data] = JSON.parse( Net::HTTP.get( URI.parse( "http://www.sanger.ac.uk/htgt/tools/mutagenesis_prediction/project/#{project_id}/detail" ) ) ).recursively_symbolize_keys!
         rescue Exception => error
-          results[:error] = {
             :text  => "There was a problem retrieving mutagenesis predictions for this project.  As a result this data will not be available on the page.  Please try refreshing your browser or come back in 10 minutes to obtain this data.",
+          result[:error] = {
             :error => error.to_s,
             :type  => error.class
           }
