@@ -1,6 +1,6 @@
 <% unless @errors[:project_page_errors].nil? or @errors[:project_page_errors].empty? %>
   <div class="messages serious_errors">
-    <h5>Sorry, an error occurred whilst querying the Biomarts ...</h5>
+    <h5>Sorry, an error occurred whilst querying the data sources ...</h5>
     <% @errors[:project_page_errors].each do |error| %>
       <div id="serious_error_wrapper">
         <%= error[:text] %>&nbsp;&nbsp;
