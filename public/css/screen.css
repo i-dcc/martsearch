@@ -893,6 +893,8 @@ table.ikmc-pipeline-progress-bar td.end_warn {
   background-image: url('../images/progress-bar/progress-end-warn.png');
 }
 
+/* Project Page Mutagenesis Prediction Tool */
+
 td.exon_deleted {
 	background-color: #99000f;
 	color: #fff;
