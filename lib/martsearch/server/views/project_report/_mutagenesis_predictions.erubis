@@ -53,7 +53,9 @@
 
               </tbody>
             </table>
-            <a class="transcripts_toggle toggle-close">show/hide more Transcripts</a>
+            <% if @data[:mutagenesis_predictions].size > 1 %>
+              <a class="transcripts_toggle toggle-close">show/hide more Transcripts</a>
+            <% end %>
           </td>
 
           <!-- Display the key -->
