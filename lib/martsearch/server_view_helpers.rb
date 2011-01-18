@@ -110,7 +110,24 @@ module MartSearch
     def ensembl_link_url_from_gene( species, gene, das_tracks=[] )
       ensembl_vega_link_url( :ensembl, species, "?g=#{gene}", das_tracks )
     end
-    
+
+    # Helper function to construct a url for linking to Ensembl from an
+    # Ensembl Transcript ID.
+    #
+    # @param [String/Symbol] view - The display to view (exon|transcript)
+    # @param [String] gene The Ensembl Gene ID
+    # @param [String] transcript the Ensembl Transcript ID
+    # @raise TypeError if an unkown view is specified
+    def ensembl_link_url_from_transcript( gene, transcript, view=:transcript )
+      display = case view.to_sym
+        when :exon       then 'Exons'
+        when :transcript then 'Summary'
+        else
+          raise TypeError, "Unkown display #{view}, try ':exon' or ':transcript'"
+      end
+      "http://www.ensembl.org/Mus_musculus/Transcript/#{display}?db=core;g=#{gene};t=#{transcript}"
+    end
+
     # Helper function to construct a url for linking to Ensembl from a 
     # series of co-ordinates.
     #
@@ -170,9 +187,11 @@ module MartSearch
     # @param [String] marker_symbol The marker symbol for the gene
     # @param [String] project The IKMC project name ['KOMP/KOMP-CSD','KOMP-Regeneron','NorCOMM','EUCOMM','mirKO']
     # @param [String] project_id The IKMC project ID
+    # @param [String] escell_clone The ES Cell to order
     # @return [String] The html markup for a button
-    def escell_order_button( mgi_accession_id, marker_symbol, project, project_id )
+    def escell_order_button( mgi_accession_id, marker_symbol, project, project_id, escell_clone=nil )
       order_url   = ikmc_product_order_url( :escell, project, project_id, mgi_accession_id, marker_symbol )
+      order_url   = "#{order_url}&comments1=#{escell_clone}" if project == "TIGM"
       button_text = generic_order_button( project, order_url )
       return button_text
     end
@@ -334,6 +353,7 @@ module MartSearch
         when "KOMP-CSD"       then "http://www.komp.org/geneinfo.php?project=CSD#{project_id}"
         when "KOMP-Regeneron" then "http://www.komp.org/geneinfo.php?project=#{project_id}"
         when "NorCOMM"        then "http://www.phenogenomics.ca/services/cmmr/escell_services.html"
+        when "TIGM"           then "http://www.tigm.org/cgi-bin/tigminfo.cgi?survey=IKMC%20Website&mgi1=MGI:#{mgi_accession_id}&gene1=#{marker_symbol}"
         when "EUCOMM"
           case product_type
           when :vector  then "http://www.eummcr.org/final_vectors.php?mgi_id=#{mgi_accession_id}"

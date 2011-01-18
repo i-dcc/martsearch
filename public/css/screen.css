@@ -145,6 +145,11 @@ a:active, .ui-widget-content a:acitve {
 	padding: 4px 0 4px 24px;
 }
 
+.mutagenesis_prediction_key {
+	float: right;
+	background-position: right top;
+}
+
 a.feed {
 	background: url(../images/feed.png) no-repeat left center;
 	padding: 4px 2px 4px 20px;
@@ -907,4 +912,25 @@ div#googlemeter_crop {
 	width: 375px;
 	overflow: hidden;
 	padding: 10px;
+}
+
+/* Project Page Mutagenesis Prediction Tool */
+
+td.exon_deleted {
+	background-color: #99000f;
+	color: #fff;
+}
+
+td.exon_frameshifted {
+	background-color: #fc9925;
+}
+
+td.exon_upstream {
+	background-color: #185394;
+	color: #fff;
+}
+
+td.exon_downstream {
+	background-color: #185394;
+	color: #fff;
 }

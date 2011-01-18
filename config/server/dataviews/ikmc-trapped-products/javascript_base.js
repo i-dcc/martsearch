@@ -14,9 +14,3 @@ jQuery("#search_results .ikmc-trapped-products a.unitraps_by_link").click( funct
   
   return false;
 });
-
-// Temp Add-in for viv...
-jQuery("#search_results .ikmc-trapped-products").hide();
-var header = jQuery("#search_results .ikmc-trapped-products").parent().find(".dataset_title");
-header.removeClass("toggle-open");
-header.addClass("toggle-close");
