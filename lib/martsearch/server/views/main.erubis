@@ -1,8 +1,11 @@
 <form id="martsearchr" action="<%= url_for '/search' %>" method="get" accept-charset="utf-8">
-  <input type="text" name="query" value="" size="50" />&nbsp;
+  <input type="text" id="query" name="query" value="" size="50" />&nbsp;
   <input type="submit" value="Search" /><br />
   <small>Enter gene symbols, gene or product identifiers or any other search term described in the <%= link_to 'help', '/help' %> section.</small>
 </form>
 
 <div class="clear"></div>
 
+<script type="text/javascript" charset="utf-8">
+  jQuery("#query").focus();
+</script>
