@@ -6,7 +6,9 @@
     "from": "team87@sanger.ac.uk"
   },
   "cache": {
-    "type":   "file"
+    "type":   "mongo",
+    "server": "t87-mongodb.internal.sanger.ac.uk",
+    "db":     "ikmc_portal"
   },
   "datasets": [
     "emma-strains",
