@@ -18,6 +18,7 @@
             <table class="border" width="100%">
               <thead>
                 <th>Ensembl transcript id</th>
+                <th>Biotype</th>
                 <th>Floxed transcript description</th>
                 <th>Details</th>
               </thead>
@@ -32,6 +33,7 @@
                         <%= transcript[:ensembl_transcript_id] %>
                       </a>
                      </td>
+                     <td><%= transcript[:biotype] %></td>
                      <td><%= transcript[:floxed_transcript_description] %></td>
                      <td>
                        <% unless transcript[:exons].nil? or transcript[:exons].empty? %>
