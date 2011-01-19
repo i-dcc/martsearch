@@ -1,7 +1,3 @@
-require "uri"
-require "net/http"
-require "json"
-
 module MartSearch
   
   # Utility module to house all of the data gathering logic for the IKMC 
