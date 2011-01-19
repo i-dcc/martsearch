@@ -35,7 +35,7 @@
       <% end %>
     <% end %>
     
-    <%= partial("project_report/ensembl_links") %>
+    <%= partial( "project_report/ensembl_htgt_links", { :locals => { :escell => cells.first[:name] } }) %>
     
     <table>
       <thead>
