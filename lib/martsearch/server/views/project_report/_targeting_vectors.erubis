@@ -6,7 +6,7 @@
       <div class="clear"></div>
     <% end %>
     
-    <%= partial("project_report/ensembl_links") %>
+    <%= partial( "project_report/ensembl_htgt_links", { :locals => { :escell => nil } } ) %>
     
     <table>
       <thead>
