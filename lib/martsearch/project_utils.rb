@@ -7,6 +7,8 @@ module MartSearch
   # @author Darren Oakley
   # @author Nelo Onyiah
   module ProjectUtils
+
+    include MartSearch::Utils
     
     # Wrapper function to collate all of the data for a given IKMC project.
     #
