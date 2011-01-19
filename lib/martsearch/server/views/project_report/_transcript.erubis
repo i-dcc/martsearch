@@ -11,7 +11,7 @@
 <p style="margin: 5px 0;">
 	<strong>Predicted translation:</strong>
 	<pre style="margin: 3px 0;">
-	  <%= transcript[:floxed_transcript_translation] %>
+	  <%= transcript[:floxed_transcript_translation].wrap %>
 	</pre>
 </p>
 
