@@ -7,9 +7,12 @@
     "U"  => "UTR"
   }
 %>
-<p>
+
+<p style="margin: 5px 0;">
 	<strong>Predicted translation:</strong>
-	<pre><%= transcript[:floxed_transcript_translation]%></pre>
+	<pre style="margin: 3px 0;">
+	  <%= transcript[:floxed_transcript_translation] %>
+	</pre>
 </p>
 
 <table width="100%" style="margin-bottom:5px;">
