@@ -14,7 +14,7 @@
         <tr>
 
           <!-- Display the mutagenesis predictions -->
-          <td style="vertical-align:top" width="65%">
+          <td style="vertical-align:top" width="80%">
             <table class="border" width="100%">
               <thead>
                 <th>Ensembl transcript id</th>
@@ -63,7 +63,7 @@
                 <!-- Insert the key explaining the predictions (may have to be a partial) -->
                 <tr>
                   <div class="">
-                    <%= image_tag '/images/mutagenesis_prediction_key.png', { :width => 350 } %>
+                    <%= image_tag '/images/mutagenesis_prediction_key.png', { :width => 300 } %>
                   </div>
                 </tr>
 
