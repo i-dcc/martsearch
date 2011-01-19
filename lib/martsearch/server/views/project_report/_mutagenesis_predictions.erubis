@@ -45,7 +45,7 @@
                     <!-- Process the exon details -->
                     <% unless transcript[:exons].nil? or transcript[:exons].empty? %>
                       <tr class="details">
-                        <td colspan="3">
+                        <td colspan="4">
                           <%= partial("project_report/transcript", :locals => { :transcript => transcript, :transcript_id => transcript[:ensembl_transcript_id] } ) %>
                         </td>
                       </tr>
