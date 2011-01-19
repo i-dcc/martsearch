@@ -56,7 +56,6 @@
         <th>Biotype</th>
         <th>Floxed transcript description</th>
         <th>Details</th>
-        <th>Protein sequence</th>
       </thead>
       <tbody>
 
@@ -76,13 +75,12 @@
                  <a class="details_toggle toggle-close">view</a>
                <% end %>
              </td>
-             <td><%= transcript[:floxed_transcript_translation] %></td>
             </tr>
 
             <!-- Process the exon details -->
             <% unless transcript[:exons].nil? or transcript[:exons].empty? %>
               <tr class="details">
-                <td colspan="5">
+                <td colspan="4">
                   <%= partial("project_report/transcript", :locals => { :transcript => transcript, :transcript_id => transcript[:ensembl_transcript_id] } ) %>
                 </td>
               </tr>

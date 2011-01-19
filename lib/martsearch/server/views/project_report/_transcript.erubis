@@ -7,6 +7,11 @@
     "U"  => "UTR"
   }
 %>
+<p>
+	<strong>Predicted translation:</strong>
+	<pre><%= transcript[:floxed_transcript_translation]%></pre>
+</p>
+
 <table width="100%" style="margin-bottom:5px;">
   <thead>
     <th>Ensembl Exon ID</th>
