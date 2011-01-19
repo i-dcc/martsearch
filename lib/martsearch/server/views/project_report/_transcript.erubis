@@ -8,12 +8,12 @@
   }
 %>
 
-<p style="margin: 5px 0;">
-	<strong>Predicted translation:</strong>
-	<pre style="margin: 3px 0;">
-	  <%= transcript[:floxed_transcript_translation].wrap %>
-	</pre>
-</p>
+<% unless transcript[:floxed_transcript_translation].nil? or transcript[:floxed_transcript_translation].empty? %>
+  <p style="margin: 5px 0;">
+  	<strong>Predicted translation:</strong>
+  	<pre style="margin: 3px 0;"><%= transcript[:floxed_transcript_translation].wrap(80) %></pre>
+  </p>
+<% end %>
 
 <table width="100%" style="margin-bottom:5px;">
   <thead>
