@@ -21,6 +21,7 @@
                 <th>Biotype</th>
                 <th>Floxed transcript description</th>
                 <th>Details</th>
+                <th>Protein sequence</th>
               </thead>
               <tbody>
 
@@ -40,6 +41,7 @@
                          <a class="details_toggle toggle-close">view</a>
                        <% end %>
                      </td>
+                     <td><%= transcript[:floxed_transcript_translation] %></td>
                     </tr>
 
                     <!-- Process the exon details -->
