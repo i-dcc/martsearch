@@ -471,7 +471,7 @@ module MartSearch
 
       # Retrieve the mutagenesis predictions for the project_id from HTGT
       #
-      # @param  [String] project_id
+      # @param  [String] project_id The IKMC project ID
       # @return [Hash] The output from the HTGT mutagenesis prediction tool
       def get_mutagenesis_predictions( project_id )
         result  = { :data => [], :error => {} }
