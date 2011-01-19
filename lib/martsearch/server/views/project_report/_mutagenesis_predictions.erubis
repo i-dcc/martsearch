@@ -21,7 +21,7 @@
                 <th>Floxed transcript description</th>
                 <th>Details</th>
               </thead>
-              <tbody class="products">
+              <tbody>
 
                 <!-- Process the transcripts -->
                 <% @data[:mutagenesis_predictions].each do |transcript| %>
@@ -50,12 +50,8 @@
                     <% end %>
                   <% end %>
                 <% end %>
-
               </tbody>
             </table>
-            <% if @data[:mutagenesis_predictions].size > 1 %>
-              <a class="products_toggle toggle-close">show/hide more Transcripts</a>
-            <% end %>
           </td>
 
           <!-- Display the key -->
