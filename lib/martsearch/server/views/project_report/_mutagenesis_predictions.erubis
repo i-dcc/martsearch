@@ -21,7 +21,7 @@
                 <th>Floxed transcript description</th>
                 <th>Details</th>
               </thead>
-              <tbody class="transcripts">
+              <tbody class="products">
 
                 <!-- Process the transcripts -->
                 <% @data[:mutagenesis_predictions].each do |transcript| %>
@@ -35,14 +35,14 @@
                      <td><%= transcript[:floxed_transcript_description] %></td>
                      <td>
                        <% unless transcript[:exons].nil? or transcript[:exons].empty? %>
-                         <a class="exons_toggle toggle-close">view</a>
+                         <a class="details_toggle toggle-close">view</a>
                        <% end %>
                      </td>
                     </tr>
 
                     <!-- Process the exon details -->
                     <% unless transcript[:exons].nil? or transcript[:exons].empty? %>
-                      <tr class="exons">
+                      <tr class="details">
                         <td colspan="3">
                           <%= partial("project_report/transcript", :locals => { :transcript => transcript, :transcript_id => transcript[:ensembl_transcript_id] } ) %>
                         </td>
@@ -53,7 +53,9 @@
 
               </tbody>
             </table>
-            <a class="transcripts_toggle toggle-close">show/hide more Transcripts</a>
+            <% if @data[:mutagenesis_predictions].size > 1 %>
+              <a class="products_toggle toggle-close">show/hide more Transcripts</a>
+            <% end %>
           </td>
 
           <!-- Display the key -->

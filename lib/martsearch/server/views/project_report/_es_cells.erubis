@@ -68,7 +68,7 @@
             <td><%= cell[:mouse?] %></td>
             <td>
               <% if cell[:qc_count] > 0 %>
-                <a class="qc_results_toggle">view</a>
+                <a class="details_toggle">view</a>
               <% else %>
                 <em style="color:#999;">no&nbsp;data&nbsp;reported</em>
               <% end %>
@@ -77,7 +77,7 @@
             </td>
           </tr>
           <% if cell[:qc_count] > 0 %>
-            <tr class="qc_results">
+            <tr class="details">
               <td colspan="8">
                 <%= partial('dataviews/ikmc-targeted-products/escell_clone_qc', :locals => { :clone => cell }) %>
               </td>

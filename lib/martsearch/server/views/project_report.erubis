@@ -1,6 +1,6 @@
 <% unless @errors[:project_page_errors].nil? or @errors[:project_page_errors].empty? %>
   <div class="messages serious_errors">
-    <h5>Sorry, an error occurred whilst querying the Biomarts ...</h5>
+    <h5>Sorry, an error occurred whilst querying the data sources ...</h5>
     <% @errors[:project_page_errors].each do |error| %>
       <div id="serious_error_wrapper">
         <%= error[:text] %>&nbsp;&nbsp;
@@ -83,52 +83,21 @@
 </div>
 
 <script type="text/javascript" charset="utf-8">
-  // Exons toggles
-  jQuery(".exons_toggle").live("click", function () {
-    jQuery(this).parent().parent().next(".exons").toggle();
-    jQuery(this).toggleClass("toggle-open");
-    jQuery(this).toggleClass("toggle-close");
-  });
-
-  jQuery(".exons").hide();
-  jQuery(".exons_toggle").removeClass("toggle-open");
-  jQuery(".exons_toggle").addClass("toggle-close");
-
-  // Transcripts toggles
-  jQuery("a.transcripts_toggle").live("click", function () {
-    var rows      = jQuery(this).parent().find("tbody.transcripts").children().not(".exons").slice(1);
-    var exon_rows = jQuery(this).parent().find("tbody.transcripts .exons");
-
-    if ( rows.first().is(":visible") ) { exon_rows.hide(); rows.hide(); }
-    else                               { rows.show(); }
-
-    jQuery(this).toggleClass("toggle-up");
-    jQuery(this).toggleClass("toggle-close");
-  });
-
-  jQuery("tbody.transcripts").each( function () {
-    var rows = jQuery(this).children().not(".exons");
-    rows.slice(1, rows.size()).hide();
-  });
-
-  jQuery(".transcripts_toggle").addClass("toggle-close");
-  jQuery(".transcripts_toggle").removeClass("toggle-up");
-
   // QC results toggles
-  jQuery(".qc_results_toggle").live("click", function () {
-    jQuery(this).parent().parent().next(".qc_results").toggle();
+  jQuery(".details_toggle").live("click", function () {
+    jQuery(this).parent().parent().next(".details").toggle();
     jQuery(this).toggleClass("toggle-open");
     jQuery(this).toggleClass("toggle-close");
   });
   
-  jQuery(".qc_results").hide();
-  jQuery(".qc_results_toggle").removeClass("toggle-open");
-  jQuery(".qc_results_toggle").addClass("toggle-close");
+  jQuery(".details").hide();
+  jQuery(".details_toggle").removeClass("toggle-open");
+  jQuery(".details_toggle").addClass("toggle-close");
   
   // Products toggles
   jQuery("a.products_toggle").live("click", function () {
-    var rows    = jQuery(this).parent().find("tbody.products").children().not(".qc_results").slice(1);
-    var qc_rows = jQuery(this).parent().find("tbody.products .qc_results");
+    var rows    = jQuery(this).parent().find("tbody.products").children().not(".details").slice(1);
+    var qc_rows = jQuery(this).parent().find("tbody.products .details");
     
     if ( rows.first().is(":visible") ) { qc_rows.hide(); rows.hide(); }
     else                               { rows.show(); }
@@ -138,7 +107,7 @@
   });
 
   jQuery("tbody.products").each( function () {
-    var rows = jQuery(this).children().not(".qc_results");
+    var rows = jQuery(this).children().not(".details");
     rows.slice(1, rows.size()).hide();
   });
 
