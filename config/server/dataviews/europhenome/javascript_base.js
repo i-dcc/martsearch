@@ -33,11 +33,3 @@ jQuery(".europhenome table.europhenome-data").delegate(
     event
   }
 );
-
-if ( !jQuery.browser.msie ) {
-  jQuery(".csstransforms table.europhenome-data th .user_instructions").show();
-  jQuery(".csstransforms table.europhenome-data th").css({ "height": "30px", "overflow": "hidden" });
-  jQuery(".csstransforms table.europhenome-data th")
-    .live( "mouseover", function() { jQuery(this).css({ "height": "188px" }); })
-    .live( "mouseout", function()  { jQuery(this).css({ "height": "30px" });  });
-}
