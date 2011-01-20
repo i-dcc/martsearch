@@ -32,7 +32,7 @@
         </td>
         <td>
           <% unless exon[:domains].nil? or exon[:domains].empty? %>
-            <%= exon[:domains].map { |domain| "#{domain[0]} (#{domain[1]}/#{domain[2]} aa)" }.join(", ") %>
+            <%= exon[:domains].map { |domain| "#{domain[:description]} (#{domain[:amino_acids][0]}/#{domain[:amino_acids][1]} aa)" }.join(", ") %>
           <% end %>
         </td>
         <td><%= label[ exon[:structure] ] %></td>
