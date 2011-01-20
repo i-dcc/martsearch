@@ -64,7 +64,7 @@
             <% transcript_class = transcript.include?(:is_warning) ? "transcript warning" : "transcript" %>
             <tr class="<%= transcript_class %>">
              <td>
-              <a href="<%= ensembl_link_url_from_transcript( @data[:ensembl_gene_id], transcript[:ensembl_transcript_id] ) %>">
+              <a href="<%= ensembl_link_url_from_transcript( @data[:ensembl_gene_id], transcript[:ensembl_transcript_id] ) %>" target="_blank">
                 <%= transcript[:ensembl_transcript_id] %>
               </a>
              </td>
