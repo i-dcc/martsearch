@@ -39,7 +39,7 @@
   </tr>
   <% projects.each do |project| %>
     <tr>
-      <th style="text-align:left;"><%= project %></th>
+      <th><%= project %></th>
       <% unitraps.each do |unitrap| %>
         <% trap_count = traps[project][unitrap].is_a?(Array) ? traps[project][unitrap].size : 0 %>
         <td <% if trap_count == 0 %>class="zero"<% end %>>
