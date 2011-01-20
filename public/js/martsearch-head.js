@@ -13,7 +13,7 @@ jQuery(".single_parent_toggler_toggle").live("click", function() {
 
 // Add an observer for all the returned dataset links - this 
 // will make sure that the target elment for the link is visible.
-jQuery("a.dataset_link_bubble").live( "click", function () {
+jQuery("a.dataset_link_bubble").live("click", function () {
   var target_id = jQuery(this).attr("href");
   if ( jQuery(target_id).parent().is(":hidden") ) {
     jQuery(target_id).parent().show();
@@ -28,6 +28,7 @@ jQuery("a.dataset_link_bubble").live( "click", function () {
 // Add the toggling observers for results...
 jQuery(".dataset_title").live("click", function() {
   jQuery(this).parent().find(".dataset_content").slideToggle("fast");
+  jQuery(this).parent().find(".attribution").toggle();
   jQuery(this).toggleClass("toggle-open");
   jQuery(this).toggleClass("toggle-close");
 });

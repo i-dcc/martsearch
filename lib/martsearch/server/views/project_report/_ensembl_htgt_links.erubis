@@ -1,0 +1,33 @@
+<%
+  links = []
+  
+  links.push({
+    :url   => ensembl_link_url_from_gene( :mouse, @data[:ensembl_gene_id], ['das:http://das.sanger.ac.uk/das/ikmc_products'] ),
+    :class => 'ensembl_link',
+    :text  => 'view in ensembl (mouse)'
+  }) unless @data[:ensembl_gene_id].nil?
+  
+  links.push({
+    :url   => ensembl_link_url_from_gene( :human, @data[:human_ensembl_gene], ['das:http://das.sanger.ac.uk/das/mouse_KOs'] ),
+    :class => 'ensembl_link',
+    :text  => 'view in ensembl (human)'
+  }) unless @data[:human_ensembl_gene].nil?
+  
+  links.push({
+    :url   => "http://www.sanger.ac.uk/htgt/tools/restrictionenzymes?es_clone_name=#{escell}",
+    :class => 'ext_link',
+    :text  => 'Southern Blot Enzymes',
+    :title => 'Southern Blot Tool: Find restriction enzymes suitable for a southern blot.'
+  }) unless escell.nil?
+  
+  links.map! do |link|
+    tag = "<a href=\"#{link[:url]}\" target=\"_blank\""
+    tag << " class=\"#{link[:class]}\"" unless link[:class].nil?
+    tag << " title=\"#{link[:title]}\"" unless link[:title].nil?
+    tag << '>' + link[:text] + '</a>'
+  end
+%>
+
+<% unless links.empty? %>
+  <div style="margin-bottom:7px;"><%= links.join(" ") %></div>
+<% end %>

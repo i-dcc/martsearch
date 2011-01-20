@@ -568,6 +568,10 @@ form#martsearchr {
 	margin-bottom: 10px;
 }
 
+#search_results .dataset_content {
+	overflow: auto;
+}
+
 #search_results table.result-header {
 	margin-bottom: 2px;
 }
@@ -916,21 +920,21 @@ div#googlemeter_crop {
 
 /* Project Page Mutagenesis Prediction Tool */
 
-td.exon_deleted {
-	background-color: #99000f;
+.exon_deleted {
+	background-color: #c0241f;
 	color: #fff;
 }
 
-td.exon_frameshifted {
-	background-color: #fc9925;
+.exon_frameshifted {
+	background-color: #ffa93c;
 }
 
-td.exon_upstream {
-	background-color: #185394;
+.exon_upstream {
+	background-color: #376598;
 	color: #fff;
 }
 
-td.exon_downstream {
-	background-color: #185394;
+.exon_downstream {
+	background-color: #376598;
 	color: #fff;
 }
