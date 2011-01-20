@@ -32,7 +32,18 @@
         </td>
         <td>
           <% unless exon[:domains].nil? or exon[:domains].empty? %>
-            <%= exon[:domains].map { |domain| "#{domain[:description]} (#{domain[:amino_acids][0]}/#{domain[:amino_acids][1]} aa)" }.join(", ") %>
+            <!-- display the domains including links to InterPro -->
+            <%=
+              domains = exon[:domains].map do |domain|
+                domain_text = "#{domain[:description]} (#{domain[:amino_acids][0]}/#{domain[:amino_acids][1]} aa)"
+                if domain.include?( :interpro_ac )
+                  "<a href='#{ interpro_link_url( domain[:interpro_ac] ) }' target='_blank'>#{ domain_text }</a>"
+                else
+                  domain_text
+                end
+              end
+              domains.join(" | ")
+           %>
           <% end %>
         </td>
         <td><%= label[ exon[:structure] ] %></td>
