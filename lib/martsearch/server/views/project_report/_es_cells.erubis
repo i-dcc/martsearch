@@ -27,7 +27,7 @@
     <%- cells = @data[:es_cells][cond_vs_noncond][:cells] -%>
     
     <% unless @data[:es_cells][cond_vs_noncond][:allele_img].nil? %>
-      <img src="<%= @data[:es_cells][cond_vs_noncond][:allele_img] %>" width="940px" />
+      <img src="<%= @data[:es_cells][cond_vs_noncond][:allele_img] %>" width="930px" />
       <div class="clear"></div>
       
       <% if cond_vs_noncond != 'conditional' and img_txt != '' %>
