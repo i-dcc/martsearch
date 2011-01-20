@@ -130,37 +130,40 @@ class MartSearchServerViewHelpersTest < Test::Unit::TestCase
   end
 
   def test_mouse_order_button
-    params = {
-      :mgi_accession_id    => "MGI:1338071",
-      :marker_symbol       => "Ikbkb",
-      :sponsor             => "EUCOMM",
-      :ikmc_project_id     => "33339",
-      :dist_flag           => true,
-      :mi_centre           => "WTSI",
-      :distribution_centre => "WTSI"
-    }
+    # In future we should add to this list mice from NorCOMM and TIGM as well
+    mice = [
+      {
+        :mgi_accession_id    => "MGI:1338071",
+        :marker_symbol       => "Ikbkb",
+        :sponsor             => "EUCOMM",
+        :ikmc_project_id     => "33339",
+        :dist_flag           => true,
+        :mi_centre           => "WTSI",
+        :distribution_centre => "WTSI",
+        :expected_regex      => /emma/
+      },
+      {
+        :mgi_accession_id    => "MGI:1916976",
+        :marker_symbol       => "Smyd3",
+        :sponsor             => "KOMP",
+        :ikmc_project_id     => "32046",
+        :dist_flag           => true,
+        :mi_centre           => "UCD",
+        :distribution_centre => "UCD",
+        :expected_regex      => /komp/
+      },
+    ]
 
-    assert_nothing_raised do
-      mouse_order_button(
-        params[:mgi_accession_id],
-        params[:marker_symbol],
-        params[:sponsor],
-        params[:ikmc_project_id],
-        params[:dist_flag],
-        params[:mi_centre],
-        params[:distribution_centre]
-      )
+    mice.each do |mouse|
+      assert_match( mouse[:expected_regex], mouse_order_button(
+        mouse[:mgi_accession_id],
+        mouse[:marker_symbol],
+        mouse[:sponsor],
+        mouse[:ikmc_project_id],
+        mouse[:dist_flag],
+        mouse[:mi_centre],
+        mouse[:distribution_centre]
+      ) )
     end
-
-    # EMMA distributed mice should be ordered from EMMA
-    assert_match( /emma/, mouse_order_button(
-      params[:mgi_accession_id],
-      params[:marker_symbol],
-      params[:sponsor],
-      params[:ikmc_project_id],
-      params[:dist_flag],
-      params[:mi_centre],
-      params[:distribution_centre]
-    ) )
   end
 end
