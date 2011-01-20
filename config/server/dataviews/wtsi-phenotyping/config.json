@@ -1,6 +1,6 @@
 {
   "name":                 "WTSI Phenotyping",
-  "description":          "Phenotyping assay data from the Mouse Genetics Program (MGP) at the Wellcome Trust Sanger Institute.",
+  "description":          "Phenotyping assay data from the Mouse Genetics Project (MGP) at the Wellcome Trust Sanger Institute.",
   "enabled":              true,
   "display":              true,
   "custom_css":           true,
