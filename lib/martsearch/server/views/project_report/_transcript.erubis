@@ -7,9 +7,18 @@
     "U"  => "UTR"
   }
 %>
+
+<% unless transcript[:floxed_transcript_translation].nil? or transcript[:floxed_transcript_translation].empty? %>
+  <p style="margin: 5px 0;">
+  	<strong>Predicted translation:</strong>
+  	<pre style="margin: 3px 0;"><%= transcript[:floxed_transcript_translation].wrap(80) %></pre>
+  </p>
+<% end %>
+
 <table width="100%" style="margin-bottom:5px;">
   <thead>
     <th>Ensembl Exon ID</th>
+    <th>Domains</th>
     <th>WildType</th>
     <th>Floxed</th>
   </thead>
@@ -21,8 +30,13 @@
             <%= exon[:ensembl_stable_id] %>
           </a>
         </td>
+        <td>
+          <% unless exon[:domains].nil? or exon[:domains].empty? %>
+            <%= exon[:domains].map { |domain| "#{domain[0]} (#{domain[1]}/#{domain[2]} aa)" }.join(", ") %>
+          <% end %>
+        </td>
         <td><%= label[ exon[:structure] ] %></td>
-        <td class="<%= 'exon_' + exon[:description] %>">
+        <td <% unless exon[:floxed_structure] == "U" %>class="<%= 'exon_' + exon[:description] %>"<% end %>>
           <% if exon.include?(:floxed_structure) %>
             <%= label[ exon[:floxed_structure] ] %>
           <% else %>

@@ -1,7 +1,3 @@
-require "uri"
-require "net/http"
-require "json"
-
 module MartSearch
   
   # Utility module to house all of the data gathering logic for the IKMC 
@@ -11,6 +7,8 @@ module MartSearch
   # @author Darren Oakley
   # @author Nelo Onyiah
   module ProjectUtils
+
+    include MartSearch::Utils
     
     # Wrapper function to collate all of the data for a given IKMC project.
     #
@@ -473,13 +471,21 @@ module MartSearch
 
       # Retrieve the mutagenesis predictions for the project_id from HTGT
       #
-      # @param  [String] project_id
+      # @param  [String] project_id The IKMC project ID
       # @return [Hash] The output from the HTGT mutagenesis prediction tool
       def get_mutagenesis_predictions( project_id )
         result  = { :data => [], :error => {} }
         message = "There was a problem retrieving mutagenesis predictions for this project.  As a result this data will not be available on the page.  Please try refreshing your browser or come back in 10 minutes to obtain this data."
         begin
-          result[:data] = JSON.parse( Net::HTTP.get( URI.parse( "http://www.sanger.ac.uk/htgt/tools/mutagenesis_prediction/project/#{project_id}/detail" ) ) ).recursively_symbolize_keys!
+          uri         = URI.parse( "http://www.sanger.ac.uk/htgt/tools/mutagenesis_prediction/project/#{project_id}/detail" )
+          http_client = build_http_client()
+          response    = http_client.get_response( uri )
+
+          unless response.code == "200"
+            raise Exception.new( "Mutagenesis prediction analysis unavailable." )
+          end
+
+          result[:data] = JSON.parse( response.body ).recursively_symbolize_keys!
         rescue JSON::ParserError => error
           result[:error] = {
             :text  => message,

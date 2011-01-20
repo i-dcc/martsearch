@@ -2,60 +2,15 @@
   <h4 class="dataset_title toggle-open">Mutagenesis Predictions</h4>
   <div class="dataset_content">
 
-    <p>
-      This tool shows the predicted structure of the gene transcripts after successful
-      mutation. The image below shows what a typical transcript may look like (this is
-      an example only).  Click the 'view' button for each transcript to see the full
-      prediction for that transcript.
-    </p>
-
     <table class="noborder">
-      <tbody class="">
+      <tbody>
         <tr>
-
           <!-- Display the mutagenesis predictions -->
-          <td style="vertical-align:top" width="65%">
-            <table class="border" width="100%">
-              <thead>
-                <th>Ensembl transcript id</th>
-                <th>Floxed transcript description</th>
-                <th>Details</th>
-              </thead>
-              <tbody class="products">
-
-                <!-- Process the transcripts -->
-                <% @data[:mutagenesis_predictions].each do |transcript| %>
-                  <% if transcript.class == Hash or transcript.class == BSON::OrderedHash %>
-                    <tr class="transcript">
-                     <td>
-                      <a href="<%= ensembl_link_url_from_transcript( @data[:ensembl_gene_id], transcript[:ensembl_transcript_id] ) %>">
-                        <%= transcript[:ensembl_transcript_id] %>
-                      </a>
-                     </td>
-                     <td><%= transcript[:floxed_transcript_description] %></td>
-                     <td>
-                       <% unless transcript[:exons].nil? or transcript[:exons].empty? %>
-                         <a class="details_toggle toggle-close">view</a>
-                       <% end %>
-                     </td>
-                    </tr>
-
-                    <!-- Process the exon details -->
-                    <% unless transcript[:exons].nil? or transcript[:exons].empty? %>
-                      <tr class="details">
-                        <td colspan="3">
-                          <%= partial("project_report/transcript", :locals => { :transcript => transcript, :transcript_id => transcript[:ensembl_transcript_id] } ) %>
-                        </td>
-                      </tr>
-                    <% end %>
-                  <% end %>
-                <% end %>
-
-              </tbody>
-            </table>
-            <% if @data[:mutagenesis_predictions].size > 1 %>
-              <a class="products_toggle toggle-close">show/hide more Transcripts</a>
-            <% end %>
+          <td style="vertical-align:top">
+            This tool shows the predicted structure of the gene transcripts after successful
+            mutation. The image shows what a typical transcript may look like (this is
+            an example only).  Click the 'view' button for each transcript to see the full
+            prediction for that transcript.
           </td>
 
           <!-- Display the key -->
@@ -63,34 +18,29 @@
             <table>
               <tbody>
                 <!-- Insert the key explaining the predictions (may have to be a partial) -->
-                <tr>
-                  <div class="">
-                    <%= image_tag '/images/mutagenesis_prediction_key.png', { :width => 350 } %>
-                  </div>
-                </tr>
-
-                <tr>
+                <td><%= image_tag '/images/mutagenesis_prediction_key.png', { :width => 300 } %></td>
+                <td style="vertical-align:top">
                   <table>
                     <tr>
-                      <td class="noborder"><strong>Legend:</strong></td>
-                      <td class="noborder"><strong>C</strong></td>
-                      <td class="noborder">CDS</td>
-                      <td class="noborder"><strong>D</strong></td>
-                      <td class="noborder">deleted exon</td>
-                      <td class="noborder"><strong>U</strong></td>
-                      <td class="noborder">UTR</td>
+                      <td><strong>Legend:</strong></td>
+                      <td><strong>C</strong></td>
+                      <td>CDS</td>
+                      <td><strong>D</strong></td>
+                      <td>deleted&nbsp;exon</td>
+                      <td><strong>U</strong></td>
+                      <td>UTR</td>
                     </tr>
                     <tr>
-                      <td class="noborder"></td>
+                      <td></td>
                       <td class="exon_upstream"/>
-                      <td class="noborder">in frame</td>
+                      <td>in&nbsp;frame</td>
                       <td class="exon_deleted"/>
-                      <td class="noborder">deleted</td>
+                      <td>deleted</td>
                       <td class="exon_frameshifted"/>
-                      <td class="noborder">frameshifted</td>
+                      <td>frameshifted</td>
                     </tr>
                   </table>
-                </tr>
+                </td>
               </tbody>
             </table>
           </td>
@@ -99,6 +49,45 @@
       </tbody>
     </table>
 
+    <table class="border" width="100%">
+      <thead>
+        <th>Ensembl transcript id</th>
+        <th>Biotype</th>
+        <th>Floxed transcript description</th>
+        <th>Details</th>
+      </thead>
+      <tbody>
+
+        <!-- Process the transcripts -->
+        <% @data[:mutagenesis_predictions].each do |transcript| %>
+          <% if transcript.class == Hash or transcript.class == BSON::OrderedHash %>
+            <tr class="transcript">
+             <td>
+              <a href="<%= ensembl_link_url_from_transcript( @data[:ensembl_gene_id], transcript[:ensembl_transcript_id] ) %>">
+                <%= transcript[:ensembl_transcript_id] %>
+              </a>
+             </td>
+             <td><%= transcript[:biotype] %></td>
+             <td><%= transcript[:floxed_transcript_description] %></td>
+             <td>
+               <% unless transcript[:exons].nil? or transcript[:exons].empty? %>
+                 <a class="details_toggle toggle-close">view</a>
+               <% end %>
+             </td>
+            </tr>
+
+            <!-- Process the exon details -->
+            <% unless transcript[:exons].nil? or transcript[:exons].empty? %>
+              <tr class="details">
+                <td colspan="4">
+                  <%= partial("project_report/transcript", :locals => { :transcript => transcript, :transcript_id => transcript[:ensembl_transcript_id] } ) %>
+                </td>
+              </tr>
+            <% end %>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
     
     <div class="clear"></div>
   </div>
