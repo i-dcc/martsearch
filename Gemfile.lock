@@ -6,7 +6,7 @@ GEM
     activesupport (3.0.0)
     addressable (2.2.2)
     arrayfields (4.7.4)
-    awesome_print (0.2.1)
+    awesome_print (0.3.1)
     biomart (0.2.0)
       builder
     bson (1.1.1)
