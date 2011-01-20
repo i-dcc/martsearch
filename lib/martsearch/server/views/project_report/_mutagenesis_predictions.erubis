@@ -61,7 +61,8 @@
         <!-- Process the transcripts -->
         <% @data[:mutagenesis_predictions].each do |transcript| %>
           <% if transcript.class == Hash or transcript.class == BSON::OrderedHash %>
-            <tr class="transcript">
+            <% transcript_class = transcript.include?(:is_warning) ? "transcript warning" : "transcript" %>
+            <tr class="<%= transcript_class %>">
              <td>
               <a href="<%= ensembl_link_url_from_transcript( @data[:ensembl_gene_id], transcript[:ensembl_transcript_id] ) %>">
                 <%= transcript[:ensembl_transcript_id] %>
