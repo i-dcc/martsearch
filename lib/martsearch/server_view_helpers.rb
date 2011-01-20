@@ -99,6 +99,14 @@ module MartSearch
       
       return url
     end
+
+    # Helper function to generate a link to InterPro
+    #
+    # @param  [String|Symbol] interpro_ac - the InterPro ID
+    # @return [String]                      the link to InterPro
+    def interpro_link_url( interpro_ac )
+      "http://www.ebi.ac.uk/interpro/ISearch?query=#{ interpro_ac.to_s }"
+    end
     
     # Helper function to construct a url for linking to Ensembl from an 
     # Ensembl Gene ID.
