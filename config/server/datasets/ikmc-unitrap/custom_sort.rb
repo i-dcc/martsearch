@@ -31,7 +31,9 @@ module MartSearch
         end
         
         data       = sorted_results[ result[ joined_attribute ] ]
-        unitrap_id = result[:unitrap_accession_id].to_sym
+        
+        result[:unitrap_accession_id] = result[:unitrap_accession_id].match(/^(ENS\w+)-(UNI.+)$/)[2]
+        unitrap_id                    = result[:unitrap_accession_id].to_sym
         
         project = result[:project].to_sym
         project = :NorCOMM if ['Stanford','ESCells','CMHD'].include?(result[:project])

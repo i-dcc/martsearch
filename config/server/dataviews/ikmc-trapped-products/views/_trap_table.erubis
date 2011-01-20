@@ -2,7 +2,8 @@
   <caption><%= caption %></caption>
   <tr>
     <th><%= first_cell_header %></th>
-    <th>Design Type</th>
+    <th>Tag Type</th>
+    <th>Vector</th>
     <th>ES Cell Clone</th>
     <th>ES Cell Line</th>
     <th>ES Cell Strain</th>
@@ -17,6 +18,7 @@
     <tr class="<%= row_class %>">
       <td><%= trap[first_cell_content.to_sym]%></td>
       <td><%= trap[:design_type] %></td>
+      <td><%= trap[:vector_name] %></td>
       <td><%= trap[:escell_clone] %></td>
       <td><%= trap[:escell_line] %></td>
       <td><%= trap[:escell_strain] %></td>

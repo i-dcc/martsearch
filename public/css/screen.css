@@ -567,6 +567,10 @@ form#martsearchr {
 	margin-bottom: 10px;
 }
 
+#search_results .dataset_content {
+	overflow: auto;
+}
+
 #search_results table.result-header {
 	margin-bottom: 2px;
 }
