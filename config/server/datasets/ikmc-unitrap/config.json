@@ -13,6 +13,7 @@
       "ensembl_gene_id",
       "unitrap_accession_id",
       "project",
+      "vector_name",
       "escell_clone",
       "escell_line",
       "escell_strain",
