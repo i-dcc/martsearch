@@ -128,5 +128,39 @@ class MartSearchServerViewHelpersTest < Test::Unit::TestCase
       assert_equal( 'http://www.phenogenomics.ca/services/cmmr/escell_services.html', idcc_targ_rep_product_order_url( norcomm_project, result_data, 'something' ) )
     end
   end
-  
+
+  def test_mouse_order_button
+    params = {
+      :mgi_accession_id    => "MGI:1338071",
+      :marker_symbol       => "Ikbkb",
+      :sponsor             => "EUCOMM",
+      :ikmc_project_id     => "33339",
+      :dist_flag           => true,
+      :mi_centre           => "WTSI",
+      :distribution_centre => "WTSI"
+    }
+
+    assert_nothing_raised do
+      mouse_order_button(
+        params[:mgi_accession_id],
+        params[:marker_symbol],
+        params[:sponsor],
+        params[:ikmc_project_id],
+        params[:dist_flag],
+        params[:mi_centre],
+        params[:distribution_centre]
+      )
+    end
+
+    # EMMA distributed mice should be ordered from EMMA
+    assert_match( /emma/, mouse_order_button(
+      params[:mgi_accession_id],
+      params[:marker_symbol],
+      params[:sponsor],
+      params[:ikmc_project_id],
+      params[:dist_flag],
+      params[:mi_centre],
+      params[:distribution_centre]
+    ) )
+  end
 end
