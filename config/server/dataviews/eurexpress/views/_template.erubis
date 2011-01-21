@@ -37,7 +37,7 @@
         <a href="#" class="eurexpress_assay_ontology_close">close tree</a>
         <div class="clear"></div>
         <div class="eurexpress_assay_ontology_key">
-          <table class="nocol nobg nopadding noborder">
+          <table class="nobg nopadding noborder">
             <tr class=""><th>Expression</th><td></td></tr>
             <tr><td>strong</td><td class="strong"></td><td>moderate</td><td class="moderate"></td></tr>
             <tr><td>weak</td><td class="weak"></td><td>possible</td><td class="possible"></tr>

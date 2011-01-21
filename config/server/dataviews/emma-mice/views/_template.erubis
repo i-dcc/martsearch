@@ -5,7 +5,7 @@
     <th>(International) Strain Designation</th>
     <th>Allele Name</th>
     <th></th>
-    <th class="noborder nocol nobg"></th>
+    <th class="noborder nobg"></th>
   </tr>
   <% result_data[:'emma-strains'].each do |id,data| %>
     <tr>
@@ -14,7 +14,7 @@
       <td><%= data[:international_strain_name] %></td>
       <td><%= data[:allele_name] %></td>
       <td><a href="#" class="emma-strains-information-toggle">more&nbsp;information</a></td>
-      <td class="noborder nocol nobg">
+      <td class="noborder nobg">
         <% url_args = "?new=y&id=#{data[:emma_id]}&sname=#{data[:international_strain_name]}&cname=#{data[:synonym]}" %>
         <a href="https://www.emmanet.org/apps/RegisterInterest/requestFormView.emma<%= CGI::escapeHTML(url_args) %>" class="order">order</a>
       </td>
