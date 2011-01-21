@@ -733,6 +733,10 @@ ul.ensembl_link_list li {
 	color: #666;
 }
 
+.ui-tooltip-content {
+	border-width: 2px;
+}
+
 /* jQuery TableSorter Overrides */
 
 table.tablesorter thead tr th {

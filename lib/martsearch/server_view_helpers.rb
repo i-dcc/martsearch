@@ -173,12 +173,12 @@ module MartSearch
     # @return [String] The html markup for a button
     def mouse_order_button( mgi_accession_id, marker_symbol, project, project_id, flagged_for_dist, mi_centre='', dist_centre='' )
       order_url = ikmc_product_order_url( :mouse, project, project_id, mgi_accession_id, marker_symbol )
-      
-      unless flagged_for_dist
+
+      if not flagged_for_dist
         order_url = ""
       else
         centre = dist_centre ? dist_centre : mi_centre
-        if dist_centre.eql?('WTSI')
+        if project =~ /KOMP/ and centre == "WTSI"
           order_url = "mailto:mouseinterest@sanger.ac.uk?subject=Interest in Mouse for #{marker_symbol}"
         end
       end
