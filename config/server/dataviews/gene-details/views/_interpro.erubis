@@ -5,7 +5,7 @@
       <% unless index_string.gsub(" ","") === "||||" %>
         <% interpro = index_string.split("||") %>
         <li>
-          <a href="http://www.ebi.ac.uk/interpro/IEntry?ac=<%= interpro[0] %>" target="_blank"><%= "#{interpro[2].titlecase} (#{interpro[0]})" %></a>
+          <a href="<%= interpro_link_url(interpro[0]) %>" target="_blank"><%= "#{interpro[2].titlecase} (#{interpro[0]})" %></a>
         </li>
       <% end %>
     <% end %>

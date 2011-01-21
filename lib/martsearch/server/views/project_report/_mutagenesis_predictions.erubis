@@ -2,7 +2,7 @@
   <h4 class="dataset_title toggle-open">Mutagenesis Predictions</h4>
   <div class="dataset_content">
 
-    <table class="noborder">
+    <table class="noborder nopadding">
       <tbody>
         <tr>
           <!-- Display the mutagenesis predictions -->
@@ -56,19 +56,23 @@
         <th>Floxed transcript description</th>
         <th>Details</th>
       </thead>
-      <tbody>
+      <tbody class="products">
 
         <!-- Process the transcripts -->
         <% @data[:mutagenesis_predictions].each do |transcript| %>
           <% if transcript.class == Hash or transcript.class == BSON::OrderedHash %>
             <tr class="transcript">
              <td>
-              <a href="<%= ensembl_link_url_from_transcript( @data[:ensembl_gene_id], transcript[:ensembl_transcript_id] ) %>">
+              <a href="<%= ensembl_link_url_from_transcript( @data[:ensembl_gene_id], transcript[:ensembl_transcript_id] ) %>" target="_blank">
                 <%= transcript[:ensembl_transcript_id] %>
               </a>
              </td>
              <td><%= transcript[:biotype] %></td>
-             <td><%= transcript[:floxed_transcript_description] %></td>
+             <% if transcript.include?(:is_warning) %>
+               <td class="warning"><%= transcript[:floxed_transcript_description] %></td>
+             <% else %>
+               <td><%= transcript[:floxed_transcript_description] %></td>
+             <% end %>
              <td>
                <% unless transcript[:exons].nil? or transcript[:exons].empty? %>
                  <a class="details_toggle toggle-close">view</a>
@@ -88,7 +92,9 @@
         <% end %>
       </tbody>
     </table>
-    
+    <% if @data[:mutagenesis_predictions].size > 1 %>
+      <a class="products_toggle">show/hide more transcripts</a>
+    <% end %>
     <div class="clear"></div>
   </div>
 </div>
