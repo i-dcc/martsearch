@@ -915,83 +915,68 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
       end
     end
 
-    context "with no mice" do
-      setup do
-        @project_id = 42474
+    should "not throw any exceptions with no mice" do
+      assert_nothing_raised do
+        get_ikmc_project_page_data( 42474 )
+      end
+    end
+
+    should "return the correct data with more than one mouse" do
+      project_id    = 40343
+      expected_data = JSON.parse( File.read( File.dirname( __FILE__ ) + "/fixtures/test_project_utils-project_id_#{project_id}.json" ) )
+      expected_data.recursively_symbolize_keys!()
+      observed_data = get_ikmc_project_page_data( project_id )[:data]
+      valid_keys    = [
+          :project_id,
+          :marker_symbol,
+          :mgi_accession_id,
+          :ensembl_gene_id,
+          :vega_gene_id,
+          :ikmc_project,
+          :status,
+          :mouse_available,
+          :escell_available,
+          :vector_available,
+          :human_ensembl_gene,
+          :mice,
+          :intermediate_vectors,
+          :targeting_vectors,
+          :es_cells,
+          :vector_image,
+          :vector_gb,
+          :stage,
+          :stage_type
+      ]
+
+      # sort the relevant bits of data
+      [:conditional, :"targeted non-conditional"].each do |symbol|
+        expected_data[:es_cells][symbol][:cells].uniq!
+        expected_data[:es_cells][symbol][:cells].sort! do |a, b|
+          res = b[:"mouse?"] <=> a[:"mouse?"]
+          res = b[:qc_count] <=> a[:qc_count] if res == 0
+          res = a[:name]     <=> b[:name]     if res == 0
+          res
+        end
       end
 
-      should "not throw any exceptions" do
+      [ :genotype_confirmed, :mi_in_progress ].each do |symbol|
+        expected_data[:mice][symbol].sort! do |a, b|
+          res = a[:qc_count]     <=> b[:qc_count]
+          res = a[:escell_clone] <=> b[:escell_clone] if res == 0
+          res
+        end
+      end
+      
+      valid_keys.each do |valid_key|
+        assert_equal expected_data[valid_key], observed_data[valid_key]
+      end
+    end
+
+    should "not crash with *NoMethodError* when data is requested for projects in status *Redesign Requested*" do
+      project_ids = [ 80797, 92475 ]
+      project_ids.each do |project_id|
         assert_nothing_raised do
-          get_ikmc_project_page_data( @project_id )
-        end
-      end
-    end
-
-    context "with more than one mouse" do
-      setup do
-        @project_id    = 40343
-        @expected_data = JSON.parse( File.read( File.dirname( __FILE__ ) + "/../tmp/40343.json" ) )
-        @expected_data.recursively_symbolize_keys!()
-        @observed_data = get_ikmc_project_page_data( @project_id )[:data]
-        @valid_keys    = [
-            :project_id,
-            :marker_symbol,
-            :mgi_accession_id,
-            :ensembl_gene_id,
-            :vega_gene_id,
-            :ikmc_project,
-            :status,
-            :mouse_available,
-            :escell_available,
-            :vector_available,
-            :human_ensembl_gene,
-            :mice,
-            :intermediate_vectors,
-            :targeting_vectors,
-            :es_cells,
-            :vector_image,
-            :vector_gb,
-            :stage,
-            :stage_type
-        ]
-
-        # sort the relevant bits of data
-        [:conditional, :"targeted non-conditional"].each do |symbol|
-          @expected_data[:es_cells][symbol][:cells].uniq!
-          @expected_data[:es_cells][symbol][:cells].sort! do |a, b|
-            res = b[:"mouse?"] <=> a[:"mouse?"]
-            res = b[:qc_count] <=> a[:qc_count] if res == 0
-            res = a[:name]     <=> b[:name]     if res == 0
-            res
-          end
-        end
-
-        [ :genotype_confirmed, :mi_in_progress ].each do |symbol|
-          @expected_data[:mice][symbol].sort! do |a, b|
-            res = a[:qc_count]     <=> b[:qc_count]
-            res = a[:escell_clone] <=> b[:escell_clone] if res == 0
-            res
-          end
-        end
-      end
-
-      should "return the correct data" do
-        @valid_keys.each do |valid_key|
-          assert_equal @expected_data[valid_key], @observed_data[valid_key]
-        end
-      end
-    end
-
-    context "with status *Redesign Requested*" do
-      setup do
-        @project_ids = [ 80797, 92475 ]
-      end
-
-      should "not crash with *NoMethodError* when data is requested" do
-        @project_ids.each do |project_id|
-          assert_nothing_raised do
-            get_ikmc_project_page_data( project_id )
-          end
+          get_ikmc_project_page_data( project_id )
         end
       end
     end
