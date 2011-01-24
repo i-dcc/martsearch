@@ -58,3 +58,5 @@
     <% end %>
   </tbody>
 </table>
+
+<%= partial("project_report/mutagenesis_prediction_legend") %>

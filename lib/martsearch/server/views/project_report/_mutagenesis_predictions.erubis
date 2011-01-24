@@ -1,53 +1,26 @@
 <div class="dataset">
   <h4 class="dataset_title toggle-open">Mutagenesis Predictions</h4>
   <div class="dataset_content">
-
-    <table class="noborder nopadding">
-      <tbody>
-        <tr>
-          <!-- Display the mutagenesis predictions -->
-          <td style="vertical-align:top">
-            This tool shows the predicted structure of the gene transcripts after successful
-            mutation. The image shows what a typical transcript may look like (this is
-            an example only).  Click the 'view' button for each transcript to see the full
-            prediction for that transcript.
-          </td>
-
-          <!-- Display the key -->
-          <td style="vertical-align:top">
-            <table>
-              <tbody>
-                <!-- Insert the key explaining the predictions (may have to be a partial) -->
-                <td><%= image_tag '/images/mutagenesis_prediction_key.png', { :width => 300 } %></td>
-                <td style="vertical-align:top">
-                  <table>
-                    <tr>
-                      <td><strong>Legend:</strong></td>
-                      <td><strong>C</strong></td>
-                      <td>CDS</td>
-                      <td><strong>D</strong></td>
-                      <td>deleted&nbsp;exon</td>
-                      <td><strong>U</strong></td>
-                      <td>UTR</td>
-                    </tr>
-                    <tr>
-                      <td></td>
-                      <td class="exon_upstream"/>
-                      <td>in&nbsp;frame</td>
-                      <td class="exon_deleted"/>
-                      <td>deleted</td>
-                      <td class="exon_frameshifted"/>
-                      <td>frameshifted</td>
-                    </tr>
-                  </table>
-                </td>
-              </tbody>
-            </table>
-          </td>
-
-        </tr>
-      </tbody>
-    </table>
+    
+    <p>
+      This gene has 
+      <% counts = @data[:mutagenesis_predictions][:statistics] %>
+      <%= counts[:wt_transcripts] %> wiltdype transcripts, of which <%= counts[:wt_proteien_coding_transcripts] %> 
+      are protein-coding. Of these <%= counts[:wt_proteien_coding_transcripts] %>, 
+      <%= counts[:mut_nmd_transcripts] %>  
+      <% if counts[:mut_nmd_transcripts] == 1 %>is<% else %>are<% end %>
+      <strong>predicted</strong> to produce no protein in the mutant (for example, because of NMD).
+      
+      <% if counts[:mut_nmd_rescue_transcripts] > 0 %>
+        Of the <%= counts[:wt_non_coding_transcripts] %> non-coding wildtype transcripts, 
+        <%= counts[:mut_nmd_rescue_transcripts] %> are possibly subject to NMD rescue in the
+        mutant.
+      <% end %>
+      
+      The table below shows the <strong>predicted</strong> structure of the gene transcripts 
+      after successful mutation. Click the 'view' button for each transcript to see the full
+      prediction for that transcript.
+    </p>    
 
     <table class="border" width="100%">
       <thead>
@@ -58,8 +31,7 @@
       </thead>
       <tbody class="products">
 
-        <!-- Process the transcripts -->
-        <% @data[:mutagenesis_predictions].each do |transcript| %>
+        <% @data[:mutagenesis_predictions][:transcripts].each do |transcript| %>
           <% if transcript.class == Hash or transcript.class == BSON::OrderedHash %>
             <tr class="transcript">
              <td>
@@ -80,7 +52,6 @@
              </td>
             </tr>
 
-            <!-- Process the exon details -->
             <% unless transcript[:exons].nil? or transcript[:exons].empty? %>
               <tr class="details">
                 <td colspan="4">

@@ -43,7 +43,9 @@
 
     <!-- Mutagenesis Predictions -->
     <% unless @data[:mutagenesis_predictions].nil? or @data[:mutagenesis_predictions].empty? %>
-      <%= partial("project_report/mutagenesis_predictions") %>
+      <% unless @data[:mutagenesis_predictions][:transcripts].nil? or @data[:mutagenesis_predictions][:transcripts].empty? %>
+        <%= partial("project_report/mutagenesis_predictions") %>
+      <% end %>
     <% end %>
     
     
