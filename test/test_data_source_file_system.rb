@@ -22,7 +22,7 @@ class MartSearchFileSystemDataSourceTest < Test::Unit::TestCase
     
     should 'return the expeced data structure for search()' do
       if @conf_obj.datasets[:'wtsi-phenotyping-abr'].nil?
-        skip( "Can't run a FileSystemDataSource.search() test without a configure dataset." )
+        skip( "Can't run a FileSystemDataSource.search() test without a configured dataset." )
       else
         dataset_conf = @conf_obj.datasets[:'wtsi-phenotyping-abr'].config()
         ret          = @fs_datasource.search( ['MAMH','MAMJ'], dataset_conf[:searching] )
