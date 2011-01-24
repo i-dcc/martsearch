@@ -6,11 +6,9 @@
 }
 
 #wrapper {
-	width: 90%;
+	width: 95%;
 	min-width: 1015px;
-	margin: 0 auto;
-	padding: 10px;
-	margin-bottom: 20px;
+	margin: 10px auto 20px;
 }
 
 #content {
@@ -641,14 +639,14 @@ form#martsearchr {
 /* Data Browsing */
 
 #browse_controls {
-	width: 150px;
+	width: 200px;
 	float: left;
 	margin-top: 5px;
 	margin-bottom: 25px;
 }
 
 .browse_results {
-	margin-left: 160px;
+	margin-left: 210px;
 }
 
 #browse_controls h6 {
@@ -693,7 +691,7 @@ form#martsearchr {
 #browse_controls a {
 	display: inline-block;
 	position: relative;
-	width: 138px;
+	width: 190px;
 	padding: 2px 0 2px 10px;
 	font-weight: bold;
 }
