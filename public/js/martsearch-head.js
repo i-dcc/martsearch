@@ -5,7 +5,11 @@
 
 // Single parent togglers...
 jQuery(".single_parent_toggler_toggle").live("click", function() {
-  jQuery(this).parent().find(".single_parent_toggler_content").toggle();
+  if ( jQuery(this).hasClass("slide") ) {
+    jQuery(this).parent().find(".single_parent_toggler_content").slideToggle("fast");
+  } else {
+    jQuery(this).parent().find(".single_parent_toggler_content").toggle();
+  }
   jQuery(this).toggleClass("toggle-open");
   jQuery(this).toggleClass("toggle-close");
   return false;

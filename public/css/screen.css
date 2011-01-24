@@ -6,10 +6,9 @@
 }
 
 #wrapper {
-	width: 960px;
-	margin: 0 auto;
-	padding: 10px;
-	margin-bottom: 20px;
+	width: 95%;
+	min-width: 1015px;
+	margin: 10px auto 20px;
 }
 
 #content {
@@ -357,45 +356,6 @@ span.highlight {
 .search_information {
 	margin-bottom: 10px;
 	height: 26px;
-	clear: both;
-}
-
-/* Data Browsing Controls */
-
-#browsable_content {
-	margin: 0 auto;
-	margin-bottom: 25px;
-}
-
-#browsable_content th,
-#browsable_content td {
-	vertical-align: middle;
-	padding: 4px;
-}
-
-#browsable_content a {
-	display: inline-block;
-	border: 1px solid #999;
-	border-radius: 2px;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	-o-border-radius: 2px;
-	background-color: #ccc;
-	color: #333;
-	margin-bottom: 2px;
-	padding: 3px 5px;
-}
-
-#browsable_content a:hover {
-	color: #fff;
-	background-color: #6998cb;
-	border-color: #376598;
-}
-
-#browsable_content a.current {
-	color: #fff;
-	background-color: #6998cb;
-	border: 1px solid #376598;
 }
 
 /* Navigation Menu */
@@ -675,6 +635,78 @@ form#martsearchr {
     padding: 2px 3px 2px 16px;
     margin: 2px;
     background: url(../images/silk/bullet_go.png) no-repeat left center;
+}
+
+/* Data Browsing */
+
+#browse_controls {
+	width: 200px;
+	float: left;
+	margin-top: 5px;
+	margin-bottom: 25px;
+}
+
+.browse_results {
+	margin-left: 210px;
+}
+
+#browse_controls h6 {
+	color: #fff;
+	margin-bottom: 1px;
+	padding-top: 7px;
+	padding-bottom: 7px;
+	border-top-left-radius: 5px;
+	-webkit-border-top-left-radius: 5px;
+	-moz-border-radius-topleft: 5px;
+	-o-border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	-moz-border-radius-topright: 5px;
+	-o-border-radius-topright: 5px;
+	background-color: #376598;
+	background-position: 2px center;
+	padding-left: 17px;
+}
+
+#browse_controls .browse_control_footer {
+	background-color: #376598;
+	height: 2px;
+	margin-bottom: 4px;
+}
+
+#browse_controls ul {
+	margin: 0;
+	list-style-type: none;
+}
+
+#browse_controls ul li {
+	margin-left: 0;
+	border-top: 1px solid #999;
+}
+
+#browse_controls ul li:hover,
+#browse_controls ul li.current {
+	background-color: #6998cb;
+}
+
+#browse_controls a {
+	display: inline-block;
+	position: relative;
+	width: 190px;
+	padding: 2px 0 2px 10px;
+	font-weight: bold;
+}
+
+#browse_controls a span.count {
+	float: right;
+	padding-right: 5px;
+	font-weight: normal;
+	font-style: normal;
+}
+
+#browse_controls ul li:hover a,
+#browse_controls ul li.current a {
+	color: #fff;
 }
 
 /* Welcome Page Specifics */

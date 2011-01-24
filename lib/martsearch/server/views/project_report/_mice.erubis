@@ -12,7 +12,7 @@
         <th>Microinjection Status</th>
         <th>Distribution Centre</th>
         <th>QC Data</th>
-        <th class="noborder nocol nobg hide_on_print"></th>
+        <th class="noborder nobg hide_on_print"></th>
       </thead>
       <tbody>
         <% @data[:mice][:genotype_confirmed].each do |mouse| %>

@@ -122,6 +122,47 @@ module MartSearch
       return @search_results
     end
     
+    # Function to load in the browsable content config and then query the index 
+    # for each term and get a count of items returned...
+    #
+    # @param [Boolean] use_cache Use cached data if available
+    # @return [Hash] A hash of all of the browsable content counts
+    def browse_counts( use_cache=true )
+      counts = @cache.fetch( "browse_counts" )
+      
+      if counts != nil and use_cache
+        counts = BSON.deserialize(counts) unless @cache.is_a?(MartSearch::MongoCache)
+        counts = counts.clean_hash if RUBY_VERSION < '1.9'
+        counts.recursively_symbolize_keys!
+      else
+        all_ok = true
+        counts = {}
+        @config[:server][:browsable_content].each do |field,field_config|
+          counts[field.to_sym] = {}
+          Parallel.each( field_config[:processed_options].keys, :in_threads => 5 ) do |option|
+            begin
+              option_config                       = field_config[:processed_options][option]
+              counts[field.to_sym][option.to_sym] = @index.count( option_config[:solr_query] )
+            rescue MartSearch::IndexSearchError => error
+              all_ok                              = false
+              counts[field.to_sym][option.to_sym] = nil
+            end
+          end
+        end
+        
+        if all_ok
+          @cache.delete( "browse_counts" )
+          if @cache.is_a?(MartSearch::MongoCache)
+            @cache.write( "browse_counts", counts, { :expires_in => 36.hours } )
+          else
+            @cache.write( "browse_counts", BSON.serialize(counts), { :expires_in => 36.hours } )
+          end
+        end
+      end
+      
+      return counts
+    end
+    
     private
       
       # Utility function that drives the index searches.
@@ -218,6 +259,13 @@ module MartSearch
               :text  => "The '#{ds_name}' dataset did not respond quickly enough for this query.",
               :error => error,
               :type  => 'Timeout::Error'
+            }
+            success = false
+          rescue Errno::ETIMEDOUT => error
+            @errors[:datasets][ds_name] = {
+              :text  => "The '#{ds_name}' dataset did not respond quickly enough for this query.",
+              :error => error,
+              :type  => 'Errno::ETIMEDOUT'
             }
             success = false
           end

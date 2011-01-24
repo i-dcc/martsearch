@@ -13,7 +13,7 @@
     <td><%= clone[:production_qc_loss_of_allele] %></td>
     <th>Vector Integrity</th>
     <td><%= clone[:production_qc_vector_integrity] %></td>
-    <td colspan="2" class="noborder nocol"></td>
+    <td colspan="2" class="noborder nobg"></td>
   </tr>
 </table>
 
@@ -80,6 +80,6 @@
   <tr>
     <th>3' LR-PCR</th>
     <td><%= clone[:user_qc_three_prime_lr_pcr] %></td>
-    <td colspan="4" class="noborder nocol"></td>
+    <td colspan="4" class="noborder nobg"></td>
   </tr>
 </table>

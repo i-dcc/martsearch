@@ -169,15 +169,14 @@ module MartSearch
     ##
     
     get '/browse/?' do
-      @current    = 'browse'
-      @page_title = 'Browse'
-      @results    = nil
-      @data       = nil
-      @params     = params
+      @current       = 'browse'
+      @page_title    = 'Browse'
+      @results       = nil
+      @data          = nil
+      @params        = params
+      @browse_counts = @ms.browse_counts
       
       if params[:field] and params[:query]
-        
-        
         if !@config[:browsable_content].has_key?(params[:field].to_sym)
           status 404
           halt

@@ -1,6 +1,6 @@
 {
   "emma-strains":         { "type": "Biomart", "url": "http://www.emmanet.org/biomart", "dataset": "strains" },
-  "ensembl-mouse":        { "type": "Biomart", "url": "http://www.biomart.org/biomart", "dataset": "mmusculus_gene_ensembl" },
+  "ensembl-mouse":        { "type": "Biomart", "url": "http://www.ensembl.org/biomart", "dataset": "mmusculus_gene_ensembl" },
   "eurexpress":           { "type": "Biomart", "url": "http://biomart.eurexpress.org/biomart", "dataset": "template" },
   "europhenome":          { "type": "Biomart", "url": "http://www.europhenome.org/biomart", "dataset": "europhenome" },
   "ikmc-dcc":             { "type": "Biomart", "url": "http://www.knockoutmouse.org/biomart", "dataset": "dcc" },

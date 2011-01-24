@@ -135,7 +135,7 @@ module MartSearch
     # @param [String] query The query string to pass to Solr
     # @return [Integer] The number of documents that match this query
     def count( query )
-      data = index_request({ "q" => query })
+      data = index_request({ "q" => query, "rows" => 0 })
       return data["response"]["numFound"]
     end
     
