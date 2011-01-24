@@ -102,6 +102,25 @@ class MartSearchControllerTest < Test::Unit::TestCase
       end
     end
     
+    should "give a count of genes/items for each of the configured browsing options" do
+      VCR.use_cassette( 'test_controller_browse_counts' ) do
+        @controller.cache.clear
+        
+        fresh_counts  = @controller.browse_counts()
+        cached_counts = @controller.browse_counts()
+        
+        assert_equal( fresh_counts, cached_counts )
+        assert( fresh_counts.is_a?(Hash) )
+        
+        @controller.config[:server][:browsable_content].each do |field,field_config|
+          assert_not_nil( fresh_counts[field.to_sym] )
+          field_config[:processed_options].each do |option,option_config|
+            assert_not_nil( fresh_counts[field.to_sym][option.to_sym] )
+          end
+        end
+      end
+    end
+    
   end
   
 end
