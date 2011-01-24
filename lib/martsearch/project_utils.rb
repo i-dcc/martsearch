@@ -469,23 +469,25 @@ module MartSearch
         return status_definitions[ status ]
       end
 
-      # Retrieve the mutagenesis predictions for the project_id from HTGT
+      # Retrieve the mutagenesis predictions for the project_id from HTGT.
       #
       # @param  [String] project_id The IKMC project ID
       # @return [Hash] The output from the HTGT mutagenesis prediction tool
       def get_mutagenesis_predictions( project_id )
-        result  = { :data => [], :error => {} }
+        result  = { :data => {}, :error => {} }
         message = "There was a problem retrieving mutagenesis predictions for this project.  As a result this data will not be available on the page.  Please try refreshing your browser or come back in 10 minutes to obtain this data."
         begin
           uri         = URI.parse( "http://www.sanger.ac.uk/htgt/tools/mutagenesis_prediction/project/#{project_id}/detail" )
           http_client = build_http_client()
           response    = http_client.get_response( uri )
 
-          unless response.code == "200"
+          unless response.code.to_i == 200
             raise Exception.new( "Mutagenesis prediction analysis unavailable." )
           end
-
-          result[:data] = JSON.parse( response.body ).recursively_symbolize_keys!
+          
+          mutagenesis_data            = JSON.parse( response.body ).recursively_symbolize_keys!
+          result[:data][:transcripts] = mutagenesis_data
+          result[:data][:statistics]  = calculate_mutagenesis_prediction_stats( mutagenesis_data )
         rescue JSON::ParserError => error
           result[:error] = {
             :text  => message,
@@ -500,6 +502,33 @@ module MartSearch
           }
         end
         return result
+      end
+      
+      # Small helper function to calculate some top-level statistics for 
+      # the mutagenesis prediction tool.
+      #
+      # @param [Hash] transcripts The output from the HTGT mutagenesis prediction tool
+      # @return [Hash] The statistics calculated off of the data
+      def calculate_mutagenesis_prediction_stats( transcripts )
+        count = {
+          :wt_transcripts                 => 0,
+          :wt_non_coding_transcripts      => 0,
+          :wt_proteien_coding_transcripts => 0,
+          :mut_nmd_transcripts            => 0,
+          :mut_nmd_rescue_transcripts     => 0
+        }
+        
+        transcripts.each do |transcript|
+          count[:wt_transcripts] += 1
+          if transcript[:biotype].eql?('protein_coding')
+            count[:wt_proteien_coding_transcripts] += 1
+            count[:mut_nmd_transcripts]            += 1 if transcript[:floxed_transcript_description] =~ /^No protein product/
+            count[:mut_nmd_rescue_transcripts]     += 1 if transcript[:floxed_transcript_description] =~ /^Possible NMD rescue/
+          end
+        end
+        
+        count[:wt_non_coding_transcripts] = count[:wt_transcripts] - count[:wt_proteien_coding_transcripts]
+        return count
       end
   end
   
