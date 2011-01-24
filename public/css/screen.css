@@ -692,8 +692,8 @@ form#martsearchr {
 #browse_controls a {
 	display: inline-block;
 	position: relative;
-	width: 190px;
-	padding: 2px 0 2px 10px;
+	width: 196px;
+	padding: 2px 0 2px 5px;
 	font-weight: bold;
 }
 
