@@ -9,12 +9,24 @@
               display_opts = field_config[:processed_options][option_name.to_sym]
               query        = display_opts[:link_arg]
               text         = display_opts[:display_arg]
+              
+              count = nil
+              if @browse_counts[field.to_sym] && @browse_counts[field.to_sym][option_name.to_sym]
+                count = @browse_counts[field.to_sym][option_name.to_sym]
+              end
             %>
             <% if field.to_s == params[:field] and query == params[:query] %>
-              <li class="current"><%= link_to( text, { :path => '/browse', :field => field, :query => query } )%></li>
+              <li class="current">
             <% else %>     
-              <li><%= link_to( text, { :path => '/browse', :field => field, :query => query } )%></li>
+              <li>
             <% end %>
+                <%=
+                  link_to(
+                    text + ' <span class="count">(' + count.to_s + ')</span>',
+                    { :path => '/browse', :field => field, :query => query } 
+                  )
+                %>
+              </li>
           <% end %>
         </ul>
       </div>
