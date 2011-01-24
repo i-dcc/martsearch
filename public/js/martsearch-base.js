@@ -62,9 +62,10 @@ jQuery(document).ready(function() {
 
 function setup_toggles() {
   // Single parent togglers...
-  jQuery(".single_parent_toggler_content").hide();
-  jQuery(".single_parent_toggler_toggle").removeClass("toggle-open");
-  jQuery(".single_parent_toggler_toggle").addClass("toggle-close");
+  jQuery(".single_parent_toggler_content").not(".open").hide();
+  jQuery(".single_parent_toggler_toggle").not(".open").removeClass("toggle-open");
+  jQuery(".single_parent_toggler_toggle").not(".open").addClass("toggle-close");
+  jQuery(".single_parent_toggler_toggle.open").addClass("toggle-open");
   
   // Add Toggling for search explainations
   jQuery("#search_explaination_toggle").click( function() {

@@ -1,27 +1,30 @@
-<table id="browsable_content" class="nobg noborder">
+<div id="browse_controls">
   <% @ms.config[:server][:browsable_content].each do |field,field_config| %>
-    <tr>
-      <th><%= field_config[:display_name] %>:</th>
-      <td>
-        <% field_config[:options].each do |option_name| %>
-          <%
-            display_opts = field_config[:processed_options][option_name.to_sym]
-            query        = display_opts[:link_arg]
-            text         = display_opts[:display_arg]
-          %>
-          <% if field.to_s == params[:field] and query == params[:query] %>
-            <%= link_to( text, { :path => '/browse', :field => field, :query => query }, { :class => 'current' } )%>
-          <% else %>     
-            <%= link_to( text, { :path => '/browse', :field => field, :query => query } )%>
+    <div>
+      <h6 class="single_parent_toggler_toggle slide<% if field.to_s == params[:field] %> open<% end %>"><%= field_config[:display_name] %></h6>
+      <div class="single_parent_toggler_content<% if field.to_s == params[:field] %> open<% end %>">
+        <ul>
+          <% field_config[:options].each do |option_name| %>
+            <%
+              display_opts = field_config[:processed_options][option_name.to_sym]
+              query        = display_opts[:link_arg]
+              text         = display_opts[:display_arg]
+            %>
+            <% if field.to_s == params[:field] and query == params[:query] %>
+              <li class="current"><%= link_to( text, { :path => '/browse', :field => field, :query => query } )%></li>
+            <% else %>     
+              <li><%= link_to( text, { :path => '/browse', :field => field, :query => query } )%></li>
+            <% end %>
           <% end %>
-        <% end %>
-      </td>
-    </tr>
+        </ul>
+      </div>
+      <div class="browse_control_footer"></div>
+    </div>
   <% end %>
-</table>
+</div>
 
 <% if @results_title %>
-  <div id="search_results">
+  <div id="search_results" class="browse_results">
     <h2><%= @results_title %></h2>
     <% if @results and !@results.empty? %>
       <%= partial( :search_results ) %>
@@ -36,3 +39,5 @@
     Solr search parameters used: <%= @solr_query %>
   </div>
 <% end %>
+
+<div class="clear"></div>
