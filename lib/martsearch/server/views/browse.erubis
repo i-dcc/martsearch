@@ -49,9 +49,9 @@
     <h2>Data Browsing</h2>
     <p>
       This page to allows you to browse the data within this portal.  Expand one of the 
-      browse controls to the left (by clicking on them), and then select the category you would like 
-      to see data for.  The numbers in parenthesis indicate the number of genes that match (and 
-      will be returned by) the given browse category.
+      browse controls to the left (by clicking on them), and then select the category for 
+      which you would like to see data.  The numbers in parenthesis indicate the number 
+      of genes that match (and will be returned by) the given browse category.
     </p>
     <h4>Browse by...</h4>
     <ul>
