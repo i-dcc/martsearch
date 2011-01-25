@@ -11,7 +11,7 @@ jQuery(".europhenome table.europhenome-data").delegate(
       content:   jQuery(this).attr("tooltip"),
       overwrite: false,
       style: {
-        tip: false,
+        tip: "topMiddle",
         classes: "ui-tooltip-light ui-tooltip-rounded ui-tooltip-shadow europhenome-tooltip"
       },
       position: {

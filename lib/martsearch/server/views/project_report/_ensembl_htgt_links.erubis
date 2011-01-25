@@ -16,7 +16,7 @@
   links.push({
     :url   => "http://www.sanger.ac.uk/htgt/tools/restrictionenzymes?es_clone_name=#{escell}",
     :class => 'ext_link',
-    :text  => 'Southern Blot Enzymes',
+    :text  => 'Southern Blot Tool',
     :title => 'Southern Blot Tool: Find restriction enzymes suitable for a southern blot.'
   }) unless escell.nil?
   
