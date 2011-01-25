@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Fri Jan 21 14:08:05 2011 +0000
+* Date: Mon Jan 24 19:29:04 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -34,7 +34,11 @@
 		replaceSuffix = '_replacedByqTip',
 		oldtitle = 'oldtitle';
 
-
+	// Simple console.error wrapper
+	function debug() {
+		var c = window.console;
+		return c && (c.error || c.log || $.noop).apply(c, arguments);
+	}
 // Option object sanitizer
 function sanitizeOptions(opts)
 {
@@ -463,7 +467,7 @@ function QTip(target, options, id, attr)
 
 			// Check if new target was actually the tooltip element
 			var relatedTarget = $(event.relatedTarget || event.target),
-				ontoTooltip = relatedTarget.parents(selector)[0] === tooltip[0],
+				ontoTooltip = relatedTarget.closest(selector)[0] === tooltip[0],
 				ontoTarget = relatedTarget[0] === targets.show[0];
 
 			// Clear timers and stop animation queue
@@ -1140,6 +1144,14 @@ function QTip(target, options, id, attr)
 					position = position.offset;
 				}
 
+				// If it's an SVG use the SVG plugin
+				else if(target[0].namespaceURI == 'http://www.w3.org/2000/svg' && $.fn.qtip.plugins.svg) {
+					position = $.fn.qtip.plugins.svg(target, at);
+					targetWidth = position.width;
+					targetHeight = position.height;
+					position = position.offset;
+				}
+
 				else {
 					targetWidth = target.outerWidth();
 					targetHeight = target.outerHeight();
@@ -1286,7 +1298,7 @@ function QTip(target, options, id, attr)
 // Initialization method
 function init(id, opts)
 {
-	var obj, posOptions, attr,
+	var obj, posOptions, attr, config,
 
 	// Setup element references
 	elem = $(this),
@@ -1302,10 +1314,16 @@ function init(id, opts)
 	metadata5 = opts.metadata.type === 'html5' && metadata ? metadata[opts.metadata.name] : NULL,
 
 	// Grab data from metadata.name (or data-qtipopts as fallback) using .data() method,
-	html5 = elem.data(opts.metadata.name || 'qtipopts'),
+	html5 = elem.data(opts.metadata.name || 'qtipopts');
+
+	// If we don't get an object returned attempt to parse it manualyl without parseJSON
+	try { html5 = typeof html5 === 'string' ? (new Function("return " + html5))() : html5; }
+	catch(e) { debug('Unable to parse HTML5 attribute data: ' + html5); }
 
 	// Merge in and sanitize metadata
-	config = $.extend(TRUE, {}, $.fn.qtip.defaults, opts, sanitizeOptions(html5), sanitizeOptions(metadata5 || metadata));
+	config = $.extend(TRUE, {}, $.fn.qtip.defaults, opts, 
+		typeof html5 === 'object' ? sanitizeOptions(html5) : NULL,
+		sanitizeOptions(metadata5 || metadata));
 
 	// Remove metadata object so we don't interfere with other metadata calls
 	if(metadata) { $.removeData(this, 'metadata'); }
@@ -1670,95 +1688,7 @@ $.fn.qtip.defaults = {
 		focus: NULL,
 		blur: NULL
 	}
-};function Ajax(qTip)
-{
-	var self = this,
-		tooltip = qTip.elements.tooltip,
-		opts = qTip.options.content.ajax,
-		namespace = '.qtip-ajax';
-
-	self.checks = {
-		'^content.ajax': function(obj, name) {
-			if(name === 'once') {
-				self.once();
-			}
-			else if(opts && opts.url) {
-				self.load();
-			}
-		}
-	};
-
-	$.extend(self, {
-		init: function()
-		{
-			// Make sure ajax options are enabled before proceeding
-			if(opts && opts.url) {
-				self.load();
-				tooltip.one('tooltipshow', self.once);
-			}
-		},
-
-		once: function()
-		{
-			if(opts.once) {
-				self.destroy();
-			}
-			else {
-				tooltip.bind('tooltipshow'+namespace, self.load);
-			}
-		},
-
-		load: function()
-		{
-			// Define success and error handlers
-			function successHandler(content){ qTip.set('content.text', content); }
-			function errorHandler(xh, status, error){ qTip.set('content.text', status + ': ' + error); }
-
-			// Setup $.ajax option object and process the request
-			$.ajax( $.extend({ success: successHandler, error: errorHandler, context: qTip }, opts) );
-
-			return self;
-		},
-
-		destroy: function()
-		{
-			// Remove bound events
-			tooltip.unbind(namespace);
-		}
-	});
-
-	self.init();
-}
-
-
-$.fn.qtip.plugins.ajax = function(qTip)
-{
-	var api = qTip.plugins.ajax;
-	
-	return 'object' === typeof api ? api : (qTip.plugins.ajax = new Ajax(qTip));
-};
-
-$.fn.qtip.plugins.ajax.initialize = 'render';
-
-// Setup plugin sanitization
-$.fn.qtip.plugins.ajax.sanitize = function(options)
-{
-	var content = options.content, opts;
-	if(content && 'ajax' in content) {
-		opts = content.ajax;
-		if(typeof opts !== 'object') { opts = options.content.ajax = { url: opts }; }
-		if('boolean' !== typeof opts.once && opts.once) { opts.once = !!opts.once; }
-	}
-};
-
-// Extend original qTip defaults
-$.extend(TRUE, $.fn.qtip.defaults, {
-	content: {
-		ajax: {
-			once: TRUE
-		}
-	}
-});// Tip coordinates calculator
+};// Tip coordinates calculator
 function calculateTip(corner, width, height)
 {	
 	var width2 = Math.ceil(width / 2), height2 = Math.ceil(height / 2),
@@ -2246,383 +2176,10 @@ $.extend(TRUE, $.fn.qtip.defaults, {
 		tip: {
 			corner: TRUE,
 			mimic: FALSE,
-			width: 8,
-			height: 8,
+			width: 6,
+			height: 6,
 			border: TRUE,
 			offset: 0
 		}
 	}
-});$.fn.qtip.plugins.imagemap = function(area, corner)
-{
-	var shape = area.attr('shape').toLowerCase(),
-		baseCoords = area.attr('coords').split(','),
-		coords = [],
-		image = $('img[usemap="#'+area.parent('map').attr('name')+'"]'),
-		imageOffset = image.offset(),
-		result = {
-			width: 0, height: 0,
-			offset: { top: 1e10, right: 0, bottom: 0, left: 1e10 }
-		},
-		i = 0, next = 0;
-
-	// POLY area coordinate calculator
-	//	Special thanks to Ed Cradock for helping out with this.
-	//	Uses a binary search algorithm to find suitable coordinates.
-	function polyCoordinates(result, coords)
-	{
-		var i = 0,
-			compareX = 1, compareY = 1,
-			realX = 0, realY = 0,
-			newWidth = result.width,
-			newHeight = result.height;
-
-		// Use a binary search algorithm to locate most suitable coordinate (hopefully)
-		while(newWidth > 0 && newHeight > 0 && compareX > 0 && compareY > 0)
-		{
-			newWidth = Math.floor(newWidth / 2);
-			newHeight = Math.floor(newHeight / 2);
-
-			if(corner.x === 'left'){ compareX = newWidth; }
-			else if(corner.x === 'right'){ compareX = result.width - newWidth; }
-			else{ compareX += Math.floor(newWidth / 2); }
-
-			if(corner.y === 'top'){ compareY = newHeight; }
-			else if(corner.y === 'bottom'){ compareY = result.height - newHeight; }
-			else{ compareY += Math.floor(newHeight / 2); }
-
-			i = coords.length; while(i--)
-			{
-				if(coords.length < 2){ break; }
-
-				realX = coords[i][0] - result.offset.left;
-				realY = coords[i][1] - result.offset.top;
-
-				if((corner.x === 'left' && realX >= compareX) ||
-				(corner.x === 'right' && realX <= compareX) ||
-				(corner.x === 'center' && (realX < compareX || realX > (result.width - compareX))) ||
-				(corner.y === 'top' && realY >= compareY) ||
-				(corner.y === 'bottom' && realY <= compareY) ||
-				(corner.y === 'center' && (realY < compareY || realY > (result.height - compareY)))) {
-					coords.splice(i, 1);
-				}
-			}
-		}
-
-		return { left: coords[0][0], top: coords[0][1] };
-	}
-
-	// Make sure we account for padding and borders on the image
-	imageOffset.left += Math.ceil((image.outerWidth() - image.width()) / 2);
-	imageOffset.top += Math.ceil((image.outerHeight() - image.height()) / 2);
-
-	// Parse coordinates into proper array
-	if(shape === 'poly') {
-		i = baseCoords.length; while(i--)
-		{
-			next = [ parseInt(baseCoords[--i], 10), parseInt(baseCoords[i+1], 10) ];
-
-			if(next[0] > result.offset.right){ result.offset.right = next[0]; }
-			if(next[0] < result.offset.left){ result.offset.left = next[0]; }
-			if(next[1] > result.offset.bottom){ result.offset.bottom = next[1]; }
-			if(next[1] < result.offset.top){ result.offset.top = next[1]; }
-
-			coords.push(next);
-		}
-	}
-	else {
-		coords = $.map(baseCoords, function(coord){ return parseInt(coord, 10); });
-	}
-
-	// Calculate details
-	switch(shape)
-	{
-		case 'rect':
-			result = {
-				width: Math.abs(coords[2] - coords[0]),
-				height: Math.abs(coords[3] - coords[1]),
-				offset: { left: coords[0], top: coords[1] }
-			};
-		break;
-
-		case 'circle':
-			result = {
-				width: coords[2] + 2,
-				height: coords[2] + 2,
-				offset: { left: coords[0], top: coords[1] }
-			};
-		break;
-
-		case 'poly':
-			$.extend(result, {
-				width: Math.abs(result.offset.right - result.offset.left),
-				height: Math.abs(result.offset.bottom - result.offset.top)
-			});
-
-			if(corner.string() === 'centercenter') {
-				result.offset = {
-					left: result.offset.left + (result.width / 2),
-					top: result.offset.top + (result.height / 2)
-				};
-			}
-			else {
-				result.offset = polyCoordinates(result, coords.slice());
-			}
-
-			result.width = result.height = 0;
-		break;
-	}
-
-	// Add image position to offset coordinates
-	result.offset.left += imageOffset.left;
-	result.offset.top += imageOffset.top;
-
-	return result;
-};
-
-function Modal(qTip)
-{
-	var self = this,
-		options = qTip.options.show.modal,
-		elems = qTip.elements,
-		tooltip = elems.tooltip,
-		
-		selector = '#qtip-overlay',
-		namespace = '.qtipmodal',
-		events = 'tooltipshow'+namespace+' tooltiphide'+namespace;
-
-	// Setup option set checks
-	self.checks = {
-		'^show.modal.(on|blur)$': function() {
-			// Initialise
-			self.init();
-			
-			// Show the modal if not visible already and tooltip is visible
-			elems.overlay.toggle( tooltip.is(':visible') );
-		}
-	};
-
-	$.extend(self, {
-		init: function()
-		{
-			if(options.on) {
-				// Apply our modal events (unbind the mfirst so we don't duplicate)
-				tooltip.unbind(namespace).bind(events, function(event, api, duration) {
-					var type = event.type.replace('tooltip', '');
-
-					if($.isFunction(options[type])) {
-						options[type].call(elems.overlay, duration, api);
-					}
-					else {
-						self[type](duration);
-					}
-				});
-
-				// Create the overlay if needed
-				self.create();
-
-				// Hide tooltip on overlay click if enabled
-				if(options.blur === TRUE) {
-					elems.overlay.unbind(namespace+qTip.id).bind('click'+namespace+qTip.id, function(){ qTip.hide.call(qTip); });
-				}
-			}
-		},
-
-		create: function()
-		{
-			// Return if overlay is already rendered
-			var elem = $(selector);
-			if(elem.length) { elems.overlay = elem; return; }
-
-			// Create document overlay
-			elems.overlay = $('<div />', {
-				id: selector.substr(1),
-				css: {
-					position: 'absolute',
-					top: 0,
-					left: 0,
-					display: 'none',
-					zIndex: parseInt( tooltip.css('z-index'), 10 ) - 1 // Use the current tooltips z-index as a base
-				}
-			})
-			.appendTo(document.body);
-
-			// Update position on window resize or scroll
-			$(window).bind('resize'+namespace, function() {
-				elems.overlay.css({
-					height: Math.max( $(window).height(), $(document).height() ),
-					width: Math.max( $(window).width(), $(document).width() )
-				});
-			})
-			.trigger('resize');
-		},
-
-		toggle: function(state)
-		{
-			var overlay = elems.overlay,
-				effect = qTip.options.show.modal.effect,
-				type = state ? 'show': 'hide';
-
-			// Setop all animations
-			overlay.stop(TRUE, FALSE);
-
-			// Use custom function if provided
-			if($.isFunction(effect)) {
-				effect.call(overlay, state);
-			}
-
-			// If no effect type is supplied, use a simple toggle
-			else if(effect === FALSE) {
-				overlay[ type ]();
-			}
-
-			// Use basic fade function
-			else {
-				overlay.fadeTo(90, state ? 0.7 : 0, function() {
-					if(!state) { $(this).hide(); }
-				});
-			}
-		},
-
-		show: function() { self.toggle(TRUE); },
-		hide: function() { self.toggle(FALSE); },
-
-		destroy: function()
-		{
-			var delBlanket = TRUE;
-
-			// Check if any other modal tooltips are present
-			$('*').each(function() {
-				var api = $(this).data('qtip');
-
-				// If another modal tooltip is present, leave overlay
-				if(api && api.id !== qTip.id && api.options.show.modal) {
-					return (delBlanket = FALSE);
-				}
-			});
-
-			// Remove overlay if needed
-			if(delBlanket) {
-				elems.overlay.remove();
-				$(window).unbind(namespace);
-			}
-			else {
-				elems.overlay.unbind(namespace+qTip.id);
-			}
-
-			// Remove bound events
-			tooltip.unbind(events);
-		}
-	});
-
-	self.init();
-}
-
-$.fn.qtip.plugins.modal = function(qTip)
-{
-	var api = qTip.plugins.modal;
-
-	return 'object' === typeof api ? api : (qTip.plugins.modal = new Modal(qTip));
-};
-
-// Plugin needs to be initialized on render
-$.fn.qtip.plugins.modal.initialize = 'render';
-
-// Setup sanitiztion rules
-$.fn.qtip.plugins.modal.sanitize = function(opts) {
-	if(opts.show) { 
-		if(typeof opts.show.modal !== 'object') { opts.show.modal = { on: !!opts.show.modal }; }
-		else if(typeof opts.show.modal.on === 'undefined') { opts.show.modal.on = TRUE; }
-	}
-};
-
-// Extend original qTip defaults
-$.extend(TRUE, $.fn.qtip.defaults, {
-	show: {
-		modal: {
-			on: FALSE,
-			effect: TRUE,
-			blur: TRUE
-		}
-	}
-});/* BGIFrame adaption (http://plugins.jquery.com/project/bgiframe) - Special thanks to Brandon Aaron */
-function BGIFrame(qTip)
-{
-	var self = this,
-		elems = qTip.elements,
-		tooltip = elems.tooltip,
-		namespace = '.bgiframe-' + qTip.id,
-		events = 'tooltipmove'+namespace+' tooltipshow'+namespace;
-
-	$.extend(self, {
-		init: function()
-		{
-			// Create the BGIFrame element
-			elems.bgiframe = $('<iframe class="ui-tooltip-bgiframe" frameborder="0" tabindex="-1" src="javascript:\'\';" ' +
-				' style="display:block; position:absolute; z-index:-1; filter:alpha(opacity=0);"></iframe>');
-
-			// Append the new element to the tooltip
-			elems.bgiframe.appendTo(tooltip);
-
-			// Update BGIFrame on tooltip move
-			tooltip.bind(events, self.adjust);
-		},
-
-		adjust: function()
-		{
-			var dimensions = qTip.get('dimensions'), // Determine current tooltip dimensions
-				plugin = qTip.plugins.tip,
-				tip = qTip.elements.tip,
-				tipAdjust, offset;
-
-			// Adjust border offset
-			offset = parseInt(tooltip.css('border-left-width'), 10) || 0;
-			offset = { left: -offset, top: -offset };
-
-			// Adjust for tips plugin
-			if(plugin && tip) {
-				tipAdjust = (plugin.corner.precedance === 'x') ? ['width', 'left'] : ['height', 'top'];
-				offset[ tipAdjust[1] ] -= tip[ tipAdjust[0] ]();
-			}
-
-			// Update bgiframe
-			elems.bgiframe.css(offset).css(dimensions);
-		},
-
-		destroy: function()
-		{
-			// Remove iframe
-			self.iframe.remove();
-
-			// Remove bound events
-			tooltip.unbind(events);
-		}
-	});
-
-	self.init();
-}
-
-$.fn.qtip.plugins.bgiframe = function(qTip)
-{
-	// Proceed only if the browser is IE6 and offending elements are present
-	if(!($.browser.msie && (/^6\.[0-9]/).test($.browser.version) && $('select, object').length)) {
-		return FALSE;
-	}
-
-	// Retrieve previous API object
-	var api = qTip.plugins.bgiframe;
-
-	// An API is already present,
-	if(api) {
-		return api;
-	}
-	// No API was found, create new instance
-	else {
-		qTip.plugins.bgiframe = new BGIFrame(qTip);
-		return qTip.plugins.bgiframe;
-	}
-};
-
-// Plugin needs to be initialized on render
-$.fn.qtip.plugins.bgiframe.initialize = 'render';
-
-}(jQuery, window));
+});}(jQuery, window));
