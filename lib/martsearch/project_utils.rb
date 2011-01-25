@@ -515,6 +515,7 @@ module MartSearch
           :wt_non_coding_transcripts      => 0,
           :wt_proteien_coding_transcripts => 0,
           :mut_nmd_transcripts            => 0,
+          :mut_coding_transcripts         => 0,
           :mut_nmd_rescue_transcripts     => 0
         }
         
@@ -522,7 +523,8 @@ module MartSearch
           count[:wt_transcripts] += 1
           if transcript[:biotype].eql?('protein_coding')
             count[:wt_proteien_coding_transcripts] += 1
-            count[:mut_nmd_transcripts]            += 1 if transcript[:floxed_transcript_description] =~ /^No protein product/
+            count[:mut_nmd_transcripts]            += 1 if transcript[:floxed_transcript_description] =~ /^No protein product \(NMD\)/
+            count[:mut_coding_transcripts]         += 1 if transcript[:floxed_transcript_description] =~ /^No protein product \(NMD\)/ or transcript[:floxed_transcript_description] !~ /^No protein product^/
             count[:mut_nmd_rescue_transcripts]     += 1 if transcript[:floxed_transcript_description] =~ /^Possible NMD rescue/
           end
         end

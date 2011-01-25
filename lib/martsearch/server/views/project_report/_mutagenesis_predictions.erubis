@@ -2,19 +2,18 @@
   <h4 class="dataset_title toggle-open">Mutagenesis Predictions</h4>
   <div class="dataset_content">
     
+    <% counts = @data[:mutagenesis_predictions][:statistics] %>
     <p>
-      This gene has 
-      <% counts = @data[:mutagenesis_predictions][:statistics] %>
-      <%= counts[:wt_transcripts] %> wiltdype transcripts, of which <%= counts[:wt_proteien_coding_transcripts] %> 
-      are protein-coding. Of these <%= counts[:wt_proteien_coding_transcripts] %>, 
-      <%= counts[:mut_nmd_transcripts] %>  
-      <% if counts[:mut_nmd_transcripts] == 1 %>is<% else %>are<% end %>
-      <strong>predicted</strong> to produce no protein in the mutant (for example, because of NMD).
+      This gene has <%= counts[:wt_transcripts] %> wild type transcripts, 
+      of which <%= counts[:wt_proteien_coding_transcripts] %> are protein-coding.
+      Following removal of the floxed region, <%= counts[:mut_coding_transcripts] %> 
+      <% if counts[:mut_coding_transcripts] == 1 %>transcript is<% else %>transcripts are<% end %> 
+      <strong>predicted</strong> to produce a truncated protein product of which 
+      <%= counts[:mut_nmd_transcripts] %> may be subject to non-sense mediated decay (NMD).
       
       <% if counts[:mut_nmd_rescue_transcripts] > 0 %>
-        Of the <%= counts[:wt_non_coding_transcripts] %> non-coding wildtype transcripts, 
-        <%= counts[:mut_nmd_rescue_transcripts] %> are possibly subject to NMD rescue in the
-        mutant.
+        <strong>NOTE:</strong> Of the <%= counts[:wt_non_coding_transcripts] %> non-coding wild type transcripts, 
+        <%= counts[:mut_nmd_rescue_transcripts] %> are possibly subject to NMD rescue in the mutant.
       <% end %>
       
       The table below shows the <strong>predicted</strong> structure of the gene transcripts 
