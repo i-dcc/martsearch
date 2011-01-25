@@ -47,6 +47,7 @@
     "marker-symbol": {
       "index_field":  "marker_symbol_str",
       "display_name": "Marker Symbol",
+      "descriptive_text": "browse for genes that start with a given letter/number",
       "exact_search": false,
       "options": [
         "A","B","C","D","E","F","G","H","I","J",
@@ -58,6 +59,7 @@
     "chromosome": {
       "index_field":  "chromosome",
       "display_name": "Chromosome",
+      "descriptive_text": "browse for genes that are found on a given chromosome",
       "exact_search": true,
       "options": [
         "1","2","3","4","5","6","7","8","9","10",

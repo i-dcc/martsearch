@@ -44,6 +44,24 @@
       <em>Sorry, your search did not return any results.</em>
     <% end %>
   </div>
+<% else %>
+  <div class="browse_results larger">
+    <h2>Data Browsing</h2>
+    <p>
+      This page to allows you to browse the data within this portal.  Expand one of the 
+      browse controls to the left (by clicking on them), and then select the category you would like 
+      to see data for.  The numbers in parenthesis indicate the number of genes that match (and 
+      will be returned by) the given browse category.
+    </p>
+    <h4>Browse by...</h4>
+    <ul>
+      <% @ms.config[:server][:browsable_content].each do |field,field_config| %>
+        <li>
+          <strong><%= field_config[:display_name] %></strong> - <%= field_config[:descriptive_text] %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
 <% end %>
 
 <% if @ms.config[:debug] %>
