@@ -21,7 +21,7 @@
       prediction for that transcript.
     </p>    
 
-    <table class="border" width="100%">
+    <table class="border">
       <thead>
         <th>Ensembl transcript id</th>
         <th>Biotype</th>
