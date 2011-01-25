@@ -1,12 +1,6 @@
 <table>
   <tr>
     <td style="border: none !important"><strong>Legend:</strong></td>
-    <td style="border: none !important"><strong>C</strong></td>
-    <td style="border: none !important">coding&nbsp;sequence</td>
-    <td style="border: none !important"><strong>D</strong></td>
-    <td style="border: none !important">deleted&nbsp;exon</td>
-    <td style="border: none !important"><strong>U</strong></td>
-    <td style="border: none !important">untranslated&nbsp;region</td>
     <td style="border: none !important" class="exon_upstream"></td>
     <td style="border: none !important">in&nbsp;frame</td>
     <td style="border: none !important" class="exon_deleted"></td>
