@@ -140,7 +140,7 @@ a:active, .ui-widget-content a:acitve {
 }
 
 .ensembl_link {
-  background: url(../images/ensembl_link.gif) no-repeat left center;
+	background: url(../images/ensembl_link.gif) no-repeat left center;
 	padding: 4px 0 4px 24px;
 }
 
@@ -176,6 +176,11 @@ a.button:hover, a.order:hover {
 
 .link_button {
     background: url(../images/silk/bullet_go.png) no-repeat 2px center;
+}
+
+.ensembl_button {
+    background: url(../images/ensembl_link.gif) no-repeat 2px center;
+	padding-left: 26px;
 }
 
 .unavailable {
