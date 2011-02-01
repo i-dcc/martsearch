@@ -8,7 +8,7 @@
 <% @results.each do |result| %>
   <% result_data = @data[ result[@ms.index.primary_field].to_sym ] %>
   <div class="result">
-    <table class="noborder nocol result-header" width="100%">
+    <table class="noborder nobg result-header" width="100%">
       <tr>
         <td width="30%">
           <h3 class="doc_title toggle-open">
@@ -64,7 +64,7 @@
           </em>
         <% else %>
           <h6><%= result_data[:index][:marker_symbol] %> was found for the following reasons:</h6>
-          <table class="nocol nobg noborder nopadding search_explaination_detail">
+          <table class="nobg noborder nopadding search_explaination_detail">
             <% result_data[:search_explaination].each_pair do |field, value| %>
               <tr>
                 <th><%= field %></th>
@@ -109,33 +109,31 @@
               
               <% if dataset_errors[:required].empty? %>
                 <%= partial( "dataviews/#{view.internal_name}/template", :locals => { :result_data => result_data } ) %>
-                
-                <div class="attribution">
-                  <div class="dataset_original_data">
-                    <a href="#" class="single_parent_toggler_toggle">view original data</a>
-                    <div class="dataset_original_data_links single_parent_toggler_content" style="display:none;">
-                      <ul>
-                        <% view.data_origin_links( result_data ).each do |link| %>
-                          <% next if link[1].nil? %>
-                          <li>
-                            <a href="<%= link[1] %>" target="_blank"><%= link[0] %></a>
-                          </li>
-                        <% end %>
-                      </ul>
-                    </div>
-                  </div>
-                  <%
-                    attribution_links = []
-                    view.attribution_links( result_data ).each do |link|
-                      attribution_links.push(
-                        "<a href=\"#{link[1]}\" target=\"_blank\">#{link[0]}</a>"
-                      )
-                    end
-                  %>
-                  Data provided by <%=  attribution_links.join(', ') %>
-                </div>
               <% end %>
             </div>
+            
+            <% if dataset_errors[:required].empty? %>
+              <div class="attribution">
+                <div class="dataset_original_data">
+                  <a href="#" class="single_parent_toggler_toggle">view original data</a>
+                  <div class="dataset_original_data_links single_parent_toggler_content" style="display:none;">
+                    <ul>
+                      <% view.data_origin_links( result_data ).each do |link| %>
+                        <% next if link[1].nil? %>
+                        <li><a href="<%= link[1] %>" target="_blank"><%= link[0] %></a></li>
+                      <% end %>
+                    </ul>
+                  </div>
+                </div>
+                <%
+                  attribution_links = []
+                  view.attribution_links( result_data ).each do |link|
+                    attribution_links.push( "<a href=\"#{link[1]}\" target=\"_blank\">#{link[0]}</a>" )
+                  end
+                %>
+                Data provided by <%=  attribution_links.join(', ') %>
+              </div>
+            <% end %>
           </div>
         <% end %>
       <% end %>

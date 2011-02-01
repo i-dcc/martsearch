@@ -1,33 +1,66 @@
-<table id="browsable_content" class="nobg noborder">
+<div id="browse_controls">
   <% @ms.config[:server][:browsable_content].each do |field,field_config| %>
-    <tr>
-      <th><%= field_config[:display_name] %>:</th>
-      <td>
-        <% field_config[:options].each do |option_name| %>
-          <%
-            display_opts = field_config[:processed_options][option_name.to_sym]
-            query        = display_opts[:link_arg]
-            text         = display_opts[:display_arg]
-          %>
-          <% if field.to_s == params[:field] and query == params[:query] %>
-            <%= link_to( text, { :path => '/browse', :field => field, :query => query }, { :class => 'current' } )%>
-          <% else %>     
-            <%= link_to( text, { :path => '/browse', :field => field, :query => query } )%>
+    <div>
+      <h6 class="single_parent_toggler_toggle slide<% if field.to_s == params[:field] %> open<% end %>"><%= field_config[:display_name] %></h6>
+      <div class="single_parent_toggler_content<% if field.to_s == params[:field] %> open<% end %>">
+        <ul>
+          <% field_config[:options].each do |option_name| %>
+            <%
+              display_opts = field_config[:processed_options][option_name.to_sym]
+              query        = display_opts[:link_arg]
+              text         = display_opts[:display_arg]
+              
+              count = nil
+              if @browse_counts[field.to_sym] && @browse_counts[field.to_sym][option_name.to_sym]
+                count = @browse_counts[field.to_sym][option_name.to_sym]
+              end
+            %>
+            <% if field.to_s == params[:field] and query == params[:query] %>
+              <li class="current">
+            <% else %>     
+              <li>
+            <% end %>
+                <%=
+                  link_to(
+                    text + ' <span class="count">(' + count.to_s + ')</span>',
+                    { :path => '/browse', :field => field, :query => query } 
+                  )
+                %>
+              </li>
           <% end %>
-        <% end %>
-      </td>
-    </tr>
+        </ul>
+      </div>
+      <div class="browse_control_footer"></div>
+    </div>
   <% end %>
-</table>
+</div>
 
 <% if @results_title %>
-  <div id="search_results">
+  <div id="search_results" class="browse_results">
     <h2><%= @results_title %></h2>
     <% if @results and !@results.empty? %>
       <%= partial( :search_results ) %>
     <% else %>
       <em>Sorry, your search did not return any results.</em>
     <% end %>
+  </div>
+<% else %>
+  <div class="browse_results larger">
+    <h2>Data Browsing</h2>
+    <p>
+      This page to allows you to browse the data within this portal.  Expand one of the 
+      browse controls to the left (by clicking on them), and then select the category for 
+      which you would like to see data.  The numbers in parenthesis indicate the number 
+      of genes that match (and will be returned by) the given browse category.
+    </p>
+    <h4>Browse by...</h4>
+    <ul>
+      <% @ms.config[:server][:browsable_content].each do |field,field_config| %>
+        <li>
+          <strong><%= field_config[:display_name] %></strong> - <%= field_config[:descriptive_text] %>
+        </li>
+      <% end %>
+    </ul>
   </div>
 <% end %>
 
@@ -36,3 +69,5 @@
     Solr search parameters used: <%= @solr_query %>
   </div>
 <% end %>
+
+<div class="clear"></div>

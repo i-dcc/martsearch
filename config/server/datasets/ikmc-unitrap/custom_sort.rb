@@ -22,14 +22,21 @@ module MartSearch
           
           data = sorted_results[ result[ joined_attribute ] ]
           projects.each do |proj|
-            data[:project_counts_total][proj.to_sym] = 0
-            data[:traps][proj.to_sym]                = {}
+            project_name = proj.clone
+            project_name = 'NorCOMM' if ['Stanford','ESCells','CMHD'].include?(project_name)
+            
+            data[:project_counts_total][project_name.to_sym] = 0
+            data[:traps][project_name.to_sym]                = {}
           end
         end
         
         data       = sorted_results[ result[ joined_attribute ] ]
-        unitrap_id = result[:unitrap_accession_id].to_sym
-        project    = result[:project].to_sym
+        
+        result[:unitrap_accession_id] = result[:unitrap_accession_id].match(/^(ENS\w+)-(UNI.+)$/)[2]
+        unitrap_id                    = result[:unitrap_accession_id].to_sym
+        
+        project = result[:project].to_sym
+        project = :NorCOMM if ['Stanford','ESCells','CMHD'].include?(result[:project])
         
         # Instanciate variables
         data[:traps][ project ][ unitrap_id ]     = [] unless data[:traps][ project ][ unitrap_id ]
@@ -39,7 +46,39 @@ module MartSearch
         data[:unitrap_counts_total][ unitrap_id ] = data[:unitrap_counts_total][ unitrap_id ] + 1
         data[:project_counts_total][ project ]    = data[:project_counts_total][ project ] + 1
         
+        # Update the cell line and strain if we have no data
+        if result[:escell_line].nil?
+          result[:escell_line] = case result[:project]
+          when 'TIGM'     then 'Lex3.13'
+          when 'Stanford' then 'R1'
+          when 'CMHD'     then 'R1'
+          when 'ESCells'  then 'E14Tg2a.4'
+          when 'EUCOMM'
+            case result[:escell_clone]
+            when /EUCJ/ then 'JM8'
+            when /EUCE/ then 'E14Tg2a'
+            when /EUCG/ then 'E14Tg2a'
+            end
+          end
+        end
+        
+        if result[:escell_strain].nil?
+          result[:escell_strain] = case result[:project]
+          when 'TIGM'     then 'C57Bl/6N'
+          when 'Stanford' then '129S3'
+          when 'CMHD'     then '129S3'
+          when 'ESCells'  then '129 sv'
+          when 'EUCOMM'
+            case result[:escell_clone]
+            when /EUCJ/ then 'C57Bl/6N'
+            when /EUCE/ then '129P2/OlaHsd'
+            when /EUCG/ then '129P2/OlaHsd'
+            end
+          end
+        end
+        
         # Store data
+        result[:project] = 'NorCOMM' if ['Stanford','ESCells','CMHD'].include?(result[:project])
         data[:traps][ project ][ unitrap_id ].push(result)
       end
       

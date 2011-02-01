@@ -99,6 +99,14 @@ module MartSearch
       
       return url
     end
+
+    # Helper function to generate a link to InterPro
+    #
+    # @param  [String|Symbol] interpro_ac - the InterPro ID
+    # @return [String]                      the link to InterPro
+    def interpro_link_url( interpro_ac )
+      "http://www.ebi.ac.uk/interpro/ISearch?query=#{ interpro_ac.to_s }"
+    end
     
     # Helper function to construct a url for linking to Ensembl from an 
     # Ensembl Gene ID.
@@ -110,7 +118,24 @@ module MartSearch
     def ensembl_link_url_from_gene( species, gene, das_tracks=[] )
       ensembl_vega_link_url( :ensembl, species, "?g=#{gene}", das_tracks )
     end
-    
+
+    # Helper function to construct a url for linking to Ensembl from an
+    # Ensembl Transcript ID.
+    #
+    # @param [String/Symbol] view - The display to view (exon|transcript)
+    # @param [String] gene The Ensembl Gene ID
+    # @param [String] transcript the Ensembl Transcript ID
+    # @raise TypeError if an unkown view is specified
+    def ensembl_link_url_from_transcript( gene, transcript, view=:transcript )
+      display = case view.to_sym
+        when :exon       then 'Exons'
+        when :transcript then 'Summary'
+        else
+          raise TypeError, "Unkown display #{view}, try ':exon' or ':transcript'"
+      end
+      "http://www.ensembl.org/Mus_musculus/Transcript/#{display}?db=core;g=#{gene};t=#{transcript}"
+    end
+
     # Helper function to construct a url for linking to Ensembl from a 
     # series of co-ordinates.
     #
@@ -148,12 +173,12 @@ module MartSearch
     # @return [String] The html markup for a button
     def mouse_order_button( mgi_accession_id, marker_symbol, project, project_id, flagged_for_dist, mi_centre='', dist_centre='' )
       order_url = ikmc_product_order_url( :mouse, project, project_id, mgi_accession_id, marker_symbol )
-      
-      unless flagged_for_dist
+
+      if not flagged_for_dist
         order_url = ""
       else
         centre = dist_centre ? dist_centre : mi_centre
-        if dist_centre.eql?('WTSI')
+        if project =~ /KOMP/ and centre == "WTSI"
           order_url = "mailto:mouseinterest@sanger.ac.uk?subject=Interest in Mouse for #{marker_symbol}"
         end
       end
@@ -170,9 +195,11 @@ module MartSearch
     # @param [String] marker_symbol The marker symbol for the gene
     # @param [String] project The IKMC project name ['KOMP/KOMP-CSD','KOMP-Regeneron','NorCOMM','EUCOMM','mirKO']
     # @param [String] project_id The IKMC project ID
+    # @param [String] escell_clone The ES Cell to order
     # @return [String] The html markup for a button
-    def escell_order_button( mgi_accession_id, marker_symbol, project, project_id )
+    def escell_order_button( mgi_accession_id, marker_symbol, project, project_id, escell_clone=nil )
       order_url   = ikmc_product_order_url( :escell, project, project_id, mgi_accession_id, marker_symbol )
+      order_url   = "#{order_url}&comments1=#{escell_clone}" if project == "TIGM"
       button_text = generic_order_button( project, order_url )
       return button_text
     end
@@ -334,6 +361,7 @@ module MartSearch
         when "KOMP-CSD"       then "http://www.komp.org/geneinfo.php?project=CSD#{project_id}"
         when "KOMP-Regeneron" then "http://www.komp.org/geneinfo.php?project=#{project_id}"
         when "NorCOMM"        then "http://www.phenogenomics.ca/services/cmmr/escell_services.html"
+        when "TIGM"           then "http://www.tigm.org/cgi-bin/tigminfo.cgi?survey=IKMC%20Website&mgi1=MGI:#{mgi_accession_id}&gene1=#{marker_symbol}"
         when "EUCOMM"
           case product_type
           when :vector  then "http://www.eummcr.org/final_vectors.php?mgi_id=#{mgi_accession_id}"

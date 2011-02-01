@@ -18,6 +18,7 @@ end
 # Add the lib directory to the search path
 $:.unshift( "#{File.expand_path(File.dirname(__FILE__))}/../lib" )
 
+require 'ap'
 require 'test/unit'
 require 'vcr'
 require 'shoulda'
@@ -33,7 +34,7 @@ VCR.config do |c|
     c.cassette_library_dir = 'test/vcr_cassettes_ruby1.9.2+'
   end
   
-  c.http_stubbing_library    = :webmock
+  c.stub_with                :webmock
   c.ignore_localhost         = true
   c.default_cassette_options = { 
     :record            => :new_episodes, 

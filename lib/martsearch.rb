@@ -29,8 +29,8 @@ MARTSEARCH_PATH = "#{File.expand_path(File.dirname(__FILE__))}/.."
 
 require "#{MARTSEARCH_PATH}/lib/martsearch/array"
 require "#{MARTSEARCH_PATH}/lib/martsearch/hash"
+require "#{MARTSEARCH_PATH}/lib/martsearch/string"
 require "#{MARTSEARCH_PATH}/lib/martsearch/marker"
-require "#{MARTSEARCH_PATH}/lib/martsearch/file_store_patch"
 
 # Module housing all of the classes and code that make up the MartSearch portal framework.
 #

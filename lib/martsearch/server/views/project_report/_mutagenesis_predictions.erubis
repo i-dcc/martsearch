@@ -1,0 +1,70 @@
+<div class="dataset">
+  <h4 class="dataset_title toggle-open">Mutagenesis Predictions</h4>
+  <div class="dataset_content">
+    
+    <% counts = @data[:mutagenesis_predictions][:statistics] %>
+    <p>
+      This gene has <%= counts[:wt_transcripts] %> wild type transcripts, 
+      of which <%= counts[:wt_proteien_coding_transcripts] %> are protein-coding.
+      Following removal of the floxed region, <%= counts[:mut_coding_transcripts] %> 
+      <% if counts[:mut_coding_transcripts] == 1 %>transcript is<% else %>transcripts are<% end %> 
+      <strong>predicted</strong> to produce a truncated protein product of which 
+      <%= counts[:mut_nmd_transcripts] %> may be subject to non-sense mediated decay (NMD).
+      
+      <% if counts[:mut_nmd_rescue_transcripts] > 0 %>
+        <strong>NOTE:</strong> Of the <%= counts[:wt_non_coding_transcripts] %> non-coding wild type transcripts, 
+        <%= counts[:mut_nmd_rescue_transcripts] %> are possibly subject to NMD rescue in the mutant.
+      <% end %>
+      
+      The table below shows the <strong>predicted</strong> structure of the gene transcripts 
+      after successful mutation. Click the 'view' button for each transcript to see the full
+      prediction for that transcript.
+    </p>    
+
+    <table class="border">
+      <thead>
+        <th>Ensembl transcript id</th>
+        <th>Biotype</th>
+        <th>Floxed transcript description</th>
+        <th>Details</th>
+      </thead>
+      <tbody class="products">
+
+        <% @data[:mutagenesis_predictions][:transcripts].each do |transcript| %>
+          <% if transcript.class == Hash or transcript.class == BSON::OrderedHash %>
+            <tr class="transcript">
+             <td>
+              <a href="<%= ensembl_link_url_from_transcript( @data[:ensembl_gene_id], transcript[:ensembl_transcript_id] ) %>" target="_blank">
+                <%= transcript[:ensembl_transcript_id] %>
+              </a>
+             </td>
+             <td><%= transcript[:biotype] %></td>
+             <% if transcript.include?(:is_warning) %>
+               <td class="warning"><%= transcript[:floxed_transcript_description] %></td>
+             <% else %>
+               <td><%= transcript[:floxed_transcript_description] %></td>
+             <% end %>
+             <td>
+               <% unless transcript[:exons].nil? or transcript[:exons].empty? %>
+                 <a class="details_toggle toggle-close">view</a>
+               <% end %>
+             </td>
+            </tr>
+
+            <% unless transcript[:exons].nil? or transcript[:exons].empty? %>
+              <tr class="details">
+                <td colspan="4">
+                  <%= partial("project_report/transcript", :locals => { :transcript => transcript, :transcript_id => transcript[:ensembl_transcript_id] } ) %>
+                </td>
+              </tr>
+            <% end %>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+    <% if @data[:mutagenesis_predictions].size > 1 %>
+      <a class="products_toggle">show/hide more transcripts</a>
+    <% end %>
+    <div class="clear"></div>
+  </div>
+</div>

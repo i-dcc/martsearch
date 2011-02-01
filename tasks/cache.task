@@ -34,8 +34,13 @@ begin
       @ms.cache.clean_expired if @ms.cache.is_a?(MartSearch::MongoCache)
     end
     
+    desc "Refreshes the results counts for the 'browse' page"
+    task :refresh_browse_counts do
+      counts = @ms.browse_counts( false )
+    end
+    
     desc "Primes the search cache"
-    task :prime => [:clear_expired] do
+    task :prime => [:clear_expired, :refresh_browse_counts] do
       no_genes_to_hit_at_once            = 250
       @ms.config[:index][:docs_per_page] = no_genes_to_hit_at_once
       conf                               = @ms.config[:server][:browsable_content][:chromosome]

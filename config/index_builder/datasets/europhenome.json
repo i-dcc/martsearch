@@ -8,6 +8,9 @@
       { "attr": "mp_term",          "idx": "mp_id" },
       { "attr": "mp_term_name",     "idx": "mp_term" }
     ],
+    "filters": {
+      "significance": "0.0001"
+    },
     "ontology_terms": [
       {
         "attr": "mp_term",

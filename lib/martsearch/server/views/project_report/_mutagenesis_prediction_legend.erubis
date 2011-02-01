@@ -1,0 +1,11 @@
+<table>
+  <tr>
+    <td style="border: none !important"><strong>Legend:</strong></td>
+    <td style="border: none !important" class="exon_upstream"></td>
+    <td style="border: none !important">in&nbsp;frame</td>
+    <td style="border: none !important" class="exon_deleted"></td>
+    <td style="border: none !important">deleted</td>
+    <td style="border: none !important" class="exon_frameshifted"></td>
+    <td style="border: none !important">frameshifted</td>
+  </tr>
+</table>

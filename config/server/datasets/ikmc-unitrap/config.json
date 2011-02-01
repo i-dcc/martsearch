@@ -13,6 +13,7 @@
       "ensembl_gene_id",
       "unitrap_accession_id",
       "project",
+      "vector_name",
       "escell_clone",
       "escell_line",
       "escell_strain",
@@ -22,7 +23,7 @@
       "project"
     ],
     "filters": {
-      "project": "Bay Genomics,EGTC,ESCells,EUCOMM,FHCRC,GGTC,Lexicon,Stanford,TIGEM,TIGM,Vanderbilt,WTSI"
+      "project": "TIGM,EUCOMM,Stanford,ESCells,CMHD"
     }
   }
 }

@@ -6,10 +6,9 @@
 }
 
 #wrapper {
-	width: 960px;
-	margin: 0 auto;
-	padding: 10px;
-	margin-bottom: 20px;
+	width: 95%;
+	min-width: 995px;
+	margin: 10px auto 20px;
 }
 
 #content {
@@ -98,12 +97,18 @@ p,dl,hr,h1,h2,h3,h4,h5,h6,ol,ul,pre,table,address,fieldset {
 
 .csstransforms .vertical_text {
 	display: block;
+	transform: rotate(-90deg);
+	transform-origin: 50% 50%;
 	-webkit-transform: rotate(-90deg);
 	-webkit-transform-origin: 50% 50%;
 	-moz-transform: rotate(-90deg);
 	-moz-transform-origin: 50% 50%;
 	-o-transform: rotate(-90deg);
 	-o-transform-origin: 50% 50%;
+}
+
+.no-csstransforms .vertical_text {
+	-ms-writing-mode: tb-rl;
 	writing-mode: tb-rl;
 	filter: flipv fliph;
 }
@@ -134,8 +139,13 @@ a:active, .ui-widget-content a:acitve {
 }
 
 .ensembl_link {
-  background: url(../images/ensembl_link.gif) no-repeat left center;
+	background: url(../images/ensembl_link.gif) no-repeat left center;
 	padding: 4px 0 4px 24px;
+}
+
+.mutagenesis_prediction_key {
+	float: right;
+	background-position: right top;
 }
 
 a.feed {
@@ -161,6 +171,15 @@ a.feed {
 
 a.button:hover, a.order:hover {
 	background-color: #ccc;
+}
+
+.link_button {
+    background: url(../images/silk/bullet_go.png) no-repeat 2px center;
+}
+
+.ensembl_button {
+    background: url(../images/ensembl_link.gif) no-repeat 2px center;
+	padding-left: 26px;
 }
 
 .unavailable {
@@ -341,45 +360,6 @@ span.highlight {
 .search_information {
 	margin-bottom: 10px;
 	height: 26px;
-	clear: both;
-}
-
-/* Data Browsing Controls */
-
-#browsable_content {
-	margin: 0 auto;
-	margin-bottom: 25px;
-}
-
-#browsable_content th,
-#browsable_content td {
-	vertical-align: middle;
-	padding: 4px;
-}
-
-#browsable_content a {
-	display: inline-block;
-	border: 1px solid #999;
-	border-radius: 2px;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	-o-border-radius: 2px;
-	background-color: #ccc;
-	color: #333;
-	margin-bottom: 2px;
-	padding: 3px 5px;
-}
-
-#browsable_content a:hover {
-	color: #fff;
-	background-color: #6998cb;
-	border-color: #376598;
-}
-
-#browsable_content a.current {
-	color: #fff;
-	background-color: #6998cb;
-	border: 1px solid #376598;
 }
 
 /* Navigation Menu */
@@ -552,6 +532,10 @@ form#martsearchr {
 	margin-bottom: 10px;
 }
 
+#search_results .dataset_content {
+	overflow: auto;
+}
+
 #search_results table.result-header {
 	margin-bottom: 2px;
 }
@@ -657,6 +641,78 @@ form#martsearchr {
     background: url(../images/silk/bullet_go.png) no-repeat left center;
 }
 
+/* Data Browsing */
+
+#browse_controls {
+	width: 200px;
+	float: left;
+	margin-top: 5px;
+	margin-bottom: 25px;
+}
+
+.browse_results {
+	margin-left: 210px;
+}
+
+#browse_controls h6 {
+	color: #fff;
+	margin-bottom: 1px;
+	padding-top: 7px;
+	padding-bottom: 7px;
+	border-top-left-radius: 5px;
+	-webkit-border-top-left-radius: 5px;
+	-moz-border-radius-topleft: 5px;
+	-o-border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	-moz-border-radius-topright: 5px;
+	-o-border-radius-topright: 5px;
+	background-color: #376598;
+	background-position: 2px center;
+	padding-left: 17px;
+}
+
+#browse_controls .browse_control_footer {
+	background-color: #376598;
+	height: 2px;
+	margin-bottom: 4px;
+}
+
+#browse_controls ul {
+	margin: 0;
+	list-style-type: none;
+}
+
+#browse_controls ul li {
+	margin-left: 0;
+	border-top: 1px solid #999;
+}
+
+#browse_controls ul li:hover,
+#browse_controls ul li.current {
+	background-color: #6998cb;
+}
+
+#browse_controls a {
+	display: inline-block;
+	position: relative;
+	width: 196px;
+	padding: 2px 0 2px 5px;
+	font-weight: bold;
+}
+
+#browse_controls a span.count {
+	float: right;
+	padding-right: 5px;
+	font-weight: normal;
+	font-style: normal;
+}
+
+#browse_controls ul li:hover a,
+#browse_controls ul li.current a {
+	color: #fff;
+}
+
 /* Welcome Page Specifics */
 
 table.welcome td {
@@ -730,6 +786,10 @@ ul.ensembl_link_list li {
 .ui-accordion .header_annotation {
 	font-style: italic;
 	color: #666;
+}
+
+.ui-tooltip-content {
+	border-width: 2px;
 }
 
 /* jQuery TableSorter Overrides */
@@ -895,4 +955,25 @@ table.ikmc-pipeline-progress-bar td.end_error {
 
 table.ikmc-pipeline-progress-bar td.end_warn {
   background-image: url('../images/progress-bar/progress-end-warn.png');
+}
+
+/* Project Page Mutagenesis Prediction Tool */
+
+.exon_deleted {
+	background-color: #c0241f;
+	color: #fff;
+}
+
+.exon_frameshifted {
+	background-color: #ffa93c;
+}
+
+.exon_upstream {
+	background-color: #376598;
+	color: #fff;
+}
+
+.exon_downstream {
+	background-color: #376598;
+	color: #fff;
 }

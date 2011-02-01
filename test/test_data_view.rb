@@ -52,7 +52,7 @@ class MartSearchDataViewTest < Test::Unit::TestCase
     should 'let the view know if it has data worth displaying' do
       dataview       = MartSearch::DataView.new( @test_conf )
       search_results = @controller.search( @controller.config[:index][:test][:single_return_search], 1 )
-      result         = @controller.search_data[ search_results[0][ @controller.index.primary_field ].to_sym ]
+      result         = @controller.search_data[ search_results[0][ @controller.index.primary_field ].to_sym ].dup
       
       assert_equal( true, dataview.display_for_result?( result, {} ) )
       assert_equal( true, dataview.display_for_result?( result, { :'mgi-markers' => [1,2,3] } ) )

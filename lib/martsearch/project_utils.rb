@@ -7,6 +7,8 @@ module MartSearch
   # @author Darren Oakley
   # @author Nelo Onyiah
   module ProjectUtils
+
+    include MartSearch::Utils
     
     # Wrapper function to collate all of the data for a given IKMC project.
     #
@@ -14,7 +16,7 @@ module MartSearch
     # @return [Hash] A hash containing all the data for the given project
     def get_ikmc_project_page_data( project_id )
       datasources = MartSearch::Controller.instance().datasources
-      data        = { :project_id => project_id }
+      data        = { :project_id => project_id.to_s }
       errors      = []
 
       top_level_data = get_top_level_project_info( datasources, project_id )
@@ -25,22 +27,65 @@ module MartSearch
         data.merge!( top_level_data[:data][0] )
         errors.push( top_level_data[:error] ) unless top_level_data[:error].empty?
 
+        # Look for human orthalog's
         if data[:ensembl_gene_id]
           human_orthalogs = get_human_orthalog( datasources, data[:ensembl_gene_id] )
           data.merge!( human_orthalogs[:data][0] ) unless human_orthalogs[:data].empty?
           errors.push( human_orthalogs[:error] ) unless human_orthalogs[:error].empty?
         end
 
-        if data[:marker_symbol]
-          mice = get_mice( datasources, data[:marker_symbol] )
+        # Now search the targ_rep for vectors and es cells
+        vectors_and_cells = get_vectors_and_cells( datasources, project_id )
+        data.merge!( vectors_and_cells[:data] )
+        errors.push( vectors_and_cells[:error] ) unless vectors_and_cells[:error].empty?
+
+        # Search Kermits for mice
+        es_cell_names = []
+        [ :"targeted non-conditional", :conditional ].each do |symbol|
+          es_cell_names.push( data[:es_cells][symbol][:cells] ) unless data[:es_cells][symbol].nil?
+        end
+        es_cell_names.flatten!
+        es_cell_names.map! { |es_cell| es_cell[:name] }
+        unless es_cell_names.empty?
+          mice = get_mice( datasources, es_cell_names )
           data.merge!( mice[:data] ) unless mice[:data].empty?
           errors.push( mice[:error] ) unless mice[:error].empty?
         end
 
-        vectors_and_cells = get_vectors_and_cells( datasources, project_id, data[:mice] )
-        data.merge!( vectors_and_cells[:data] )
-        errors.push( vectors_and_cells[:error] ) unless vectors_and_cells[:error].empty?
+        mouse_data = nil
+        mouse_data = data[:mice][:genotype_confirmed] if data[:mice] and data[:mice][:genotype_confirmed]
+        
+        # Ammend the es cells data to say which cells have been made into a mouse, then sort the cells as 
+        # we do in the current code (by mice, followed by qc count).
+        unless mouse_data.nil?
+          mouse_data.each do |mouse|
+            [ :"targeted non-conditional", :conditional ].each do |symbol|
+              unless data[:es_cells][symbol].nil?
+                # update the mouse status
+                data[:es_cells][symbol][:cells].each do |es_cell|
+                  es_cell.merge!({ :"mouse?" => "yes" }) if mouse[:escell_clone] == es_cell[:name]
+                end
 
+                # then sort (by mice > qc_count > name)
+                data[:es_cells][symbol][:cells].sort! do |a, b|
+                  res = b[:"mouse?"] <=> a[:"mouse?"]
+                  res = b[:qc_count] <=> a[:qc_count] if res == 0
+                  res = a[:name]     <=> b[:name]     if res == 0
+                  res
+                end
+              end
+            end
+          end
+        end
+
+        # Add the mutagenesis predictions
+        mutagenesis_predictions        = get_mutagenesis_predictions( project_id )
+        data[:mutagenesis_predictions] = mutagenesis_predictions[:data]
+        unless mutagenesis_predictions[:error].empty?
+          errors.push( mutagenesis_predictions[:error] )
+        end
+
+        # Finally, categorize the stage of the pipeline that we are in
         data.merge!( get_pipeline_stage( data[:status]) ) if data[:status]
       end
 
@@ -130,9 +175,9 @@ module MartSearch
       # This function hits the ikmc-kermits mart for data on mice.
       #
       # @param [Hash] datasources The hash of prepared datasources from {MartSearch::Controller#datasources}
-      # @param [String] marker_symbol The marker_symbol to search the mart by
+      # @param [String] escell_clones The escell clone names to search the mart by
       # @return [Hash] The data relating to mice for this project
-      def get_mice( datasources, marker_symbol )
+      def get_mice( datasources, escell_clones )
         qc_metrics  = [
           'qc_southern_blot',
           'qc_tv_backbone_assay',
@@ -154,9 +199,8 @@ module MartSearch
           kermits_mart.search({
             :process_results => true,
             :filters         => {
-              'marker_symbol' => marker_symbol,
-              'status'        => 'Genotype Confirmed',
-              'emma'          => '1'
+              'escell_clone' => escell_clones,
+              'status'        => ['Genotype Confirmed','Germline transmission achieved','Chimera mating complete','Recipient Littered','Micro-injected','Pending']
             },
             :attributes      => [
                 'status', 'allele_name', 'escell_clone', 'emma',
@@ -169,20 +213,40 @@ module MartSearch
 
         unless results[:data].empty?
           results[:data].recursively_symbolize_keys!
+          
+          mouse_results = {
+            :genotype_confirmed => [],
+            :mi_in_progress     => []
+          }
 
           # Test for QC data - set each empty qc_metric to '-' or count it
           results[:data].each do |result|
             result[:qc_count] = 0
             qc_metrics.each do |metric|
-              if result[metric].nil?
-                result[metric] = '-'
+              if result[metric.to_sym].nil?
+                result[metric.to_sym] = '-'
               else
                 result[:qc_count] = result[:qc_count] + 1
               end
             end
+            
+            if result[:status] == 'Genotype Confirmed'
+              mouse_results[:genotype_confirmed].push(result)
+            else
+              mouse_results[:mi_in_progress].push(result)
+            end
           end
 
-          results[:data] = { :mice => results[:data] }
+          # sort the mice (by qc_count > escell_clone)
+          [:genotype_confirmed, :mi_in_progress].each do |symbol|
+            mouse_results[symbol].sort! do |a, b|
+              res = a[:qc_count]     <=> b[:qc_count]
+              res = a[:escell_clone] <=> b[:escell_clone] if res == 0
+              res
+            end
+          end
+
+          results[:data] = { :mice => mouse_results }
         end
 
         return results
@@ -192,9 +256,8 @@ module MartSearch
       #
       # @param [Hash] datasources The hash of prepared datasources from {MartSearch::Controller#datasources}
       # @param [String] project_id The IKMC project ID
-      # @param [Hash] mouse_data The resulting data from {#get_mice}
       # @return [Hash] The data relating to this project
-      def get_vectors_and_cells( datasources, project_id, mouse_data )
+      def get_vectors_and_cells( datasources, project_id )
         qc_metrics = [
           'production_qc_five_prime_screen',
           'production_qc_loxp_screen',
@@ -247,20 +310,16 @@ module MartSearch
           })
         end
       
-        data = {}
+        data = {
+          'intermediate_vectors' => [],
+          'targeting_vectors'    => [],
+          'es_cells'             => {
+            'conditional'              => { 'cells' => [], 'allele_img' => nil, 'allele_gb' => nil },
+            'targeted non-conditional' => { 'cells' => [], 'allele_img' => nil, 'allele_gb' => nil }
+          }
+        }
       
         results[:data].each do |result|
-          if data.empty?
-            data = {
-              'intermediate_vectors' => [],
-              'targeting_vectors'    => [],
-              'es_cells'             => {
-                'conditional'              => { 'cells' => [], 'allele_img' => nil, 'allele_gb' => nil }, 
-                'targeted non-conditional' => { 'cells' => [], 'allele_img' => nil, 'allele_gb' => nil }
-              }
-            }
-          end
-          
           if result['vector_gb_file'] == 'yes'
             data['vector_image'] = "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/vector-image"
             data['vector_gb']    = "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/targeting-vector-genbank-file"
@@ -325,11 +384,6 @@ module MartSearch
             end
           end
 
-          do_i_have_a_mouse = 'no'
-          unless mouse_data.nil?
-            do_i_have_a_mouse = 'yes' if mouse_data.any?{ |mouse| mouse[:escell_clone] == result['escell_clone'] }
-          end
-
           if result['allele_gb_file'] == 'yes'
             data['es_cells'][push_to]['allele_img'] = "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/allele-image"
             data['es_cells'][push_to]['allele_gb']  = "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/escell-clone-genbank-file"
@@ -340,7 +394,7 @@ module MartSearch
               'allele_symbol_superscript' => result['allele_symbol_superscript'],
               'parental_cell_line'        => result['parental_cell_line'],
               'targeting_vector'          => result['targeting_vector'],
-              'mouse?'                    => do_i_have_a_mouse
+              'mouse?'                    => 'no' # default to no
             }.merge(qc_data)
           )
 
@@ -353,29 +407,9 @@ module MartSearch
           data['intermediate_vectors'].uniq!
           data['targeting_vectors'].uniq!
 
-          # Uniqify and sort the ES Cells...
-          ['conditional','targeted non-conditional'].each do |cond_vs_non|
-            data['es_cells'][cond_vs_non]['cells'].uniq!
-            data['es_cells'][cond_vs_non]['cells'].sort! do |elm1,elm2|
-              compstr1 = ''
-              compstr2 = ''
-
-              if elm1['mouse?'] == 'yes' then compstr1 = 'A '
-              else                            compstr1 = 'Z '
-              end
-
-              if elm2['mouse?'] == 'yes' then compstr2 = 'A '
-              else                            compstr2 = 'Z '
-              end
-
-              compstr1 << "#{elm1['qc_count']} "
-              compstr1 << elm1['name']
-
-              compstr2 << "#{elm2['qc_count']} "
-              compstr2 << elm2['name']
-
-              compstr1 <=> compstr2
-            end
+          # Uniqify the ES Cells...
+          ["conditional", "targeted non-conditional"].each do |cond_vs_non|
+            data["es_cells"][cond_vs_non]["cells"].uniq!
           end
         end
 
@@ -416,6 +450,7 @@ module MartSearch
           "Mice - Microinjection in progress"                       => { :stage => "mice",    :stage_type => "normal" },
           "Mice - Germline transmission"                            => { :stage => "mice",    :stage_type => "normal" },
           "Mice - Genotype confirmed"                               => { :stage => "mice",    :stage_type => "normal" },
+          "Redesign Requested"                                      => { :stage => "designs", :stage_type => "normal" },
 
           # KOMP-Regeneron
           "Regeneron Selected"                                      => { :stage => "pre",     :stage_type => "normal" },
@@ -432,6 +467,70 @@ module MartSearch
         }
 
         return status_definitions[ status ]
+      end
+
+      # Retrieve the mutagenesis predictions for the project_id from HTGT.
+      #
+      # @param  [String] project_id The IKMC project ID
+      # @return [Hash] The output from the HTGT mutagenesis prediction tool
+      def get_mutagenesis_predictions( project_id )
+        result  = { :data => {}, :error => {} }
+        message = "There was a problem retrieving mutagenesis predictions for this project.  As a result this data will not be available on the page.  Please try refreshing your browser or come back in 10 minutes to obtain this data."
+        begin
+          uri         = URI.parse( "http://www.sanger.ac.uk/htgt/tools/mutagenesis_prediction/project/#{project_id}/detail" )
+          http_client = build_http_client()
+          response    = http_client.get_response( uri )
+
+          unless response.code.to_i == 200
+            raise Exception.new( "Mutagenesis prediction analysis unavailable." )
+          end
+          
+          mutagenesis_data            = JSON.parse( response.body ).recursively_symbolize_keys!
+          result[:data][:transcripts] = mutagenesis_data
+          result[:data][:statistics]  = calculate_mutagenesis_prediction_stats( mutagenesis_data )
+        rescue JSON::ParserError => error
+          result[:error] = {
+            :text  => message,
+            :error => "Problem parsing the JSON returned.",
+            :type  => error.class
+          }
+        rescue Exception => error
+          result[:error] = {
+            :text  => message,
+            :error => error.to_s,
+            :type  => error.class
+          }
+        end
+        return result
+      end
+      
+      # Small helper function to calculate some top-level statistics for 
+      # the mutagenesis prediction tool.
+      #
+      # @param [Hash] transcripts The output from the HTGT mutagenesis prediction tool
+      # @return [Hash] The statistics calculated off of the data
+      def calculate_mutagenesis_prediction_stats( transcripts )
+        count = {
+          :wt_transcripts                 => 0,
+          :wt_non_coding_transcripts      => 0,
+          :wt_proteien_coding_transcripts => 0,
+          :mut_nmd_transcripts            => 0,
+          :mut_coding_transcripts         => 0,
+          :mut_nmd_rescue_transcripts     => 0
+        }
+        
+        transcripts.each do |transcript|
+          count[:wt_transcripts] += 1
+          if transcript[:biotype].eql?('protein_coding')
+            count[:wt_proteien_coding_transcripts] += 1
+            count[:mut_nmd_transcripts]            += 1 if transcript[:floxed_transcript_description] =~ /^No protein product \(NMD\)/
+            count[:mut_coding_transcripts]         += 1 if transcript[:floxed_transcript_description] =~ /^No protein product \(NMD\)/ or transcript[:floxed_transcript_description] !~ /^No protein product^/
+            count[:mut_nmd_rescue_transcripts]     += 1 if transcript[:floxed_transcript_description] =~ /^Possible NMD rescue/
+          end
+        end
+        
+        count[:wt_non_coding_transcripts] = count[:wt_transcripts] - count[:wt_proteien_coding_transcripts]
+        return count
       end
   end
   

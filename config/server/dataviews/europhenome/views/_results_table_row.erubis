@@ -1,34 +1,25 @@
 <tr>
   <td><%= line_data[:line_name] %>&nbsp;(<%= line_data[:zygosity] %>)</td>
-  <% mp_group_chunks.each do |mp_group| %>
-    <% ['male','female'].each do |sex| %>
-      <%
-        cell_class = 'no-data'
-        unless line_data[:mp_groups][mp_group[:term].to_sym].nil?
-          if line_data[:mp_groups][mp_group[:term].to_sym][:"is_#{sex}_significant"] == true
-            cell_class = 'significant'
-          elsif line_data[:mp_groups][mp_group[:term].to_sym][:"is_#{sex}_significant"] == false
-            cell_class = 'not-significant'
-          end
+  <% mp_groups.each do |mp_group| %>
+    <%
+      cell_class = 'no-data'
+      unless line_data[:mp_groups][mp_group[:term].to_sym].nil?
+        if line_data[:mp_groups][mp_group[:term].to_sym][:is_significant] == true
+          cell_class = 'significant'
+        elsif line_data[:mp_groups][mp_group[:term].to_sym][:is_significant] == false
+          cell_class = 'not-significant'
         end
-      %>
-      <% if cell_class == 'significant' %>
-        <td 
-          class="pheno-result <%= cell_class %>"
-          title="<%= partial( "dataviews/europhenome/popup", :locals => { :line_data => line_data, :parameters => line_data[:mp_groups][mp_group[:term].to_sym][:"#{sex}_results"][:significant], :sex => sex } ) %>"
-          rel="qtip"
-        >
-        </td>
-      <% else %>
-        <td class="pheno-result <%= cell_class %>"></td>
-      <% end %>
-    <% end %>
-  <% end %>
-  
-  <% if mp_group_chunks.size < europhenome_tests_per_row %>
-    <% ( europhenome_tests_per_row - mp_group_chunks.size ).times do |fill| %>
-      <td class="nobg noborder"></td>
-      <td class="nobg noborder"></td>
+      end
+    %>
+    <% if cell_class == 'significant' %>
+      <td 
+        class="pheno-result <%= cell_class %>"
+        title="<%= partial( "dataviews/europhenome/popup", :locals => { :line_data => line_data, :parameters => line_data[:mp_groups][mp_group[:term].to_sym][:results][:significant] } ) %>"
+        rel="qtip"
+      >
+      </td>
+    <% else %>
+      <td class="pheno-result <%= cell_class %>"></td>
     <% end %>
   <% end %>
 </tr>

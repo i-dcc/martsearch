@@ -8,15 +8,31 @@ jQuery(document).ready(function() {
   check_browser_compatibility();
   
   // Add tooltips for the returned dataset links.
-  jQuery(".dataset_link_bubble").each( function() {
-    jQuery(this).attr( "tooltip", jQuery(this).attr("title") );
-    jQuery(this).attr( "title", "" );
-    jQuery(this).qtip({
-      content:  jQuery(this).attr("tooltip"),
-      style:    { tip: "topRight", border: { radius: 5 }, name: "light" },
-      position: { corner: { target: "bottomLeft", tooltip: "topRight" } }
-    });
-  });
+  jQuery('div.doc_datasets_returned').delegate(
+    '.dataset_link_bubble',
+    'mouseover',
+    function(event) {
+      jQuery(this).attr( "tooltip", jQuery(this).attr("title") );
+      jQuery(this).attr( "title", "" );
+      jQuery(this).qtip({
+        content:   jQuery(this).attr("tooltip"),
+        overwrite: false,
+        style: {
+          tip: "topRight",
+          classes: "ui-tooltip-light ui-tooltip-shadow"
+        },
+        position: {
+          at: "bottom left",
+          my: "top right"
+        },
+        show: {
+          event: event.type,
+          ready: true
+        }
+      });
+      event
+    }
+  );
   
   // Add prettyPhoto to anything with the property 'rel="prettyPhoto"'
   jQuery("a[rel^='prettyPhoto']").prettyPhoto({ theme: 'facebook', show_title: false });
@@ -44,12 +60,12 @@ jQuery(document).ready(function() {
   jQuery("#fontresize").fontResize();
 });
 
-
 function setup_toggles() {
   // Single parent togglers...
-  jQuery(".single_parent_toggler_content").hide();
-  jQuery(".single_parent_toggler_toggle").removeClass("toggle-open");
-  jQuery(".single_parent_toggler_toggle").addClass("toggle-close");
+  jQuery(".single_parent_toggler_content").not(".open").hide();
+  jQuery(".single_parent_toggler_toggle").not(".open").removeClass("toggle-open");
+  jQuery(".single_parent_toggler_toggle").not(".open").addClass("toggle-close");
+  jQuery(".single_parent_toggler_toggle.open").addClass("toggle-open");
   
   // Add Toggling for search explainations
   jQuery("#search_explaination_toggle").click( function() {

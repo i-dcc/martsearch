@@ -1,16 +1,34 @@
 /* ikmc-unitrap custom css */
 
-table.unitrap_matrix td,
-table.unitrap_matrix th {
+.ikmc-trapped-products table.unitrap_matrix td,
+.ikmc-trapped-products table.unitrap_matrix th {
   text-align: center;
   vertical-align: middle;
 }
 
-table.unitrap_matrix td.zero {
+.csstransforms .ikmc-trapped-products table.unitrap_matrix th.unitrap_cluster_header {
+	vertical-align:	bottom;
+	height: 107px;
+	min-width: 16px;
+	white-space: nowrap;
+}
+
+.csstransforms .ikmc-trapped-products table.unitrap_matrix th.unitrap_cluster_header .vertical_text {
+	text-align: center;
+	width: 16px;
+	margin: 0 auto;
+}
+
+.no-csstransforms .ikmc-trapped-products table.unitrap_matrix th.unitrap_cluster_header {
+	vertical-align:	bottom;
+	min-width: 16px;
+}
+
+.ikmc-trapped-products table.unitrap_matrix td.zero {
 	color: #999;
 }
 
-div.unitraps_by table caption {
+.ikmc-trapped-products div.unitraps_by table caption {
   text-align: left;
   font-weight: bold;
 }

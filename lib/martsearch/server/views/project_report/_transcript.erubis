@@ -1,0 +1,62 @@
+<!-- Display the exon details -->
+<%
+  label = {
+    "UC" => "UTR + start codon + CDS",
+    "CU" => "CDS + stop codon + UTR",
+    "C"  => "CDS",
+    "U"  => "UTR"
+  }
+%>
+
+<% unless transcript[:floxed_transcript_translation].nil? or transcript[:floxed_transcript_translation].empty? %>
+  <p style="margin: 5px 0;">
+  	<strong>Predicted translation:</strong>
+  	<pre style="margin: 3px 0;"><%= transcript[:floxed_transcript_translation].wrap(80) %></pre>
+  </p>
+<% end %>
+
+<table width="100%" style="margin-bottom:5px;">
+  <thead>
+    <th>Ensembl Exon ID</th>
+    <th>Domains</th>
+    <th>WildType</th>
+    <th>Floxed</th>
+  </thead>
+  <tbody>
+    <% transcript[:exons].each do |exon| %>
+      <tr>
+        <td>
+          <a href="<%= ensembl_link_url_from_transcript( @data[:ensembl_gene_id], transcript_id, :exon ) %>" target="_blank">
+            <%= exon[:ensembl_stable_id] %>
+          </a>
+        </td>
+        <td>
+          <% unless exon[:domains].nil? or exon[:domains].empty? %>
+            <!-- display the domains including links to InterPro -->
+            <%=
+              domains = exon[:domains].map do |domain|
+                domain_text = "#{domain[:description]} (#{domain[:amino_acids][0]}/#{domain[:amino_acids][1]} aa)"
+                if domain.include?( :interpro_ac )
+                  "<a href='#{ interpro_link_url( domain[:interpro_ac] ) }' target='_blank'>#{ domain_text }</a>"
+                else
+                  domain_text
+                end
+              end
+              domains.join(" | ")
+           %>
+          <% end %>
+        </td>
+        <td><%= label[ exon[:structure] ] %></td>
+        <td <% unless exon[:floxed_structure] == "U" %>class="<%= 'exon_' + exon[:description] %>"<% end %>>
+          <% if exon.include?(:floxed_structure) %>
+            <%= label[ exon[:floxed_structure] ] %>
+          <% else %>
+            Deleted
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= partial("project_report/mutagenesis_prediction_legend") %>

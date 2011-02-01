@@ -2,11 +2,11 @@
   <h4 class="dataset_title toggle-open">Targeting Vectors</h4>
   <div class="dataset_content">
     <% unless @data[:vector_image].nil? %>
-      <img src="<%= @data[:vector_image] %>" width="940px" />
+      <img src="<%= @data[:vector_image] %>" width="930px" />
       <div class="clear"></div>
     <% end %>
     
-    <%= partial("project_report/ensembl_links") %>
+    <%= partial( "project_report/ensembl_htgt_links", { :locals => { :escell => nil } } ) %>
     
     <table>
       <thead>
