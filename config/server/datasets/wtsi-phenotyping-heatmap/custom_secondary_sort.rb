@@ -163,9 +163,9 @@ module MartSearch
                   end
                 end
                 
-                # wtsi-mgp_images-wholemount_expression
-                if result_data[:'wtsi-mgp_images-wholemount_expression']
-                  images = result_data[:'wtsi-mgp_images-wholemount_expression'][result[:colony_prefix].to_sym]
+                # wtsi-phenotyping-published_images
+                if result_data[:'wtsi-phenotyping-published_images']
+                  images = result_data[:'wtsi-phenotyping-published_images'][result[:colony_prefix].to_sym]
                   
                   if images and ( images[:adult] and !images[:adult].empty? )
                     result[:adult_expression_data] = {} if result[:adult_expression_data].nil?
@@ -239,7 +239,7 @@ module MartSearch
           end
         end
         
-        result_data[:'cached_pheno_data'] = cache_data
+        #result_data[:'cached_pheno_data'] = cache_data
       end
       
     end

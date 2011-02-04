@@ -22,13 +22,13 @@
     "ikmc-unitrap",
     "mgi-markers",
     "wtsi-bacs",
-    "wtsi-expression-ticklist",
-    "wtsi-mgp_images-wholemount_expression",
+    "wtsi-phenotyping-abr",
+    "wtsi-phenotyping-adult_expression",
     "wtsi-phenotyping-fertility",
     "wtsi-phenotyping-heatmap",
     "wtsi-phenotyping-heatmap_graphs",
     "wtsi-phenotyping-hom_viability",
-    "wtsi-phenotyping-abr"
+    "wtsi-phenotyping-published_images"
   ],
   "dataviews": [
     "gene-details",
