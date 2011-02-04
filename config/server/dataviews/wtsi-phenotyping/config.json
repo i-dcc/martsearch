@@ -14,8 +14,8 @@
     ],
     "optional": [
       "wtsi-expression-ticklist",
-      "wtsi-mgp_graphs",
       "wtsi-mgp_images-wholemount_expression",
+      "wtsi-phenotyping-heatmap_graphs",
       "wtsi-phenotyping-fertility",
       "wtsi-phenotyping-hom_viability",
       "wtsi-phenotyping-abr"
