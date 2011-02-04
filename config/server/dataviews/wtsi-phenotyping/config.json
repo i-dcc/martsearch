@@ -13,8 +13,8 @@
       "wtsi-phenotyping-heatmap"
     ],
     "optional": [
-      "wtsi-expression-ticklist",
       "wtsi-mgp_images-wholemount_expression",
+      "wtsi-phenotyping-adult_expression",
       "wtsi-phenotyping-heatmap_graphs",
       "wtsi-phenotyping-fertility",
       "wtsi-phenotyping-hom_viability",
