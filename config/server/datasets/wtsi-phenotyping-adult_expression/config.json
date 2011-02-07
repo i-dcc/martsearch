@@ -65,6 +65,7 @@
       "adult_expression_vascular_system",
       "adult_expression_white_adipose_tissue"
     ],
+    "required_attributes": [ "adult_expression_colony_prefix" ],
     "filters": {}
   }
 }

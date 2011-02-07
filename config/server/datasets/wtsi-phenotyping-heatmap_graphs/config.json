@@ -17,6 +17,7 @@
       "heatmap_graphs_url",
       "heatmap_graphs_order_by"
     ],
+    "required_attributes": [ "heatmap_graphs_colony_prefix" ],
     "filters": {}
   }
 }
