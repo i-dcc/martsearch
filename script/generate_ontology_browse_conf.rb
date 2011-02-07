@@ -39,14 +39,16 @@ ARGV.each do |cmd|
     "options"          => []
   }
   
-  ontology = MartSearch::OntologyTerm.new(conf[:root_term])
+  ontology        = MartSearch::OntologyTerm.new(conf[:root_term])
+  ontology_prefix = conf[:root_term].match(/^(\w+\:)\d+$/)[1]
   ontology.children.sort{ |a,b| a.term_name <=> b.term_name }.each do |child|
-    term      = child.term
+    
+    term      = child.term.gsub(ontology_prefix,'')
     term_name = child.term_name
     
     term_name.gsub!(conf[:gsub_term_name],'') if conf[:gsub_term_name]
     
-    # puts "#{child.term} - #{child.term_name}"
+    # puts "#{term} - #{term_name}"
     
     generated_conf[ conf[:id] ]["options"].push({
       "text"  => term_name,
