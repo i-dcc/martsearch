@@ -46,7 +46,7 @@ ARGV.each do |cmd|
     
     term_name.gsub!(conf[:gsub_term_name],'') if conf[:gsub_term_name]
     
-    puts "#{child.term} - #{child.term_name}"
+    # puts "#{child.term} - #{child.term_name}"
     
     generated_conf[ conf[:id] ]["options"].push({
       "text"  => term_name,
@@ -56,4 +56,4 @@ ARGV.each do |cmd|
   end
 end
 
-# puts generated_conf.to_json
+puts generated_conf.to_json
