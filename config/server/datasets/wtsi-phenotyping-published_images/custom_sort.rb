@@ -1,8 +1,21 @@
 module MartSearch
   module DataSetUtils
     
-    def wtsi_mgp_images_wholemount_expression_sort_results( results )
+    def wtsi_phenotyping_published_images_sort_results( results )
       sorted_results = {}
+      
+      # remove the 'published_images_' prefix from the attributes
+      prefix            = /^published\_images\_/
+      processed_results = []
+      results.each do |result|
+        processed_result = {}
+        result.each do |key,value|
+          processed_result[key] = value if key == @config[:searching][:joined_attribute].to_sym
+          processed_result[ key.to_s.gsub(prefix,'').to_sym ] = value
+        end
+        processed_results.push(processed_result)
+      end
+      results = processed_results
       
       results.sort{ |a,b| "#{a[:tissue]}-#{a[:gender]}" <=> "#{b[:tissue]}-#{b[:gender]}" }.each do |result|
         joined_attribute = @config[:searching][:joined_attribute].to_sym
@@ -24,7 +37,9 @@ module MartSearch
         result[:thumbnail_url] = result[:url].sub("\.(\w+)$","thumb.\1")
         
         if result[:tissue].match("Embryo")
-          result_data[:embryo].push(result)
+          if result[:tissue].match("14.5")
+            result_data[:embryo].push(result)
+          end
         else
           result_data[:adult].push(result)
         end

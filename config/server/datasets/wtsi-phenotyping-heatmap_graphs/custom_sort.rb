@@ -1,8 +1,21 @@
 module MartSearch
   module DataSetUtils
     
-    def wtsi_mgp_graphs_sort_results( results )
+    def wtsi_phenotyping_heatmap_graphs_sort_results( results )
       sorted_results = {}
+      
+      # remove the 'heatmap_graphs_' prefix from the attributes
+      prefix            = /^heatmap_graphs\_/
+      processed_results = []
+      results.each do |result|
+        processed_result = {}
+        result.each do |key,value|
+          processed_result[key] = value if key == @config[:searching][:joined_attribute].to_sym
+          processed_result[ key.to_s.gsub(prefix,'').to_sym ] = value
+        end
+        processed_results.push(processed_result)
+      end
+      results = processed_results
       
       results.each do |result|
         joined_attribute = @config[:searching][:joined_attribute].to_sym

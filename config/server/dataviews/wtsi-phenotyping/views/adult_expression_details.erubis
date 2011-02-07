@@ -8,12 +8,12 @@
         Adult expression (&ge; 6 weeks):  The lacZ reporter gene within 
         the targeting vector was used to determine the wholemount expression 
         profile of the targeted gene.  Mice were fixed by cardiac perfusion 
-        using 4% paraformaldehyde (PFA).  Following dissection, the tissues 
-        to be stained were fixed an additional 30 min in 4% PFA before being 
+        using 4&#37; paraformaldehyde (PFA).  Following dissection, the tissues 
+        to be stained were fixed an additional 30 min in 4&#37; PFA before being 
         rinsed in phosphate buffered saline and transferred to lacZ staining 
-        solution, containing 0.1% X-gal, for up to 48 hours.  After an 
-        additional overnight post-staining fixation in 4% PFA, tissues were 
-        cleared with 50% glycerol then transferred to 70% glycerol for long-term 
+        solution, containing 0.1&#37; X-gal, for up to 48 hours.  After an 
+        additional overnight post-staining fixation in 4&#37; PFA, tissues were 
+        cleared with 50&#37; glycerol then transferred to 70&#37; glycerol for long-term 
         storage.
       </p>
     </div> 
@@ -22,11 +22,11 @@
   <div id="test-display-criteria" class="test-descriptor"> 
     <h4>Display Criteria</h4> 
     <div class="test-descriptor-content"> 
-      <p style="margin-bottom:5px">
+      <p style="margin-bottom:8px">
         A tick-list of 41 tissues and organs was scored for the presence (green 
         tick) or absence (red cross) of lacZ expression.
       </p>
-      <ul style="margin-bottom:5px">
+      <ul style="margin-bottom:8px">
         <li>
           The term 'Ambiguous' was assigned when there was uncertainty as to 
           the validity of the observed pattern e.g. staining may be very faint, 
@@ -37,14 +37,15 @@
           to assess.
         </li>
       </ul>
-      <p style="margin-bottom:0">
+      <p style="margin-bottom:8px">
         By default, up to 27 standard images may be taken using a Leica MZ16A 
         microscope and Imagic software.  These images were only collected when 
-        X-gal staining was present. If information or images that you are interested 
-        in are not presented, please send details to 
-        <a href="mailto:MGPenquiries@sanger.ac.uk">MGPenquiries@sanger.ac.uk</a> 
-        and, on a limited, first come first served basis, we will process your 
-        request.
+        X-gal staining was present.
+      </p>
+      <p style="margin-bottom:0">
+        If information or images that you are interested in are not presented, please send
+        details to <a href="mailto:MGPenquiries@sanger.ac.uk">MGPenquiries@sanger.ac.uk</a> 
+        and, on a limited, first come first served basis, we will process your request.
       </p>
     </div> 
   </div>

@@ -926,7 +926,31 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
       expected_data = JSON.parse( File.read( File.dirname( __FILE__ ) + "/fixtures/test_project_utils-project_id_#{project_id}.json" ) )
       expected_data.recursively_symbolize_keys!()
       observed_data = get_ikmc_project_page_data( project_id )[:data]
-      valid_keys    = [
+      
+      ##
+      ## Sort the relevant bits of data
+      ##
+      
+      [ :conditional, :"targeted non-conditional" ].each do |symbol|
+        expected_data[:es_cells][symbol][:cells].uniq!
+        expected_data[:es_cells][symbol][:cells].sort! do |a, b|
+          res = b[:"mouse?"] <=> a[:"mouse?"]
+          res = b[:qc_count] <=> a[:qc_count] if res == 0
+          res = a[:name]     <=> b[:name]     if res == 0
+          res
+        end
+      end
+      
+      [ :genotype_confirmed, :mi_in_progress ].each do |symbol|
+        expected_data[:mice][symbol].sort! do |a, b|
+          res = a[:qc_count]     <=> b[:qc_count]
+          res = a[:escell_clone] <=> b[:escell_clone] if res == 0
+          res
+        end
+      end
+      
+      # So... test top-level data first
+      top_level_keys = [
           :project_id,
           :marker_symbol,
           :mgi_accession_id,
@@ -938,40 +962,39 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
           :escell_available,
           :vector_available,
           :human_ensembl_gene,
-          :mice,
           :intermediate_vectors,
           :targeting_vectors,
-          :es_cells,
           :vector_image,
           :vector_gb,
           :stage,
           :stage_type
       ]
-
-      # sort the relevant bits of data
-      [:conditional, :"targeted non-conditional"].each do |symbol|
-        expected_data[:es_cells][symbol][:cells].uniq!
-        expected_data[:es_cells][symbol][:cells].sort! do |a, b|
-          res = b[:"mouse?"] <=> a[:"mouse?"]
-          res = b[:qc_count] <=> a[:qc_count] if res == 0
-          res = a[:name]     <=> b[:name]     if res == 0
-          res
-        end
+      top_level_keys.each do |key|
+        # puts "testing '#{key}' - exp: '#{expected_data[key]}' vs obs: '#{observed_data[key]}'"
+        assert_equal expected_data[key], observed_data[key]
       end
-
-      [ :genotype_confirmed, :mi_in_progress ].each do |symbol|
-        expected_data[:mice][symbol].sort! do |a, b|
-          res = a[:qc_count]     <=> b[:qc_count]
-          res = a[:escell_clone] <=> b[:escell_clone] if res == 0
-          res
+      
+      # Now mice...
+      [ :genotype_confirmed, :mi_in_progress ].each do |status|
+        expected_data[:mice][status][0].keys.each do |key|
+          expected_data[:mice][status].each_index do |index|
+            # puts "mice: testing [:mice][:#{status}][#{index}][:#{key}] - exp: '#{expected_data[:mice][status][index][key]}' vs obs: '#{observed_data[:mice][status][index][key]}'"
+            assert_equal( expected_data[:mice][status][index][key], observed_data[:mice][status][index][key], "Mouse data has changed... We're now getting: \n\n #{observed_data[:mice].to_json}" )
+          end
         end
       end
       
-      valid_keys.each do |valid_key|
-        assert_equal expected_data[valid_key], observed_data[valid_key]
+      # And cells...
+      [ :conditional, :"targeted non-conditional" ].each do |status|
+        expected_data[:es_cells][status][:cells][0].keys.each do |key|
+          expected_data[:es_cells][status][:cells].each_index do |index|
+            # puts "cells: testing [:es_cells][:#{status}][:cells][#{index}][:#{key}] - exp: '#{expected_data[:es_cells][status][:cells][index][key]}' vs obs: '#{observed_data[:es_cells][status][:cells][index][key]}'"
+            assert_equal( expected_data[:es_cells][status][:cells][index][key], observed_data[:es_cells][status][:cells][index][key], "Cell data has changed... We're now getting: \n\n #{observed_data[:es_cells].to_json}" )
+          end
+        end
       end
     end
-
+    
     should "not crash with *NoMethodError* when data is requested for projects in status *Redesign Requested*" do
       project_ids = [ 80797, 92475 ]
       project_ids.each do |project_id|

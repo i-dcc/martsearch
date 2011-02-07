@@ -129,9 +129,9 @@ module MartSearch
               tests.each do |test|
                 test_display_name = group_data[:tests][test.to_sym]
                 
-                # wtsi-mgp_graphs
-                if result_data[:'wtsi-mgp_graphs']
-                  mgp_graphs = result_data[:'wtsi-mgp_graphs'][result[:colony_prefix].to_sym]
+                # wtsi-phenotyping-heatmap_graphs
+                if result_data[:'wtsi-phenotyping-heatmap_graphs']
+                  mgp_graphs = result_data[:'wtsi-phenotyping-heatmap_graphs'][result[:colony_prefix].to_sym]
                   unless mgp_graphs.nil?
                     mgp_graphs.each do |test_name,image_data|
                       if test_display_name.gsub("\(","").gsub("\)","") =~ Regexp.new(image_data[0][:heatmap_group], true)
@@ -153,21 +153,19 @@ module MartSearch
                   result[:homozygote_viability_data] = viability unless viability.nil?
                 end
                 
-                # wtsi-expression-ticklist
-                if result_data[:'wtsi-expression-ticklist']
-                  ticklist = result_data[:'wtsi-expression-ticklist'][result[:colony_prefix].to_sym]
+                # wtsi-phenotyping-adult_expression
+                if result_data[:'wtsi-phenotyping-adult_expression']
+                  ticklist = result_data[:'wtsi-phenotyping-adult_expression'][result[:colony_prefix].to_sym]
                   
                   if ticklist and !ticklist.empty?
                     result[:adult_expression_data]  = {} if result[:adult_expression_data].nil?
-                    # result[:embryo_expression_data] = {} if result[:embryo_expression_data].nil?
                     result[:adult_expression_data][:ticklist]  = ticklist
-                    # result[:embryo_expression_data][:ticklist] = ticklist
                   end
                 end
                 
-                # wtsi-mgp_images-wholemount_expression
-                if result_data[:'wtsi-mgp_images-wholemount_expression']
-                  images = result_data[:'wtsi-mgp_images-wholemount_expression'][result[:colony_prefix].to_sym]
+                # wtsi-phenotyping-published_images
+                if result_data[:'wtsi-phenotyping-published_images']
+                  images = result_data[:'wtsi-phenotyping-published_images'][result[:colony_prefix].to_sym]
                   
                   if images and ( images[:adult] and !images[:adult].empty? )
                     result[:adult_expression_data] = {} if result[:adult_expression_data].nil?
@@ -241,7 +239,7 @@ module MartSearch
           end
         end
         
-        result_data[:'cached_pheno_data'] = cache_data
+        #result_data[:'cached_pheno_data'] = cache_data
       end
       
     end
