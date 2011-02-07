@@ -200,7 +200,8 @@ module MartSearch
             :process_results => true,
             :filters         => {
               'escell_clone' => escell_clones,
-              'status'        => ['Genotype Confirmed','Germline transmission achieved','Chimera mating complete','Recipient Littered','Micro-injected','Pending']
+              'status'       => ['Genotype Confirmed','Germline transmission achieved','Chimera mating complete','Recipient Littered','Micro-injected','Pending'],
+              'active'       => '1'
             },
             :attributes      => [
                 'status', 'allele_name', 'escell_clone', 'emma',
@@ -230,7 +231,7 @@ module MartSearch
               end
             end
             
-            if result[:status] == 'Genotype Confirmed'
+            if result[:status] == 'Genotype Confirmed' and result[:emma] == '1'
               mouse_results[:genotype_confirmed].push(result)
             else
               mouse_results[:mi_in_progress].push(result)
