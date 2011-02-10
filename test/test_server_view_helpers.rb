@@ -45,17 +45,29 @@ class MartSearchServerViewHelpersTest < Test::Unit::TestCase
   end
   
   def test_ensembl_link_url_from_transcript
-    link = ensembl_link_url_from_transcript('ENSMUSG00000018666', 'ENSMUST00000093943' )
+    link = ensembl_link_url_from_transcript( :mouse, 'ENSMUSG00000018666', 'ENSMUST00000093943' )
     assert_match( /Mus_musculus/, link )
     assert_match( /Summary/, link )
 
-    link = ensembl_link_url_from_transcript( 'ENSMUSG00000018666', 'ENSMUST00000093943', :exon )
+    link = ensembl_link_url_from_transcript( :mouse, 'ENSMUSG00000018666', 'ENSMUST00000093943', :exon )
     assert_match( /Mus_musculus/, link )
     assert_match( /Exons/, link )
 
-    assert_raise(TypeError) do
-      ensembl_link_url_from_transcript( 'ENSMUSG00000018666', 'ENSMUST00000093943', :foo )
-    end
+    assert_raise(TypeError) { ensembl_link_url_from_transcript( :mouse, 'ENSMUSG00000018666', 'ENSMUST00000093943', :foo ) }
+  end
+  
+  def test_ensembl_vega_link_url_from_exon
+    ens_link = ensembl_link_url_from_exon( :mouse, 'ENSMUSE00000810911' )
+    assert_match( /ensembl/, ens_link )
+    assert_match( /Mus_musculus/, ens_link )
+    assert_match( /exonview/, ens_link )
+    
+    veg_link = vega_link_url_from_exon( :mouse, 'OTTMUSE00000014611' )
+    assert_match( /vega/, veg_link )
+    assert_match( /Mus_musculus/, veg_link )
+    assert_match( /exonview/, veg_link )
+    
+    assert_raise(TypeError) { vega_link_url_from_exon( :monkey, 'OTTMUSE00000014611' ) }
   end
   
   def test_mouse_order_button

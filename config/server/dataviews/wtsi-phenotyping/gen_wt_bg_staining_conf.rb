@@ -10,7 +10,7 @@ $:.unshift( "#{File.expand_path(File.dirname(__FILE__))}/../../../../lib" )
 require 'martsearch'
 
 ms                  = MartSearch::Controller.instance()
-images_mart         = ms.datasources[:'wtsi-mgp_images'].ds
+images_mart         = ms.datasources[:'wtsi-phenotyping'].ds
 
 background_images   = []
 mouse_ids           = {}
@@ -32,23 +32,35 @@ end
 image_data = images_mart.search(
   :process_results => true,
   :filters => {
-    "image_type" => "Wildtype Expression",
-    "mouse_id"   => mouse_ids.keys
+    "published_images_image_type" => "Wildtype Expression",
+    "published_images_mouse_id"   => mouse_ids.keys
   },
   :attributes => [
-    "colony_prefix",
-    "mouse_id",
-    "gender",
-    "genotype",
-    "age_at_death",
-    "tissue",
-    "image_type",
-    "description",
-    "annotations",
-    "comments",
-    "url"
+    "published_images_colony_prefix",
+    "published_images_mouse_id",
+    "published_images_gender",
+    "published_images_genotype",
+    "published_images_age_at_death",
+    "published_images_tissue",
+    "published_images_image_type",
+    "published_images_description",
+    "published_images_annotations",
+    "published_images_comments",
+    "published_images_url"
   ]
 )
+
+# remove the 'published_images_' prefix from the attributes
+prefix            = /^published\_images\_/
+processed_results = []
+image_data.each do |result|
+  processed_result = {}
+  result.each do |key,value|
+    processed_result[ key.gsub(prefix,'') ] = value
+  end
+  processed_results.push(processed_result)
+end
+image_data = processed_results
 
 image_data.each do |result|
   save_this_img = false

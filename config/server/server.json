@@ -35,11 +35,11 @@
     "other-mutant-resources"
   ],
   "browsable_content": {
-    "mamalian-phenotype":{
-      "index_field":  "mp",
-      "display_name": "Mamalian Phenotype",
-      "descriptive_text": "browse for genes that when knocked-out have been annotated as causing a distinct phenotype (as classified by the <a href='http://nbirn.net/research/ontology/mammalian_ontology.shtm' target='_blank'>mamalian phenotype ontology</a>)",
-      "exact_search": true,
+    "mamalian-phenotype": {
+      "index_field":"mp",
+      "display_name":"Mamalian Phenotype",
+      "descriptive_text":"browse for genes that when knocked-out have been annotated as causing a distinct phenotype (as classified by the <a href='http://nbirn.net/research/ontology/mammalian_ontology.shtm' target='_blank'>mamalian phenotype ontology</a>)",
+      "exact_search":true,
       "options": [
         {"text":"adipose tissue","query":"0005375","slug":"adipose-tissue"},
         {"text":"behavior/neurological","query":"0005386","slug":"behavior-neurological"},

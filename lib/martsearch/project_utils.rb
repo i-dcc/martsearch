@@ -84,7 +84,7 @@ module MartSearch
         unless mutagenesis_predictions[:error].empty?
           errors.push( mutagenesis_predictions[:error] )
         end
-
+        
         # Finally, categorize the stage of the pipeline that we are in
         data.merge!( get_pipeline_stage( data[:status]) ) if data[:status]
       end
@@ -200,7 +200,8 @@ module MartSearch
             :process_results => true,
             :filters         => {
               'escell_clone' => escell_clones,
-              'status'        => ['Genotype Confirmed','Germline transmission achieved','Chimera mating complete','Recipient Littered','Micro-injected','Pending']
+              'status'       => ['Genotype Confirmed','Germline transmission achieved','Chimera mating complete','Recipient Littered','Micro-injected','Pending'],
+              'active'       => '1'
             },
             :attributes      => [
                 'status', 'allele_name', 'escell_clone', 'emma',
@@ -230,7 +231,7 @@ module MartSearch
               end
             end
             
-            if result[:status] == 'Genotype Confirmed'
+            if result[:status] == 'Genotype Confirmed' and result[:emma] == '1'
               mouse_results[:genotype_confirmed].push(result)
             else
               mouse_results[:mi_in_progress].push(result)
@@ -304,6 +305,7 @@ module MartSearch
               'allele_symbol_superscript',
               'escell_clone',
               'floxed_start_exon',
+              'floxed_end_exon',
               'parental_cell_line',
               qc_metrics
             ].flatten
@@ -331,22 +333,24 @@ module MartSearch
             when 'targeted_non_conditional' then 'Targeted, Non-Conditional'
             else ''
           end
-        
+          
+          data['floxed_start_exon'] = result['floxed_start_exon']
+          data['floxed_end_exon']   = result['floxed_end_exon']
+          
           ##
           ## Intermediate Vectors
           ##
-        
+          
           unless result['mutation_subtype'] == 'targeted_non_conditional'
             unless result['intermediate_vector'].nil?
               data['intermediate_vectors'].push(
-                'name'        => result['intermediate_vector'],
-                'design_id'   => result['design_id'],
-                'design_type' => design_type,
-                'floxed_exon' => result['floxed_start_exon']
+                'name'              => result['intermediate_vector'],
+                'design_id'         => result['design_id'],
+                'design_type'       => design_type
               )
             end
           end
-        
+          
           ##
           ## Targeting Vectors
           ##
@@ -358,8 +362,7 @@ module MartSearch
                 'design_id'    => result['design_id'],
                 'design_type'  => design_type,
                 'cassette'     => result['cassette'],
-                'backbone'     => result['backbone'],
-                'floxed_exon'  => result['floxed_start_exon']
+                'backbone'     => result['backbone']
               )
             end
           end

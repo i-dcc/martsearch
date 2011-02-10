@@ -1,5 +1,5 @@
 {
-  "datasource":            "wtsi-mgp_graphs",
+  "datasource":            "wtsi-phenotyping",
   "enabled":               true,
   "custom_sort":           true,
   "custom_secondary_sort": false,
@@ -8,17 +8,16 @@
   "searching": {
     "joined_index_field": "colony_prefix",
     "joined_filter":      "colony_prefix",
-    "joined_attribute":   "colony_prefix",
+    "joined_attribute":   "heatmap_graphs_colony_prefix",
     "attributes": [
-      "colony_prefix",
-      "heatmap_group",
-      "heatmap_group_description",
-      "pipeline",
-      "test",
-      "url",
-      "order_by",
-      "raw_data"
+      "heatmap_graphs_colony_prefix",
+      "heatmap_graphs_heatmap_group",
+      "heatmap_graphs_heatmap_group_description",
+      "heatmap_graphs_test",
+      "heatmap_graphs_url",
+      "heatmap_graphs_order_by"
     ],
+    "required_attributes": [ "heatmap_graphs_colony_prefix" ],
     "filters": {}
   }
 }

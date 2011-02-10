@@ -5,7 +5,13 @@
     <h4>Overview</h4> 
     <div class="test-descriptor-content">
       <p style="margin-bottom:0">
-        
+        Embryo expression (E14.5): The lacZ reporter gene within the targeting vector was
+        used to determine the wholemount expression profile of the targeted gene. Embryos
+        were collected at E14.5 and drop fixed in 4&#37; paraformaldehyde (PFA) for 30 min. After
+        rinsing in PBS, each embryo was sub-dissected to permit penetration of the stain and
+        transferred to lacZ staining solution, containing 0.1&#37; X-gal, for up to 48 hours.
+        After an additional overnight post-staining fixation in 4&#37; PFA, tissues were cleared
+        with 50&#37; glycerol then transferred to 70&#37; glycerol for long-term storage.
       </p>
     </div> 
   </div> 
@@ -13,8 +19,29 @@
   <div id="test-display-criteria" class="test-descriptor"> 
     <h4>Display Criteria</h4> 
     <div class="test-descriptor-content"> 
+      <p style="margin-bottom:8px">
+        A tick-list indicating if each embryo was scored for the presence (green tick) or
+        absence (red cross) of lacZ expression.
+      </p>
+      <ul style="margin-bottom:8px">
+        <li>
+          The term 'Ambiguous' was assigned when there was uncertainty as to the validity of 
+          the observed pattern e.g. staining may be very faint or an artefact due to trapping.
+        </li>
+        <li>
+          The term 'No Data' was assigned if the stained entity was not available 
+          to assess.
+        </li>
+      </ul>
+      <p style="margin-bottom:8px">
+        By default, 4 standard images (lateral, dorsal and ventral aspects and the placenta) may 
+        be taken using a Leica MZ16A microscope and Imagic software. These images were only 
+        collected when X-gal staining was present.
+      </p>
       <p style="margin-bottom:0">
-        
+        If information or images that you are interested in are not presented, please send
+        details to <a href="mailto:MGPenquiries@sanger.ac.uk">MGPenquiries@sanger.ac.uk</a> 
+        and, on a limited, first come first served basis, we will process your request.
       </p>
     </div> 
   </div>
@@ -38,9 +65,9 @@
       <% end %>
     </div>
   
-    <h6><a href="">Background LacZ Staining in Embryo</a></h6>
+    <h6><a href="">Background LacZ Staining in Embryo - <span class="header_annotation">No background LacZ staining detected in day 14.5 embryos</span></a></h6>
     <div class="wtsi-phenotyping-expression-images">
-      
+      No background LacZ staining detected in day 14.5 embryos
     </div>
   </div>
 </div>
