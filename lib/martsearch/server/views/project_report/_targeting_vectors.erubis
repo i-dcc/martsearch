@@ -14,7 +14,7 @@
         <th>Design ID</th>
         <th>Vector Type</th>
         <th>Targeting Vector</th>
-        <th>Floxed Exon</th>
+        <th>Floxed Exon<%= "s" if @data[:floxed_exon_count] > 1 %></th>
         <th>Cassette</th>
         <th>Backbone</th>
         <th class="hide_on_print">Genbank File</th>
@@ -29,7 +29,7 @@
             <td><%= targvec[:design_id] ? targvec[:design_id] : '-' %></td>
             <td><%= targvec[:design_type] %></td>
             <td><%= targvec[:name] %></td>
-            <td><%= targvec[:floxed_exon] %></td>
+            <td><%= @data[:floxed_exon_link] %></td>
             <td><%= targvec[:cassette] %></td>
             <td><%= targvec[:backbone] %></td>
             <td class="hide_on_print">

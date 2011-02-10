@@ -43,6 +43,7 @@
         <th>ES Cell Clone</th>
         <th>Targeting Vector</th>
         <th>Allele</th>
+        <th>Floxed Exon<%= "s" if @data[:floxed_exon_count] > 1 %></th>
         <th>Parental ES Cell Line</th>
         <th class="hide_on_print">Genbank File</th>
         <th>Mouse</th>
@@ -57,6 +58,7 @@
             <td><%= cell[:name] %></td>
             <td><%= cell[:targeting_vector] %></td>
             <td><%= @data[:marker_symbol] %><sup><%= cell[:allele_symbol_superscript] %></sup></td>
+            <td><%= @data[:floxed_exon_link] %></td>
             <td><%= cell[:parental_cell_line] %></td>
             <td class="hide_on_print">
               <% if @data[:es_cells][cond_vs_noncond][:allele_gb].nil? %>

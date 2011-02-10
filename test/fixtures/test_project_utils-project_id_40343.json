@@ -71,8 +71,7 @@
         {
             "name":"PCS00030_B_D01",
             "design_id":"40651",
-            "design_type":"Conditional (Frameshift)",
-            "floxed_exon":"ENSMUSE00000208803"
+            "design_type":"Conditional (Frameshift)"
         }
     ],
     "targeting_vectors":
@@ -82,56 +81,49 @@
             "design_id":"40651",
             "design_type":"Conditional (Frameshift)",
             "cassette":"L1L2_gt0",
-            "backbone":"L3L4_pZero_DTA_kan",
-            "floxed_exon":"ENSMUSE00000208803"
+            "backbone":"L3L4_pZero_DTA_kan"
         },
         {
             "name":"PG00030_C_1_D01",
             "design_id":"40651",
             "design_type":"Conditional (Frameshift)",
             "cassette":"L1L2_gt0",
-            "backbone":"L3L4_pZero_DTA_kan",
-            "floxed_exon":"ENSMUSE00000208803"
+            "backbone":"L3L4_pZero_DTA_kan"
         },
         {
             "name":"PG00030_C_2_D01",
             "design_id":"40651",
             "design_type":"Conditional (Frameshift)",
             "cassette":"L1L2_gt0",
-            "backbone":"L3L4_pZero_DTA_kan",
-            "floxed_exon":"ENSMUSE00000208803"
+            "backbone":"L3L4_pZero_DTA_kan"
         },
         {
             "name":"PG00030_C_3_D01",
             "design_id":"40651",
             "design_type":"Conditional (Frameshift)",
             "cassette":"L1L2_gt0",
-            "backbone":"L3L4_pZero_DTA_kan",
-            "floxed_exon":"ENSMUSE00000208803"
+            "backbone":"L3L4_pZero_DTA_kan"
         },
         {
             "name":"PG00030_C_4_D01",
             "design_id":"40651",
             "design_type":"Conditional (Frameshift)",
             "cassette":"L1L2_gt0",
-            "backbone":"L3L4_pZero_DTA_kan",
-            "floxed_exon":"ENSMUSE00000208803"
+            "backbone":"L3L4_pZero_DTA_kan"
         },
         {
             "name":"PGS00030_B_D01",
             "design_id":"40651",
             "design_type":"Conditional (Frameshift)",
             "cassette":"L1L2_gt0",
-            "backbone":"L3L4_pZero_DTA_kan",
-            "floxed_exon":"ENSMUSE00000208803"
+            "backbone":"L3L4_pZero_DTA_kan"
         },
         {
             "name":"PGS00030_C_D01",
             "design_id":"40651",
             "design_type":"Conditional (Frameshift)",
             "cassette":"L1L2_gt0",
-            "backbone":"L3L4_pZero_DTA_kan",
-            "floxed_exon":"ENSMUSE00000208803"
+            "backbone":"L3L4_pZero_DTA_kan"
         }
     ],
     "es_cells":
@@ -454,6 +446,8 @@
     },
     "vector_image":"http://www.knockoutmouse.org/targ_rep/alleles/4282/vector-image",
     "vector_gb":"http://www.knockoutmouse.org/targ_rep/alleles/4282/targeting-vector-genbank-file",
+    "floxed_start_exon":"ENSMUSE00000208803",
+    "floxed_end_exon":"ENSMUSE00000208803",
     "stage":"mice",
     "stage_type":"normal"
 }
