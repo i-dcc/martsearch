@@ -32,10 +32,6 @@ module MartSearch
           sorted_results[result[ joined_attribute ]][result[:colony_prefix]][result[:heatmap_group]] = []
         end
         
-        unless result[:url] =~ /^http:/
-          result[:url] = "http://img1.sanger.ac.uk/#{result[:url]}"
-        end
-        
         sorted_results[result[ joined_attribute ]][result[:colony_prefix]][result[:heatmap_group]].push(result)
         
       end

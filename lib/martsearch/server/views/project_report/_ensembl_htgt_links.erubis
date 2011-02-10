@@ -3,19 +3,21 @@
   
   links.push({
     :url   => ensembl_link_url_from_gene( :mouse, @data[:ensembl_gene_id], ['das:http://das.sanger.ac.uk/das/ikmc_products'] ),
-    :class => 'ensembl_link',
-    :text  => 'view in ensembl (mouse)'
+    :class => 'button ensembl_button',
+    :text  => 'view in Ensembl (mouse)',
+    :title => "View this mutation in a genomic context in Ensembl. This link will also enable our DAS track ('KO Alleles'), showing the exact location/structure of the mutation."
   }) unless @data[:ensembl_gene_id].nil?
   
   links.push({
     :url   => ensembl_link_url_from_gene( :human, @data[:human_ensembl_gene], ['das:http://das.sanger.ac.uk/das/mouse_KOs'] ),
-    :class => 'ensembl_link',
-    :text  => 'view in ensembl (human)'
+    :class => 'button ensembl_button',
+    :text  => 'view in Ensembl (human)',
+    :title => "View the human ortholog of this gene in Ensembl. This link will also enable our DAS track ('mouse_KOs'), showing the availability of IKMC products for orthologous human genes."
   }) unless @data[:human_ensembl_gene].nil?
   
   links.push({
     :url   => "http://www.sanger.ac.uk/htgt/tools/restrictionenzymes?es_clone_name=#{escell}",
-    :class => 'ext_link',
+    :class => 'button link_button',
     :text  => 'Southern Blot Tool',
     :title => 'Southern Blot Tool: Find restriction enzymes suitable for a southern blot.'
   }) unless escell.nil?
@@ -29,5 +31,5 @@
 %>
 
 <% unless links.empty? %>
-  <div style="margin-bottom:7px;" class="larger"><%= links.join(" | ") %></div>
+  <div style="margin-bottom:7px;" class="larger"><%= links.join(" ") %></div>
 <% end %>

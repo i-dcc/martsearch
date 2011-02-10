@@ -84,7 +84,7 @@ module MartSearch
         unless mutagenesis_predictions[:error].empty?
           errors.push( mutagenesis_predictions[:error] )
         end
-
+        
         # Finally, categorize the stage of the pipeline that we are in
         data.merge!( get_pipeline_stage( data[:status]) ) if data[:status]
       end
@@ -305,6 +305,7 @@ module MartSearch
               'allele_symbol_superscript',
               'escell_clone',
               'floxed_start_exon',
+              'floxed_end_exon',
               'parental_cell_line',
               qc_metrics
             ].flatten
@@ -312,6 +313,7 @@ module MartSearch
         end
       
         data = {
+          'design_type'          => [],
           'intermediate_vectors' => [],
           'targeting_vectors'    => [],
           'es_cells'             => {
@@ -332,22 +334,25 @@ module MartSearch
             when 'targeted_non_conditional' then 'Targeted, Non-Conditional'
             else ''
           end
-        
+          
+          data['design_type'].push(design_type) unless data['design_type'].include?(design_type)
+          data['floxed_start_exon'] = result['floxed_start_exon']
+          data['floxed_end_exon']   = result['floxed_end_exon']
+          
           ##
           ## Intermediate Vectors
           ##
-        
+          
           unless result['mutation_subtype'] == 'targeted_non_conditional'
             unless result['intermediate_vector'].nil?
               data['intermediate_vectors'].push(
-                'name'        => result['intermediate_vector'],
-                'design_id'   => result['design_id'],
-                'design_type' => design_type,
-                'floxed_exon' => result['floxed_start_exon']
+                'name'              => result['intermediate_vector'],
+                'design_id'         => result['design_id'],
+                'design_type'       => design_type
               )
             end
           end
-        
+          
           ##
           ## Targeting Vectors
           ##
@@ -359,8 +364,7 @@ module MartSearch
                 'design_id'    => result['design_id'],
                 'design_type'  => design_type,
                 'cassette'     => result['cassette'],
-                'backbone'     => result['backbone'],
-                'floxed_exon'  => result['floxed_start_exon']
+                'backbone'     => result['backbone']
               )
             end
           end

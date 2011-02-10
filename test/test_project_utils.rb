@@ -35,10 +35,9 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
     should "have the expected results" do
       expected_int_vectors = [
         {
-          :name        => "PCS00019_A_B11",
-          :design_id   => "39792",
-          :design_type => "Conditional (Frameshift)",
-          :floxed_exon => "ENSMUSE00000110990"
+          :name               => "PCS00019_A_B11",
+          :design_id          => "39792",
+          :design_type        => "Conditional (Frameshift)"
         }
       ]
       expected_targ_vectors = [
@@ -48,39 +47,34 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
           :design_type => "Conditional (Frameshift)",
           :cassette    => "L1L2_gt2",
           :backbone    => "L3L4_pZero_kan",
-          :floxed_exon => "ENSMUSE00000110990"
         },
         {
           :name        => "PG00019_A_2_B11",
           :design_id   => "39792",
           :design_type => "Conditional (Frameshift)",
           :cassette    => "L1L2_gt2",
-          :backbone    => "L3L4_pZero_kan",
-          :floxed_exon => "ENSMUSE00000110990"
+          :backbone    => "L3L4_pZero_kan"
         },
         {
           :name        => "PG00019_A_3_B11",
           :design_id   => "39792",
           :design_type => "Conditional (Frameshift)",
           :cassette    => "L1L2_gt2",
-          :backbone    => "L3L4_pZero_kan",
-          :floxed_exon => "ENSMUSE00000110990"
+          :backbone    => "L3L4_pZero_kan"
         },
         {
           :name        => "PG00019_A_4_B11",
           :design_id   => "39792",
           :design_type => "Conditional (Frameshift)",
           :cassette    => "L1L2_gt2",
-          :backbone    => "L3L4_pZero_kan",
-          :floxed_exon => "ENSMUSE00000110990"
+          :backbone    => "L3L4_pZero_kan"
         },
         {
           :name        => "PGS00019_A_B11",
           :design_id   => "39792",
           :design_type => "Conditional (Frameshift)",
           :cassette    => "L1L2_gt2",
-          :backbone    => "L3L4_pZero_kan",
-          :floxed_exon => "ENSMUSE00000110990"
+          :backbone    => "L3L4_pZero_kan"
         }
       ]
       expected_cells = {
