@@ -43,7 +43,7 @@
         <th>ES Cell Clone</th>
         <th>Targeting Vector</th>
         <th>Allele</th>
-        <th>Floxed Exon<%= "s" if @data[:floxed_exon_count] > 1 %></th>
+        <th><%= @data[:deletion] ? "Deleted" : "Floxed" %> Exon<%= "s" if @data[:floxed_exon_count] > 1 %></th>
         <th>Parental ES Cell Line</th>
         <th class="hide_on_print">Genbank File</th>
         <th>Mouse</th>

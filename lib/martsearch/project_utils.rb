@@ -313,6 +313,7 @@ module MartSearch
         end
       
         data = {
+          'design_type'          => [],
           'intermediate_vectors' => [],
           'targeting_vectors'    => [],
           'es_cells'             => {
@@ -334,6 +335,7 @@ module MartSearch
             else ''
           end
           
+          data['design_type'].push(design_type) unless data['design_type'].include?(design_type)
           data['floxed_start_exon'] = result['floxed_start_exon']
           data['floxed_end_exon']   = result['floxed_end_exon']
           
