@@ -6,7 +6,7 @@
         <th>Design ID</th>
         <th>Vector Type</th>
         <th>Intermediate Vector</th>
-        <th>Floxed Exon<%= "s" if @data[:floxed_exon_count] > 1 %></th>
+        <th><%= @data[:deletion] ? "Deleted" : "Floxed" %> Exon<%= "s" if @data[:floxed_exon_count] > 1 %></th>
       </thead>
       <tbody>
         <% @data[:intermediate_vectors].each do |intvec| %>

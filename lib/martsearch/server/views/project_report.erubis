@@ -74,7 +74,11 @@
       
       @data[:floxed_exon_count] = exon_links.size
       @data[:floxed_exon_link]  = exon_links.join(" - ")
-    %>
+      
+      # Also, extablish id these are "Floxed" or "Deleted" exons...
+      @data[:deletion] = false
+      @data[:deletion] = true if @data[:design_type].include?('Deletion')
+    -%>
     
     <% unless @data[:es_cells].nil? %>
       <!-- ES Cell Clones (Conditional) -->
@@ -87,7 +91,6 @@
         <%= partial("project_report/es_cells", :locals => { :cond_vs_noncond => :'targeted non-conditional' }) %>
       <% end %>
     <% end %>
-    
     
     <!-- Targeting Vectors -->
     <% unless @data[:targeting_vectors].nil? or @data[:targeting_vectors].empty? %>

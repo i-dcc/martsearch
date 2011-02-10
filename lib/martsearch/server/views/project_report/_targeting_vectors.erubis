@@ -14,7 +14,7 @@
         <th>Design ID</th>
         <th>Vector Type</th>
         <th>Targeting Vector</th>
-        <th>Floxed Exon<%= "s" if @data[:floxed_exon_count] > 1 %></th>
+        <th><%= @data[:deletion] ? "Deleted" : "Floxed" %> Exon<%= "s" if @data[:floxed_exon_count] > 1 %></th>
         <th>Cassette</th>
         <th>Backbone</th>
         <th class="hide_on_print">Genbank File</th>
