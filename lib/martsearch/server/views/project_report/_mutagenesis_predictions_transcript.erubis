@@ -18,7 +18,7 @@
 <table width="100%" style="margin-bottom:5px;">
   <thead>
     <th>Ensembl Exon ID</th>
-    <th>Domains</th>
+    <th>Pfam Domains</th>
     <th>WildType</th>
     <th>Floxed</th>
   </thead>
@@ -59,4 +59,4 @@
   </tbody>
 </table>
 
-<%= partial("project_report/mutagenesis_prediction_legend") %>
+<%= partial("project_report/mutagenesis_predictions_legend") %>

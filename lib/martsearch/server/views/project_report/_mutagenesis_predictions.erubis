@@ -24,7 +24,7 @@
     <table class="border">
       <thead>
         <th>Ensembl transcript id</th>
-        <th>Biotype</th>
+        <th>Ensembl Biotype</th>
         <th>Floxed transcript description</th>
         <th>Details</th>
       </thead>
@@ -54,7 +54,7 @@
             <% unless transcript[:exons].nil? or transcript[:exons].empty? %>
               <tr class="details">
                 <td colspan="4">
-                  <%= partial("project_report/transcript", :locals => { :transcript => transcript, :transcript_id => transcript[:ensembl_transcript_id] } ) %>
+                  <%= partial("project_report/mutagenesis_predictions_transcript", :locals => { :transcript => transcript, :transcript_id => transcript[:ensembl_transcript_id] } ) %>
                 </td>
               </tr>
             <% end %>
