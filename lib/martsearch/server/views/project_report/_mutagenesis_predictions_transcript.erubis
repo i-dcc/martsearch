@@ -26,7 +26,7 @@
     <% transcript[:exons].each do |exon| %>
       <tr>
         <td>
-          <a href="<%= ensembl_link_url_from_transcript( @data[:ensembl_gene_id], transcript_id, :exon ) %>" target="_blank">
+          <a href="<%= ensembl_link_url_from_transcript( :mouse, @data[:ensembl_gene_id], transcript_id, :exon ) %>" target="_blank">
             <%= exon[:ensembl_stable_id] %>
           </a>
         </td>
