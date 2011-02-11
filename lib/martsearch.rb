@@ -23,7 +23,7 @@ require 'will_paginate/view_helpers'
 require 'mongo'
 require 'mongo_store'
 
-require 'ap'
+require 'awesome_print'
 
 MARTSEARCH_PATH = "#{File.expand_path(File.dirname(__FILE__))}/.."
 
