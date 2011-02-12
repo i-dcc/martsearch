@@ -12,7 +12,7 @@ class Array
   #   "[1,2,3,4,5,6,7,8,9,10,11,12].chunk(5)" => "[[1,2,3,4,5],[6,7,8,9,10],[11,12]]"
   def chunk( length )
     chunks = []
-    each_with_index do |element,index|
+    self.each_with_index do |element,index|
       chunks << [] if index % length == 0
       chunks.last << element
     end
@@ -23,11 +23,7 @@ class Array
   # @see http://snippets.dzone.com/posts/show/12019
   def recursively_symbolize_keys!
     self.each do |item|
-      if item.is_a?(Hash)
-        item.recursively_symbolize_keys!
-      elsif item.is_a? Array
-        item.recursively_symbolize_keys!
-      end
+      item.recursively_symbolize_keys! if item.respond_to?(:recursively_symbolize_keys!)
     end
   end
   
@@ -35,11 +31,7 @@ class Array
   # @see http://snippets.dzone.com/posts/show/12019
   def recursively_stringify_keys!
     self.each do |item|
-      if item.is_a?(Hash)
-        item.recursively_stringify_keys!
-      elsif item.is_a? Array
-        item.recursively_stringify_keys!
-      end
+      item.recursively_stringify_keys! if item.respond_to?(:recursively_stringify_keys!)
     end
   end
   
@@ -56,7 +48,7 @@ class Array
     sort_by{ rand }.slice( 0...number )
   end
   
-  # Helper function for {Hash#clean_hashes} - this just call .clean_hashes 
+  # Helper function for {Hash#clean_hashes} - just call .clean_hashes 
   # if one of the elements of the array is an instance of Hash (or one of its children).
   def clean_hashes
     self.map do |item|
