@@ -42,6 +42,9 @@ module MartSearch
   # Error class raised when there is an error with the supplied configuration files.
   class InvalidConfigError < StandardError; end
   
+  # MongoDB based cache class.  This is entirely ActiveSupport::Cache::MongoStore, but 
+  # we have to ovveride it here as we're not running in a Rails environment, and we 
+  # need to include some Rails3 mixins for it to work correctly.
   class MongoCache < ActiveSupport::Cache::MongoStore
     include ::MongoStore::Cache::Rails3
   end
