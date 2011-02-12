@@ -1,0 +1,5 @@
+MetricFu::Configuration.run do |config|
+  config.metrics.delete(:flog)
+  config.metrics.delete(:rcov)
+  config.graph_engine = :gchart
+end

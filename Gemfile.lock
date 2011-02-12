@@ -1,11 +1,9 @@
 GEM
   remote: http://rubygems.org/
   specs:
-    Saikuro (1.1.0)
     abstract (1.0.0)
     activesupport (3.0.4)
     addressable (2.2.3)
-    arrayfields (4.7.4)
     awesome_print (0.3.2)
     biomart (0.2.0)
       builder
@@ -32,58 +30,23 @@ GEM
     celerity (0.8.7)
     childprocess (0.1.6)
       ffi (~> 0.6.3)
-    chronic (0.2.3)
-      hoe (>= 1.2.1)
-    churn (0.0.13)
-      chronic (>= 0.2.3)
-      hirb
-      json_pure
-      main
-      ruby_parser (~> 2.0.4)
-      sexp_processor (~> 3.0.3)
     closure-compiler (1.0.0)
-    colored (1.2)
     crack (0.1.8)
     culerity (0.2.15)
     emk-sinatra-url-for (0.2.1)
       sinatra (>= 0.9.1.1)
     erubis (2.6.6)
       abstract (>= 1.0.0)
-    fattr (2.2.0)
     ffi (0.6.3)
       rake (>= 0.8.7)
-    flay (1.4.1)
-      ruby_parser (~> 2.0)
-      sexp_processor (~> 3.0)
-    flog (2.5.0)
-      ruby_parser (~> 2.0)
-      sexp_processor (~> 3.0)
-    haml (3.0.25)
     highline (1.6.1)
-    hirb (0.3.6)
-    hoe (2.8.0)
-      rake (>= 0.8.7)
     hoptoad_notifier (2.4.5)
       activesupport
       builder
     i18n (0.5.0)
     json (1.5.1)
     json_pure (1.5.1)
-    main (4.4.0)
-      arrayfields (>= 4.7.4)
-      fattr (>= 2.1.0)
     memcache-client (1.8.5)
-    metric_fu (2.0.1)
-      Saikuro (>= 1.1.0)
-      activesupport (>= 2.0.0)
-      chronic (~> 0.2.3)
-      churn (>= 0.0.7)
-      flay (>= 1.2.1)
-      flog (>= 2.2.0)
-      rails_best_practices (>= 0.3.16)
-      rcov (>= 0.8.3.3)
-      reek (>= 1.2.6)
-      roodi (>= 2.1.0)
     mime-types (1.16)
     mongo (1.2.1)
       bson (>= 1.2.1)
@@ -106,29 +69,8 @@ GEM
       rack (>= 0.9.1)
     rack-test (0.5.7)
       rack (>= 1.0)
-    rails_best_practices (0.6.5)
-      activesupport
-      colored (~> 1.2)
-      erubis (~> 2.6.6)
-      haml (~> 3.0.18)
-      i18n
-      ruby-progressbar (~> 0.0.9)
-      ruby_parser (~> 2.0.4)
     railsless-deploy (1.0.2)
     rake (0.8.7)
-    rcov (0.9.9)
-    reek (1.2.8)
-      ruby2ruby (~> 1.2)
-      ruby_parser (~> 2.0)
-      sexp_processor (~> 3.0)
-    roodi (2.1.0)
-      ruby_parser
-    ruby-progressbar (0.0.9)
-    ruby2ruby (1.2.5)
-      ruby_parser (~> 2.0)
-      sexp_processor (~> 3.0)
-    ruby_parser (2.0.5)
-      sexp_processor (~> 3.0)
     rubytree (0.8.1)
     rubyzip (0.9.4)
     selenium-webdriver (0.1.2)
@@ -137,7 +79,6 @@ GEM
       json_pure
       rubyzip
     sequel (3.20.0)
-    sexp_processor (3.0.5)
     shoulda (2.11.3)
     simplecov (0.4.0)
       simplecov-html (~> 0.4.0)
@@ -180,7 +121,6 @@ DEPENDENCIES
   i18n
   json
   memcache-client (>= 1.8)
-  metric_fu
   mongo
   mongo_store
   mysql2
@@ -190,7 +130,6 @@ DEPENDENCIES
   rack-contrib
   rack-test (>= 0.5)
   railsless-deploy
-  rcov
   rubytree (~> 0.7)
   sequel (~> 3.0)
   shoulda (>= 2.11)
