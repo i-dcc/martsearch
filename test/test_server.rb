@@ -100,7 +100,7 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
     
     should "render IKMC project pages" do
       VCR.use_cassette('test_server_project_page') do
-        project_ids_to_test = ['35505','27042','42474','82403','23242']
+        project_ids_to_test = ['35505','27042','42474','82403','23242','VG12252','VG11490']
 
         project_ids_to_test.each do |project_id|
           visit "/project/#{project_id}"
@@ -225,7 +225,7 @@ class MartSearchServerRackTest < Test::Unit::TestCase
     
     should 'render IKMC project pages as JSON...' do
       VCR.use_cassette('test_server_project_page') do
-        project_ids_to_test = ['35505','27042','42474','82403','23242']
+        project_ids_to_test = ['35505','27042','42474','82403','23242','VG12252','VG11490']
 
         project_ids_to_test.each do |project_id|
           @browser.get "/project/#{project_id}?wt=json"
