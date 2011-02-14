@@ -1,3 +1,7 @@
+require 'bundler/deployment'
+
+set :bundle_cmd, '/software/team87/brave_new_world/bin/htgt-env.pl --environment Ruby19 /software/team87/brave_new_world/app/ruby-1.9.2-p0/lib/ruby/gems/1.9/bin/bundle'
+
 set :application, 'ikmc_portal'
 set :repository,  'git://github.com/i-dcc/martsearch.git'
 set :branch, 'ikmc_portal'

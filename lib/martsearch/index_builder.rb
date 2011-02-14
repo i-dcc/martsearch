@@ -298,6 +298,11 @@ module MartSearch
               if ds_index_conf[:ontology_terms]
                 index_ontology_terms( ds_index_conf[:ontology_terms], doc, data_row_obj, map_data, @ontology_cache )
               end
+              
+              # Any concatenated ontology term fields...
+              if ds_index_conf[:concatenated_ontology_terms]
+                index_concatenated_ontology_terms( ds_index_conf[:concatenated_ontology_terms], doc, data_row_obj, map_data, @ontology_cache )
+              end
 
               # Finally - save the document to the cache
               doc_primary_key = doc[@index_config[:schema][:unique_key].to_sym][0]

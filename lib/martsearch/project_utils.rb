@@ -9,6 +9,7 @@ module MartSearch
   module ProjectUtils
 
     include MartSearch::Utils
+    include MartSearch::ServerViewHelpers
     
     # Wrapper function to collate all of the data for a given IKMC project.
     #
@@ -44,19 +45,19 @@ module MartSearch
         [ :"targeted non-conditional", :conditional ].each do |symbol|
           es_cell_names.push( data[:es_cells][symbol][:cells] ) unless data[:es_cells][symbol].nil?
         end
-        es_cell_names.flatten!
-        es_cell_names.map! { |es_cell| es_cell[:name] }
+        
+        es_cell_names.flatten!.map! { |es_cell| es_cell[:name] }
         unless es_cell_names.empty?
           mice = get_mice( datasources, es_cell_names )
           data.merge!( mice[:data] ) unless mice[:data].empty?
           errors.push( mice[:error] ) unless mice[:error].empty?
         end
-
-        mouse_data = nil
-        mouse_data = data[:mice][:genotype_confirmed] if data[:mice] and data[:mice][:genotype_confirmed]
         
         # Ammend the es cells data to say which cells have been made into a mouse, then sort the cells as 
         # we do in the current code (by mice, followed by qc count).
+        mouse_data = nil
+        mouse_data = data[:mice][:genotype_confirmed] if data[:mice] and data[:mice][:genotype_confirmed]
+        
         unless mouse_data.nil?
           mouse_data.each do |mouse|
             [ :"targeted non-conditional", :conditional ].each do |symbol|
@@ -81,19 +82,52 @@ module MartSearch
         # Add the mutagenesis predictions
         mutagenesis_predictions        = get_mutagenesis_predictions( project_id )
         data[:mutagenesis_predictions] = mutagenesis_predictions[:data]
-        unless mutagenesis_predictions[:error].empty?
-          errors.push( mutagenesis_predictions[:error] )
-        end
+        errors.push( mutagenesis_predictions[:error] ) unless mutagenesis_predictions[:error].empty?
+        
+        # Add the conf for the floxed exon display
+        data.merge!( floxed_exon_display_conf( data ) )
         
         # Finally, categorize the stage of the pipeline that we are in
         data.merge!( get_pipeline_stage( data[:status]) ) if data[:status]
       end
-
+      
       return { :data => data, :errors => errors }
     end
-
+    
     private
-
+      
+      # Helper function to setup links to the floxed/deleted exons and all the config 
+      # needed for these activities in the templates.
+      #
+      # @param [Hash] data The current project page data hash
+      # @return [Hash] The additional data required for the floxed exon display
+      def floxed_exon_display_conf( data )
+        new_data = {}
+        
+        # Calculate the links to the Floxed/Deleted exons...
+        exon_links = []
+        unless data[:floxed_start_exon].nil?
+          url = ensembl_link_url_from_exon( :mouse, data[:floxed_start_exon] )
+          url = vega_link_url_from_exon( :mouse, data[:floxed_start_exon] ) if data[:floxed_start_exon] =~ /OTT/
+          exon_links.push( '<a href="'+url+'" target="_blank">'+data[:floxed_start_exon]+'</a>' )
+        end
+        
+        if !data[:floxed_end_exon].nil? && ( data[:floxed_start_exon] != data[:floxed_end_exon] )
+          url = ensembl_link_url_from_exon( :mouse, data[:floxed_end_exon] )
+          url = vega_link_url_from_exon( :mouse, data[:floxed_end_exon] ) if data[:floxed_end_exon] =~ /OTT/
+          exon_links.push( '<a href="'+url+'" target="_blank">'+data[:floxed_end_exon]+'</a>' )
+        end
+        
+        new_data[:floxed_exon_count] = exon_links.size
+        new_data[:floxed_exon_link]  = exon_links.join(" - ")
+        
+        # Also, extablish id these are "Floxed" or "Deleted" exons...
+        new_data[:deletion] = false
+        new_data[:deletion] = true if data[:design_type].include?('Deletion')
+        
+        return new_data
+      end
+      
       # Wrapper function to handle Biomart::BiomartErrors
       #
       # @param  [String] data_source - the biomart data source name
