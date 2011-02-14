@@ -495,6 +495,8 @@ module MartSearch
           "Regeneron Selected"                                      => { :stage => "pre",     :stage_type => "normal" },
           "Design Finished/Oligos Ordered"                          => { :stage => "designs", :stage_type => "normal" },
           "Parental BAC Obtained"                                   => { :stage => "vectors", :stage_type => "normal" },
+          "BAC QC Failure"                                          => { :stage => "vectors", :stage_type => "error"  },
+          "Targeting Vector Unsuccessful"                           => { :stage => "vectors", :stage_type => "error"  },
           "Targeting Vector QC Completed"                           => { :stage => "vectors", :stage_type => "normal" },
           "Vector Electroporated into ES Cells"                     => { :stage => "vectors", :stage_type => "normal" },
           "ES cell colonies picked"                                 => { :stage => "cells",   :stage_type => "normal" },
