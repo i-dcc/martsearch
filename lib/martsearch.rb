@@ -1,9 +1,9 @@
+require 'rubygems'
+require 'bundler/setup'
+
 require 'singleton'
 require 'logger'
 require 'date'
-
-require 'rubygems'
-require 'bundler/setup'
 
 require 'biomart'
 require 'sinatra/base'
