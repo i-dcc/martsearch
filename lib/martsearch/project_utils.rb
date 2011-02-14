@@ -85,15 +85,36 @@ module MartSearch
           errors.push( mutagenesis_predictions[:error] )
         end
         
+        # Calculate the links to the Floxed/Deleted exons...
+        exon_links = []
+        unless data[:floxed_start_exon].nil?
+          url = ensembl_link_url_from_exon( :mouse, data[:floxed_start_exon] )
+          url = vega_link_url_from_exon( :mouse, data[:floxed_start_exon] ) if data[:floxed_start_exon] =~ /OTT/
+          exon_links.push( '<a href="'+url+'" target="_blank">'+data[:floxed_start_exon]+'</a>' )
+        end
+        
+        if !data[:floxed_end_exon].nil? && ( data[:floxed_start_exon] != data[:floxed_end_exon] )
+          url = ensembl_link_url_from_exon( :mouse, data[:floxed_end_exon] )
+          url = vega_link_url_from_exon( :mouse, data[:floxed_end_exon] ) if data[:floxed_end_exon] =~ /OTT/
+          exon_links.push( '<a href="'+url+'" target="_blank">'+data[:floxed_end_exon]+'</a>' )
+        end
+        
+        data[:floxed_exon_count] = exon_links.size
+        data[:floxed_exon_link]  = exon_links.join(" - ")
+        
+        # Also, extablish id these are "Floxed" or "Deleted" exons...
+        data[:deletion] = false
+        data[:deletion] = true if data[:design_type].include?('Deletion')
+        
         # Finally, categorize the stage of the pipeline that we are in
         data.merge!( get_pipeline_stage( data[:status]) ) if data[:status]
       end
-
+      
       return { :data => data, :errors => errors }
     end
-
+    
     private
-
+      
       # Wrapper function to handle Biomart::BiomartErrors
       #
       # @param  [String] data_source - the biomart data source name

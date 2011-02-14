@@ -67,7 +67,7 @@ require "#{MARTSEARCH_PATH}/lib/martsearch/ontology_term_cache"
 require "#{MARTSEARCH_PATH}/lib/martsearch/index_builder_utils"
 require "#{MARTSEARCH_PATH}/lib/martsearch/index_builder"
 
-require "#{MARTSEARCH_PATH}/lib/martsearch/project_utils"
 require "#{MARTSEARCH_PATH}/lib/martsearch/server_utils"
 require "#{MARTSEARCH_PATH}/lib/martsearch/server_view_helpers"
+require "#{MARTSEARCH_PATH}/lib/martsearch/project_utils"
 require "#{MARTSEARCH_PATH}/lib/martsearch/server"
