@@ -80,9 +80,11 @@ module MartSearch
         end
 
         # Add the mutagenesis predictions
-        mutagenesis_predictions        = get_mutagenesis_predictions( project_id )
-        data[:mutagenesis_predictions] = mutagenesis_predictions[:data]
-        errors.push( mutagenesis_predictions[:error] ) unless mutagenesis_predictions[:error].empty?
+        unless ['KOMP-Regeneron','mirKO'].include?(data[:ikmc_project])
+          mutagenesis_predictions        = get_mutagenesis_predictions( project_id )
+          data[:mutagenesis_predictions] = mutagenesis_predictions[:data]
+          errors.push( mutagenesis_predictions[:error] ) unless mutagenesis_predictions[:error].empty?
+        end
         
         # Add the conf for the floxed exon display
         data.merge!( floxed_exon_display_conf( data ) )
@@ -495,6 +497,8 @@ module MartSearch
           "Regeneron Selected"                                      => { :stage => "pre",     :stage_type => "normal" },
           "Design Finished/Oligos Ordered"                          => { :stage => "designs", :stage_type => "normal" },
           "Parental BAC Obtained"                                   => { :stage => "vectors", :stage_type => "normal" },
+          "BAC QC Failure"                                          => { :stage => "vectors", :stage_type => "error"  },
+          "Targeting Vector Unsuccessful"                           => { :stage => "vectors", :stage_type => "error"  },
           "Targeting Vector QC Completed"                           => { :stage => "vectors", :stage_type => "normal" },
           "Vector Electroporated into ES Cells"                     => { :stage => "vectors", :stage_type => "normal" },
           "ES cell colonies picked"                                 => { :stage => "cells",   :stage_type => "normal" },
