@@ -145,6 +145,7 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
               when 'embryo-expression'     then 'Embryo Expression'
               when 'homozygote-viability'  then 'Homozygote Viability'
               when 'fertility'             then 'Fertility'
+              when 'skin-screen'           then 'Skin Screen'
               else
                 test_data[0][:heatmap_group]
               end
@@ -300,7 +301,7 @@ class MartSearchServerRackTest < Test::Unit::TestCase
         skip("Skipping WTSI Phenotyping report tests as the DataView is not active.")
       else
         VCR.use_cassette('test_server_wtsi_phenotyping_report_pages') do
-          tests_to_test    = ['abr','homozygote-viability','fertility','adult-expression','embryo-expression','dexa','hot-plate']
+          tests_to_test    = ['abr','homozygote-viability','fertility','adult-expression','embryo-expression','dexa','hot-plate','skin-screen']
           colonies_to_test = ['FOOO','BAAR','BAAZ','ARRR']
           
           colonies_to_test.each do |colony_prefix|
