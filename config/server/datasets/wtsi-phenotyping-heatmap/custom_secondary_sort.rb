@@ -167,14 +167,11 @@ module MartSearch
                 if result_data[:'wtsi-phenotyping-published_images']
                   images = result_data[:'wtsi-phenotyping-published_images'][result[:colony_prefix].to_sym]
                   
-                  if images and ( images[:adult] and !images[:adult].empty? )
-                    result[:adult_expression_data] = {} if result[:adult_expression_data].nil?
-                    result[:adult_expression_data][:images] = images[:adult]
-                  end
-                  
-                  if images and ( images[:embryo] and !images[:embryo].empty? )
-                    result[:embryo_expression_data] = {} if result[:embryo_expression_data].nil?
-                    result[:embryo_expression_data][:images] = images[:embryo]
+                  ['adult_expression','embryo_expression','skin_screen'].each do |test|
+                    if images && ( images[test.to_sym] && !images[test.to_sym].empty? )
+                      result["#{test}_data".to_sym] = {} if result["#{test}_data".to_sym].nil?
+                      result["#{test}_data".to_sym][:images] = images[test.to_sym]
+                    end
                   end
                 end
                 
