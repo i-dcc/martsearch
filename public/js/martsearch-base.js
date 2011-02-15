@@ -19,7 +19,7 @@ jQuery(document).ready(function() {
         overwrite: false,
         style: {
           tip: "topRight",
-          classes: "ui-tooltip-light ui-tooltip-shadow"
+          classes: "ui-tooltip-light ui-tooltip-rounded ui-tooltip-shadow"
         },
         position: {
           at: "bottom left",

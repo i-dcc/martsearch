@@ -1,3 +1,4 @@
+
 /* wtsi-phenotyping custom css */
 
 .wtsi-phenotyping table td { background: #fff; }
@@ -7,6 +8,7 @@
 .wtsi-phenotyping table td.no_significant_difference { background-color: #6998cb; }
 .wtsi-phenotyping table td.not_applicable {	background-color: #ccc; }
 .wtsi-phenotyping table td.early_indication_of_possible_phenotype {	background-color: #fcfe66; }
+.wtsi-phenotyping table td.test_abandoned {	background-color: #fad77c; }
 .wtsi-phenotyping table td.pheno_result {
 	text-align: center;
 	vertical-align: middle;
@@ -40,6 +42,11 @@
 	background-image: url(../images/silk/page_white_excel.png);
 	padding-top: 5px;
 	padding-bottom: 5px;
+}
+
+table.wtsi-phenotyping_heatmap_legend {
+	border-collapse: separate;
+	border-spacing: 1px;
 }
 
 /* Phenotyping details pages */
