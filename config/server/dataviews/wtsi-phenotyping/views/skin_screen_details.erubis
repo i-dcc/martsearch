@@ -64,7 +64,7 @@
       <% unless @data[:images].nil? or @data[:images].empty? %>
         <ul class="wtsi-phenotyping-image-list">
           <% @data[:images].each do |img| %>
-            <%= partial( "dataviews/wtsi-phenotyping/expression_images", :locals => { :img => img, :gallery_name => "skinscreen" } ) %>
+            <%= partial( "dataviews/wtsi-phenotyping/images", :locals => { :img => img, :gallery_name => "skinscreen" } ) %>
           <% end %>
         </ul>
       <% else %>

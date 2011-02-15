@@ -8,7 +8,7 @@
   <div style="text-align:center">
     <a 
       href="<%= img[:url] %>" 
-      title="<%= partial( "dataviews/wtsi-phenotyping/expression_image_legend", :locals => { :img => img } ) %>" 
+      title="<%= partial( "dataviews/wtsi-phenotyping/images_legend", :locals => { :img => img } ) %>" 
       rel="prettyPhoto[<%= gallery_name %>]"
     >
       <img src="<%= img[:thumbnail_url] %>" alt="<%= img[:tissue] %> (<%= img[:gender] %> / <%= img[:genotype] %>)" />
