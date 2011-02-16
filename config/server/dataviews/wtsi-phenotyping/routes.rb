@@ -131,9 +131,8 @@ module MartSearch
         status 404
         erubis :not_found
       else
-        @marker_symbol = @data[0][:marker_symbol]
-        @test_name     = @data[0][:heatmap_group]
-        @test_desc     = @data[0][:heatmap_group_description]
+        @marker_symbol = @data[:marker_symbol]
+        @test_name     = @data[:heatmap_group]
         @page_title    = "#{@marker_symbol} (#{@colony_prefix}): #{@test_name}"
         erubis :"dataviews/wtsi-phenotyping/test_details"
       end

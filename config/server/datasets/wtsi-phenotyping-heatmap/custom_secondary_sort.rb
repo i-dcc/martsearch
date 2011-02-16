@@ -134,7 +134,7 @@ module MartSearch
                   mgp_graphs = result_data[:'wtsi-phenotyping-heatmap_graphs'][result[:colony_prefix].to_sym]
                   unless mgp_graphs.nil?
                     mgp_graphs.each do |test_name,image_data|
-                      if test_display_name.gsub("\(","").gsub("\)","") =~ Regexp.new(image_data[0][:heatmap_group], true)
+                      if test_display_name.gsub("\(","").gsub("\)","") =~ Regexp.new(image_data[:heatmap_group], true)
                         result["#{test}_data".to_sym] = image_data
                       end
                     end
@@ -236,7 +236,7 @@ module MartSearch
           end
         end
         
-        #result_data[:'cached_pheno_data'] = cache_data
+        result_data[:'cached_pheno_data'] = cache_data
       end
       
     end
