@@ -26,10 +26,9 @@ module MartSearch
         sorted_results[joined_attribute]                                         ||= {}
         sorted_results[joined_attribute][colony_prefix]                          ||= {}
         sorted_results[joined_attribute][colony_prefix][heatmap_group]           ||= {}
-
-        sorted_results[joined_attribute][colony_prefix][heatmap_group][:heatmap_group] = heatmap_group
-        
         sorted_results[joined_attribute][colony_prefix][heatmap_group][protocol] ||= []
+        
+        sorted_results[joined_attribute][colony_prefix][heatmap_group][:heatmap_group] = heatmap_group
         
         result.delete(:colony_prefix)
         result.delete(:heatmap_graphs_colony_prefix)
