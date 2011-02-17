@@ -133,8 +133,8 @@ module MartSearch
                 if result_data[:'wtsi-phenotyping-heatmap_graphs']
                   mgp_graphs = result_data[:'wtsi-phenotyping-heatmap_graphs'][result[:colony_prefix].to_sym]
                   unless mgp_graphs.nil?
-                    mgp_graphs.each do |test_name,image_data|
-                      if test_display_name.gsub("\(","").gsub("\)","") =~ Regexp.new(image_data[:heatmap_group], true)
+                    mgp_graphs.each do |heatmap_group,image_data|
+                      if test_display_name.gsub("\(","").gsub("\)","") =~ Regexp.new(heatmap_group.to_s, true)
                         result["#{test}_data".to_sym] = image_data
                       end
                     end
