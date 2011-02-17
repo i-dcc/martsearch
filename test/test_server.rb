@@ -147,7 +147,7 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
               when 'fertility'             then 'Fertility'
               when 'skin-screen'           then 'Skin Screen'
               else
-                test_data[0][:heatmap_group]
+                test_data[:heatmap_group]
               end
               
               urls_to_hit.push({
