@@ -29,6 +29,9 @@ gem 'sequel',               '~>3.0'
 gem 'mysql2'
 gem 'builder',              '~>2.1'
 
+# Misc
+gem 'awesome_print'
+
 group :development, :test do
   gem 'yard'
   gem 'shoulda',            '>=2.11'
@@ -40,8 +43,5 @@ group :development, :test do
   gem 'capistrano-ext'
   gem 'railsless-deploy'
   gem 'simplecov',                      :platforms => :ruby_19
-  gem 'rcov',                           :platforms => :ruby_18
-  gem 'metric_fu'
-  gem 'awesome_print',                  :require => 'ap'
   gem 'wirble'
 end

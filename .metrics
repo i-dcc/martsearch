@@ -1,0 +1,9 @@
+MetricFu::Configuration.run do |config|
+  config.metrics.delete(:flog)
+  config.metrics.delete(:rcov)
+  
+  config.flay     = { :dirs_to_flay  => ["lib","config/server/datasets"] }
+  config.reek     = { :dirs_to_reek  => ["lib","config/server/datasets"] }
+  config.roodi    = { :dirs_to_roodi => ["lib","config/server/datasets"] }
+  
+end

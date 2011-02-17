@@ -26,8 +26,9 @@ module MartSearch
         
         unless sorted_results[ result[ joined_attribute ] ][ result[:colony_prefix].to_sym ]
           sorted_results[ result[ joined_attribute ] ][ result[:colony_prefix].to_sym ] = {
-            :adult  => [],
-            :embryo => []
+            :adult_expression  => [],
+            :embryo_expression => [],
+            :skin_screen       => []
           }
         end
         
@@ -36,14 +37,18 @@ module MartSearch
         # work out the thumbnail URL (as the one in the mart can be flakey...)
         result[:thumbnail_url] = result[:url].sub("\.(\w+)$","thumb.\1")
         
-        if result[:tissue].match("Embryo")
-          if result[:tissue].match("14.5")
-            result_data[:embryo].push(result)
+        case result[:image_type]
+        when 'Wholemount Expression'
+          if result[:tissue].match('Embryo')
+            if result[:tissue].match('14.5')
+              result_data[:embryo_expression].push(result)
+            end
+          else
+            result_data[:adult_expression].push(result)
           end
-        else
-          result_data[:adult].push(result)
+        when 'Confocal Skin Screen'
+          result_data[:skin_screen].push(result)
         end
-        
       end
       
       return sorted_results

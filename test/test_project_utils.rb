@@ -1,5 +1,4 @@
 require "test_helper"
-require "json"
 
 class TestMartSearchProjectUtils < Test::Unit::TestCase
   include MartSearch::ProjectUtils
@@ -910,9 +909,11 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
     end
 
     should "not throw any exceptions with no mice" do
-      assert_nothing_raised do
-        get_ikmc_project_page_data( 42474 )
-      end
+      project_id = 42474
+      data = nil
+      assert_nothing_raised { data = get_ikmc_project_page_data( project_id ) }
+      assert( !data.nil? )
+      assert( data[:mice].nil?, "We're trying to test for exception handling for projects with no mice - but this project 'project_id' has mouse data!")
     end
 
     should "return the correct data with more than one mouse" do

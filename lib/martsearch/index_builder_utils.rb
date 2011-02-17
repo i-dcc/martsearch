@@ -213,13 +213,47 @@ module MartSearch
       ontology_term_conf.each do |term_conf|
         attribute      = term_conf[:attr]
         value_to_index = extract_value_to_index( attribute, map_data[:attribute_map], { attribute => data_row_obj[attribute] } )
-
-        if value_to_index and !value_to_index.gsub(" ","").empty?
+        
+        if value_to_index && !value_to_index.gsub(" ","").empty?
           cached_data = cache[value_to_index]
           if cached_data != nil
             index_ontology_terms_from_cache( doc, term_conf, cached_data )
           else
             index_ontology_terms_from_fresh( doc, term_conf, value_to_index, cache )
+          end
+        end
+      end
+    end
+    
+    
+    def index_concatenated_ontology_terms( concat_ont_term_conf, doc, data_row_obj, map_data, cache )
+      attribute       = concat_ont_term_conf[:attr]
+      split_delimiter = concat_ont_term_conf[:split_on] || ", "
+      value_to_index  = extract_value_to_index( attribute, map_data[:attribute_map], { attribute => data_row_obj[attribute] } )
+      
+      if value_to_index && !value_to_index.gsub(" ","").empty?
+        terms_to_test = value_to_index.split(split_delimiter)
+        terms_to_test.each do |test_term|
+          concat_ont_term_conf[:ontologies].each do |ontology_matcher,ontology_conf|
+            regexp = Regexp.new(ontology_matcher.to_s)
+            
+            unless test_term.match(regexp).nil?
+              cached_data = cache[test_term]
+              term_conf   = {
+                :attr => attribute,
+                :idx  => {
+                  :term       => ontology_conf[:term],
+                  :term_name  => ontology_conf[:term_name],
+                  :breadcrumb => ontology_conf[:breadcrumb]
+                }
+              }
+              
+              if cached_data != nil
+                index_ontology_terms_from_cache( doc, term_conf, cached_data )
+              else
+                index_ontology_terms_from_fresh( doc, term_conf, test_term, cache )
+              end
+            end
           end
         end
       end

@@ -469,7 +469,7 @@ tr.odd td {
 	background: none !important;
 }
 
-.noborder, .noborder th, .noborder td {
+.noborder, .noborder th, .noborder td, td.noborder {
 	border: none !important;
 }
 
@@ -478,7 +478,7 @@ tr.odd td {
 	padding-bottom: 2px;
 }
 
-.border, .border th, .border td {
+.border, .border th, .border td, td.border {
 	border: 1px solid #999 !important;
 }
 

@@ -8,9 +8,13 @@ doc*
 lib/martsearch/server/public/css/martsearch-*.css
 lib/martsearch/server/public/js/martsearch-base-*.js
 lib/martsearch/server/public/js/martsearch-head-*.js
+pheno_heatmap.xls
+public/css/martsearch-*
+public/js/martsearch-base-*
+public/js/martsearch-head-*
 schema.xml
 simplecov/*
 test/vcr_cassettes*
+tmp/*.json
 tmp/index_builder*
 tmp/pheno_abr*
-pheno_heatmap.xls

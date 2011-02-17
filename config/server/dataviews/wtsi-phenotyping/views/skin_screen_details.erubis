@@ -1,0 +1,101 @@
+<div id="wtsi-phenotyping-report">
+  <h2>Skin Screen Data for <%= @data[:marker_symbol] %> (<%= @colony_prefix %>)</h2>
+
+  <div id="test-overview" class="test-descriptor"> 
+    <h4>Overview</h4> 
+    <div class="test-descriptor-content">
+      <p style="margin-bottom:0">
+        Skin screen collaboration (Mice were fed on Mouse Breeder Diet (5021, Labdiet) from weaning): Tails were
+        collected in duplicate from mutant and wild type mice of the same genetic background (&ge; 14 weeks). Epidermal
+        whole mounts were prepared by separating the epidermis from the underlying dermis as an intact sheet following
+        EDTA digestion. The epidermis was fixed in 4&#37; paraformaldehyde and permeabilised, then stained using a rapid
+        labelling protocol with antibodies to keratin 14 and 15 (K14, K15) that were directly conjugated with
+        fluorophores (Alexa 555 (red) for K14 and 488 (green) for K15). Whole mounts were counter-stained with DAPI to
+        reveal cell nuclei (blue). Preparations’ were imaged using a Leica SP5 Confocal microscope and Maximum Intensity
+        Projections produced from &#126;150um Z-series at 4um spacing. DAPI, Alexa 488 and Alexa555 channels were merged.
+        Images are x10 magnification unless otherwise indicated.
+      </p>
+    </div> 
+  </div> 
+
+  <div id="test-display-criteria" class="test-descriptor"> 
+    <h4>Evaluation of Phenotype</h4> 
+    <div class="test-descriptor-content"> 
+      <p style="margin-bottom:8px">
+        A tick-list was used to record the presence (red cross) or absence (green tick) of a phenotype in the epidermis. 
+      </p>
+      <p style="margin-bottom:8px">
+        K14 is expressed in basal layer epidermal cells in the interfollicular epidermis (IFE), sebaceous gland (SG) and
+        hair follicles (HF). DAPI staining provides an indication of cell density and K15 is most highly expressed in the HF
+        bulge, which is a stem cell reservoir.
+      </p>
+      <p style="margin-bottom:8px">
+        In tail epidermis melanocytes reside in the HF and also in the IFE immediately adjacent to the HF (parakeratotic
+        scale). In some mutant mice pigmentation in the IFE is altered and this is recorded in bright-field images.
+      </p>
+      <p style="margin-bottom:8px">
+        In the tick-list, abnormal K14 expression would indicate loss of expression. Abnormal K15 expression indicates
+        either abnormal bulge morphology or altered K15 expression (for example, reduced in the bulge or up-regulated
+        outside the bulge). In tail epidermis the HF are normally arranged in groups of three (triplets) and in
+        staggered rows; abnormalities in HF patterning include changes in number of HF per group and distance between
+        rows. The hair growth cycle in tail epidermis is less highly synchronised than in the back and the mice analysed
+        are not closely age-matched. Therefore, detailed evaluation of the hair cycle has not been performed;
+        nevertheless, obvious disturbance, such as all HF being in catagen, is recorded. The SG are K14-positive
+        sack-like structures that lie above the bulge; changes in SG size, number or morphology are recorded as
+        abnormal. Changes in the IFE include hyperproliferation (detected as increased basal layer density and
+        enveloping of the junction with the HF), hypocellularity and altered pigmentation.
+      </p>
+      <p style="margin-bottom:0">
+        If information or images that you are interested in are not presented, please send
+        details to <a href="mailto:MGPenquiries@sanger.ac.uk">MGPenquiries@sanger.ac.uk</a> 
+        and, on a limited, first come first served basis, we will process your request.
+      </p>
+    </div> 
+  </div>
+
+  <div class="accordion">
+    <h6><a href="">Tick-List</a></h6>
+    <div>
+      <%= partial( "dataviews/wtsi-phenotyping/skin_screen_ticklist" ) %>
+    </div>
+
+    <h6><a href="">Images</a></h6>
+    <div class="wtsi-phenotyping-images">
+      <% unless @data[:images].nil? or @data[:images].empty? %>
+        <ul class="wtsi-phenotyping-image-list">
+          <% @data[:images].each do |img| %>
+            <%= partial( "dataviews/wtsi-phenotyping/images", :locals => { :img => img, :gallery_name => "skinscreen" } ) %>
+          <% end %>
+        </ul>
+      <% else %>
+        <div style="text-align:center;"><em>no data reported</em></div>
+      <% end %>
+    </div>
+  
+    <h6><a href="">Reference Wildtype Images</a></h6>
+    <div class="wtsi-phenotyping-images">
+      <em>To be done...</em>
+    </div>
+
+    <h6><a href="">Collaborator Information</a></h6>
+    <div>
+      <p>
+        The screen is being performed by Emma Heath in the laboratory of Fiona Watt, assisted by Elizabeth MacRae and
+        Kifayathullah Liakath Ali. Our website is: <a href="http://www.bio.cam.ac.uk/~wattlab/"
+        target="_blank">http://www.bio.cam.ac.uk/~wattlab/</a>. We gratefully acknowledge the financial support of
+        Cancer Research UK, the Medical Research Council, the Wellcome Trust and the European Union. The references
+        below are the original description of the whole mount tail epidermal preparation (Braun et al., 2003) and a
+        review on different epidermal stem cell populations (Watt and Jensen, 2009).
+      </p>
+      <p>
+        Braun, K.M., Niemann,C., Jensen, U.B., Sundberg, J.P., Silva-Vargas, V. and <strong>Watt, F.M</strong>. (2003)
+        Manipulation of stem cell proliferation and lineage commitment: visualisation of label-retaining cells in
+        wholemounts of mouse epidermis. Development 130:5241-5255.
+      </p>
+      <p>
+        <strong>Watt, F.M</strong>. and Jensen, K.B. (2009). Epidermal stem cell diversity and quiescence. EMBO
+        Molecular Medicine 1:260-267.
+      </p>
+    </div>
+  </div>
+</div>

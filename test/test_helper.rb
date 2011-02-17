@@ -1,3 +1,6 @@
+# Add the lib directory to the search path
+$:.unshift( "#{File.expand_path(File.dirname(__FILE__))}/../lib" )
+
 require 'rubygems'
 
 # Set-up SimpleCov (code coverage tool for Ruby 1.9)
@@ -15,14 +18,10 @@ if /^1.9/ === RUBY_VERSION
   end
 end
 
-# Add the lib directory to the search path
-$:.unshift( "#{File.expand_path(File.dirname(__FILE__))}/../lib" )
-
-require 'ap'
+require 'martsearch'
 require 'test/unit'
 require 'vcr'
 require 'shoulda'
-require 'martsearch'
 
 # Set-up VCR for mocking up web requests.
 VCR.config do |c|

@@ -1,9 +1,9 @@
+require 'rubygems'
+require 'bundler/setup'
+
 require 'singleton'
 require 'logger'
 require 'date'
-
-require 'rubygems'
-require 'bundler/setup'
 
 require 'biomart'
 require 'sinatra/base'
@@ -23,7 +23,7 @@ require 'will_paginate/view_helpers'
 require 'mongo'
 require 'mongo_store'
 
-require 'ap'
+require 'awesome_print'
 
 MARTSEARCH_PATH = "#{File.expand_path(File.dirname(__FILE__))}/.."
 
@@ -42,6 +42,9 @@ module MartSearch
   # Error class raised when there is an error with the supplied configuration files.
   class InvalidConfigError < StandardError; end
   
+  # MongoDB based cache class.  This is entirely ActiveSupport::Cache::MongoStore, but 
+  # we have to ovveride it here as we're not running in a Rails environment, and we 
+  # need to include some Rails3 mixins for it to work correctly.
   class MongoCache < ActiveSupport::Cache::MongoStore
     include ::MongoStore::Cache::Rails3
   end
@@ -59,11 +62,12 @@ require "#{MARTSEARCH_PATH}/lib/martsearch/data_view"
 require "#{MARTSEARCH_PATH}/lib/martsearch/controller_utils"
 require "#{MARTSEARCH_PATH}/lib/martsearch/controller"
 require "#{MARTSEARCH_PATH}/lib/martsearch/ontology_term"
+require "#{MARTSEARCH_PATH}/lib/martsearch/ontology_term_cache"
 
 require "#{MARTSEARCH_PATH}/lib/martsearch/index_builder_utils"
 require "#{MARTSEARCH_PATH}/lib/martsearch/index_builder"
 
-require "#{MARTSEARCH_PATH}/lib/martsearch/project_utils"
 require "#{MARTSEARCH_PATH}/lib/martsearch/server_utils"
 require "#{MARTSEARCH_PATH}/lib/martsearch/server_view_helpers"
+require "#{MARTSEARCH_PATH}/lib/martsearch/project_utils"
 require "#{MARTSEARCH_PATH}/lib/martsearch/server"

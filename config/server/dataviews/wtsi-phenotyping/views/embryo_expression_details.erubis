@@ -53,11 +53,11 @@
     </div>
 
     <h6><a href="">Images</a></h6>
-    <div class="wtsi-phenotyping-expression-images">
+    <div class="wtsi-phenotyping-images">
       <% unless @data[:images].nil? or @data[:images].empty? %>
-        <ul class="wtsi-phenotyping-expression-image-list">
+        <ul class="wtsi-phenotyping-image-list">
           <% @data[:images].each do |img| %>
-            <%= partial( "dataviews/wtsi-phenotyping/expression_images", :locals => { :img => img, :gallery_name => "embryoexp" } ) %>
+            <%= partial( "dataviews/wtsi-phenotyping/images", :locals => { :img => img, :gallery_name => "embryoexp" } ) %>
           <% end %>
         </ul>
       <% else %>
@@ -66,7 +66,7 @@
     </div>
   
     <h6><a href="">Background LacZ Staining in Embryo - <span class="header_annotation">No background LacZ staining detected in day 14.5 embryos</span></a></h6>
-    <div class="wtsi-phenotyping-expression-images">
+    <div class="wtsi-phenotyping-images">
       No background LacZ staining detected in day 14.5 embryos
     </div>
   </div>
