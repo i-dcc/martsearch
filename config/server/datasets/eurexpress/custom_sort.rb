@@ -6,32 +6,20 @@ module MartSearch
       # chart_config   = @config[:chart_config]
       
       results.each do |result|
-        joined_attribute = @config[:searching][:joined_attribute].to_sym
+        joined_attribute      = result[ @config[:searching][:joined_attribute].to_sym ]
+        ass_assay_id_key      = result[:ass_assay_id_key]
         
-        unless sorted_results[ result[ joined_attribute ] ]
-          sorted_results[ result[ joined_attribute ] ] = {}
-        end
+        result_data           = sorted_results[joined_attribute] ||= {}
+        result_data_for_assay = result_data[ass_assay_id_key]    ||= {}
         
-        result_data = sorted_results[ result[ joined_attribute ] ]
         
-        unless result_data[ result[:ass_assay_id_key] ]
-          result_data[ result[:ass_assay_id_key] ] = {}
-          # chart_config.keys.each do |field|
-          #   result_data[ result[:ass_assay_id_key] ][:chart][field] = {
-          #     :score       => 0,
-          #     :found_terms => []
-          #   }
-          # end
-        end
+        # chart_config.keys.each do |field|
+        #   result_data_for_assay[:chart][field] = { :score => 0, :found_terms => [] }
+        # end
         
-        result_data_for_assay = result_data[ result[:ass_assay_id_key] ]
-        
-        result_data_for_assay[:assay_id]          = result[:ass_assay_id_key]
-        result_data_for_assay[:assay_image_count] = result[:assay_image_count]
-        
-        unless result_data_for_assay[:annotations]
-          result_data_for_assay[:annotations] = {}
-        end
+        result_data_for_assay[:assay_id]            = ass_assay_id_key
+        result_data_for_assay[:assay_image_count]   = result[:assay_image_count]
+        result_data_for_assay[:annotations]       ||= {}
         
         emap_id = result[:emap_id]
         emap_id = "EMAP:#{emap_id}" unless emap_id =~ /EMAP/
@@ -68,7 +56,7 @@ module MartSearch
         the_results.each do |assay_id,assay_data|
           assays.push(assay_data)
         end
-        results_to_return[id] = assays.sort_by { |a| -1*(a[:annotations].size) }
+        results_to_return[id] = assays.sort_by { |elm| -1*(elm[:annotations].size) }
       end
       
       # Now calculate the EMAP ontology trees for the annotations and 
