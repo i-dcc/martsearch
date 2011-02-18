@@ -688,17 +688,28 @@ form#martsearchr {
 	border-top: 1px solid #999;
 }
 
+#browse_controls ul li.child {
+	padding-left: 16px;
+	background: url(../images/fugue/arrow-315-small.png) no-repeat 5px 2px;
+}
+
 #browse_controls ul li:hover,
 #browse_controls ul li.current {
 	background-color: #6998cb;
 }
 
-#browse_controls a {
+#browse_controls ul li a {
+	width: 196px;
 	display: inline-block;
 	position: relative;
-	width: 196px;
 	padding: 2px 0 2px 5px;
 	font-weight: bold;
+}
+
+#browse_controls ul li.child a {
+	width: 180px;
+	color: #999;
+	font-weight: normal;
 }
 
 #browse_controls a span.count {
