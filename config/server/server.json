@@ -1,12 +1,14 @@
 {
-  "portal_name": "WTSI Mouse Resources Portal",
+  "portal_name": "Mouse Resources Portal",
   "debug":       false,
   "email": {
     "from": "team87@sanger.ac.uk",
     "to":   "team87@sanger.ac.uk"
   },
   "cache": {
-    "type":   "file"
+    "type":   "mongo",
+    "server": "t87-mongodb.internal.sanger.ac.uk",
+    "db":     "wtsi_portal"
   },
   "datasets": [
     "emma-strains",
