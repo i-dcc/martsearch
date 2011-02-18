@@ -176,6 +176,7 @@ module MartSearch
             display_arg = nil
             solr_query  = nil
             search_term = nil
+            child       = nil
             
             if option.is_a?(Array)
               link_arg    = option[0].downcase
@@ -186,6 +187,7 @@ module MartSearch
               link_arg    = option['slug'].downcase
               display_arg = option['text']
               search_term = option['query']
+              child       = option['child']
               solr_query  = "#{content_conf['index_field']}:#{search_term}"
             else
               link_arg    = option.downcase
@@ -209,12 +211,13 @@ module MartSearch
               end
             end
             
-            display_arg.gsub!(' ','&nbsp;')
+            # display_arg.gsub!(' ','&nbsp;')
             content_conf['processed_options'][link_arg] = {
               :display_arg => display_arg,
               :link_arg    => link_arg,
               :solr_query  => solr_query,
-              :search_term => search_term
+              :search_term => search_term,
+              :child       => child
             }
             
             link_arg

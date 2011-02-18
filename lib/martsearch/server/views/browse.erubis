@@ -9,17 +9,22 @@
               display_opts = field_config[:processed_options][option_name.to_sym]
               query        = display_opts[:link_arg]
               text         = display_opts[:display_arg]
+              li_class     = []
+              
+              if display_opts[:child]
+                li_class.push('child')
+              end
+              
+              if field.to_s == params[:field] and query == params[:query]
+                li_class.push('current')
+              end
               
               count = nil
               if @browse_counts[field.to_sym] && @browse_counts[field.to_sym][option_name.to_sym]
                 count = @browse_counts[field.to_sym][option_name.to_sym]
               end
             %>
-            <% if field.to_s == params[:field] and query == params[:query] %>
-              <li class="current">
-            <% else %>     
-              <li>
-            <% end %>
+              <li<%= ' class="' + li_class.join(" ") + '"' unless li_class.empty? %>>
                 <%=
                   link_to(
                     text + ' <span class="count">(' + count.to_s + ')</span>',
