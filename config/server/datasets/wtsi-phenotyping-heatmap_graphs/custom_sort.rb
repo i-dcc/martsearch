@@ -37,20 +37,24 @@ module MartSearch
           sorted_results[joined_attribute][colony_prefix][heatmap_group].push(result)
         else
           # 'Regular' published graphs...
-          sorted_results[joined_attribute][colony_prefix][heatmap_group]           ||= {}
-          sorted_results[joined_attribute][colony_prefix][heatmap_group][protocol] ||= []
-          sorted_results[joined_attribute][colony_prefix][heatmap_group][:heatmap_group] = heatmap_group
+          protocol_hash = Digest::MD5.hexdigest(protocol)
           
-          sorted_results[joined_attribute][colony_prefix][heatmap_group][protocol].push(result)
+          sorted_results[joined_attribute][colony_prefix][heatmap_group]                           ||= {}
+          sorted_results[joined_attribute][colony_prefix][heatmap_group][:heatmap_group]             = heatmap_group
+          
+          sorted_results[joined_attribute][colony_prefix][heatmap_group][protocol_hash]            ||= {}
+          sorted_results[joined_attribute][colony_prefix][heatmap_group][protocol_hash][:graphs]   ||= []
+          sorted_results[joined_attribute][colony_prefix][heatmap_group][protocol_hash][:protocol]   = protocol
+          sorted_results[joined_attribute][colony_prefix][heatmap_group][protocol_hash][:graphs].push(result)
         end
       end
       
       sorted_results.keys.each do |colony_prefix|
         sorted_results[colony_prefix][colony_prefix].each do |heatmap_group,heatmap_group_data|
           next if heatmap_group_data.is_a? Array
-          heatmap_group_data.each do |protocol,protocol_data|
-            next if protocol == :heatmap_group
-            protocol_data.sort!{ |a,b| a[:order_by] <=> b[:order_by] }
+          heatmap_group_data.each do |protocol_hash,protocol_data|
+            next if protocol_hash == :heatmap_group
+            protocol_data[:graphs].sort!{ |a,b| a[:order_by] <=> b[:order_by] }
           end
         end
         
