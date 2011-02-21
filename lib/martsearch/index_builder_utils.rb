@@ -147,7 +147,7 @@ module MartSearch
           value_to_index = "#{value_to_index}#{options[:attr_append]}"
         end
       end
-
+      
       return value_to_index
     end
     
@@ -178,11 +178,12 @@ module MartSearch
     # @param [Hash] doc The Solr document object to inject any indexable data into
     # @param [Hash] data_row_obj Hash representing the row of dataset data to process
     # @param [Hash] map_data The complete processed attribute_map config (return from {#process_attribute_map})
-    def index_grouped_attributes( grouped_attr_conf, doc, data_row_obj, map_data )
+    # @param [Biomart::Dataset] mart_ds A Biomart::Dataset object
+    def index_grouped_attributes( grouped_attr_conf, doc, data_row_obj, map_data, mart_ds=nil )
       grouped_attr_conf.each do |group|
         attrs = []
         group[:attrs].each do |attribute|
-          value_to_index = extract_value_to_index( attribute, map_data[:attribute_map], { attribute => data_row_obj[attribute] } )
+          value_to_index = extract_value_to_index( attribute, map_data[:attribute_map], { attribute => data_row_obj[attribute] }, mart_ds )
 
           # When we have an attribute that we're indexing the attribute NAME 
           # of, we get an array returned...  We can only pick one, so let's pick 
@@ -225,7 +226,13 @@ module MartSearch
       end
     end
     
-    
+    # Utility function to split out and index ontology terms concatenated into a single string.
+    # 
+    # @param [Hash] ontology_term_conf The configuration object defining how the ontology data should be indexed
+    # @param [Hash] doc The Solr document object to inject any indexable data into
+    # @param [Hash] data_row_obj Hash representing the row of dataset data to process
+    # @param [Hash] map_data The complete processed attribute_map config (return from {#process_attribute_map})
+    # @param [Hash] cache A cache object to store data about already retrieved ontology terms (this is for optimization as generating the OntologyTerm objects is expensive)
     def index_concatenated_ontology_terms( concat_ont_term_conf, doc, data_row_obj, map_data, cache )
       attribute       = concat_ont_term_conf[:attr]
       split_delimiter = concat_ont_term_conf[:split_on] || ", "

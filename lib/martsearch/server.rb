@@ -22,7 +22,7 @@ module MartSearch
     # We're going to use the version number as a cache breaker for the CSS 
     # and javascript code. Update with each release of your portal (especially 
     # if you change the CSS or JS)!!!
-    VERSION = '0.1.11'
+    VERSION = '0.1.12'
     DEFAULT_CSS_FILES = [
       'reset.css',
       'jquery.prettyPhoto.css',
@@ -194,6 +194,8 @@ module MartSearch
           @results       = @ms.search( @solr_query, params[:page].to_i, use_cache )
           @data          = @ms.search_data
           @errors        = @ms.errors
+          # @do_not_show_search_explaination = true if browser_field_conf[:exact_search] == false
+          @do_not_show_search_explaination = false
         end
       end
       

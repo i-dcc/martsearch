@@ -1,3 +1,4 @@
+
 /* wtsi-phenotyping custom css */
 
 .wtsi-phenotyping table td { background: #fff; }
@@ -7,6 +8,7 @@
 .wtsi-phenotyping table td.no_significant_difference { background-color: #6998cb; }
 .wtsi-phenotyping table td.not_applicable {	background-color: #ccc; }
 .wtsi-phenotyping table td.early_indication_of_possible_phenotype {	background-color: #fcfe66; }
+.wtsi-phenotyping table td.test_abandoned { background: transparent url(../images/diagonal_line.png) no-repeat center center; }
 .wtsi-phenotyping table td.pheno_result {
 	text-align: center;
 	vertical-align: middle;
@@ -40,6 +42,11 @@
 	background-image: url(../images/silk/page_white_excel.png);
 	padding-top: 5px;
 	padding-bottom: 5px;
+}
+
+table.wtsi-phenotyping_heatmap_legend {
+	border-collapse: separate;
+	border-spacing: 1px;
 }
 
 /* Phenotyping details pages */
@@ -138,12 +145,12 @@ table.expression_ticklist td.ambiguous {
 	text-transform: lowercase;
 }
 
-.wtsi-phenotyping-expression-images {
+.wtsi-phenotyping-images {
 	margin: 0 auto;
 	text-align: center;
 }
 
-.wtsi-phenotyping-expression-image-list li {
+.wtsi-phenotyping-image-list li {
 	list-style-type: none;
 	margin: 5px;
 	padding: 5px;
@@ -164,7 +171,7 @@ table.expression_ticklist td.ambiguous {
 	_height: 190px;
 }
 
-.wtsi-phenotyping-expression-image-list li img {
+.wtsi-phenotyping-image-list li img {
 	padding: 2px;
 	border: 1px solid #ccc;
 	background-color: #fff;
@@ -176,20 +183,20 @@ table.expression_ticklist td.ambiguous {
 	width: 180px;
 }
 
-.wtsi-phenotyping-expression-image-list li img:hover {
+.wtsi-phenotyping-image-list li img:hover {
 	background-color: #fcf9b2;
 }
 
-.wtsi-phenotyping-expression-image-list .gender {
+.wtsi-phenotyping-image-list .gender {
 	width: 16px;
 	height: 16px;
 	float: right;
 }
 
-.wtsi-phenotyping-expression-image-list .male {
+.wtsi-phenotyping-image-list .male {
 	background-image: url(../images/silk/male.png);
 }
 
-.wtsi-phenotyping-expression-image-list .female {
+.wtsi-phenotyping-image-list .female {
 	background-image: url(../images/silk/female.png);
 }

@@ -101,7 +101,7 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
     should "render IKMC project pages" do
       VCR.use_cassette('test_server_project_page') do
         project_ids_to_test = ['35505','27042','42474','82403','23242','VG12252','VG11490']
-
+    
         project_ids_to_test.each do |project_id|
           visit "/project/#{project_id}"
           assert_equal( "/project/#{project_id}", current_path )
@@ -145,11 +145,13 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
               when 'embryo-expression'     then 'Embryo Expression'
               when 'homozygote-viability'  then 'Homozygote Viability'
               when 'fertility'             then 'Fertility'
+              when 'skin-screen'           then 'Skin Screen'
               else
-                test_data[0][:heatmap_group]
+                test_data[:heatmap_group]
               end
               
               urls_to_hit.push({
+                :test  => test_url,
                 :url   => "/phenotyping/#{colony_prefix}/#{test_url}/",
                 :title => test_title
               })
@@ -162,6 +164,13 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
               visit test_conf[:url]
               assert_equal( "#{test_conf[:url]}", current_path, "WTSI Phenotyping - can't visit '#{test_conf[:url]}'!" )
               assert( page.has_content?(test_conf[:title]) )
+              
+              if test_conf[:test] == 'abr'
+                assert( page.has_css?('#abr-thresholds') )
+                href = page.first(:css, "#abr-thresholds a[rel='prettyPhoto']")[:href]
+                visit "#{test_conf[:url]}#{href}"
+                visit "#{test_conf[:url]}foobarweewar.png"
+              end
             end
           end
         end
@@ -226,14 +235,14 @@ class MartSearchServerRackTest < Test::Unit::TestCase
     should 'render IKMC project pages as JSON...' do
       VCR.use_cassette('test_server_project_page') do
         project_ids_to_test = ['35505','27042','42474','82403','23242','VG12252','VG11490']
-
+    
         project_ids_to_test.each do |project_id|
           @browser.get "/project/#{project_id}?wt=json"
           assert( @browser.last_response.ok?, "A request to '/project/#{project_id}?wt=json' failed!" )
           json = JSON.parse( @browser.last_response.body )
           assert( json.is_a?(Hash) )
         end
-
+    
         @browser.get "/project/foobar"
         assert_equal( 404, @browser.last_response.status )
       end
@@ -300,7 +309,7 @@ class MartSearchServerRackTest < Test::Unit::TestCase
         skip("Skipping WTSI Phenotyping report tests as the DataView is not active.")
       else
         VCR.use_cassette('test_server_wtsi_phenotyping_report_pages') do
-          tests_to_test    = ['abr','homozygote-viability','fertility','adult-expression','embryo-expression','dexa','hot-plate']
+          tests_to_test    = ['abr','homozygote-viability','fertility','adult-expression','embryo-expression','dexa','hot-plate','skin-screen']
           colonies_to_test = ['FOOO','BAAR','BAAZ','ARRR']
           
           colonies_to_test.each do |colony_prefix|

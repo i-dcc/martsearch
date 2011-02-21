@@ -28,7 +28,7 @@
       "published_images_url"
     ],
     "filters": {
-      "published_images_image_type": "Wholemount Expression",
+      "published_images_image_type": ["Wholemount Expression","Confocal Skin Screen"],
       "published_images_genotype":   ["Heterozygous","Homozygous","Hemizygous"]
     }
   }

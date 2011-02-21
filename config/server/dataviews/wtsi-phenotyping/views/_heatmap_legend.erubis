@@ -1,34 +1,86 @@
+<%
+  legend_rows_conf = [
+    [
+      {
+        :text  => 'Test complete and data/resources are available',
+        :desc  => 'Tissue blocks, images or data are available to researchers for further analysis.',
+        :class => 'completed_data_available'
+      },
+      {
+        :text  => 'Test is complete and the data are considered interesting',
+        :desc  => 'Phenotyping is complete, genotypes have been confirmed and the data has passed the QC process. The data generated from the analysis of the mutant mice are considered interesting.',
+        :class => 'significant_difference'
+      },
+      {
+        :text  => 'Preliminary indication of an interesting phenotype',
+        :desc  => 'Phenotyping is in progress. At least three mice have been tested and the preliminary data are considered interesting.',
+        :class => 'early_indication_of_possible_phenotype'
+      }
+    ],
+    [
+      {
+        :text  => 'Test is complete but the data are not considered interesting',
+        :desc  => 'Phenotyping is complete, genotypes have been confirmed and the data has passed the QC process. The data generated from the analysis of the mutant mice are not considered interesting.',
+        :class => 'no_significant_difference'
+      },
+      {
+        :text  => 'Test not performed or applicable',
+        :desc  => 'The test has not been performed. This may be the result of equipment failure, the mice being deemed unsuitable to perform the test or the inability to derive a readout (e.g. the targeting construct lacks a <em>LacZ</em> reporter gene resulting in absence of expression data).',
+        :class => 'not_applicable'
+      },
+      {
+        :text  => 'Test pending',
+        :desc  => "
+          <p style='margin-bottom:8px'>Two situations fit the test pending category:</p>
+          <ol style='margin-bottom:0'>
+            <li>Phenotyping is in progress and less than three mice have been tested.</li>
+            <li>Phenotyping is in progress, at least three mice have been tested and the preliminary data are not considered interesting.</li>
+          </ol>
+        ",
+        :class => 'test_pending'
+      }
+    ],
+    [
+      {
+        :text  => 'Test abandoned',
+        :desc  => 'The test has been removed from our high-throughput phenotyping project and has therefore not been performed on mice bearing this mutation.',
+        :class => 'test_abandoned'
+      },
+      {
+        :text    => 'Link to a test report page',
+        :img_tag => image_tag( '/images/silk/chart_bar.png', :alt => 'Link to a Test Report Page' ),
+      },
+      {
+        :text    => 'Link to a pdf report',
+        :img_tag => image_tag( '/images/silk/page_white_acrobat.png', :alt => 'Link to a PDF Report' ),
+      }
+    ]
+  ]
+%>
+
 <table class="wtsi-phenotyping_heatmap_legend">
   <tr>
-    <td class="noborder"><strong>Legend:</strong></td>
-    <td class="completed_data_available pheno_result"></td>
-    <td class="noborder">Test complete and data/resources available</td>
-    <td class="noborder"></td>
-    <td class="significant_difference pheno_result"></td>
-    <td class="noborder">Test complete and considered interesting</td>
+    <td colspan="<%= legend_rows_conf.first.size * 3 %>" class="noborder">
+      <strong>Legend</strong> - <small>hover over each heading to get a more complete description</small>
+    </td>
   </tr>
-  <tr>
-    <td class="noborder"></td>
-    <td class="early_indication_of_possible_phenotype pheno_result"></td>
-    <td class="noborder">Early indication of possible phenotype</td>
-    <td class="noborder"></td>
-    <td class="no_significant_difference pheno_result"></td>
-    <td class="noborder">Test complete but not considered interesting</td>
-  </tr>
-  <tr>
-    <td class="noborder"></td>
-    <td class="not_applicable pheno_result"></td>
-    <td class="noborder">Test not performed or applicable e.g. no lacZ reporter therefore no expression</td>
-    <td class="noborder"></td>
-    <td class="test_pending pheno_result"></td>
-    <td class="noborder">Test pending</td>
-  </tr>
-  <tr>
-    <td class="noborder"></td>
-    <td class="pheno_result noborder"><%= image_tag( '/images/silk/chart_bar.png', :alt => 'Link to a Test Report Page' ) %></td>
-    <td class="noborder">link to a test report page</td>
-    <td class="noborder"></td>
-    <td class="pheno_result noborder"><%= image_tag( '/images/silk/page_white_acrobat.png', :alt => 'Link to a PDF Report' ) %></td>
-    <td class="noborder">link to a pdf report</td>
-  </tr>
+  <% legend_rows_conf.each do |row| %>
+    <tr>
+      <% row.each do |legend_opt| %>
+        <td class="<%= legend_opt[:class] %> pheno_result <% if legend_opt[:img_tag].nil? %>border<% else %>noborder<% end %>">
+          <% unless legend_opt[:img_tag].nil? %>
+            <%= legend_opt[:img_tag] %>
+          <% end %>
+        </td>
+        <td class="noborder">
+          <% if legend_opt[:desc].nil? %>
+            <%= legend_opt[:text] %>
+          <% else %>
+            <span rel="qtip" title="<%= legend_opt[:desc] %>"><%= legend_opt[:text] %></span>
+          <% end %>
+        </td>
+        <td class="noborder"></td>
+      <% end %>
+    </tr>
+  <% end %>
 </table>

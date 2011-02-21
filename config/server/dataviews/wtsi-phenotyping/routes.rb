@@ -74,8 +74,20 @@ module MartSearch
         erubis :not_found
       else
         @page_title       = "#{@data[:marker_symbol]} (#{@colony_prefix}): Embryo Expression"
-        # @bg_staining_imgs = @ms.dataviews_by_name[:'wtsi-phenotyping'].config[:wt_lacz_background_staining_embryo]
         erubis :"dataviews/wtsi-phenotyping/embryo_expression_details"
+      end
+    end
+    
+    get "/phenotyping/:colony_prefix/skin-screen/?" do
+      @colony_prefix = params[:colony_prefix].upcase
+      @data          = wtsi_phenotyping_fetch_report_data( @colony_prefix, 'skin_screen' )
+      
+      if @data.nil?
+        status 404
+        erubis :not_found
+      else
+        @page_title       = "#{@data[:marker_symbol]} (#{@colony_prefix}): Skin Screen"
+        erubis :"dataviews/wtsi-phenotyping/skin_screen_details"
       end
     end
     
@@ -119,9 +131,8 @@ module MartSearch
         status 404
         erubis :not_found
       else
-        @marker_symbol = @data[0][:marker_symbol]
-        @test_name     = @data[0][:heatmap_group]
-        @test_desc     = @data[0][:heatmap_group_description]
+        @marker_symbol = @data[:marker_symbol]
+        @test_name     = @data[:heatmap_group]
         @page_title    = "#{@marker_symbol} (#{@colony_prefix}): #{@test_name}"
         erubis :"dataviews/wtsi-phenotyping/test_details"
       end

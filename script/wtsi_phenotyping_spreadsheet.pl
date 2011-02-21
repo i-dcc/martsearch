@@ -121,20 +121,19 @@ sub _xls_setup_result_formats {
   my $xls_formats = {
     completed_data_available  => { bg => 'navy', col => 'white' },
     significant_difference    => { bg => 'red' },
-    no_significant_difference => { bg => 44 }, # light blue
     early_indication          => { bg => 'yellow' },
+    no_significant_difference => { bg => 44 }, # light blue
     not_applicable            => { bg => 'silver' },
-    test_pending              => { bg => 'white' }
+    test_pending              => { bg => 'white' },
+    test_abandoned            => { bg => 'white', fg => 'silver', pattern => 14 }
   };
   
   foreach my $result ( keys %{$xls_formats} ) {
     my $format = $workbook->add_format( %{$default_props} );
-    if ( defined $xls_formats->{$result}->{bg} ) {
-      $format->set_bg_color( $xls_formats->{$result}->{bg} );
-    }
-    if ( defined $xls_formats->{$result}->{col} ) {
-      $format->set_color( $xls_formats->{$result}->{col} );
-    }
+    if ( defined $xls_formats->{$result}->{bg} )        { $format->set_bg_color( $xls_formats->{$result}->{bg} ); }
+    if ( defined $xls_formats->{$result}->{fg} )        { $format->set_fg_color( $xls_formats->{$result}->{fg} ); }
+    if ( defined $xls_formats->{$result}->{pattern} )   { $format->set_pattern( $xls_formats->{$result}->{pattern} ); }
+    if ( defined $xls_formats->{$result}->{col} )       { $format->set_color( $xls_formats->{$result}->{col} ); }
     
     $xls_formats->{$result} = $format;
   }
@@ -153,6 +152,7 @@ sub _xls_test_result_format {
   elsif ( $result eq "Test complete but not considered interesting" ) { $form = $tf->{no_significant_difference}; }
   elsif ( $result eq "Early indication of possible phenotype" )       { $form = $tf->{early_indication}; }
   elsif ( $result =~ /^Test not performed or applicable/i )           { $form = $tf->{not_applicable}; }
+  elsif ( $result eq "Test abandoned" )                               { $form = $tf->{test_abandoned}; }
   else                                                                { $form = $tf->{test_pending}; }
   
   return $form;
@@ -163,10 +163,11 @@ sub sorted_results_test_codes {
   my $test_mapping = {
     completed_data_available  => 1,
     significant_difference    => 2,
-    no_significant_difference => 3,
-    early_indication          => 4,
+    early_indication          => 3,
+    no_significant_difference => 4,
     not_applicable            => 5,
-    test_pending              => 6
+    test_abandoned            => 6,
+    test_pending              => 7
   };
   return $test_mapping;
 }
@@ -179,20 +180,22 @@ sub write_unsorted_legend {
   my $linked_formats   = $formats->{linked_tests};
   
   $worksheet->write( 2, $number_of_columns+2, "LEGEND" );
-  $worksheet->write( 4, $number_of_columns+3, "Test complete and data/resources available" );
+  $worksheet->write( 4, $number_of_columns+3, "Test complete and data/resources are available" );
   $worksheet->write( 4, $number_of_columns+2, "", $unlinked_formats->{completed_data_available} );
-  $worksheet->write( 5, $number_of_columns+3, "Test complete and considered interesting" );
+  $worksheet->write( 5, $number_of_columns+3, "Test is complete and the data are considered interesting" );
   $worksheet->write( 5, $number_of_columns+2, "", $unlinked_formats->{significant_difference} );
-  $worksheet->write( 6, $number_of_columns+3, "Test complete but not considered interesting" );
-  $worksheet->write( 6, $number_of_columns+2, "", $unlinked_formats->{no_significant_difference} );
-  $worksheet->write( 7, $number_of_columns+3, "Early indication of possible phenotype" );
-  $worksheet->write( 7, $number_of_columns+2, "", $unlinked_formats->{early_indication} );
+  $worksheet->write( 6, $number_of_columns+3, "Preliminary indication of an interesting phenotype" );
+  $worksheet->write( 6, $number_of_columns+2, "", $unlinked_formats->{early_indication} );
+  $worksheet->write( 7, $number_of_columns+3, "Test is complete but the data are not considered interesting" );
+  $worksheet->write( 7, $number_of_columns+2, "", $unlinked_formats->{no_significant_difference} );
   $worksheet->write( 8, $number_of_columns+3, "Test not performed or applicable e.g. no lacZ reporter therefore no expression" );
   $worksheet->write( 8, $number_of_columns+2, "", $unlinked_formats->{not_applicable} );
   $worksheet->write( 9, $number_of_columns+3, "Test pending" );
   $worksheet->write( 9, $number_of_columns+2, "", $unlinked_formats->{test_pending} );
-  $worksheet->write( 10, $number_of_columns+3, "Link to a phenotyping test report page" );
-  $worksheet->write( 10, $number_of_columns+2, ">", $linked_formats->{test_pending} );
+  $worksheet->write( 10, $number_of_columns+3, "Test abandoned" );
+  $worksheet->write( 10, $number_of_columns+2, "", $unlinked_formats->{test_abandoned} );
+  $worksheet->write( 11, $number_of_columns+3, "Link to a phenotyping test report page" );
+  $worksheet->write( 11, $number_of_columns+2, ">", $linked_formats->{test_pending} );
 }
 
 # Helper function to write the cells for the sortable heatmap.
@@ -204,20 +207,22 @@ sub write_sorted_legend {
   my $test_code      = sorted_results_test_codes();
   
   $worksheet->write( 2, $number_of_columns+2, "LEGEND" );
-  $worksheet->write( 4, $number_of_columns+3, "Test complete and data/resources available" );
+  $worksheet->write( 4, $number_of_columns+3, "Test complete and data/resources are available" );
   $worksheet->write( 4, $number_of_columns+2, $test_code->{completed_data_available}, $test_formats->{completed_data_available} );
-  $worksheet->write( 5, $number_of_columns+3, "Test complete and considered interesting" );
+  $worksheet->write( 5, $number_of_columns+3, "Test is complete and the data are considered interesting" );
   $worksheet->write( 5, $number_of_columns+2, $test_code->{significant_difference}, $test_formats->{significant_difference} );
-  $worksheet->write( 6, $number_of_columns+3, "Test complete but not considered interesting" );
-  $worksheet->write( 6, $number_of_columns+2, $test_code->{no_significant_difference}, $test_formats->{no_significant_difference} );
-  $worksheet->write( 7, $number_of_columns+3, "Early indication of possible phenotype" );
-  $worksheet->write( 7, $number_of_columns+2, $test_code->{early_indication}, $test_formats->{early_indication} );
+  $worksheet->write( 6, $number_of_columns+3, "Preliminary indication of an interesting phenotype" );
+  $worksheet->write( 6, $number_of_columns+2, $test_code->{early_indication}, $test_formats->{early_indication} );
+  $worksheet->write( 7, $number_of_columns+3, "Test is complete but the data are not considered interesting" );
+  $worksheet->write( 7, $number_of_columns+2, $test_code->{no_significant_difference}, $test_formats->{no_significant_difference} );
   $worksheet->write( 8, $number_of_columns+3, "Test not performed or applicable e.g. no lacZ reporter therefore no expression" );
   $worksheet->write( 8, $number_of_columns+2, $test_code->{not_applicable}, $test_formats->{not_applicable} );
   $worksheet->write( 9, $number_of_columns+3, "Test pending" );
   $worksheet->write( 9, $number_of_columns+2, $test_code->{test_pending}, $test_formats->{test_pending} );
-  $worksheet->write( 10, $number_of_columns+3, "Link to a phenotyping test report page" );
-  $worksheet->write( 10, $number_of_columns+2, "x", $linked_formats->{test_pending} );
+  $worksheet->write( 10, $number_of_columns+3, "Test pending" );
+  $worksheet->write( 10, $number_of_columns+2, $test_code->{test_abandoned}, $test_formats->{test_abandoned} );
+  $worksheet->write( 11, $number_of_columns+3, "Link to a phenotyping test report page" );
+  $worksheet->write( 11, $number_of_columns+2, ">", $linked_formats->{test_pending} );
   
 }
 
@@ -268,7 +273,7 @@ sub write_test_results {
     if ( $worksheet->get_name() =~ /Sort/ ) {
       $worksheet->write_url( $row, $col, $pheno_details_url, _xls_test_result_format( $sorted_test_mapping, $result ), _xls_test_result_format( $formats->{linked_tests}, $result ) );
     } else {
-      $worksheet->write_url( $row, $col, $pheno_details_url, "x", _xls_test_result_format( $formats->{linked_tests}, $result ) );
+      $worksheet->write_url( $row, $col, $pheno_details_url, ">", _xls_test_result_format( $formats->{linked_tests}, $result ) );
     }
   }
   else {

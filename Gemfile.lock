@@ -5,7 +5,7 @@ GEM
     activesupport (3.0.4)
     addressable (2.2.3)
     awesome_print (0.3.2)
-    biomart (0.2.0)
+    biomart (0.2.2)
       builder
     bson (1.2.1)
     bson_ext (1.2.1)

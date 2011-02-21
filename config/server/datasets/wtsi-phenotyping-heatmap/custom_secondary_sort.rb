@@ -133,8 +133,8 @@ module MartSearch
                 if result_data[:'wtsi-phenotyping-heatmap_graphs']
                   mgp_graphs = result_data[:'wtsi-phenotyping-heatmap_graphs'][result[:colony_prefix].to_sym]
                   unless mgp_graphs.nil?
-                    mgp_graphs.each do |test_name,image_data|
-                      if test_display_name.gsub("\(","").gsub("\)","") =~ Regexp.new(image_data[0][:heatmap_group], true)
+                    mgp_graphs.each do |heatmap_group,image_data|
+                      if test_display_name.gsub("\(","").gsub("\)","") =~ Regexp.new(heatmap_group.to_s, true)
                         result["#{test}_data".to_sym] = image_data
                       end
                     end
@@ -167,14 +167,11 @@ module MartSearch
                 if result_data[:'wtsi-phenotyping-published_images']
                   images = result_data[:'wtsi-phenotyping-published_images'][result[:colony_prefix].to_sym]
                   
-                  if images and ( images[:adult] and !images[:adult].empty? )
-                    result[:adult_expression_data] = {} if result[:adult_expression_data].nil?
-                    result[:adult_expression_data][:images] = images[:adult]
-                  end
-                  
-                  if images and ( images[:embryo] and !images[:embryo].empty? )
-                    result[:embryo_expression_data] = {} if result[:embryo_expression_data].nil?
-                    result[:embryo_expression_data][:images] = images[:embryo]
+                  ['adult_expression','embryo_expression','skin_screen'].each do |image_group|
+                    if images && ( images[image_group.to_sym] && !images[image_group.to_sym].empty? )
+                      result["#{image_group}_data".to_sym] = {} if result["#{image_group}_data".to_sym].nil?
+                      result["#{image_group}_data".to_sym][:images] = images[image_group.to_sym]
+                    end
                   end
                 end
                 
@@ -239,7 +236,7 @@ module MartSearch
           end
         end
         
-        #result_data[:'cached_pheno_data'] = cache_data
+        result_data[:'cached_pheno_data'] = cache_data
       end
       
     end

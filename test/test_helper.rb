@@ -2,10 +2,6 @@
 $:.unshift( "#{File.expand_path(File.dirname(__FILE__))}/../lib" )
 
 require 'rubygems'
-require 'martsearch'
-require 'test/unit'
-require 'vcr'
-require 'shoulda'
 
 # Set-up SimpleCov (code coverage tool for Ruby 1.9)
 if /^1.9/ === RUBY_VERSION
@@ -21,6 +17,11 @@ if /^1.9/ === RUBY_VERSION
     puts "[ERROR] Unable to load 'simplecov' - please run 'bundle install'"
   end
 end
+
+require 'martsearch'
+require 'test/unit'
+require 'vcr'
+require 'shoulda'
 
 # Set-up VCR for mocking up web requests.
 VCR.config do |c|

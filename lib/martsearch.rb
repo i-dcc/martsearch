@@ -4,6 +4,7 @@ require 'bundler/setup'
 require 'singleton'
 require 'logger'
 require 'date'
+require 'digest/md5'
 
 require 'biomart'
 require 'sinatra/base'

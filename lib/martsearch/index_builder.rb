@@ -291,7 +291,7 @@ module MartSearch
 
               # Do we have any attributes that we need to group together?
               if ds_index_conf[:grouped_attributes]
-                index_grouped_attributes( ds_index_conf[:grouped_attributes], doc, data_row_obj, map_data )
+                index_grouped_attributes( ds_index_conf[:grouped_attributes], doc, data_row_obj, map_data, datasource.ds )
               end
 
               # Any ontology terms to index?

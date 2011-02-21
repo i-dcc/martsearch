@@ -11,7 +11,7 @@ CONF = {
     :index_field      => 'mp',
     :root_term        => 'MP:0000001',
     :display_name     => "Mamalian Phenotype",
-    :descriptive_text => "browse for genes that when knocked-out have been annotated as causing a distinct phenotype (as classified by the <a href='http://nbirn.net/research/ontology/mammalian_ontology.shtm' target='_blank'>mamalian phenotype ontology</a>)",
+    :descriptive_text => "browse for genes that when knocked-out have been annotated as causing a distinct phenotype (as classified by the <a href='http://www.obofoundry.org/cgi-bin/detail.cgi?id=mammalian_phenotype' target='_blank'>mamalian phenotype ontology</a>)",
     :gsub_term_name   => " phenotype"
   },
   :ma => {
@@ -19,7 +19,8 @@ CONF = {
     :index_field      => 'ma',
     :root_term        => 'MA:0002405',
     :display_name     => "Adult Mouse Anatomy",
-    :descriptive_text => "browse for genes that when knocked-out have been annotated as ..."
+    :descriptive_text => "browse for genes that when knocked-out have been annotated as being expressed within a region (as classified by the <a href='http://www.obofoundry.org/cgi-bin/detail.cgi?id=adult_mouse_anatomy' target='_blank'>adult mouse anatomy ontology</a>)",
+    :include_children => true
   }
 }
 
@@ -41,8 +42,8 @@ ARGV.each do |cmd|
   
   ontology        = MartSearch::OntologyTerm.new(conf[:root_term])
   ontology_prefix = conf[:root_term].match(/^(\w+\:)\d+$/)[1]
+  
   ontology.children.sort{ |a,b| a.term_name <=> b.term_name }.each do |child|
-    
     term      = child.term.gsub(ontology_prefix,'')
     term_name = child.term_name
     
@@ -55,6 +56,24 @@ ARGV.each do |cmd|
       "query" => term,
       "slug"  => term_name.gsub(' ','-').gsub('/','-')
     })
+    
+    if conf[:include_children]
+      child.children.sort{ |a,b| a.term_name <=> b.term_name }.each do |grand_child|
+        term      = grand_child.term.gsub(ontology_prefix,'')
+        term_name = grand_child.term_name
+        
+        term_name.gsub!(conf[:gsub_term_name],'') if conf[:gsub_term_name]
+        
+        # puts "#{term} - #{term_name}"
+        
+        generated_conf[ conf[:id] ]["options"].push({
+          "text"  => term_name,
+          "query" => term,
+          "slug"  => term_name.gsub(' ','-').gsub('/','-'),
+          "child" => true
+        })
+      end
+    end
   end
 end
 
