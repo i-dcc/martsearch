@@ -163,7 +163,52 @@ module MartSearch
       return counts
     end
     
+    # Function to calculate the progress of the WTSI Mouse Genetics Project (MGP).
+    # This should return counts for three categories:
+    #   - Number of genes with lines with Standard Phenotyping (MGP pipeline) done
+    #   - Number of genes with lines with Infection Challenge (Citrobacter & Salmonella) done
+    #   - Number of genes with lines with Expression (embryo and adult) done
+    # 
+    # @param [Boolean] use_cache Use cached data if available
+    # @return [Hash] A hash of the status counts that the MGP wants
+    def wtsi_phenotyping_progress_counts( use_cache=true )
+      heatmap_dataset = self.datasets[:'wtsi-phenotyping-heatmap']
+      raise MartSearch::InvalidConfigError, "MartSearch::Controller.wtsi_phenotyping_progress_counts cannot be called if the 'wtsi-phenotyping-heatmap' dataset is inactive" if heatmap_dataset.nil?
+      
+      heatmap_test_groups_conf = heatmap_dataset.config[:test_groups]
+      heatmap_mart             = heatmap_dataset.datasource.ds
+      
+      mgp_counts = {
+        :standard_phenotyping => complete_mgp_genes_count( heatmap_mart, heatmap_test_groups_conf[:'Comprehensive Phenotyping Pipeline'][:tests] ),
+        :infection_challenge  => complete_mgp_genes_count( heatmap_mart, heatmap_test_groups_conf[:'Infectious Challenges'][:tests] ),
+        :expression           => complete_mgp_genes_count( heatmap_mart, ['adult_expression','embryo_expression'] )
+      }
+      
+      return mgp_counts
+    end
+    
     private
+      
+      #
+      def complete_mgp_genes_count( mart, attributes )
+        complete_genes = []
+        results        = mart.search(
+          :process_results => true,
+          :attributes      => attributes.unshift('marker_symbol'),
+          :filters         => {}
+        )
+        
+        results.each do |result|
+          complete_test = true
+          result.each do |key,value|
+            next if key == 'marker_symbol'
+            complete_test = false if value == 'Test pending'
+          end
+          complete_genes.push( result['marker_symbol'] ) if complete_test
+        end
+        
+        return complete_genes.uniq.size
+      end
       
       # Utility function that drives the index searches.
       #

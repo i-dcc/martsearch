@@ -121,6 +121,30 @@ class MartSearchControllerTest < Test::Unit::TestCase
       end
     end
     
+    should "give top-level progress counts for the WTSI MGP" do
+      if @controller.datasets[:'wtsi-phenotyping-heatmap'].nil?
+        skip("Skipping WTSI MGP progress counts tests as the DataSet 'wtsi-phenotyping-heatmap' is not active.")
+      else
+        VCR.use_cassette( 'test_controller_wtsi_mgp_counts' ) do
+          @controller.cache.clear
+          
+          fresh_counts  = @controller.wtsi_phenotyping_progress_counts()
+          cached_counts = @controller.wtsi_phenotyping_progress_counts()
+          
+          assert_equal( fresh_counts, cached_counts )
+          assert( fresh_counts.is_a?(Hash) )
+          
+          assert( fresh_counts.has_key?(:standard_phenotyping) )
+          assert( fresh_counts.has_key?(:infection_challenge) )
+          assert( fresh_counts.has_key?(:expression) )
+          
+          assert( fresh_counts[:standard_phenotyping] > 0 )
+          assert( fresh_counts[:infection_challenge] > 0 )
+          assert( fresh_counts[:expression] > 0 )
+        end
+      end
+    end
+    
   end
   
 end
