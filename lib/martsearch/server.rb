@@ -194,6 +194,8 @@ module MartSearch
           @results       = @ms.search( @solr_query, params[:page].to_i, use_cache )
           @data          = @ms.search_data
           @errors        = @ms.errors
+          # @do_not_show_search_explaination = true if browser_field_conf[:exact_search] == false
+          @do_not_show_search_explaination = false
         end
       end
       
