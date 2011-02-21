@@ -175,21 +175,51 @@ module MartSearch
       heatmap_dataset = self.datasets[:'wtsi-phenotyping-heatmap']
       raise MartSearch::InvalidConfigError, "MartSearch::Controller.wtsi_phenotyping_progress_counts cannot be called if the 'wtsi-phenotyping-heatmap' dataset is inactive" if heatmap_dataset.nil?
       
-      heatmap_test_groups_conf = heatmap_dataset.config[:test_groups]
-      heatmap_mart             = heatmap_dataset.datasource.ds
+      counts = @cache.fetch( "wtsi_phenotyping_progress_counts" )
       
-      mgp_counts = {
-        :standard_phenotyping => complete_mgp_genes_count( heatmap_mart, heatmap_test_groups_conf[:'Comprehensive Phenotyping Pipeline'][:tests] ),
-        :infection_challenge  => complete_mgp_genes_count( heatmap_mart, heatmap_test_groups_conf[:'Infectious Challenges'][:tests] ),
-        :expression           => complete_mgp_genes_count( heatmap_mart, ['adult_expression','embryo_expression'] )
-      }
+      if counts != nil and use_cache
+        counts = BSON.deserialize(counts) unless @cache.is_a?(MartSearch::MongoCache)
+        counts = counts.clean_hash if RUBY_VERSION < '1.9'
+        counts.symbolize_keys!
+      else
+        heatmap_test_groups_conf = heatmap_dataset.config[:test_groups]
+        heatmap_mart             = heatmap_dataset.datasource.ds
+        counts                   = {}
+        all_ok                   = true
+        
+        begin
+          counts = {
+            :standard_phenotyping => complete_mgp_genes_count( heatmap_mart, heatmap_test_groups_conf[:'Comprehensive Phenotyping Pipeline'][:tests] ),
+            :infection_challenge  => complete_mgp_genes_count( heatmap_mart, heatmap_test_groups_conf[:'Infectious Challenges'][:tests] ),
+            :expression           => complete_mgp_genes_count( heatmap_mart, ['adult_expression','embryo_expression'] )
+          }
+        rescue Biomart::BiomartError => error
+          all_ok = false
+        end
+        
+        if all_ok
+          @cache.delete( "wtsi_phenotyping_progress_counts" )
+          if @cache.is_a?(MartSearch::MongoCache)
+            @cache.write( "wtsi_phenotyping_progress_counts", counts, { :expires_in => 36.hours } )
+          else
+            @cache.write( "wtsi_phenotyping_progress_counts", BSON.serialize(counts), { :expires_in => 36.hours } )
+          end
+        end
+      end
       
-      return mgp_counts
+      return counts
     end
     
     private
       
-      #
+      # Helper function for #wtsi_phenotyping_progress_counts. This function queries the 
+      # MGP mart for a defined set of tests/attributes and computes the number of completed 
+      # genes (by complete, we mean that all of the tests listed have a status other than 
+      # "Test pending").
+      # 
+      # @param [Biomart::Dataset] mart A Biomart::Dataset object for the MGP mart
+      # @param [Array] attributes The list of tests/attributes to check for completeness
+      # @return [Integer] The count of unique genes that have data on all the tests queried
       def complete_mgp_genes_count( mart, attributes )
         complete_genes = []
         results        = mart.search(
