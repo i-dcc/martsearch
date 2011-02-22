@@ -67,19 +67,19 @@ module MartSearch
       end
     end
     
-    private
-      
-      # Helper function to supply our MartSearch::DataSource instance.
-      #
-      # @return [MartSearch::DataSource] The DataSource this DataSet drives
-      def datasource
-        ds = MartSearch::Controller.instance().config[:datasources][ @config[:datasource].to_sym ]
-        if ds.nil?
-          raise MartSearch::InvalidConfigError, "Unable to find a datasource called '#{@config[:datasource]}' for dataset '#{@config[:internal_name]}'!"
-        else
-          return ds
-        end
+    # Helper function to supply our MartSearch::DataSource instance.
+    #
+    # @return [MartSearch::DataSource] The DataSource this DataSet drives
+    def datasource
+      ds = MartSearch::Controller.instance().config[:datasources][ @config[:datasource].to_sym ]
+      if ds.nil?
+        raise MartSearch::InvalidConfigError, "Unable to find a datasource called '#{@config[:datasource]}' for dataset '#{@config[:internal_name]}'!"
+      else
+        return ds
       end
+    end
+    
+    private
       
       # Helper function to sort the raw results from the MartSearch::DataSource#search 
       # function and put them into something more suitable for integrating with the 
