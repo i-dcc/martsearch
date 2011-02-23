@@ -8,6 +8,7 @@ require 'digest/md5'
 
 require 'biomart'
 require 'sinatra/base'
+require 'rack/mime'
 require 'erubis'
 require 'sinatra/static_assets'
 require 'hoptoad_notifier'
