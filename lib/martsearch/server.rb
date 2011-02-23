@@ -106,13 +106,9 @@ module MartSearch
     get '/?' do
       @current               = 'home'
       @hide_side_search_form = true
+      @counts                = @ms.fetch_from_cache("wtsi_front_page_counts")
       
-      @counts = @ms.cache.fetch("wtsi_front_page_counts")
-      if @counts
-        @counts = BSON.deserialize(@counts) unless @ms.cache.is_a?(MartSearch::MongoCache)
-        @counts = @counts.clean_hash if RUBY_VERSION < '1.9'
-        @counts.recursively_symbolize_keys!
-      else
+      if @counts.nil?
         @counts = {
           :phenotyping        => { :query => 'sanger_phenotype:*' },
           :mice               => { :query => 'microinjection_centre_status:"WTSI - Genotype Confirmed"' },
@@ -127,11 +123,7 @@ module MartSearch
           details[:count] = @ms.index.count( details[:query] )
         end
         
-        if @ms.cache.is_a?(MartSearch::MongoCache)
-          @ms.cache.write("wtsi_front_page_counts", @counts, :expires_in => 12.hours )
-        else
-          @ms.cache.write("wtsi_front_page_counts", BSON.serialize(@counts), :expires_in => 12.hours )
-        end
+        @ms.write_to_cache( "wtsi_front_page_counts", @counts, { :expires_in => 12.hours } )
       end
       
       erubis :main
