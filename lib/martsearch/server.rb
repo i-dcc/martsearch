@@ -125,7 +125,6 @@ module MartSearch
 
         @counts.each do |param,details|
           details[:count] = @ms.index.count( details[:query] )
-          details[:query] = details[:query].gsub('"','&quot;')
         end
         
         if @ms.cache.is_a?(MartSearch::MongoCache)
