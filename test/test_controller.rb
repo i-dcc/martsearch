@@ -121,6 +121,44 @@ class MartSearchControllerTest < Test::Unit::TestCase
       end
     end
     
+    should "give top-level progress counts for the WTSI MGP" do
+      if @controller.datasets[:'wtsi-phenotyping-heatmap'].nil?
+        skip("Skipping WTSI MGP progress counts tests as the DataSet 'wtsi-phenotyping-heatmap' is not active.")
+      else
+        VCR.use_cassette( 'test_controller_wtsi_mgp_counts' ) do
+          @controller.cache.clear
+          
+          fresh_counts  = @controller.wtsi_phenotyping_progress_counts()
+          cached_counts = @controller.wtsi_phenotyping_progress_counts()
+          
+          assert_equal( fresh_counts, cached_counts )
+          assert( fresh_counts.is_a?(Hash) )
+          
+          assert( fresh_counts.has_key?(:standard_phenotyping) )
+          assert( fresh_counts.has_key?(:infection_challenge) )
+          assert( fresh_counts.has_key?(:expression) )
+          
+          assert( fresh_counts[:standard_phenotyping] > 0 )
+          assert( fresh_counts[:infection_challenge] > 0 )
+          assert( fresh_counts[:expression] > 0 )
+        end
+      end
+    end
+    
+    should "allow us to interact with the cache via helpers" do
+      @controller.cache.clear
+      
+      assert_equal( @controller.fetch_from_cache("foo"), nil )
+      
+      string = "weeeeeeee!"
+      array  = [1,2,3,4,5,6,7]
+      hash   = { :a => 'a', 'b' => 23, :c => [1,2,3] }
+      
+      [ string, array, hash ].each do |data|
+        @controller.write_to_cache( "foo", data )
+        assert_equal( @controller.fetch_from_cache("foo"), data )
+      end
+    end
   end
   
 end

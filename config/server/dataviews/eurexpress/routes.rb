@@ -9,14 +9,10 @@ module MartSearch
       assay_index = options[1].to_i
       emap_id     = options[2].gsub('EMAP','EMAP:')
       
-      cached_dataset_data = @ms.cache.fetch( "datasets:#{mgi_acc_id}" )
+      cached_dataset_data = @ms.fetch_from_cache( "datasets:#{mgi_acc_id}" )
       if cached_dataset_data.nil?
         @ms.search( mgi_acc_id )
         cached_dataset_data = @ms.search_data
-      else
-        cached_dataset_data = BSON.deserialize(cached_dataset_data) unless @ms.cache.is_a?(MartSearch::MongoCache)
-        cached_dataset_data = cached_dataset_data.clean_hash if RUBY_VERSION < '1.9'
-        cached_dataset_data.recursively_symbolize_keys!
       end
       
       tree_data = []

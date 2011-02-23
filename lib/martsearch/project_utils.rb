@@ -522,8 +522,14 @@ module MartSearch
         begin
           uri         = URI.parse( "http://www.sanger.ac.uk/htgt/tools/mutagenesis_prediction/project/#{project_id}/detail" )
           http_client = build_http_client()
-          response    = http_client.get_response( uri )
-
+          response    = nil
+          
+          http_client.start( uri.host, uri.port ) do |http|
+            http.read_timeout = 10
+            http.open_timeout = 10
+            response          = http.request( Net::HTTP::Get.new(uri.request_uri) )
+          end
+          
           unless response.code.to_i == 200
             raise Exception.new( "Mutagenesis prediction analysis unavailable." )
           end

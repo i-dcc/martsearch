@@ -1,5 +1,5 @@
 <div class="search_information">
-  <% unless @current == "browse" %>
+  <% unless @do_not_show_search_explaination %>
     <a id="search_explaination_toggle" class="button" href="#">Explain These Search Results</a>
   <% end %>
   <%= will_paginate @results %>
@@ -52,7 +52,7 @@
       </tr>
     </table>
     
-    <% unless @current == "browse" or result_data[:search_explaination].nil? %>
+    <% unless @do_not_show_search_explaination or result_data[:search_explaination].nil? %>
       <div class="messages search_explaination help">
         <a class="search_explaination_close" href="#"></a>
         <% if result_data[:search_explaination].empty? %>

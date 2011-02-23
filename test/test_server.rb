@@ -125,10 +125,7 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
             assert_equal( '/search', current_path, "WTSI Phenotyping search for '#{colony_prefix}': The home page form didn't forward to /search." )
             assert( page.has_content?( "Search Results for '#{colony_prefix}'" ), "WTSI Phenotyping search for '#{colony_prefix}': /search doesn't show the search term we've just looked for..." )
             
-            cached_data = @controller.cache.fetch("wtsi-pheno-data:#{colony_prefix}")
-            cached_data = BSON.deserialize(cached_data) unless @controller.cache.is_a?(MartSearch::MongoCache)
-            cached_data = cached_data.clean_hash if RUBY_VERSION < '1.9'
-            cached_data.recursively_symbolize_keys!
+            cached_data = @controller.fetch_from_cache("wtsi-pheno-data:#{colony_prefix}")
             assert( !cached_data.nil?, "There is no cached phenotyping data for '#{colony_prefix}'!" )
             
             urls_to_hit = []
