@@ -35,24 +35,21 @@ begin
       puts 'Collecting top-level heatmap data from the WTSI biomart...'
       heatmap_data   = mgp_pheno_mart.search( :attributes => attributes, :process_results => true )
       heatmap_data.sort!{ |a,b| a["marker_symbol"] <=> b["marker_symbol"] }
+      heatmap_data.recursively_symbolize_keys!
       
       puts 'Gathering data for links to report pages...'
       count = 0
       heatmap_data.map! do |heatmap_row|
         count = count + 1
-        puts "  - #{heatmap_row["colony_prefix"]} [ #{count} / #{heatmap_data.size} ]"
+        puts "  - #{heatmap_row[:colony_prefix]} [ #{count} / #{heatmap_data.size} ]"
         
-        report_data = @ms.cache.fetch("wtsi-pheno-data:#{heatmap_row["colony_prefix"]}")
+        report_data = @ms.fetch_from_cache("wtsi-pheno-data:#{heatmap_row[:colony_prefix]}")
         if report_data.nil?
-          @ms.search( heatmap_row["colony_prefix"] )
-          report_data = @ms.cache.fetch("wtsi-pheno-data:#{heatmap_row["colony_prefix"]}")
+          @ms.search( heatmap_row[:colony_prefix] )
+          report_data = @ms.fetch_from_cache("wtsi-pheno-data:#{heatmap_row[:colony_prefix]}")
         end
         
-        unless report_data.nil?
-          report_data = BSON.deserialize(report_data) unless @ms.cache.is_a?(MartSearch::MongoCache)
-          report_data = report_data.clean_hash if RUBY_VERSION < '1.9'
-          heatmap_row.merge!(report_data)
-        end
+        heatmap_row.merge!(report_data) unless report_data.nil?
         
         heatmap_row
       end

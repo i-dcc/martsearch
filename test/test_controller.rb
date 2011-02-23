@@ -145,6 +145,20 @@ class MartSearchControllerTest < Test::Unit::TestCase
       end
     end
     
+    should "allow us to interact with the cache via helpers" do
+      @controller.cache.clear
+      
+      assert_equal( @controller.fetch_from_cache("foo"), nil )
+      
+      string = "weeeeeeee!"
+      array  = [1,2,3,4,5,6,7]
+      hash   = { :a => 'a', 'b' => 23, :c => [1,2,3] }
+      
+      [ string, array, hash ].each do |data|
+        @controller.write_to_cache( "foo", data )
+        assert_equal( @controller.fetch_from_cache("foo"), data )
+      end
+    end
   end
   
 end

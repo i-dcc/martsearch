@@ -25,17 +25,13 @@ end
 def wtsi_phenotyping_fetch_report_data( colony_prefix, pheno_test )
   ms = MartSearch::Controller.instance()
   
-  cached_data = ms.cache.fetch("wtsi-pheno-data:#{colony_prefix}")
+  cached_data = ms.fetch_from_cache("wtsi-pheno-data:#{colony_prefix}")
   if cached_data.nil?
     ms.search("colony_prefix:#{colony_prefix}")
-    cached_data = ms.cache.fetch("wtsi-pheno-data:#{colony_prefix}")
+    cached_data = ms.fetch_from_cache("wtsi-pheno-data:#{colony_prefix}")
   end
   
   if cached_data != nil
-    cached_data = BSON.deserialize(cached_data) unless ms.cache.is_a?(MartSearch::MongoCache)
-    cached_data = cached_data.clean_hash if RUBY_VERSION < '1.9'
-    cached_data.recursively_symbolize_keys!
-    
     return cached_data[ "#{pheno_test}_data".to_sym ]
   else
     return nil

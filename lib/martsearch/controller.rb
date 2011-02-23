@@ -59,12 +59,8 @@ module MartSearch
       page = 1 if page == 0
       clear_instance_variables
       
-      cached_index_data = @cache.fetch( "index:#{query}-page#{page}" )
+      cached_index_data = fetch_from_cache( "index:#{query}-page#{page}" )
       if cached_index_data != nil and use_cache
-        cached_index_data = BSON.deserialize(cached_index_data) unless @cache.is_a?(MartSearch::MongoCache)
-        cached_index_data = cached_index_data.clean_hash if RUBY_VERSION < '1.9'
-        cached_index_data.recursively_symbolize_keys!
-        
         search_from_cached_index( cached_index_data )
       else
         if search_from_fresh_index( query, page ) and save_index_data
@@ -75,12 +71,7 @@ module MartSearch
             :current_results_total => @index.current_results_total,
             :cache_timestamp       => DateTime.now.to_s
           }
-          @cache.delete( "index:#{query}-page#{page}" )
-          if @cache.is_a?(MartSearch::MongoCache)
-            @cache.write( "index:#{query}-page#{page}", obj_to_cache, { :expires_in => 36.hours } )
-          else
-            @cache.write( "index:#{query}-page#{page}", BSON.serialize(obj_to_cache), { :expires_in => 36.hours } )
-          end
+          write_to_cache( "index:#{query}-page#{page}", obj_to_cache )
         end
       end
       
@@ -88,13 +79,9 @@ module MartSearch
         fresh_ds_queries_to_do = []
         
         @search_data.each do |data_key,data|
-          cached_dataset_data = @cache.fetch( "datasets:#{data_key}" )
+          cached_dataset_data = fetch_from_cache( "datasets:#{data_key}" )
           
           if cached_dataset_data != nil and use_cache
-            cached_dataset_data = BSON.deserialize(cached_dataset_data) unless @cache.is_a?(MartSearch::MongoCache)
-            cached_dataset_data = cached_dataset_data.clean_hash if RUBY_VERSION < '1.9'
-            cached_dataset_data.recursively_symbolize_keys!
-            
             @search_data[data_key] = cached_dataset_data.merge(data)
           else
             fresh_ds_queries_to_do.push(data_key)
@@ -105,13 +92,8 @@ module MartSearch
           if search_from_fresh_datasets( prepare_dataset_search_terms( fresh_ds_queries_to_do ) )
             fresh_ds_queries_to_do.each do |data_key|
               unless @search_data[data_key].nil?
-                @cache.delete( "datasets:#{data_key}" )
                 @search_data[data_key][:cache_timestamp] = DateTime.now.to_s
-                if @cache.is_a?(MartSearch::MongoCache)
-                  @cache.write( "datasets:#{data_key}", @search_data[data_key], { :expires_in => 36.hours } )
-                else
-                  @cache.write( "datasets:#{data_key}", BSON.serialize(@search_data[data_key]), { :expires_in => 36.hours } )
-                end
+                write_to_cache( "datasets:#{data_key}", @search_data[data_key] )
               end
             end
           end
@@ -128,13 +110,8 @@ module MartSearch
     # @param [Boolean] use_cache Use cached data if available
     # @return [Hash] A hash of all of the browsable content counts
     def browse_counts( use_cache=true )
-      counts = @cache.fetch( "browse_counts" )
-      
-      if counts != nil and use_cache
-        counts = BSON.deserialize(counts) unless @cache.is_a?(MartSearch::MongoCache)
-        counts = counts.clean_hash if RUBY_VERSION < '1.9'
-        counts.recursively_symbolize_keys!
-      else
+      counts = fetch_from_cache( "browse_counts" )
+      if counts.nil? || use_cache == false
         all_ok = true
         counts = {}
         @config[:server][:browsable_content].each do |field,field_config|
@@ -150,14 +127,7 @@ module MartSearch
           end
         end
         
-        if all_ok
-          @cache.delete( "browse_counts" )
-          if @cache.is_a?(MartSearch::MongoCache)
-            @cache.write( "browse_counts", counts, { :expires_in => 36.hours } )
-          else
-            @cache.write( "browse_counts", BSON.serialize(counts), { :expires_in => 36.hours } )
-          end
-        end
+        write_to_cache( "browse_counts", counts ) if all_ok
       end
       
       return counts
@@ -208,6 +178,36 @@ module MartSearch
       end
       
       return counts
+    end
+    
+    # Cache interaction helper - fetch data from the cache for a given key.
+    # 
+    # @param [String] key The cache identifer to look up
+    # @return [Object/nil] The deserialized object from the cache, or nil if none found
+    def fetch_from_cache( key )
+      cached_data = @cache.fetch( key )
+      
+      unless cached_data.nil?
+        cached_data = BSON.deserialize(cached_data) unless @cache.is_a?(MartSearch::MongoCache)
+        cached_data = cached_data.clean_hash if RUBY_VERSION < '1.9'
+        cached_data.recursively_symbolize_keys!
+      end
+      
+      return cached_data
+    end
+    
+    # Cache interaction helper - use this to store data in the cache.
+    # 
+    # @param [String] key The cache identifer to store 'value' under
+    # @param [Object] value The cache 'value' to store
+    # @param [Hash] options An options hash (see #{ActiveSupport::Cache} for more info)
+    def write_to_cache( key, value, options={} )
+      @cache.delete( key )
+      if @cache.is_a?(MartSearch::MongoCache)
+        @cache.write( key, value, { :expires_in => 36.hours }.merge(options) )
+      else
+        @cache.write( key, BSON.serialize(value), { :expires_in => 36.hours }.merge(options) )
+      end
     end
     
     private
