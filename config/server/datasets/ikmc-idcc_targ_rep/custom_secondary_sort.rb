@@ -52,6 +52,7 @@ module MartSearch
         
         unless result_data[:'ikmc-idcc_targ_rep'].nil?
           result_data[:'ikmc-idcc_targ_rep'].each do |pipeline, pipeline_projects|
+            next if pipeline_projects.nil?
             
             pipeline_projects_with = { :mice => [], :clones => [], :vectors => [] }
             
