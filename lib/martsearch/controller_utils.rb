@@ -91,14 +91,14 @@ module MartSearch
         server     = config[:server]     ? config[:server]     : 'localhost'
         port       = config[:port]       ? config[:port].to_i  : 27017
         db         = config[:db]         ? config[:db]         : 'martsearch'
-        mongo      = Mongo::Connection.new(server, port).db("#{db}-#{MartSearch::ENVIRONMENT}")
+        mongo      = Mongo::Connection.new( server, port, :pool_size => 5, :timeout => 5 ).db("#{db}-#{MartSearch::ENVIRONMENT}")
         
         return MartSearch::MongoCache.new( :db => mongo, :collection_name => 'martsearch_cache' )
       else
         return ActiveSupport::Cache::MemoryStore.new()
       end
     end
-
+    
     private
       
       ##

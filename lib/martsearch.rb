@@ -34,6 +34,21 @@ require "#{MARTSEARCH_PATH}/lib/martsearch/hash"
 require "#{MARTSEARCH_PATH}/lib/martsearch/string"
 require "#{MARTSEARCH_PATH}/lib/martsearch/marker"
 
+module MongoStore
+  module Cache
+    module Rails3
+      # Monkey patch :( - it looks like sometimes we don't get the full object back from the 
+      # database so i'm just experimenting with the timeout flag to see if that's causing 
+      # the issues (as our cached objects can be fairly big).
+      def read_entry(key, options={})
+        opts = { 'expires' => {'$gt' => Time.now}, 'timeout' => false }.merge!(options)
+        doc  = collection.find_one( opts.merge({ '_id' => key }) )
+        ActiveSupport::Cache::Entry.new(doc['value']) if doc
+      end
+    end
+  end
+end
+
 # Module housing all of the classes and code that make up the MartSearch portal framework.
 #
 # @author Darren Oakley
