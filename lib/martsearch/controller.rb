@@ -145,13 +145,8 @@ module MartSearch
       heatmap_dataset = self.datasets[:'wtsi-phenotyping-heatmap']
       raise MartSearch::InvalidConfigError, "MartSearch::Controller.wtsi_phenotyping_progress_counts cannot be called if the 'wtsi-phenotyping-heatmap' dataset is inactive" if heatmap_dataset.nil?
       
-      counts = @cache.fetch( "wtsi_phenotyping_progress_counts" )
-      
-      if counts != nil and use_cache
-        counts = BSON.deserialize(counts) unless @cache.is_a?(MartSearch::MongoCache)
-        counts = counts.clean_hash if RUBY_VERSION < '1.9'
-        counts.symbolize_keys!
-      else
+      counts = fetch_from_cache( "wtsi_phenotyping_progress_counts" )
+      if counts.nil? || use_cache == false
         heatmap_test_groups_conf = heatmap_dataset.config[:test_groups]
         heatmap_mart             = heatmap_dataset.datasource.ds
         counts                   = {}
@@ -167,14 +162,7 @@ module MartSearch
           all_ok = false
         end
         
-        if all_ok
-          @cache.delete( "wtsi_phenotyping_progress_counts" )
-          if @cache.is_a?(MartSearch::MongoCache)
-            @cache.write( "wtsi_phenotyping_progress_counts", counts, { :expires_in => 36.hours } )
-          else
-            @cache.write( "wtsi_phenotyping_progress_counts", BSON.serialize(counts), { :expires_in => 36.hours } )
-          end
-        end
+        write_to_cache( "wtsi_phenotyping_progress_counts", counts ) if all_ok
       end
       
       return counts
