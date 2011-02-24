@@ -90,6 +90,7 @@ GEM
       emk-sinatra-url-for (>= 0.2.1)
       rack (>= 1.0.0)
       sinatra (>= 0.9.1)
+    test-unit (2.2.0)
     tilt (1.2.2)
     vcr (1.6.0)
     webmock (1.6.2)
@@ -136,6 +137,7 @@ DEPENDENCIES
   simplecov
   sinatra (~> 1.0)
   sinatra-static-assets
+  test-unit
   vcr (>= 1.1)
   webmock
   will_paginate (~> 2.3)

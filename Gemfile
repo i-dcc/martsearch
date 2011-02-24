@@ -44,4 +44,5 @@ group :development, :test do
   gem 'railsless-deploy'
   gem 'simplecov',                      :platforms => :ruby_19
   gem 'wirble'
+  gem 'test-unit'
 end
