@@ -26,7 +26,7 @@
   <div class="dataset_content">
     <%- cells = @data[:es_cells][cond_vs_noncond][:cells] -%>
     
-    <% unless @data[:es_cells][cond_vs_noncond][:allele_img].nil? %>
+    <% if !@data[:es_cells][cond_vs_noncond][:allele_img].nil? && show_allele_and_vector_images %>
       <img src="<%= @data[:es_cells][cond_vs_noncond][:allele_img] %>" width="930px" />
       <div class="clear"></div>
       
@@ -35,6 +35,7 @@
       <% end %>
     <% end %>
     
+    <div class="clear"></div>
     <%= partial( "project_report/ensembl_htgt_links", { :locals => { :escell => cells.first[:name] } }) %>
     
     <table>
