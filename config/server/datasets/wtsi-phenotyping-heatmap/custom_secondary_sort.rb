@@ -20,24 +20,22 @@ module MartSearch
         
         # Calculate what to display for each group bubble
         test_groups.each do |group,group_conf|
-          
-          # First, determine if we should show the group bubble
           show_this_group   = false
           tests             = group_conf[:tests]
           allowed_pipelines = group_conf[:pipelines]
+          group_data        = {
+            :results_of_interest => false,
+            :allowed_pipelines   => allowed_pipelines,
+            :tests               => {},
+            :results             => []
+          }
           
+          # First, determine if we should show the group bubble
           heatmap_raw_data.each do |result|
             show_this_group = true if allowed_pipelines.include?(result[:pipeline])
           end
           
           if show_this_group
-            group_data = {
-              :results_of_interest => false,
-              :allowed_pipelines   => allowed_pipelines,
-              :tests               => {},
-              :results             => []
-            }
-            
             # Work out the display headings for these tests...
             tests.each do |test|
               group_data[:tests][test.to_sym] = ds_attribs[test].display_name
