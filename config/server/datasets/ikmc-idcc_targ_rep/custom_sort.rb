@@ -1,6 +1,10 @@
 module MartSearch
   module DataSetUtils
     
+    # Custom sort function for the idcc_targ_rep dataset.
+    # 
+    # @param [Array] results The raw data returned from the idcc_targ_rep biomart
+    # @return [Hash] The data into a hash, keyed by the 'joined_attribute'
     def ikmc_idcc_targ_rep_sort_results( results )
       sorted_results = {}
       
@@ -40,19 +44,22 @@ module MartSearch
         
         # Targeting Vectors
         if result[:targeting_vector]
-          ikmc_idcc_targ_rep_store_targeting_vector( ikmc_project_id, result, project )
+          ikmc_idcc_targ_rep_append_targeting_vector( ikmc_project_id, result, project )
         end
         
         # ES Cells
         if result[:escell_clone]
-          ikmc_idcc_targ_rep_store_es_cell( ikmc_project_id, result, project )
+          ikmc_idcc_targ_rep_append_es_cell( ikmc_project_id, result, project )
         end
       end
       
       return sorted_results
     end
     
-    def ikmc_idcc_targ_rep_store_targeting_vector( ikmc_project_id, result, project )
+    private
+    
+    # Helper function to append the targ_vec data into project.
+    def ikmc_idcc_targ_rep_append_targeting_vector( ikmc_project_id, result, project )
       targ_vec = {
         :ikmc_project_id     => ikmc_project_id,
         :allele_id           => result[:allele_id],
@@ -71,7 +78,8 @@ module MartSearch
       end
     end
     
-    def ikmc_idcc_targ_rep_store_es_cell( ikmc_project_id, result, project )
+    # Helper function to append the clone data into project.
+    def ikmc_idcc_targ_rep_append_es_cell( ikmc_project_id, result, project )
       es_cell = {
         :ikmc_project_id           => ikmc_project_id,
         :targeting_vector          => result[:targeting_vector],
