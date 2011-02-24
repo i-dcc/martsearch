@@ -139,21 +139,22 @@ module MartSearch
     # slightly more reliable than the kermits and wtsi-heatmap datasets.
     def wtsi_phenotyping_heatmap_append_related_targ_rep_entry( result, result_data, related_kermits_entry )
       targ_rep_data          = result_data[:'ikmc-idcc_targ_rep']
-      related_kermits_clone  = related_kermits_entry[:escell_clone]
       marker_symbol          = result_data[:index][:marker_symbol]
-      
       cassette               = nil
       related_targ_rep_clone = nil
       
-      if (related_kermits_entry && related_kermits_clone) && targ_rep_data
-        targ_rep_data.each do |project|
-          [:conditional_clones,:nonconditional_clones].each do |clone_type|
-            project[clone_type].each do |clone|
-              if clone[:escell_clone] == related_kermits_clone
-                cassette               = project[:cassette]
-                related_targ_rep_clone = clone
-              end
-            end if project[clone_type]
+      if related_kermits_entry && targ_rep_data
+        related_kermits_clone = related_kermits_entry[:escell_clone]
+        if related_kermits_clone
+          targ_rep_data.each do |project|
+            [:conditional_clones,:nonconditional_clones].each do |clone_type|
+              project[clone_type].each do |clone|
+                if clone[:escell_clone] == related_kermits_clone
+                  cassette               = project[:cassette]
+                  related_targ_rep_clone = clone
+                end
+              end if project[clone_type]
+            end
           end
         end
       end
@@ -209,7 +210,7 @@ module MartSearch
       data_to_return = {}
       
       abr_data.each do |abr_result|
-        data_to_return[:abr_data] = abr_result if abr_result[:colony_prefix] == colony_prefix
+        data_to_return[:abr_data] = abr_result if abr_result[:colony_prefix] == colony_prefix.to_s
       end
       
       return data_to_return
