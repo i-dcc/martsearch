@@ -85,9 +85,13 @@
         <% if project[:no_products_available] %>
           <% if project[:project_ids] %>
             Projects:
-            <a href="http://knockoutmouse.org/genedetails/<%= project[:mgi_accesion_id]%>" target="_blank">
-              <%= project[:project_ids].join(', ') -%>
-            </a>
+            <%
+              project_links = []
+              project[:project_ids].each do |project_id|
+                project_links.push('<a href="http://www.knockoutmouse.org/martsearch/project/'+project_id+'" target="_blank">'+project_id+'</a>')
+              end
+            %>
+            <%= project_links.join(', ') %>
           <% end %>
         <% else %>
           <a class="ikmc-idcc_targ_rep_allele_progress_details_toggle">
