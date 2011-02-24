@@ -12,10 +12,6 @@ def idcc_targ_rep_get_progressbar_info( project )
     return { :vectors => "normal", :cells => "incomp", :mice => "incomp" }
   end
   
-  if project[:no_products_available] and project[:status]
-    return { :vectors => "normal", :cells => "incomp", :mice => "incomp" }
-  end
-  
   # Some other case
   return { :vectors => "incomp", :cells => "incomp", :mice => "incomp" }
 end
