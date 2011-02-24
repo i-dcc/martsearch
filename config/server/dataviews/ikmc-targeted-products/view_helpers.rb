@@ -1,5 +1,5 @@
 
-def idcc_targ_rep_get_progressbar_info( project )
+def ikmc_vectors_and_es_cells_get_progressbar_info( project )
   if project[:mouse_available] == '1'
     return { :vectors => "normal", :cells => "normal", :mice => "normal" }
   end

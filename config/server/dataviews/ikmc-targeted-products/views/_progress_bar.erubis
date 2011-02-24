@@ -1,6 +1,6 @@
 <%
   # Make progress bar from products availability
-  progress = idcc_targ_rep_get_progressbar_info( project )
+  progress = ikmc_vectors_and_es_cells_get_progressbar_info( project )
 %>
 
 <table class="ikmc-pipeline-progress-bar" width="80%" style="margin-left:auto;margin-right:auto;">
