@@ -3,13 +3,12 @@
   progress = idcc_targ_rep_get_progressbar_info( project )
 %>
 
-<table class="ikmc-pipeline-progress-bar" width="100%">
+<table class="ikmc-pipeline-progress-bar" width="80%" style="margin-left:auto;margin-right:auto;">
   <thead>
     <tr>
-      <th width="15%" class="center"></th>
-      <th width="20%" class="center">Vectors</th>
-      <th width="20%" class="center">ES Cells</th>
-      <th width="20%" class="center">Mice</th>
+      <th width="20%" class="center"></th>
+      <th width="30%" class="center">Vectors</th>
+      <th width="30%" class="center">ES Cells</th>
       <th></th>
     </tr>
   </thead>
@@ -50,7 +49,7 @@
       </td>
       
       <!-- Cells -->
-      <td class="<%= progress[:cells] %> <%= progress[:cells] %>_<%= progress[:mice] %>">
+      <td class="end_<%= progress[:cells] %> <%= progress[:cells] %>">
         <% if project[:escell_available] == '1' %>
           <%=
             escell_order_button(
@@ -58,23 +57,6 @@
               result_data[:index][:marker_symbol],
               project[:pipeline],
               project[:ikmc_project_id]
-            )
-          %>
-        <% end %>
-      </td>
-      
-      <!-- Mice -->
-      <td class="end_<%= progress[:mice] %> <%= progress[:mice] %>">
-        <% if project[:mouse_available] == '1' %>
-          <%= 
-            mouse_order_button(
-              project[:mgi_accession_id],
-              result_data[:index][:marker_symbol],
-              project[:pipeline], 
-              project[:ikmc_project_id],
-              true,
-              project[:mouse_mi_centre],
-              project[:mouse_distribution_centre]
             )
           %>
         <% end %>
