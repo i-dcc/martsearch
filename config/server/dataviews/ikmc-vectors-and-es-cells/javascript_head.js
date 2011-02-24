@@ -1,5 +1,5 @@
 
-// ikmc-targeted-products custom javascript
+// ikmc-vectors-and-es-cells custom javascript
 
 jQuery("#search_results .ikmc-idcc_targ_rep_allele_progress_clones_toggle").live("click", function () {
   jQuery(this).parent().parent().find(".ikmc-idcc_targ_rep_allele_progress_clones_content").slideToggle("fast");

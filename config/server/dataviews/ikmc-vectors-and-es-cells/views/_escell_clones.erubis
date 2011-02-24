@@ -62,7 +62,7 @@
       <% unless conditional_clones.empty? %>
         <%=
           partial(
-            'dataviews/ikmc-targeted-products/escell_clone_details',
+            'dataviews/ikmc-vectors-and-es-cells/escell_clone_details',
             :locals => { :pipeline => pipeline, :clones => conditional_clones }
           )
         %>
@@ -75,7 +75,7 @@
       <% unless nonconditional_clones.empty? %>
         <%=
           partial(
-            'dataviews/ikmc-targeted-products/escell_clone_details',
+            'dataviews/ikmc-vectors-and-es-cells/escell_clone_details',
             :locals => { :pipeline => pipeline, :clones => nonconditional_clones }
           )
         %>

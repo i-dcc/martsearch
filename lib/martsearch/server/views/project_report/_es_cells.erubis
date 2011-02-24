@@ -82,7 +82,7 @@
           <% if cell[:qc_count] > 0 %>
             <tr class="details">
               <td colspan="8">
-                <%= partial('dataviews/ikmc-targeted-products/escell_clone_qc', :locals => { :clone => cell }) %>
+                <%= partial('dataviews/ikmc-vectors-and-es-cells/escell_clone_qc', :locals => { :clone => cell }) %>
               </td>
             </tr>
           <% end %>

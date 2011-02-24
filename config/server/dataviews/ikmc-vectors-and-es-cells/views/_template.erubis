@@ -4,7 +4,7 @@
       <!-- Progress Bar -->
       <%=
         partial(
-          'dataviews/ikmc-targeted-products/progress_bar',
+          'dataviews/ikmc-vectors-and-es-cells/progress_bar',
           :locals => { 
             :project      => project,
             :result_data  => result_data
@@ -24,7 +24,7 @@
           %>
           <%=
             partial(
-              'dataviews/ikmc-targeted-products/links',
+              'dataviews/ikmc-vectors-and-es-cells/links',
               :locals => {
                 :pipeline        => project[:pipeline],
                 :ikmc_project_id => project[:ikmc_project_id],
@@ -36,7 +36,7 @@
           <!-- ES Cells -->
           <%=
             partial(
-              'dataviews/ikmc-targeted-products/escell_clones',
+              'dataviews/ikmc-vectors-and-es-cells/escell_clones',
               :locals => {
                 :design_id                => project[:design_id],
                 :design_type              => project[:design_type],
@@ -56,7 +56,7 @@
           <% if project[:targeting_vectors] %>
             <%=
               partial(
-                'dataviews/ikmc-targeted-products/targeting_vectors',
+                'dataviews/ikmc-vectors-and-es-cells/targeting_vectors',
                 :locals => {
                   :pipeline          => project[:pipeline],
                   :cassette          => project[:cassette],
