@@ -42,14 +42,20 @@ module MartSearch
         ikmc_project_id           = result[:ikmc_project_id] || project[:ikmc_project_id]
         project[:ikmc_project_id] = ikmc_project_id if project[:ikmc_project_id].nil?
         
-        # Targeting Vectors
-        if result[:targeting_vector]
-          ikmc_idcc_targ_rep_append_targeting_vector( ikmc_project_id, result, project )
+        # Cassette type
+        project[:cassette_type] = case cassette
+        when /_P$/ then "Promotorless"
+        else            "Promotor Driven"
         end
         
         # ES Cells
         if result[:escell_clone]
           ikmc_idcc_targ_rep_append_es_cell( ikmc_project_id, result, project )
+        end
+        
+        # Targeting Vectors
+        if result[:targeting_vector]
+          ikmc_idcc_targ_rep_append_targeting_vector( ikmc_project_id, result, project )
         end
       end
       
@@ -67,14 +73,20 @@ module MartSearch
         :intermediate_vector => result[:intermediate_vector]
       }
       
-      targ_vec[:gb_file] = case result[:vector_gb_file]
+      gb_file_available = case result[:vector_gb_file]
       when 'yes' then true
       when 'no'  then false
       end
       
       unless project[:targeting_vectors].include?( targ_vec )
         project[:vector_available] = '1'
+        project[:vector_gb_file]   = gb_file_available
         project[:targeting_vectors].push( targ_vec )
+        
+        if project[:conditional_allele_id].nil? && project[:nonconditional_allele_id].nil?
+          project[:conditional_allele_id]    = targ_vec[:allele_id]
+          project[:nonconditional_allele_id] = targ_vec[:allele_id]
+        end
       end
     end
     
@@ -88,6 +100,18 @@ module MartSearch
         :parental_cell_line        => result[:parental_cell_line],
         :qc_count                  => 0
       }
+      
+      # Allele type
+      es_cell[:allele_type] = case result[:allele_symbol_superscript]
+      when /tm\d+a/ then "Knockout-First"
+      when /tm\d+e/ then "Targeted Non-Conditional"
+      when /tm\d\(/ then "Deletion"
+      else
+        case project[:design_type]
+        when /deletion/i  then "Deletion"
+        else                   "Knockout-First"
+        end
+      end
       
       # Sort and store the QC metrics for the clones
       qc_metrics = [

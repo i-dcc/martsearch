@@ -3,52 +3,65 @@
 <% if conditional_clones or nonconditional_clones %>
 
   <!-- ES Cell clones summary -->
-  
-  <table style="margin-bottom:5px">
-    <thead>
+  <table style="margin-bottom:5px;">
+    <tr>
+      <th>Cassette Type</th>
+      <td><%= cassette_type %></td>
+    </tr>
+    <% if !nonconditional_clones.empty? && nonconditional_clones.first[:allele_type] == "Deletion" %>
       <tr>
-        <th>Design</th>
-        <th># Knockout First Clones</th>
-        <th># Targeted Non-Conditional Clones</th>
-      </tr>
-    </thead>
-    
-    <tbody>
-      <tr>
+        <th><%= nonconditional_clones.length %> Deletion Alleles</th>
         <td>
-          <a href="http://www.sanger.ac.uk/htgt/design/designedit/refresh_design?design_id=<%= design_id %>"><%= design_id %></a> 
-          (<%= design_type %>)
-        </td>
-        <td>
-          <%= conditional_clones.length %>
-          &nbsp;
-          <% if conditional_allele_gb %>
-            (
-            <a href="http://www.i-dcc.org/targ_rep/alleles/<%= conditional_allele_id %>/escell-clone-genbank-file" class="file">genbank&nbsp;file</a>
-            <% unless ['KOMP-Regeneron','mirKO'].include?(pipeline) %>
-               | <a href="http://www.i-dcc.org/targ_rep/alleles/<%= conditional_allele_id %>/allele-image" class="image" rel="prettyPhoto">allele&nbsp;image</a>
-               | <a href="http://www.i-dcc.org/targ_rep/alleles/<%= conditional_allele_id %>/vector-image" class="image" rel="prettyPhoto">vector&nbsp;image</a>
-            <% end %>
+          <%=
+            partial(
+              'dataviews/ikmc-vectors-and-es-cells/escell_clone_links',
+              :locals => {
+                :pipeline  => pipeline,
+                :allele_id => nonconditional_allele_id,
+                :allele_gb => nonconditional_allele_gb,
+                :vector_gb => vector_gb,
+                :clones    => nonconditional_clones
+              }
             )
-          <% end %>
-        </td>
-        <td>
-          <%= nonconditional_clones.length %>
-          <% if nonconditional_allele_gb %>
-            &nbsp;
-            (
-            <a href="http://www.i-dcc.org/targ_rep/alleles/<%= nonconditional_allele_id %>/escell-clone-genbank-file" class="file">genbank&nbsp;file</a>
-            <% unless pipeline == 'mirKO' %>
-               | <a href="http://www.i-dcc.org/targ_rep/alleles/<%= nonconditional_allele_id %>/allele-image" class="image" rel="prettyPhoto">allele&nbsp;image</a>
-            <% end %>
-            <% unless pipeline == 'KOMP-Regeneron' %>
-              | <a href="http://www.i-dcc.org/targ_rep/alleles/<%= nonconditional_allele_id %>/vector-image" class="image" rel="prettyPhoto">vector&nbsp;image</a>
-            <% end %>
-            )
-          <% end %>
+          %>
         </td>
       </tr>
-    </tbody>
+    <% else %>
+      <tr>
+        <th><%= conditional_clones.length %> Knockout-First Alleles</th>
+        <td>
+          <%=
+            partial(
+              'dataviews/ikmc-vectors-and-es-cells/escell_clone_links',
+              :locals => {
+                :pipeline  => pipeline,
+                :allele_id => conditional_allele_id,
+                :allele_gb => conditional_allele_gb,
+                :vector_gb => vector_gb,
+                :clones    => conditional_clones
+              }
+            )
+          %>
+        </td>
+      </tr>
+      <tr>
+        <th><%= nonconditional_clones.length %> Targeted Non-Conditional Alleles</th>
+        <td>
+          <%=
+            partial(
+              'dataviews/ikmc-vectors-and-es-cells/escell_clone_links',
+              :locals => {
+                :pipeline  => pipeline,
+                :allele_id => nonconditional_allele_id,
+                :allele_gb => nonconditional_allele_gb,
+                :vector_gb => vector_gb,
+                :clones    => nonconditional_clones
+              }
+            )
+          %>
+        </td>
+      </tr>
+    <% end %>
   </table>
   
   <!-- Conditional and Non-Conditional clones -->
@@ -63,7 +76,7 @@
         <%=
           partial(
             'dataviews/ikmc-vectors-and-es-cells/escell_clone_details',
-            :locals => { :pipeline => pipeline, :clones => conditional_clones }
+            :locals => { :pipeline => pipeline, :clones => conditional_clones, :cassette_type => cassette_type }
           )
         %>
       <% else %>
@@ -76,7 +89,7 @@
         <%=
           partial(
             'dataviews/ikmc-vectors-and-es-cells/escell_clone_details',
-            :locals => { :pipeline => pipeline, :clones => nonconditional_clones }
+            :locals => { :pipeline => pipeline, :clones => nonconditional_clones, :cassette_type => cassette_type }
           )
         %>
       <% else %>

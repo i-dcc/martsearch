@@ -1,0 +1,63 @@
+<%
+  allele_links = []
+  vector_links = []
+  
+  if allele_gb
+    allele_links.push({
+      :href  => "http://www.i-dcc.org/targ_rep/alleles/#{allele_id}/escell-clone-genbank-file",
+      :class => 'file',
+      :txt   => 'genbank&nbsp;file'
+    })
+    unless ['KOMP-Regeneron','mirKO'].include?(pipeline)
+      allele_links.push({
+        :href  => "http://www.i-dcc.org/targ_rep/alleles/#{allele_id}/allele-image",
+        :class => 'image',
+        :rel   => 'prettyPhoto',
+        :txt   => 'image'
+      })
+    end
+  end
+  
+  if vector_gb
+    vector_links.push({
+      :href  => "http://www.i-dcc.org/targ_rep/alleles/#{allele_id}/targeting-vector-genbank-file",
+      :class => 'file',
+      :txt   => 'genbank&nbsp;file'
+    })
+    unless ['KOMP-Regeneron','mirKO'].include?(pipeline)
+      vector_links.push({
+        :href  => "http://www.i-dcc.org/targ_rep/alleles/#{allele_id}/vector-image",
+        :class => 'image',
+        :rel   => 'prettyPhoto',
+        :txt   => 'image'
+      })
+    end
+  end
+  
+  allele_links.map! do |link|
+    content = link.delete(:txt)
+    content_tag( 'a', content, link )
+  end
+  
+  vector_links.map! do |link|
+    content = link.delete(:txt)
+    content_tag( 'a', content, link )
+  end
+%>
+
+<% if !allele_links.empty? || !vector_links.empty? %>
+  <table class="noborder nopadding nobg" style="margin:0">
+    <% unless allele_links.empty? %>
+      <tr>
+        <td>Allele:</td>
+        <td><%= allele_links.join(' | ') %></td>
+      </tr>
+    <% end %>
+    <% unless vector_links.empty? %>
+      <tr>
+        <td>Targeting Vector:</td>
+        <td><%= vector_links.join(' | ') %></td>
+      </tr>
+    <% end %>    
+  </table>
+<% end %>

@@ -14,8 +14,8 @@ module MartSearch
           if result[:allele_name]
             result[:allele_name] = fix_superscript_text_in_attribute(result[:allele_name])
             result[:allele_type] = case result[:allele_name]
-            when /tm\d+a/ then "Conditional Knockout-First"
-            when /tm\d+e/ then "Targeted Trap"
+            when /tm\d+a/ then "Knockout-First"
+            when /tm\d+e/ then "Targeted Non-Conditional"
             when /tm\d\(/ then "Deletion"
             else               ""
             end

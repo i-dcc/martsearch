@@ -13,6 +13,7 @@
       <th>ES Cell Strain</th>
       <th>ES Cell Line</th>
       <th>Allele</th>
+      <th>Allele Type</th>
       <th>QC/Screening Data</th>
     </tr>
   </thead>
@@ -49,6 +50,9 @@
         </td>
         <td><%= clone[:parental_cell_line] %></td>
         <td><%= clone[:allele_symbol_superscript] %></td>
+        <td>
+          <%= clone[:allele_type] %> (<%= cassette_type %> Cassette)
+        </td>
         <td>
           <% if clone[:qc_count] > 0 %>
             <a class="ikmc-idcc_targ_rep_escell_qc_details_toggle">view&nbsp;data</a>

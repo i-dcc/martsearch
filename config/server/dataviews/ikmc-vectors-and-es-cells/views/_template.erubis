@@ -38,15 +38,16 @@
             partial(
               'dataviews/ikmc-vectors-and-es-cells/escell_clones',
               :locals => {
-                :design_id                => project[:design_id],
-                :design_type              => project[:design_type],
                 :pipeline                 => project[:pipeline],
+                :design_type              => project[:design_type],
+                :cassette_type            => project[:cassette_type],
                 :conditional_clones       => project[:conditional_clones],
                 :conditional_allele_id    => project[:conditional_allele_id],
                 :conditional_allele_gb    => project[:conditional_allele_gb_file],
                 :nonconditional_clones    => project[:nonconditional_clones],
                 :nonconditional_allele_id => project[:nonconditional_allele_id],
-                :nonconditional_allele_gb => project[:nonconditional_allele_gb_file]
+                :nonconditional_allele_gb => project[:nonconditional_allele_gb_file],
+                :vector_gb                => project[:vector_gb_file]
               }
             )
           %>
@@ -58,10 +59,13 @@
               partial(
                 'dataviews/ikmc-vectors-and-es-cells/targeting_vectors',
                 :locals => {
+                  :design_id         => project[:design_id],
+                  :design_type       => project[:design_type],
                   :pipeline          => project[:pipeline],
                   :cassette          => project[:cassette],
                   :backbone          => project[:backbone],
-                  :targeting_vectors => project[:targeting_vectors]
+                  :targeting_vectors => project[:targeting_vectors],
+                  :vector_gb         => project[:vector_gb_file]
                 }
               )
             %>
