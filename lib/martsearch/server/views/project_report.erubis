@@ -40,13 +40,6 @@
   <div class="result">
     <!-- Pipeline progress bar -->
     <%= partial("project_report/progress_bar") %>
-
-    <!-- Mutagenesis Predictions -->
-    <% unless @data[:mutagenesis_predictions].nil? or @data[:mutagenesis_predictions].empty? %>
-      <% unless @data[:mutagenesis_predictions][:transcripts].nil? or @data[:mutagenesis_predictions][:transcripts].empty? %>
-        <%= partial("project_report/mutagenesis_predictions") %>
-      <% end %>
-    <% end %>
     
     <!-- Mice -->
     <% unless @data[:mice].nil? %>
@@ -54,6 +47,13 @@
         <%= partial("project_report/mice") %>
       <% else %>
         <%= partial("project_report/mice_in_progress") %>
+      <% end %>
+    <% end %>
+
+    <!-- Mutagenesis Predictions -->
+    <% unless @data[:mutagenesis_predictions].nil? or @data[:mutagenesis_predictions].empty? %>
+      <% unless @data[:mutagenesis_predictions][:transcripts].nil? or @data[:mutagenesis_predictions][:transcripts].empty? %>
+        <%= partial("project_report/mutagenesis_predictions") %>
       <% end %>
     <% end %>
     
