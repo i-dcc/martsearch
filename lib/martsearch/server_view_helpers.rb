@@ -458,7 +458,14 @@ module MartSearch
         
         return button_text
       end
-      
+
+      # Helper function that produces a link to a HTGT design
+      #
+      # @param  [Int] design_id The design ID
+      # @return [String] A URL link to the design in HTGT
+      def htgt_design_link( design_id )
+        "http://www.sanger.ac.uk/htgt/design/designedit/refresh_design?design_id=#{design_id}"
+      end
   end
   
 end

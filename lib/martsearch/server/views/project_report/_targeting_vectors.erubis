@@ -26,7 +26,13 @@
             <td class="hide_on_print">
               <%= order_vector_txt %>
             </td>
-            <td><%= targvec[:design_id] ? targvec[:design_id] : '-' %></td>
+            <td>
+            <% if targvec[:design_id] %>
+              <a href="<%= htgt_design_link( targvec[:design_id] ) %>" target="_blank"><%= targvec[:design_id] %></a>
+            <% else %>
+              -
+            <% end %>
+            </td>
             <td><%= targvec[:design_type] %></td>
             <td><%= targvec[:name] %></td>
             <td><%= @data[:floxed_exon_link] %></td>
