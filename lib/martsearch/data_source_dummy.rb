@@ -17,7 +17,7 @@ module MartSearch
     # @see MartSearch::DataSource#fetch_all_terms_for_indexing
     # @raise [NotImplementedError] This feature has not been implemented for this class
     def fetch_all_terms_for_indexing( conf )
-      raise NotImplementedError, "This feature has not been implemented for the FileSystemDataSource class."
+      raise NotImplementedError, "This feature has not been implemented for the DummyDataSource class."
     end
     
     # Function to search a biomart datasource given an appropriate configuration.
