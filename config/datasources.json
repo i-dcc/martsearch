@@ -1,4 +1,5 @@
 {
+  "dummy":                { "type": "Dummy" },
   "emma-strains":         { "type": "Biomart", "url": "http://www.emmanet.org/biomart", "dataset": "strains" },
   "ensembl-mouse":        { "type": "Biomart", "url": "http://www.ensembl.org/biomart", "dataset": "mmusculus_gene_ensembl" },
   "eurexpress":           { "type": "Biomart", "url": "http://biomart.eurexpress.org/biomart", "dataset": "template" },

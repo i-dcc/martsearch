@@ -1,0 +1,12 @@
+{
+  "datasource":            "dummy",
+  "enabled":               true,
+  "custom_sort":           false,
+  "custom_secondary_sort": true,
+  "attribution":           "The Wellcome Trust Sanger Institute (WTSI)",
+  "attribution_link":      "http://www.sanger.ac.uk/",
+  "searching":            {
+    "joined_index_field":  "mgi_accession_id_key",
+    "joined_attribute":    "mgi_accession_id"
+  }
+}

@@ -28,7 +28,8 @@
     "wtsi-phenotyping-heatmap",
     "wtsi-phenotyping-heatmap_graphs",
     "wtsi-phenotyping-hom_viability",
-    "wtsi-phenotyping-published_images"
+    "wtsi-phenotyping-published_images",
+    "dummy-mice"
   ],
   "dataviews": [
     "gene-details",
