@@ -10,8 +10,9 @@ module MartSearch
         kermits = result_data[:'ikmc-kermits'] || []
         emma    = result_data[:'emma-strains'] || {}
 
-        # What columns do we want to keep?
+        # Empty the dummy mice and set default values for the columns we want
         result_data[:'dummy-mice'] = []
+        columns_to_merge           = {}
 
         if kermits.empty? and emma.empty?
           result_data.delete(:'ikmc-kermits')
@@ -19,7 +20,13 @@ module MartSearch
           result_data.delete(:'dummy-mice')
           next
         elsif !kermits.empty? and emma.empty?
+          kermits.each do |kermits_mouse|
+            result_data[:'dummy-mice'].push( kermits_mouse.merge(columns_to_merge) )
+          end
         elsif kermits.empty? and !emma.empty?
+          emma.values.each do |emma_strain|
+            result_data[:'dummy-mice'].push( emma_strain.merge(columns_to_merge) )
+          end
         else
           kermits.each do |kermits_mouse|
             emma_mouse = emma.values.select do |strain|
