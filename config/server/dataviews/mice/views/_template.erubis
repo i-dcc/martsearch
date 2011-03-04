@@ -1,9 +1,59 @@
-<% if result_data[:'ikmc-kermits'] %>
-  <h5>Mouse Production</h5>
-  <%= partial('dataviews/ikmc-mice/template', :locals => { :result_data => result_data } ) %>
-<% end %>
-
-<% if result_data[:'emma-strains'] %>
-  <h5>Distribution Information (EMMA)</h5>
-  <%= partial('dataviews/emma-mice/template', :locals => { :result_data => result_data } ) %>
+<% unless result_data[:'dummy-mice'].nil? %>
+  <table width="100%">
+    <thead>
+      <tr>
+        <th>Allele Name</th>
+        <th>Allele Type</th>
+        <th>Colony Prefix</th>
+        <th>ES Cell Clone Name</th>
+        <th>Genetic Background</th>
+        <th>Microinjection Centre</th>
+        <th>Distribution Centre</th>
+        <th>QC/Screening Data</th>
+        <th>EMMA ID</th>
+        <th>Common Strain Name(s)</th>
+        <th>(International) Strain Designation</th>
+      </tr>
+    </thead>
+    <tbody>
+    <% result_data[:'dummy-mice'].each do |mouse| %>
+      <tr>
+        <td><%= mouse[:allele_name] %></td>
+        <td><%= mouse[:allele_type] %></td>
+        <td><%= mouse[:colony_prefix] %></td>
+        <td><%= mouse[:escell_clone] %></td>
+        <td>
+          <%
+            genetic_background = [];
+            if mouse[:back_cross_strain] then genetic_background.push(mouse[:back_cross_strain]) end
+            if mouse[:test_cross_strain] then genetic_background.push(mouse[:test_cross_strain]) end
+            if mouse[:escell_strain]     then genetic_background.push(mouse[:escell_strain])     end
+          %>
+          <%= genetic_background.join(';') %>
+        </td>
+        <td><%= mouse[:mi_centre] %></td>
+        <td><%= mouse[:distribution_centre] %></td>
+        <td>
+          <% if mouse[:qc_count] > 0 %>
+            <a class="ikmc-kermits_qc_details_toggle">view&nbsp;data</a>
+          <% else %>
+            <em style="color:#999;">no&nbsp;data&nbsp;reported</em>
+          <% end %>
+          <br />
+          (&nbsp;<a href="http://www.knockoutmouse.org/kb/entry/90/" target="_blank" class="ext_link">about</a>&nbsp;)
+        </td>
+        <td><a href="<%= emma_link( mouse[:emma_id] ) %>" target="blank"><%= mouse[:emma_id] %></td>
+        <td><%= mouse[:common_name] %></td>
+        <td><%= mouse[:international_strain_name] %></td>
+      </tr>
+      <% if mouse[:qc_count] > 0 %>
+        <tr class="ikmc-kermits_qc_details">
+          <td colspan="11">
+            <%= partial('dataviews/ikmc-mice/qc_data', :locals => { :result => mouse }) %>
+          </td>
+        </tr>
+      <% end %>
+    <% end %>
+    </tbody>
+  </table>
 <% end %>
