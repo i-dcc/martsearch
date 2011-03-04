@@ -63,11 +63,11 @@ module MartSearch
           next
         elsif !kermits.empty? and emma.empty?
           kermits.each do |kermits_mouse|
-            result_data[:'dummy-mice'].push( kermits_mouse.merge(columns_to_merge) )
+            result_data[:'dummy-mice'].push( columns_to_merge.merge(kermits_mouse) )
           end
         elsif kermits.empty? and !emma.empty?
           emma.values.each do |emma_strain|
-            result_data[:'dummy-mice'].push( emma_strain.merge(columns_to_merge) )
+            result_data[:'dummy-mice'].push( columns_to_merge.merge(emma_strain) )
           end
         else
           kermits.each do |kermits_mouse|
