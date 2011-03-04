@@ -51,7 +51,7 @@ module MartSearch
               :qc_loxp_confirmation => nil,
              :qc_three_prime_lr_pcr => nil,
                        :allele_type => nil,
-                          :qc_count => nil,
+                          :qc_count => 0,
                    :ikmc_project_id => nil,
                   :mgi_accession_id => nil
         }
