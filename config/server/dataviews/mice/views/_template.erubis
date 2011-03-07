@@ -8,10 +8,9 @@
         <th>EMMA ID</th>
         <th>Colony Prefix</th>
         <th>ES Cell/Common Name</th>
-        <th>Genetic Background</th>
+        <th><%= result_data[:'dummy-mice'].select { |mouse| mouse[:genetic_background] }.size > 0 ? 'Genetic Background' : '(International) Strain Designation' %></th>
         <th>MI/Distribution Centre</th>
         <th>QC/Screening Data</th>
-        <th>(International) Strain Designation</th>
       </tr>
     </thead>
     <tbody>
@@ -35,7 +34,7 @@
             <%= mouse[:common_name] %>
           <% end %>
         </td>
-        <td><%= mouse[:genetic_background] %></td>
+        <td><%= mouse[:genetic_background] || mouse[:international_strain_name] %></td>
         <td><%= [ mouse[:mi_centre], mouse[:distribution_centre] ].uniq.join('/') %></td>
         <td>
           <% if mouse[:qc_count] > 0 %>
@@ -46,7 +45,6 @@
           <br />
           (&nbsp;<a href="http://www.knockoutmouse.org/kb/entry/90/" target="_blank" class="ext_link">about</a>&nbsp;)
         </td>
-        <td><%= mouse[:international_strain_name] %></td>
       </tr>
       <% if mouse[:qc_count] > 0 %>
         <tr class="ikmc-kermits_qc_details">
