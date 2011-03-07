@@ -9,8 +9,7 @@
         <th>Colony Prefix</th>
         <th>ES Cell Strain Name</th>
         <th>Genetic Background</th>
-        <th>Microinjection Centre</th>
-        <th>Distribution Centre</th>
+        <th>MI/Distribution Centre</th>
         <th>QC/Screening Data</th>
         <th>(International) Strain Designation</th>
       </tr>
@@ -45,8 +44,7 @@
           %>
           <%= genetic_background.join(';') %>
         </td>
-        <td><%= mouse[:mi_centre] %></td>
-        <td><%= mouse[:distribution_centre] %></td>
+        <td><%= [ mouse[:mi_centre], mouse[:distribution_centre] ].uniq.join('/') %></td>
         <td>
           <% if mouse[:qc_count] > 0 %>
             <a class="ikmc-kermits_qc_details_toggle">view&nbsp;data</a>
