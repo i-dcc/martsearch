@@ -53,7 +53,8 @@ module MartSearch
                        :allele_type => nil,
                           :qc_count => 0,
                    :ikmc_project_id => nil,
-                  :mgi_accession_id => nil
+                  :mgi_accession_id => nil,
+                :genetic_background => nil
         }
 
         if kermits.empty? and emma.empty?

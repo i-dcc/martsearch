@@ -35,15 +35,7 @@
             <%= mouse[:common_name] %>
           <% end %>
         </td>
-        <td>
-          <%
-            genetic_background = [];
-            if mouse[:back_cross_strain] then genetic_background.push(mouse[:back_cross_strain]) end
-            if mouse[:test_cross_strain] then genetic_background.push(mouse[:test_cross_strain]) end
-            if mouse[:escell_strain]     then genetic_background.push(mouse[:escell_strain])     end
-          %>
-          <%= genetic_background.join(';') %>
-        </td>
+        <td><%= mouse[:genetic_background] %></td>
         <td><%= [ mouse[:mi_centre], mouse[:distribution_centre] ].uniq.join('/') %></td>
         <td>
           <% if mouse[:qc_count] > 0 %>
