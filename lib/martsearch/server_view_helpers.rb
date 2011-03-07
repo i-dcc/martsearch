@@ -466,6 +466,14 @@ module MartSearch
       def htgt_design_link( design_id )
         "http://www.sanger.ac.uk/htgt/design/designedit/refresh_design?design_id=#{design_id}"
       end
+
+      # Helper function that produces a link to an EMMA ID
+      #
+      # @param  [Int] emma_id The EMMA ID
+      # @return [String] A URL link to the mouse strain in EMMA
+      def emma_link( emma_id )
+        "http://www.emmanet.org/mutant_types.php?keyword=#{emma_id}"
+      end
   end
   
 end

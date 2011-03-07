@@ -1,9 +1,59 @@
-<% if result_data[:'ikmc-kermits'] %>
-  <h5>Mouse Production</h5>
-  <%= partial('dataviews/ikmc-mice/template', :locals => { :result_data => result_data } ) %>
-<% end %>
-
-<% if result_data[:'emma-strains'] %>
-  <h5>Distribution Information (EMMA)</h5>
-  <%= partial('dataviews/emma-mice/template', :locals => { :result_data => result_data } ) %>
+<% unless result_data[:'dummy-mice'].nil? %>
+  <table width="100%">
+    <thead>
+      <tr>
+        <th class="hide_on_print"></th>
+        <th>Allele Name</th>
+        <th>Allele Type</th>
+        <th>EMMA ID</th>
+        <th>Colony Prefix</th>
+        <th>ES Cell/Common Name</th>
+        <th><%= result_data[:'dummy-mice'].select { |mouse| mouse[:genetic_background] }.size > 0 ? 'Genetic Background' : '(International) Strain Designation' %></th>
+        <th>MI/Distribution Centre</th>
+        <th>QC/Screening Data</th>
+      </tr>
+    </thead>
+    <tbody>
+    <% result_data[:'dummy-mice'].each do |mouse| %>
+      <tr>
+        <td>
+          <%
+            dist_flag = false
+            dist_flag = true if mouse[:emma] == "1"
+          %>
+          <%= mouse_order_button( mouse[:mgi_accession_id], mouse[:marker_symbol], mouse[:sponsor], mouse[:ikmc_project_id], dist_flag, mouse[:mi_centre], mouse[:distribution_centre] ) %>
+        </td>
+        <td><%= mouse[:allele_name] %></td>
+        <td><%= mouse[:allele_type] %></td>
+        <td><a href="<%= emma_link( mouse[:emma_id] ) %>" target="blank"><%= mouse[:emma_id] %></td>
+        <td><%= mouse[:colony_prefix] %></td>
+        <td>
+          <% if mouse[:escell_clone] %>
+            <%= mouse[:escell_clone] %>
+          <% else %>
+            <%= mouse[:common_name] %>
+          <% end %>
+        </td>
+        <td><%= mouse[:genetic_background] || mouse[:international_strain_name] %></td>
+        <td><%= [ mouse[:mi_centre], mouse[:distribution_centre] ].uniq.join('/') %></td>
+        <td>
+          <% if mouse[:qc_count] > 0 %>
+            <a class="mice_qc_details_toggle">view&nbsp;data</a>
+          <% else %>
+            <em style="color:#999;">no&nbsp;data&nbsp;reported</em>
+          <% end %>
+          <br />
+          (&nbsp;<a href="http://www.knockoutmouse.org/kb/entry/90/" target="_blank" class="ext_link">about</a>&nbsp;)
+        </td>
+      </tr>
+      <% if mouse[:qc_count] > 0 %>
+        <tr class="mice_qc_details">
+          <td colspan="11">
+            <%= partial('dataviews/mice/qc_data', :locals => { :result => mouse }) %>
+          </td>
+        </tr>
+      <% end %>
+    <% end %>
+    </tbody>
+  </table>
 <% end %>
