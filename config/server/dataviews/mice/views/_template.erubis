@@ -5,13 +5,13 @@
         <th class="hide_on_print"></th>
         <th>Allele Name</th>
         <th>Allele Type</th>
+        <th>EMMA ID</th>
         <th>Colony Prefix</th>
         <th>ES Cell Clone Name</th>
         <th>Genetic Background</th>
         <th>Microinjection Centre</th>
         <th>Distribution Centre</th>
         <th>QC/Screening Data</th>
-        <th>EMMA ID</th>
         <th>Common Strain Name(s)</th>
         <th>(International) Strain Designation</th>
       </tr>
@@ -28,6 +28,7 @@
         </td>
         <td><%= mouse[:allele_name] %></td>
         <td><%= mouse[:allele_type] %></td>
+        <td><a href="<%= emma_link( mouse[:emma_id] ) %>" target="blank"><%= mouse[:emma_id] %></td>
         <td><%= mouse[:colony_prefix] %></td>
         <td><%= mouse[:escell_clone] %></td>
         <td>
@@ -50,7 +51,6 @@
           <br />
           (&nbsp;<a href="http://www.knockoutmouse.org/kb/entry/90/" target="_blank" class="ext_link">about</a>&nbsp;)
         </td>
-        <td><a href="<%= emma_link( mouse[:emma_id] ) %>" target="blank"><%= mouse[:emma_id] %></td>
         <td><%= mouse[:common_name] %></td>
         <td><%= mouse[:international_strain_name] %></td>
       </tr>
