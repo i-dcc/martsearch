@@ -22,13 +22,17 @@
               ensembl_gene_id = result_data[:'mgi-markers'][:ensembl_gene_ids].first()
             end
           %>
+
           <%=
             partial(
               'dataviews/ikmc-vectors-and-es-cells/links',
               :locals => {
                 :pipeline        => project[:pipeline],
                 :ikmc_project_id => project[:ikmc_project_id],
-                :ensembl_gene_id => ensembl_gene_id
+                :ensembl_gene_id => ensembl_gene_id,
+                :chromosome      => result_data[:index][:chromosome],
+                :start_pos       => result_data[:index][:coord_start],
+                :end_pos         => result_data[:index][:coord_end]
               }
             )
           %>
