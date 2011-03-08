@@ -17,6 +17,7 @@ module MartSearch
     # @return [Hash] A hash containing all the data for the given project
     def get_ikmc_project_page_data( project_id )
       datasources = MartSearch::Controller.instance().datasources
+      index       = MartSearch::Controller.instance().index
       data        = { :project_id => project_id.to_s }
       errors      = []
 
@@ -64,7 +65,7 @@ module MartSearch
               unless data[:es_cells][symbol].nil?
                 # update the mouse status
                 data[:es_cells][symbol][:cells].each do |es_cell|
-                  es_cell.merge!({ :"mouse?" => "yes" }) if mouse[:escell_clone] == es_cell[:name]
+                  es_cell.merge!({ "mouse?".to_sym => "yes" }) if mouse[:escell_clone] == es_cell[:name]
                 end
 
                 # then sort (by mice > qc_count > name)
@@ -88,7 +89,12 @@ module MartSearch
         
         # Add the conf for the floxed exon display
         data.merge!( floxed_exon_display_conf( data ) )
-        
+
+        # Add the coordinate information
+        search_engine_data = search_engine_data( index, project_id )
+        data.merge!( search_engine_data[:data] )  unless search_engine_data[:data].empty?
+        errors.push( search_engine_data[:error] ) unless search_engine_data[:error].empty?
+
         # Finally, categorize the stage of the pipeline that we are in
         data.merge!( get_pipeline_stage( data[:status]) ) if data[:status]
       end
@@ -97,7 +103,30 @@ module MartSearch
     end
     
     private
-      
+
+      # Helper function to perform quick searches against the Solr index
+      #
+      # @param  [MartSearch::Index] index      the MartSearch index object
+      # @param  [String]            project_id the project ID
+      # @return [Hash]
+      def search_engine_data( index, project_id )
+        results = handle_biomart_errors( "solr index", "This provides extra information on the project." ) do
+          index.quick_search("ikmc_project_id:#{project_id}")
+        end
+        unless results[:data].empty? or results[:data].nil?
+          results[:data][0].symbolize_keys!
+        end
+
+        # currently we only need the coordinate information
+        results[:data] = {
+          :chromosome  => results[:data][0][:chromosome],
+          :coord_start => results[:data][0][:coord_start],
+          :coord_end   => results[:data][0][:coord_end]
+        }
+
+        return results
+      end
+
       # Helper function to setup links to the floxed/deleted exons and all the config 
       # needed for these activities in the templates.
       #
