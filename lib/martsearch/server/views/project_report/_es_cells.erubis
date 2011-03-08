@@ -37,6 +37,9 @@
     
     <div class="clear"></div>
     <%= partial( "project_report/ensembl_htgt_links", { :locals => { :escell => cells.first[:name] } }) %>
+
+    <!-- link to UCSC -->
+    <!-- <a href="<%=# ucsc_link_url()  %>" class="button ext_link" target="blank">view in UCSC</a> -->
     
     <table>
       <thead>
