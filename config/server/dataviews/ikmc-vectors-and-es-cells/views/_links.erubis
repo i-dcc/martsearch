@@ -7,6 +7,9 @@
         <a href="<%= ensembl_link_url_from_gene( :mouse, ensembl_gene_id, ['das:http://das.sanger.ac.uk/das/ikmc_products'] ) %>" target="_blank">view this allele in Ensembl</a>
       </li>
     <% end %>
+
+    <!-- UCSC link -->
+    <li><a href="<%= ucsc_link_url(chromosome, start_pos, end_pos) %>" target="blank" class="ext_link">view in UCSC</a></li>
     
     <!-- HTGT Gene Report -->
     <% if ikmc_project_id %>
