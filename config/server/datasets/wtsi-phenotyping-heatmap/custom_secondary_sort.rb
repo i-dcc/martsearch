@@ -137,7 +137,8 @@ module MartSearch
       if related_kermits_entry && targ_rep_data
         related_kermits_clone = related_kermits_entry[:escell_clone]
         if related_kermits_clone
-          targ_rep_data.each do |project|
+          targ_rep_data.each do |project_name,project|
+            next if project.nil? || project.empty?
             [:conditional_clones,:nonconditional_clones].each do |clone_type|
               project[clone_type].each do |clone|
                 if clone[:escell_clone] == related_kermits_clone

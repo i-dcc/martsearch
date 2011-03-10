@@ -13,12 +13,7 @@ module MartSearch
           # Correct the <> notation in several attributes...
           if result[:allele_name]
             result[:allele_name] = fix_superscript_text_in_attribute(result[:allele_name])
-            result[:allele_type] = case result[:allele_name]
-            when /tm\d+a/ then "Knockout-First"
-            when /tm\d+e/ then "Targeted Non-Conditional"
-            when /tm\d\(/ then "Deletion"
-            else               ""
-            end
+            result[:allele_type] = allele_type(result[:allele_name])
           end
           if result[:back_cross_strain]
             result[:back_cross_strain] = fix_superscript_text_in_attribute(result[:back_cross_strain])
