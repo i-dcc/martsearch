@@ -1,31 +1,9 @@
-require "rubygems"
-require "shoulda"
+require "test_helper"
 
-# 
-module MartSearch
-  module Utils
-    # Helper function to retrieve the allele type
-    #
-    # @param  [String] allele_symbol the allele symbol superscript
-    # @param  [String] design_type   the design type
-    # @return [String]
-    def allele_type( allele_symbol, design_type = nil )
-       case allele_symbol
-       when /tm\d+a/ then "Knockout-First"
-       when /tm\d+e/ then "Targeted Non-Conditional"
-       when /tm\d\(/ then "Deletion"
-       else
-         case design_type
-         when /deletion/i  then "Deletion"
-         else                   "Knockout-First"
-         end
-       end
-    end
-  end
-end
+class TestMartSearchDataSetUtils < Test::Unit::TestCase
 
-class TestMartSearchUtils < Test::Unit::TestCase
-  include MartSearch::Utils
+  include MartSearch::DataSetUtils
+
   context "A valid allele_symbol" do
     setup do
       @allele_symbols = {
@@ -41,4 +19,31 @@ class TestMartSearchUtils < Test::Unit::TestCase
       end
     end
   end
+
+  context "An invalid allele_symbol marked as a deletion" do
+    setup do
+      @example_data = [
+        {
+          :expected_type => "Deletion",
+          :allele_symbol => "Some Symbol",
+          :design_type   => "deletion",
+        },
+        {
+          :expected_type => "Knockout-First",
+          :allele_symbol => "Some Symbol",
+          :design_type   => "Some Other Design Type",
+        }
+      ]
+    end
+
+    should "still produce the correct allele_type" do
+      @example_data.each do |example|
+        assert_equal example[:expected_type], allele_type(example[:allele_symbol], example[:design_type]),
+        "Did not produce expected allele_type with #{example[:allele_symbol]} and #{example[:design_type]}"
+      end
+    end
+  end
+
+  # what happens when the allele_symbol doesn't match any regex and
+  # design_type is nil?
 end
