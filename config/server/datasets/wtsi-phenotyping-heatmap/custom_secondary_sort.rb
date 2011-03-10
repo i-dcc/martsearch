@@ -18,82 +18,73 @@ module MartSearch
         
         next if heatmap_raw_data.nil?
         
-        # Calculate what to display for each group bubble
+        # First, append any supporting data to the basic heatmap return.
+        heatmap_raw_data.each do |result|
+          # Try to improve the quality of the clone and allele data
+          result, related_kermits_entry = wtsi_phenotyping_heatmap_append_related_kermits_entry( result, result_data )
+          result                        = wtsi_phenotyping_heatmap_append_related_targ_rep_entry( result, result_data, related_kermits_entry )
+          
+          colony_prefix = result[:colony_prefix].to_sym
+          
+          # wtsi-phenotyping-heatmap_graphs
+          result.keys.each do |test|
+            mart_attribute = ds_attribs[test.to_s]
+            
+            next if mart_attribute.nil?
+            
+            test_display_name = mart_attribute.display_name
+            heatmap_graphs    = result_data[:'wtsi-phenotyping-heatmap_graphs']
+            result.merge!( wtsi_phenotyping_heatmap_heatmap_graphs( colony_prefix, heatmap_graphs, test, test_display_name ) ) unless heatmap_graphs.nil?
+          end
+          
+          # wtsi-phenotyping-fertility
+          fertility_data = result_data[:'wtsi-phenotyping-fertility']
+          result.merge!( wtsi_phenotyping_heatmap_fertility_data( colony_prefix, fertility_data ) ) unless fertility_data.nil?
+          
+          # wtsi-phenotyping-hom_viability
+          hom_viability_data = result_data[:'wtsi-phenotyping-hom_viability']
+          result.merge!( wtsi_phenotyping_heatmap_hom_viability_data( colony_prefix, hom_viability_data ) ) unless hom_viability_data.nil?
+          
+          # wtsi-phenotyping-abr
+          abr_data = result_data[:'wtsi-phenotyping-abr']
+          result.merge!( wtsi_phenotyping_heatmap_abr_data( colony_prefix, abr_data ) ) unless abr_data.nil?
+          
+          # wtsi-phenotyping-adult_expression
+          adult_expression_data = result_data[:'wtsi-phenotyping-adult_expression']
+          result = wtsi_phenotyping_heatmap_append_adult_expression_data( colony_prefix, adult_expression_data, result ) unless adult_expression_data.nil?
+          
+          # wtsi-phenotyping-published_images
+          published_image_data = result_data[:'wtsi-phenotyping-published_images']
+          result = wtsi_phenotyping_heatmap_append_published_image_data( colony_prefix, published_image_data, result ) unless published_image_data.nil?
+        end
+        
+        # Now, calculate what to display for each group bubble
         test_groups.each do |group,group_conf|
-          show_this_group   = false
           tests             = group_conf[:tests]
           allowed_pipelines = group_conf[:pipelines]
           group_data        = {
             :results_of_interest => false,
-            :allowed_pipelines   => allowed_pipelines,
             :tests               => {},
             :results             => []
           }
           
-          # First, determine if we should show the group bubble
-          heatmap_raw_data.each do |result|
-            show_this_group = true if allowed_pipelines.include?(result[:pipeline])
+          # Work out the display headings for these tests...
+          tests.each do |test|
+            mart_attribute = ds_attribs[test]
+            group_data[:tests][test.to_sym] = mart_attribute.display_name unless mart_attribute.nil?
           end
           
-          if show_this_group
-            # Work out the display headings for these tests...
-            tests.each do |test|
-              group_data[:tests][test.to_sym] = ds_attribs[test].display_name
-            end
+          heatmap_raw_data.each do |result|
+            group_data[:results].push(result)
             
-            # Now calculate what we should display for each 'result' row...
-            heatmap_raw_data.each do |result|
-              
-              # Do we want to show this row of data?
-              next unless allowed_pipelines.include?(result[:pipeline])
-              
-              # On a group level - do we have 'results of interest' for this group?
-              unless group_data[:results_of_interest]
-                tests.each do |test|
-                  if wtsi_phenotyping_css_class_for_test(result[test.to_sym]) == "significant_difference"
-                    group_data[:results_of_interest] = true
-                  end
+            # On a group level - do we have 'results of interest' for this group?
+            unless group_data[:results_of_interest]
+              tests.each do |test|
+                if wtsi_phenotyping_css_class_for_test(result[test.to_sym]) == "significant_difference"
+                  group_data[:results_of_interest] = true
                 end
               end
-              
-              # Try to improve the quality of the clone and allele data
-              result, related_kermits_entry = wtsi_phenotyping_heatmap_append_related_kermits_entry( result, result_data )
-              result                        = wtsi_phenotyping_heatmap_append_related_targ_rep_entry( result, result_data, related_kermits_entry )
-              
-              # Finally check all the other WTSI MGP datasets for data and add links 
-              # to detailed report pages for each test...
-              colony_prefix = result[:colony_prefix].to_sym
-              tests.each do |test|
-                test_display_name = group_data[:tests][test.to_sym]
-                
-                # wtsi-phenotyping-heatmap_graphs
-                heatmap_graphs = result_data[:'wtsi-phenotyping-heatmap_graphs']
-                result.merge!( wtsi_phenotyping_heatmap_heatmap_graphs( colony_prefix, heatmap_graphs, test, test_display_name ) ) unless heatmap_graphs.nil?
-                
-                # wtsi-phenotyping-fertility
-                fertility_data = result_data[:'wtsi-phenotyping-fertility']
-                result.merge!( wtsi_phenotyping_heatmap_fertility_data( colony_prefix, fertility_data ) ) unless fertility_data.nil?
-                
-                # wtsi-phenotyping-hom_viability
-                hom_viability_data = result_data[:'wtsi-phenotyping-hom_viability']
-                result.merge!( wtsi_phenotyping_heatmap_hom_viability_data( colony_prefix, hom_viability_data ) ) unless hom_viability_data.nil?
-                
-                # wtsi-phenotyping-abr
-                abr_data = result_data[:'wtsi-phenotyping-abr']
-                result.merge!( wtsi_phenotyping_heatmap_abr_data( colony_prefix, abr_data ) ) unless abr_data.nil?
-                
-                # wtsi-phenotyping-adult_expression
-                adult_expression_data = result_data[:'wtsi-phenotyping-adult_expression']
-                result = wtsi_phenotyping_heatmap_append_adult_expression_data( colony_prefix, adult_expression_data, result ) unless adult_expression_data.nil?
-                
-                # wtsi-phenotyping-published_images
-                published_image_data = result_data[:'wtsi-phenotyping-published_images']
-                result = wtsi_phenotyping_heatmap_append_published_image_data( colony_prefix, published_image_data, result ) unless published_image_data.nil?
-              end
-              
-              group_data[:results].push(result)
             end
-            
           end
           
           heatmap_data[group.to_sym] = group_data
@@ -201,7 +192,7 @@ module MartSearch
     def wtsi_phenotyping_heatmap_hom_viability_data( colony_prefix, hom_viability_data )
       data_to_return                             = {}
       data_for_colony                            = hom_viability_data[colony_prefix]
-      data_to_return[:homozygote_viability_data] = data_for_colony unless data_for_colony.nil?
+      data_to_return[:viability_at_weaning_data] = data_for_colony unless data_for_colony.nil?
       return data_to_return
     end
     
@@ -210,7 +201,7 @@ module MartSearch
       data_to_return = {}
       
       abr_data.each do |abr_result|
-        data_to_return[:abr_data] = abr_result if abr_result[:colony_prefix] == colony_prefix.to_s
+        data_to_return[:auditory_brainstem_response_data] = abr_result if abr_result[:colony_prefix] == colony_prefix.to_s
       end
       
       return data_to_return
@@ -221,8 +212,8 @@ module MartSearch
       ticklist = adult_expression_data[colony_prefix]
       
       if ticklist and !ticklist.empty?
-        result[:adult_expression_data]            ||= {}
-        result[:adult_expression_data][:ticklist]   = ticklist
+        result[:adult_lac_z_expression_data]            ||= {}
+        result[:adult_lac_z_expression_data][:ticklist]   = ticklist
       end
       
       return result
@@ -232,7 +223,7 @@ module MartSearch
     def wtsi_phenotyping_heatmap_append_published_image_data( colony_prefix, published_image_data, result )
       images = published_image_data[colony_prefix]
       
-      ['adult_expression','embryo_expression','skin_screen'].each do |image_group|
+      ['adult_lac_z_expression','embryo_lac_z_expression','skin_histopathology'].each do |image_group|
         if images && ( images[image_group.to_sym] && !images[image_group.to_sym].empty? )
           result["#{image_group}_data".to_sym]          ||= {}
           result["#{image_group}_data".to_sym][:images]   = images[image_group.to_sym]
