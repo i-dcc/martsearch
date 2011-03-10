@@ -58,7 +58,7 @@ module MartSearch
           ikmc_idcc_targ_rep_append_targeting_vector( ikmc_project_id, result, project )
         end
       end
-      
+
       return sorted_results
     end
     
