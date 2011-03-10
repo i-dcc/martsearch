@@ -107,7 +107,6 @@ module MartSearch
     # @param  [Int]    end_pos
     # @return [String] URL link to UCSC
     def ucsc_link_url(chromosome, start_pos, end_pos)
-      ap :chromosome => chromosome, :start_pos => start_pos, :end_pos => end_pos
       "http://genome.ucsc.edu/cgi-bin/hgTracks?db=mm9&ikmc=pack&position=chr#{chromosome}:#{start_pos}-#{end_pos}"
     end
 
