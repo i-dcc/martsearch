@@ -32,6 +32,11 @@ class TestMartSearchDataSetUtils < Test::Unit::TestCase
           :expected_type => "Knockout-First",
           :allele_symbol => "Some Symbol",
           :design_type   => "Some Other Design Type",
+        },
+        {
+          :expected_type => "",
+          :allele_symbol => nil,
+          :design_type   => nil,
         }
       ]
     end

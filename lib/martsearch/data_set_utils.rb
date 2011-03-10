@@ -34,6 +34,7 @@ module MartSearch
        when /tm\d\(/ then "Deletion"
        else
          case design_type
+         when nil          then ""
          when /deletion/i  then "Deletion"
          else                   "Knockout-First"
          end
