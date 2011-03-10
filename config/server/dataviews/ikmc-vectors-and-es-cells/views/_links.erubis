@@ -9,7 +9,7 @@
     <% end %>
 
     <!-- UCSC link -->
-    <li><a href="<%= ucsc_link_url(chromosome, start_pos, end_pos) %>" target="blank" class="ext_link">view in UCSC</a></li>
+    <li><a href="<%= ucsc_link_url(chromosome, start_pos, end_pos) %>" target="blank" class="ext_link">view this allele in UCSC</a></li>
     
     <!-- HTGT Gene Report -->
     <% if ikmc_project_id %>
