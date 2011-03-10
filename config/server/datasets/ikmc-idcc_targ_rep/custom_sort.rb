@@ -102,17 +102,8 @@ module MartSearch
       }
       
       # Allele type
-      es_cell[:allele_type] = case result[:allele_symbol_superscript]
-      when /tm\d+a/ then "Knockout-First"
-      when /tm\d+e/ then "Targeted Non-Conditional"
-      when /tm\d\(/ then "Deletion"
-      else
-        case project[:design_type]
-        when /deletion/i  then "Deletion"
-        else                   "Knockout-First"
-        end
-      end
-      
+      es_cell[:allele_type] = allele_type(es_cell[:allele_symbol_superscript], project[:design_type])
+
       # Sort and store the QC metrics for the clones
       qc_metrics = [
         :production_qc_five_prime_screen,
