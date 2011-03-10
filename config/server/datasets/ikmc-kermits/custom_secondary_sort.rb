@@ -9,7 +9,7 @@ module MartSearch
         
         # Cache the IKMC Project ID's for clones...
         escell_cache = {}
-        result_data[:'ikmc-idcc_targ_rep'].each do |targ_rep_data|
+        result_data[:'ikmc-idcc_targ_rep'].each do |project_name,targ_rep_data|
           [:conditional_clones,:nonconditional_clones].each do |clone_type|
             unless targ_rep_data[clone_type].nil?
               targ_rep_data[clone_type].each do |clone|
