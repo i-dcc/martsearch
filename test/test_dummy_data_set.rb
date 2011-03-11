@@ -6,65 +6,32 @@ require 'test_helper'
 # Dync1h1       | no kermiks data         | MGI:103147  |
 # Cbx1          | kermits and emma data   | MGI:105369  |
 # B020004C17Rik | no kermits or emma data | MGI:3588236 |
-#
-# Use MartSearchDataSetTest as a template.
+#               |                         | MGI:107846  |
+#               |                         | MGI:1339795 |
 
 class MartSearchDummyDataSetTest < Test::Unit::TestCase
-
-  include MartSearch::DataSetUtils
-
-  context 'A MartSearch::DummyDataSet' do
-    context 'with corresponding EMMA and KERMITS data' do
-      setup do
-        @emma     = {
-          'EM:00001' => { 'emma_id' => 'EM:00001', 'common_name' => 'EPD0001' },
-          'EM:00002' => { 'emma_id' => 'EM:00002', 'common_name' => 'EPD0002' },
-        }
-        @kermits  = [ { 'escell_clone' => 'EPD0001' }, { 'escell_clone' => 'EPD0002' } ]
-        @expected = [
-          { 'emma_id' => 'EM:00001', 'common_name' => 'EPD0001', 'escell_clone' => 'EPD0001' },
-          { 'emma_id' => 'EM:00002', 'common_name' => 'EPD0002', 'escell_clone' => 'EPD0002' },
-        ]
-        @defaults = { 'common_name' => nil, 'emma_id' => nil, 'escell_clone' => nil }
-      end
-
-      should 'merge the EMMA and KERMITS data correctly' do
-        assert_equal @expected, merge_emma_and_kermits( @emma, @kermits, @defaults )
-      end
+  context 'A MartSearch::DummyDataSet object' do
+    setup do
+      VCR.insert_cassette('test_dummy_mice')
+      @conf_obj          = MartSearch::Controller.instance
+      @mgi_accession_ids = {
+        'MGI:107846'  => 2,
+        'MGI:1339795' => 1,
+      }
     end
 
-    context 'with EMMA data missing' do
-      setup do
-        @emma     = { 'EM:00001' => { 'emma_id' => 'EM:00001', 'common_name' => 'EPD0001' } }
-        @kermits  = [ { 'escell_clone' => 'EPD0001' }, { 'escell_clone' => 'EPD0002' } ]
-        @expected = [
-          { 'emma_id' => 'EM:00001', 'common_name' => 'EPD0001', 'escell_clone' => 'EPD0001' },
-          { 'emma_id' => nil, 'common_name' => nil, 'escell_clone' => 'EPD0002' },
-        ]
-        @defaults = { 'common_name' => nil, 'emma_id' => nil, 'escell_clone' => nil }
-      end
-
-      should 'merge the EMMA and KERMITS data correctly' do
-        assert_equal @expected, merge_emma_and_kermits( @emma, @kermits, @defaults )
-      end
+    teardown do
+      VCR.eject_cassette
     end
 
-    context 'with KERMITS data missing' do
-      setup do
-        @emma     = {
-          'EM:00001' => { 'emma_id' => 'EM:00001', 'common_name' => 'EPD0001' },
-          'EM:00002' => { 'emma_id' => 'EM:00002', 'common_name' => 'EPD0002' },
-        }
-        @kermits  = [ { 'escell_clone' => 'EPD0001' } ]
-        @expected = [
-          { 'emma_id' => 'EM:00001', 'common_name' => 'EPD0001', 'escell_clone' => 'EPD0001' },
-          { 'emma_id' => 'EM:00002', 'common_name' => 'EPD0002', 'escell_clone' => nil },
-        ]
-        @defaults = { 'common_name' => nil, 'emma_id' => nil, 'escell_clone' => nil }
-      end
+    should 'instiantiate' do
+      assert @conf_obj
+    end
 
-      should 'merge the EMMA and KERMITS data correctly' do
-        assert_equal @expected, merge_emma_and_kermits( @emma, @kermits, @defaults )
+    should 'return the correct number of dummy mice' do
+      @mgi_accession_ids.each do |mgi_accession_id, expected_count|
+        assert_nothing_raised { @conf_obj.search([mgi_accession_id]) }
+        assert_equal expected_count, @conf_obj.search_data[mgi_accession_id.to_sym][:'dummy-mice'].size
       end
     end
   end
