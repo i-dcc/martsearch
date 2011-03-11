@@ -19,10 +19,11 @@ class MartSearchDummyDataSetTest < Test::Unit::TestCase
         @emma     = { 'EM:00001' => { 'emma_id' => 'EM:00001', 'common_name' => 'EPD0001' }, 'EM:00002' => { 'emma_id' => 'EM:00002', 'common_name' => 'EPD0002' } }
         @kermits  = [ { 'escell_clone' => 'EPD0001' }, { 'escell_clone' => 'EPD0002' } ]
         @expected = [ { 'emma_id' => 'EM:00001', 'common_name' => 'EPD0001', 'escell_clone' => 'EPD0001' }, { 'emma_id' => 'EM:00002', 'common_name' => 'EPD0002', 'escell_clone' => 'EPD0002' } ]
+        @defaults = { 'common_name' => nil, 'emma_id' => nil, 'escell_clone' => nil }
       end
 
       should 'merge the EMMA and KERMITS data correctly' do
-        assert_equal @expected, merge_emma_and_kermits( @emma, @kermits )
+        assert_equal @expected, merge_emma_and_kermits( @emma, @kermits, @defaults )
       end
     end
 
@@ -31,10 +32,11 @@ class MartSearchDummyDataSetTest < Test::Unit::TestCase
         @emma     = { 'EM:00001' => { 'emma_id' => 'EM:00001', 'common_name' => 'EPD0001' } }
         @kermits  = [ { 'escell_clone' => 'EPD0001' }, { 'escell_clone' => 'EPD0002' } ]
         @expected = [ { 'emma_id' => 'EM:00001', 'common_name' => 'EPD0001', 'escell_clone' => 'EPD0001' }, { 'emma_id' => nil, 'common_name' => nil, 'escell_clone' => 'EPD0002' } ]
+        @defaults = { 'common_name' => nil, 'emma_id' => nil, 'escell_clone' => nil }
       end
 
       should 'merge the EMMA and KERMITS data correctly' do
-        assert_equal @expected, merge_emma_and_kermits( @emma, @kermits )
+        assert_equal @expected, merge_emma_and_kermits( @emma, @kermits, @defaults )
       end
     end
 
@@ -43,10 +45,11 @@ class MartSearchDummyDataSetTest < Test::Unit::TestCase
         @emma     = { 'EM:00001' => { 'emma_id' => 'EM:00001', 'common_name' => 'EPD0001' }, 'EM:00002' => { 'emma_id' => 'EM:00002', 'common_name' => 'EPD0002' } }
         @kermits  = [ { 'escell_clone' => 'EPD0001' } ]
         @expected = [ { 'emma_id' => 'EM:00001', 'common_name' => 'EPD0001', 'escell_clone' => 'EPD0001' }, { 'emma_id' => 'EM:00002', 'common_name' => 'EPD0002', 'escell_clone' => nil } ]
+        @defaults = { 'common_name' => nil, 'emma_id' => nil, 'escell_clone' => nil }
       end
 
       should 'merge the EMMA and KERMITS data correctly' do
-        assert_equal @expected, merge_emma_and_kermits( @emma, @kermits )
+        assert_equal @expected, merge_emma_and_kermits( @emma, @kermits, @defaults )
       end
     end
   end

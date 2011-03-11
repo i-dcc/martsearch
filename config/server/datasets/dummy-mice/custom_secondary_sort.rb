@@ -5,9 +5,8 @@ module MartSearch
     # @param  [Hash]  emma
     # @param  [Array] kermits
     # @return [Array]
-    def merge_emma_and_kermits( emma, kermits )
-      defaults = { 'common_name' => nil, 'emma_id' => nil, 'escell_clone' => nil }
-      results  = []
+    def merge_emma_and_kermits( emma, kermits, defaults = { 'common_name' => nil, 'emma_id' => nil, 'escell_clone' => nil } )
+      results = []
 
       # associate KERMITS mice to EMMA strains
       kermits.each do |kermit_mouse|
