@@ -7,18 +7,20 @@ module MartSearch
     # @param  [Hash]  defaults
     # @return [Array]
     def merge_emma_and_kermits( emma, kermits, defaults )
-      results = []
+      results   = []
+      emma_copy = emma.clone
 
       # associate KERMITS mice to EMMA strains
-      kermits.each do |kermit_mouse|
-        emma_mice  = emma.values.select { |e| e['common_name'] == kermit_mouse['escell_clone'] }
-        emma_mouse = emma_mice.nil? || emma_mice.empty? ? defaults : emma_mice.first
-        results.push( emma_mouse.merge( kermit_mouse ) )
+      kermits.each do |mouse|
+        strains = emma_copy.values.select { |strain| mouse['escell_clone'] == strain['common_name'] }
+        strain  = strains.nil? || strains.empty? ? defaults : strains.first
+        results.push(strain.merge(mouse))
+        emma_copy.delete(strain['emma_id'])
       end
 
       # check for EMMA mice with no corresponding KERMITS mouse
-      [ emma.keys - results.collect { |m| m['emma_id'] } ].flatten.each do |emma_id|
-        results.push( defaults.merge( emma[emma_id] ) )
+      emma_copy.values.each do |strain|
+        results.push(defaults.merge(strain))
       end
       
       return results
@@ -94,7 +96,7 @@ module MartSearch
             result_data[:'dummy-mice'].push( columns_to_merge.merge(emma_strain) )
           end
         else
-          result_data[:'dummy-mice'].push( merge_emma_and_kermits( emma, kermits, columns_to_merge ).flatten )
+          result_data[:'dummy-mice'] = merge_emma_and_kermits( emma, kermits, columns_to_merge )
         end
       end
 
