@@ -16,9 +16,15 @@ class MartSearchDummyDataSetTest < Test::Unit::TestCase
   context 'A MartSearch::DummyDataSet' do
     context 'with corresponding EMMA and KERMITS data' do
       setup do
-        @emma     = { 'EM:00001' => { 'emma_id' => 'EM:00001', 'common_name' => 'EPD0001' }, 'EM:00002' => { 'emma_id' => 'EM:00002', 'common_name' => 'EPD0002' } }
+        @emma     = {
+          'EM:00001' => { 'emma_id' => 'EM:00001', 'common_name' => 'EPD0001' },
+          'EM:00002' => { 'emma_id' => 'EM:00002', 'common_name' => 'EPD0002' },
+        }
         @kermits  = [ { 'escell_clone' => 'EPD0001' }, { 'escell_clone' => 'EPD0002' } ]
-        @expected = [ { 'emma_id' => 'EM:00001', 'common_name' => 'EPD0001', 'escell_clone' => 'EPD0001' }, { 'emma_id' => 'EM:00002', 'common_name' => 'EPD0002', 'escell_clone' => 'EPD0002' } ]
+        @expected = [
+          { 'emma_id' => 'EM:00001', 'common_name' => 'EPD0001', 'escell_clone' => 'EPD0001' },
+          { 'emma_id' => 'EM:00002', 'common_name' => 'EPD0002', 'escell_clone' => 'EPD0002' },
+        ]
         @defaults = { 'common_name' => nil, 'emma_id' => nil, 'escell_clone' => nil }
       end
 
@@ -31,7 +37,10 @@ class MartSearchDummyDataSetTest < Test::Unit::TestCase
       setup do
         @emma     = { 'EM:00001' => { 'emma_id' => 'EM:00001', 'common_name' => 'EPD0001' } }
         @kermits  = [ { 'escell_clone' => 'EPD0001' }, { 'escell_clone' => 'EPD0002' } ]
-        @expected = [ { 'emma_id' => 'EM:00001', 'common_name' => 'EPD0001', 'escell_clone' => 'EPD0001' }, { 'emma_id' => nil, 'common_name' => nil, 'escell_clone' => 'EPD0002' } ]
+        @expected = [
+          { 'emma_id' => 'EM:00001', 'common_name' => 'EPD0001', 'escell_clone' => 'EPD0001' },
+          { 'emma_id' => nil, 'common_name' => nil, 'escell_clone' => 'EPD0002' },
+        ]
         @defaults = { 'common_name' => nil, 'emma_id' => nil, 'escell_clone' => nil }
       end
 
@@ -42,9 +51,15 @@ class MartSearchDummyDataSetTest < Test::Unit::TestCase
 
     context 'with KERMITS data missing' do
       setup do
-        @emma     = { 'EM:00001' => { 'emma_id' => 'EM:00001', 'common_name' => 'EPD0001' }, 'EM:00002' => { 'emma_id' => 'EM:00002', 'common_name' => 'EPD0002' } }
+        @emma     = {
+          'EM:00001' => { 'emma_id' => 'EM:00001', 'common_name' => 'EPD0001' },
+          'EM:00002' => { 'emma_id' => 'EM:00002', 'common_name' => 'EPD0002' },
+        }
         @kermits  = [ { 'escell_clone' => 'EPD0001' } ]
-        @expected = [ { 'emma_id' => 'EM:00001', 'common_name' => 'EPD0001', 'escell_clone' => 'EPD0001' }, { 'emma_id' => 'EM:00002', 'common_name' => 'EPD0002', 'escell_clone' => nil } ]
+        @expected = [
+          { 'emma_id' => 'EM:00001', 'common_name' => 'EPD0001', 'escell_clone' => 'EPD0001' },
+          { 'emma_id' => 'EM:00002', 'common_name' => 'EPD0002', 'escell_clone' => nil },
+        ]
         @defaults = { 'common_name' => nil, 'emma_id' => nil, 'escell_clone' => nil }
       end
 
