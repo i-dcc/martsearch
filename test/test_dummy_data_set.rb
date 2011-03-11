@@ -9,32 +9,6 @@ require 'test_helper'
 #
 # Use MartSearchDataSetTest as a template.
 
-module MartSearch
-  module DataSetUtils
-    # Merge the EMMA and KERMITS data
-    #
-    # @param  [Hash]  emma
-    # @param  [Array] kermits
-    # @return [Array]
-    def merge_emma_and_kermits( emma, kermits )
-      defaults = { 'common_name' => nil, 'emma_id' => nil, 'escell_clone' => nil }
-      results  = []
-      kermits.each do |kermit_mouse|
-        emma_mice  = emma.values.select { |e| e['common_name'] == kermit_mouse['escell_clone'] }
-        emma_mouse = emma_mice.nil? || emma_mice.empty? ? defaults : emma_mice.first
-        results.push( emma_mouse.merge( kermit_mouse ) )
-      end
-
-      # check for EMMA mice with no corresponding KERMITS mouse
-      [ emma.keys - results.collect { |m| m['emma_id'] } ].flatten.each do |emma_id|
-        results.push( defaults.merge( emma[emma_id] ) )
-      end
-      
-      return results
-    end
-  end
-end
-
 class MartSearchDummyDataSetTest < Test::Unit::TestCase
 
   include MartSearch::DataSetUtils
