@@ -9,5 +9,37 @@ require 'test_helper'
 #
 # Use MartSearchDataSetTest as a template.
 
+module MartSearch
+  module DataSetUtils
+    # Merge the EMMA and KERMITS data
+    #
+    # @param  [Hash]  emma
+    # @param  [Array] kermits
+    # @return [Array]
+    def merge_emma_and_kermits( emma, kermits )
+      results = []
+      kermits.each do |kermit_mouse|
+        emma_mouse = emma.values.select { |e| e['common_name'] == kermit_mouse['escell_clone'] }
+        results.push( kermit_mouse.merge( emma_mouse.first ) )
+      end
+      return results
+    end
+  end
+end
+
 class MartSearchDummyDataSetTest < Test::Unit::TestCase
+
+  include MartSearch::DataSetUtils
+
+  context 'A MartSearch::DummyDataSet' do
+    setup do
+      @emma    = { 'EM:00001' => { 'common_name' => 'EPD0001' } }
+      @kermits = [ { 'escell_clone' => 'EPD0001' } ]
+    end
+
+    should 'merge the EMMA and KERMITS data correctly' do
+      assert_equal [ { 'common_name' => 'EPD0001', 'escell_clone' => 'EPD0001' } ],
+        merge_emma_and_kermits( @emma, @kermits )
+    end
+  end
 end
