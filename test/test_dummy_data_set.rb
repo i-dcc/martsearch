@@ -24,6 +24,12 @@ module MartSearch
         emma_mouse = emma_mice.nil? || emma_mice.empty? ? defaults : emma_mice.first
         results.push( emma_mouse.merge( kermit_mouse ) )
       end
+
+      # check for EMMA mice with no corresponding KERMITS mouse
+      [ emma.keys - results.collect { |m| m['emma_id'] } ].flatten.each do |emma_id|
+        results.push( defaults.merge( emma[emma_id] ) )
+      end
+      
       return results
     end
   end
@@ -51,6 +57,18 @@ class MartSearchDummyDataSetTest < Test::Unit::TestCase
         @emma     = { 'EM:00001' => { 'emma_id' => 'EM:00001', 'common_name' => 'EPD0001' } }
         @kermits  = [ { 'escell_clone' => 'EPD0001' }, { 'escell_clone' => 'EPD0002' } ]
         @expected = [ { 'emma_id' => 'EM:00001', 'common_name' => 'EPD0001', 'escell_clone' => 'EPD0001' }, { 'emma_id' => nil, 'common_name' => nil, 'escell_clone' => 'EPD0002' } ]
+      end
+
+      should 'merge the EMMA and KERMITS data correctly' do
+        assert_equal @expected, merge_emma_and_kermits( @emma, @kermits )
+      end
+    end
+
+    context 'with KERMITS data missing' do
+      setup do
+        @emma     = { 'EM:00001' => { 'emma_id' => 'EM:00001', 'common_name' => 'EPD0001' }, 'EM:00002' => { 'emma_id' => 'EM:00002', 'common_name' => 'EPD0002' } }
+        @kermits  = [ { 'escell_clone' => 'EPD0001' } ]
+        @expected = [ { 'emma_id' => 'EM:00001', 'common_name' => 'EPD0001', 'escell_clone' => 'EPD0001' }, { 'emma_id' => 'EM:00002', 'common_name' => 'EPD0002', 'escell_clone' => nil } ]
       end
 
       should 'merge the EMMA and KERMITS data correctly' do
