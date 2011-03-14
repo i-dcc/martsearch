@@ -1,6 +1,5 @@
 module MartSearch
   module DataSetUtils
-
     # Sort the mouse data from EMMA and KERMITS
     #
     # @param  [Hash] search_data
@@ -71,17 +70,37 @@ module MartSearch
             result_data[:'dummy-mice'].push( columns_to_merge.merge(emma_strain) )
           end
         else
-          kermits.each do |kermits_mouse|
-            emma_mouse = emma.values.select do |strain|
-              kermits_mouse[:escell_clone] == strain[:common_name]
-            end
-            emma_mouse = columns_to_merge if emma_mouse.nil? || emma_mouse.empty?
-            result_data[:'dummy-mice'].push( kermits_mouse.merge( emma_mouse.first ) )
-          end
+          result_data[:'dummy-mice'] = merge_emma_and_kermits( emma, kermits, columns_to_merge )
         end
       end
 
       return search_data
+    end
+
+    # Merge the EMMA and KERMITS data
+    #
+    # @param  [Hash]  emma
+    # @param  [Array] kermits
+    # @param  [Hash]  defaults
+    # @return [Array]
+    def merge_emma_and_kermits( emma, kermits, defaults )
+      results   = []
+      emma_copy = emma.clone
+
+      # associate KERMITS mice to EMMA strains
+      kermits.each do |mouse|
+        strains = emma_copy.values.select { |strain| mouse[:escell_clone] == strain[:common_name] }
+        strain  = strains.nil? || strains.empty? ? defaults : strains.first
+        results.push(strain.merge(mouse))
+        emma_copy.delete(strain[:emma_id])
+      end
+
+      # check for EMMA mice with no corresponding KERMITS mouse
+      emma_copy.values.each do |strain|
+        results.push(defaults.merge(strain))
+      end
+
+      return results
     end
   end
 end
