@@ -39,7 +39,7 @@ my $DATA = JSON->new->decode($data_json) or die "Unable to read data file '$HEAT
 
 # Use this variable to set the number of columns of data we have 
 # per-row before we print out the test results...
-my $no_of_leading_text_entries = 5;
+my $no_of_leading_text_entries = 3;
 
 # Set up the spreadsheet and apply some formatting...
 my $workbook = Spreadsheet::WriteExcel->new( $XLS_NAME );
