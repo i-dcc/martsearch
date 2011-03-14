@@ -75,6 +75,7 @@ module MartSearch
             emma_mouse = emma.values.select do |strain|
               kermits_mouse[:escell_clone] == strain[:common_name]
             end
+            emma_mouse = columns_to_merge if emma_mouse.nil? || emma_mouse.empty?
             result_data[:'dummy-mice'].push( kermits_mouse.merge( emma_mouse.first ) )
           end
         end
