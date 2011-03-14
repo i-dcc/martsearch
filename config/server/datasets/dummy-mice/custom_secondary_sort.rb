@@ -89,7 +89,7 @@ module MartSearch
 
       # associate KERMITS mice to EMMA strains
       kermits.each do |mouse|
-        strains = emma_copy.values.select { |strain| mouse['escell_clone'] == strain['common_name'] }
+        strains = emma_copy.values.select { |strain| mouse[:escell_clone] == strain[:common_name] }
         strain  = strains.nil? || strains.empty? ? defaults : strains.first
         results.push(strain.merge(mouse))
         emma_copy.delete(strain[:emma_id])
