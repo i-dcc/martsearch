@@ -35,7 +35,7 @@ class MartSearchDummyDataSetTest < Test::Unit::TestCase
 
     should 'return the correct number of dummy mice' do
       @mgi_accession_ids.each do |mgi_accession_id, expected_count|
-        assert_nothing_raised { @conf_obj.search([mgi_accession_id]) }
+        assert_nothing_raised { @conf_obj.search(mgi_accession_id, 1, false) }
         assert_equal expected_count, @conf_obj.search_data[mgi_accession_id.to_sym][:'dummy-mice'].size
       end
     end
