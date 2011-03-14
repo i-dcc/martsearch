@@ -79,13 +79,13 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
       VCR.use_cassette('test_server_browsing') do
         @controller.config[:server][:browsable_content].each do |name,conf|
           # Select 5 random pages to hit - doing them all takes forever...
-          conf[:options].randomly_pick(5).each do |option_name|
-            opts = conf[:processed_options][option_name.to_sym]
+          conf[:options].keys.randomly_pick(5).each do |option_name|
+            opts = conf[:options][option_name.to_sym]
             
             page_no = 1
             while page_no < 3
-              visit "/browse/#{name}/#{opts[:link_arg]}/#{page_no}"
-              assert_equal( '/browse', current_path, "A request to '/browse/#{name}/#{opts[:link_arg]}/#{page_no}' failed!" )
+              visit "/browse/#{name}/#{option_name}/#{page_no}"
+              assert_equal( '/browse', current_path, "A request to '/browse/#{name}/#{option_name}/#{page_no}' failed!" )
               
               if page.has_css?('.pagination a.next_page')
                 page_no = page_no + 1
@@ -217,11 +217,11 @@ class MartSearchServerRackTest < Test::Unit::TestCase
       VCR.use_cassette('test_server_browsing') do
         @controller.config[:server][:browsable_content].each do |name,conf|
           # Select 5 random pages to hit - doing them all takes forever...
-          conf[:options].randomly_pick(5).each do |option_name|
-            opts = conf[:processed_options][option_name.to_sym]
+          conf[:options].keys.randomly_pick(5).each do |option_name|
+            opts = conf[:options][option_name.to_sym]
             
-            @browser.get "/browse?field=#{name}&query=#{opts[:link_arg]}&page=1&wt=json"
-            assert( @browser.last_response.ok?, "A request to '/browse?field=#{name}&query=#{opts[:link_arg]}&page=1&wt=json' failed!" )
+            @browser.get "/browse?field=#{name}&query=#{option_name}&page=1&wt=json"
+            assert( @browser.last_response.ok?, "A request to '/browse?field=#{name}&query=#{option_name}&page=1&wt=json' failed!" )
             json = JSON.parse( @browser.last_response.body )
             assert( json.is_a?(Hash) )
           end

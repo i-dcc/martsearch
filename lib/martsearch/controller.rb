@@ -115,14 +115,14 @@ module MartSearch
         all_ok = true
         counts = {}
         @config[:server][:browsable_content].each do |field,field_config|
-          counts[field.to_sym] = {}
-          Parallel.each( field_config[:processed_options].keys, :in_threads => 5 ) do |option|
+          counts[field] = {}
+          Parallel.each( field_config[:options].keys, :in_threads => 5 ) do |option|
             begin
-              option_config                       = field_config[:processed_options][option]
-              counts[field.to_sym][option.to_sym] = @index.count( option_config[:solr_query] )
+              option_config         = field_config[:options][option]
+              counts[field][option] = @index.count( option_config[:query] )
             rescue MartSearch::IndexSearchError => error
               all_ok                              = false
-              counts[field.to_sym][option.to_sym] = nil
+              counts[field][option] = nil
             end
           end
         end
