@@ -22,7 +22,7 @@ module MartSearch
     # We're going to use the version number as a cache breaker for the CSS 
     # and javascript code. Update with each release of your portal (especially 
     # if you change the CSS or JS)!!!
-    VERSION = '0.1.12'
+    VERSION = '0.1.13'
     DEFAULT_CSS_FILES = [
       'reset.css',
       'jquery.prettyPhoto.css',
@@ -180,17 +180,17 @@ module MartSearch
         if !@config[:browsable_content].has_key?(params[:field].to_sym)
           status 404
           halt
-        elsif !@config[:browsable_content][params[:field].to_sym][:processed_options].has_key?(params[:query].to_sym)
+        elsif !@config[:browsable_content][params[:field].to_sym][:options].has_key?(params[:query].to_sym)
           status 404
           halt
         else
           browser_field_conf = @config[:browsable_content][params[:field].to_sym]
-          browser            = browser_field_conf[:processed_options][params[:query].to_sym]
+          browser            = browser_field_conf[:options][params[:query].to_sym]
           use_cache          = params[:fresh] == "true" ? false : true
           
-          @page_title    = "Browsing Data by #{browser_field_conf[:display_name]}: '#{browser[:display_arg]}'"
+          @page_title    = "Browsing Data by #{browser_field_conf[:display_name]}: '#{browser[:text]}'"
           @results_title = @page_title
-          @solr_query    = browser[:solr_query]
+          @solr_query    = browser[:query]
           @results       = @ms.search( @solr_query, params[:page].to_i, use_cache )
           @data          = @ms.search_data
           @errors        = @ms.errors
@@ -227,27 +227,16 @@ module MartSearch
         
         @current    = "home"
         @page_title = "IKMC Project: #{project_id}"
-        @data       = nil
-        cache       = MartSearch::Controller.instance().cache
+        @data       = @ms.fetch_from_cache("project-report-#{project_id}")
         
-        cached_data = cache.fetch("project-report-#{project_id}")
-        if cached_data.nil? or params[:fresh] == "true"
+        if @data.nil? or params[:fresh] == "true"
           results = get_ikmc_project_page_data( project_id )
           @data   = results[:data]
           @errors = { :project_page_errors => results[:errors] }
           
           unless @data.nil?
-            if cache.is_a?(MartSearch::MongoCache)
-              cache.write("project-report-#{project_id}", @data, :expires_in => 12.hours )
-            else
-              cache.write("project-report-#{project_id}", BSON.serialize(@data), :expires_in => 12.hours )
-            end
+            @ms.write_to_cache( "project-report-#{project_id}", @data )
           end
-        else
-          @data = cached_data
-          @data = BSON.deserialize(@data) unless cache.is_a?(MartSearch::MongoCache)
-          @data = @data.clean_hash if RUBY_VERSION < '1.9'
-          @data.recursively_symbolize_keys!
         end
         
         if @data.nil?

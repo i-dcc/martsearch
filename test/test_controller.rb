@@ -113,9 +113,9 @@ class MartSearchControllerTest < Test::Unit::TestCase
         assert( fresh_counts.is_a?(Hash) )
         
         @controller.config[:server][:browsable_content].each do |field,field_config|
-          assert_not_nil( fresh_counts[field.to_sym] )
-          field_config[:processed_options].each do |option,option_config|
-            assert_not_nil( fresh_counts[field.to_sym][option.to_sym] )
+          assert_not_nil( fresh_counts[field] )
+          field_config[:options].each do |option,option_config|
+            assert_not_nil( fresh_counts[field][option] )
           end
         end
       end
@@ -145,6 +145,15 @@ class MartSearchControllerTest < Test::Unit::TestCase
       end
     end
     
+    should "allow us to interact with the cache via helpers" do
+      @controller.cache.clear
+      assert_equal( @controller.fetch_from_cache("foo"), nil )
+      
+      data = { :a => 'a', :b => 23, :c => [1,2,3] }
+      
+      @controller.write_to_cache( "foo", data )
+      assert_equal( data, @controller.fetch_from_cache("foo") )
+    end
   end
   
 end

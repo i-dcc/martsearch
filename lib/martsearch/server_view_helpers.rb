@@ -100,6 +100,16 @@ module MartSearch
       return url
     end
 
+    # Helper function to generate link to UCSC
+    #
+    # @param  [String] chromosome
+    # @param  [Int]    start_pos
+    # @param  [Int]    end_pos
+    # @return [String] URL link to UCSC
+    def ucsc_link_url(chromosome, start_pos, end_pos)
+      "http://genome.ucsc.edu/cgi-bin/hgTracks?db=mm9&ikmc=pack&position=chr#{chromosome}:#{start_pos}-#{end_pos}"
+    end
+
     # Helper function to generate a link to InterPro
     #
     # @param  [String|Symbol] interpro_ac - the InterPro ID
@@ -458,7 +468,22 @@ module MartSearch
         
         return button_text
       end
-      
+
+      # Helper function that produces a link to a HTGT design
+      #
+      # @param  [Int] design_id The design ID
+      # @return [String] A URL link to the design in HTGT
+      def htgt_design_link( design_id )
+        "http://www.sanger.ac.uk/htgt/design/designedit/refresh_design?design_id=#{design_id}"
+      end
+
+      # Helper function that produces a link to an EMMA ID
+      #
+      # @param  [Int] emma_id The EMMA ID
+      # @return [String] A URL link to the mouse strain in EMMA
+      def emma_link( emma_id )
+        "http://www.emmanet.org/mutant_types.php?keyword=#{emma_id}"
+      end
   end
   
 end

@@ -39,7 +39,7 @@ my $DATA = JSON->new->decode($data_json) or die "Unable to read data file '$HEAT
 
 # Use this variable to set the number of columns of data we have 
 # per-row before we print out the test results...
-my $no_of_leading_text_entries = 5;
+my $no_of_leading_text_entries = 3;
 
 # Set up the spreadsheet and apply some formatting...
 my $workbook = Spreadsheet::WriteExcel->new( $XLS_NAME );
@@ -147,13 +147,13 @@ sub _xls_test_result_format {
   my ( $tf, $result ) = @_;
   my $form;
   
-  if    ( $result eq "Test complete and data\/resources available" )  { $form = $tf->{completed_data_available}; }
-  elsif ( $result eq "Test complete and considered interesting" )     { $form = $tf->{significant_difference}; }
-  elsif ( $result eq "Test complete but not considered interesting" ) { $form = $tf->{no_significant_difference}; }
-  elsif ( $result eq "Early indication of possible phenotype" )       { $form = $tf->{early_indication}; }
-  elsif ( $result =~ /^Test not performed or applicable/i )           { $form = $tf->{not_applicable}; }
-  elsif ( $result eq "Test abandoned" )                               { $form = $tf->{test_abandoned}; }
-  else                                                                { $form = $tf->{test_pending}; }
+  if    ( $result eq "CompleteDataAvailable" )   { $form = $tf->{completed_data_available}; }
+  elsif ( $result eq "CompleteInteresting" )     { $form = $tf->{significant_difference}; }
+  elsif ( $result eq "CompleteNotInteresting" )  { $form = $tf->{no_significant_difference}; }
+  elsif ( $result eq "EarlyIndicator" )          { $form = $tf->{early_indication}; }
+  elsif ( $result eq "NotPerformedApplicable" )  { $form = $tf->{not_applicable}; }
+  elsif ( $result eq "Abandoned" )               { $form = $tf->{test_abandoned}; }
+  else                                           { $form = $tf->{test_pending}; }
   
   return $form;
 }

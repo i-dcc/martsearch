@@ -16,7 +16,7 @@
           <thead>
             <tr>
               <th>Allele Name</th>
-              <th>Comparison</th>
+              <th>Colony Prefix</th>
               <% group_data[:tests].each do |test_name,test_display_name| %>
                 <th><span class="vertical_text"><%= test_display_name %></span></th>
               <% end %>
@@ -26,7 +26,7 @@
             <% group_data[:results].each do |result| %>
               <tr>
                 <td><%= result[:allele_name] %></td>
-                <td><%= result[:comparison] %></td>
+                <td><%= result[:colony_prefix] %></td>
                 <% group_data[:tests].each do |test_name,test_display_name| %>
                   <td 
                     class="<%= wtsi_phenotyping_css_class_for_test(result[test_name]) %> pheno_result" 

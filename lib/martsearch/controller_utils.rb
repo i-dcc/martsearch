@@ -59,7 +59,7 @@ module MartSearch
       server_conf['dataviews']         = dataviews_conf[:dataviews]
       server_conf['dataviews_by_name'] = dataviews_conf[:dataviews_by_name]
       server_conf['datasets']          = process_datasets_conf( config_dir, server_conf['datasets'] )
-      server_conf['browsable_content'] = process_browsable_content_conf( server_conf['browsable_content'] )
+      server_conf['browsable_content'] = server_conf['browsable_content']
       
       server_conf.recursively_symbolize_keys!
       server_conf
@@ -91,14 +91,14 @@ module MartSearch
         server     = config[:server]     ? config[:server]     : 'localhost'
         port       = config[:port]       ? config[:port].to_i  : 27017
         db         = config[:db]         ? config[:db]         : 'martsearch'
-        mongo      = Mongo::Connection.new(server, port).db("#{db}-#{MartSearch::ENVIRONMENT}")
+        mongo      = Mongo::Connection.new( server, port, :pool_size => 5, :timeout => 5 ).db("#{db}-#{MartSearch::ENVIRONMENT}")
         
         return MartSearch::MongoCache.new( :db => mongo, :collection_name => 'martsearch_cache' )
       else
         return ActiveSupport::Cache::MemoryStore.new()
       end
     end
-
+    
     private
       
       ##
@@ -167,65 +167,6 @@ module MartSearch
         datasets
       end
       
-      def process_browsable_content_conf( browsable_content )
-        browsable_content.each do |content_group,content_conf|
-          content_conf['processed_options'] = {}
-          
-          content_conf['options'].map! do |option|
-            link_arg    = nil
-            display_arg = nil
-            solr_query  = nil
-            search_term = nil
-            child       = nil
-            
-            if option.is_a?(Array)
-              link_arg    = option[0].downcase
-              display_arg = option[0]
-              search_term = option[1]
-              solr_query  = "#{content_conf['index_field']}:#{search_term}"
-            elsif option.is_a?(Hash)
-              link_arg    = option['slug'].downcase
-              display_arg = option['text']
-              search_term = option['query']
-              child       = option['child']
-              solr_query  = "#{content_conf['index_field']}:#{search_term}"
-            else
-              link_arg    = option.downcase
-              display_arg = option
-              search_term = option
-              solr_query  = "#{content_conf['index_field']}:#{search_term}"
-            end
-            
-            # If the configuration doesnt already contain a grouped query 
-            # make the search case insensitive (as we assume we are searching
-            # on a solr string field - i.e. not interpreted in any way...)
-            unless solr_query.match(/\)$/)
-              if content_conf['exact_search']
-                if search_term =~ /[0-9]+/
-                  solr_query = "#{content_conf['index_field']}:#{search_term}"
-                else
-                  solr_query = "(#{content_conf['index_field']}:#{search_term.downcase} OR #{content_conf['index_field']}:#{search_term.upcase})"
-                end
-              else
-                solr_query = "(#{content_conf['index_field']}:#{search_term.downcase}* OR #{content_conf['index_field']}:#{search_term.upcase}*)"
-              end
-            end
-            
-            # display_arg.gsub!(' ','&nbsp;')
-            content_conf['processed_options'][link_arg] = {
-              :display_arg => display_arg,
-              :link_arg    => link_arg,
-              :solr_query  => solr_query,
-              :search_term => search_term,
-              :child       => child
-            }
-            
-            link_arg
-          end
-        end
-        
-        browsable_content
-      end
   end
   
 end

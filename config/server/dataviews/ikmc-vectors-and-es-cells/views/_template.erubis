@@ -4,7 +4,7 @@
       <!-- Progress Bar -->
       <%=
         partial(
-          'dataviews/ikmc-targeted-products/progress_bar',
+          'dataviews/ikmc-vectors-and-es-cells/progress_bar',
           :locals => { 
             :project      => project,
             :result_data  => result_data
@@ -22,13 +22,17 @@
               ensembl_gene_id = result_data[:'mgi-markers'][:ensembl_gene_ids].first()
             end
           %>
+
           <%=
             partial(
-              'dataviews/ikmc-targeted-products/links',
+              'dataviews/ikmc-vectors-and-es-cells/links',
               :locals => {
                 :pipeline        => project[:pipeline],
                 :ikmc_project_id => project[:ikmc_project_id],
-                :ensembl_gene_id => ensembl_gene_id
+                :ensembl_gene_id => ensembl_gene_id,
+                :chromosome      => result_data[:index][:chromosome],
+                :start_pos       => result_data[:index][:coord_start],
+                :end_pos         => result_data[:index][:coord_end]
               }
             )
           %>
@@ -36,17 +40,18 @@
           <!-- ES Cells -->
           <%=
             partial(
-              'dataviews/ikmc-targeted-products/escell_clones',
+              'dataviews/ikmc-vectors-and-es-cells/escell_clones',
               :locals => {
-                :design_id                => project[:design_id],
-                :design_type              => project[:design_type],
                 :pipeline                 => project[:pipeline],
+                :design_type              => project[:design_type],
+                :cassette_type            => project[:cassette_type],
                 :conditional_clones       => project[:conditional_clones],
                 :conditional_allele_id    => project[:conditional_allele_id],
                 :conditional_allele_gb    => project[:conditional_allele_gb_file],
                 :nonconditional_clones    => project[:nonconditional_clones],
                 :nonconditional_allele_id => project[:nonconditional_allele_id],
-                :nonconditional_allele_gb => project[:nonconditional_allele_gb_file]
+                :nonconditional_allele_gb => project[:nonconditional_allele_gb_file],
+                :vector_gb                => project[:vector_gb_file]
               }
             )
           %>
@@ -56,12 +61,15 @@
           <% if project[:targeting_vectors] %>
             <%=
               partial(
-                'dataviews/ikmc-targeted-products/targeting_vectors',
+                'dataviews/ikmc-vectors-and-es-cells/targeting_vectors',
                 :locals => {
+                  :design_id         => project[:design_id],
+                  :design_type       => project[:design_type],
                   :pipeline          => project[:pipeline],
                   :cassette          => project[:cassette],
                   :backbone          => project[:backbone],
-                  :targeting_vectors => project[:targeting_vectors]
+                  :targeting_vectors => project[:targeting_vectors],
+                  :vector_gb         => project[:vector_gb_file]
                 }
               )
             %>

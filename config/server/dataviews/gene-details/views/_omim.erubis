@@ -1,4 +1,6 @@
-<% unless result_data[:'ikmc-omim'].nil? %>
+<% if result_data[:'ikmc-omim'].nil? %>
+  <h6>Related Human Conditions (from OMIM) <em> - no related Human Condition</em></h6>
+<% else %>
   <h6>Related Human Conditions (from OMIM)</h6>
   <ul>
     <% result_data[:'ikmc-omim'].each do |omim| %>

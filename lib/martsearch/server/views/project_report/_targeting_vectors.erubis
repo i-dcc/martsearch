@@ -1,11 +1,11 @@
 <div class="dataset">
   <h4 class="dataset_title toggle-open">Targeting Vectors</h4>
   <div class="dataset_content">
-    <% unless @data[:vector_image].nil? %>
+    <% if !@data[:vector_image].nil? && show_allele_and_vector_images %>
       <img src="<%= @data[:vector_image] %>" width="930px" />
-      <div class="clear"></div>
     <% end %>
     
+    <div class="clear"></div>
     <%= partial( "project_report/ensembl_htgt_links", { :locals => { :escell => nil } } ) %>
     
     <table>
@@ -26,7 +26,13 @@
             <td class="hide_on_print">
               <%= order_vector_txt %>
             </td>
-            <td><%= targvec[:design_id] ? targvec[:design_id] : '-' %></td>
+            <td>
+            <% if targvec[:design_id] %>
+              <a href="<%= htgt_design_link( targvec[:design_id] ) %>" target="_blank"><%= targvec[:design_id] %></a>
+            <% else %>
+              -
+            <% end %>
+            </td>
             <td><%= targvec[:design_type] %></td>
             <td><%= targvec[:name] %></td>
             <td><%= @data[:floxed_exon_link] %></td>

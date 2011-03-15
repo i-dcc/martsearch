@@ -40,13 +40,6 @@
   <div class="result">
     <!-- Pipeline progress bar -->
     <%= partial("project_report/progress_bar") %>
-
-    <!-- Mutagenesis Predictions -->
-    <% unless @data[:mutagenesis_predictions].nil? or @data[:mutagenesis_predictions].empty? %>
-      <% unless @data[:mutagenesis_predictions][:transcripts].nil? or @data[:mutagenesis_predictions][:transcripts].empty? %>
-        <%= partial("project_report/mutagenesis_predictions") %>
-      <% end %>
-    <% end %>
     
     <!-- Mice -->
     <% unless @data[:mice].nil? %>
@@ -56,22 +49,34 @@
         <%= partial("project_report/mice_in_progress") %>
       <% end %>
     <% end %>
+
+    <!-- Mutagenesis Predictions -->
+    <% unless @data[:mutagenesis_predictions].nil? or @data[:mutagenesis_predictions].empty? %>
+      <% unless @data[:mutagenesis_predictions][:transcripts].nil? or @data[:mutagenesis_predictions][:transcripts].empty? %>
+        <%= partial("project_report/mutagenesis_predictions") %>
+      <% end %>
+    <% end %>
+    
+    <%
+      @show_allele_and_vector_images = true
+      @show_allele_and_vector_images = false if ['mirKO'].include?( @data[:ikmc_project] )
+    %>
     
     <% unless @data[:es_cells].nil? %>
       <!-- ES Cell Clones (Conditional) -->
       <% unless @data[:es_cells][:conditional][:cells].empty? %>
-        <%= partial("project_report/es_cells", :locals => { :cond_vs_noncond => :conditional }) %>
+        <%= partial("project_report/es_cells", :locals => { :cond_vs_noncond => :conditional, :show_allele_and_vector_images => @show_allele_and_vector_images }) %>
       <% end %>
       
       <!-- ES Cell Clones (Non-Conditionals) -->
       <% unless @data[:es_cells][:'targeted non-conditional'][:cells].empty? %>
-        <%= partial("project_report/es_cells", :locals => { :cond_vs_noncond => :'targeted non-conditional' }) %>
+        <%= partial("project_report/es_cells", :locals => { :cond_vs_noncond => :'targeted non-conditional', :show_allele_and_vector_images => @show_allele_and_vector_images }) %>
       <% end %>
     <% end %>
     
     <!-- Targeting Vectors -->
     <% unless @data[:targeting_vectors].nil? or @data[:targeting_vectors].empty? %>
-      <%= partial("project_report/targeting_vectors") %>
+      <%= partial("project_report/targeting_vectors", :locals => { :show_allele_and_vector_images => @show_allele_and_vector_images } ) %>
     <% end %>
     
     <!-- Intermediate Vectors -->

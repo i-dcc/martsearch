@@ -4,31 +4,23 @@
       <h6 class="single_parent_toggler_toggle slide<% if field.to_s == params[:field] %> open<% end %>"><%= field_config[:display_name] %></h6>
       <div class="single_parent_toggler_content<% if field.to_s == params[:field] %> open<% end %>">
         <ul>
-          <% field_config[:options].each do |option_name| %>
+          <% field_config[:options].each do |option_name,display_opts| %>
             <%
-              display_opts = field_config[:processed_options][option_name.to_sym]
-              query        = display_opts[:link_arg]
-              text         = display_opts[:display_arg]
               li_class     = []
               
-              if display_opts[:child]
-                li_class.push('child')
-              end
+              li_class.push('child')   if display_opts[:child]
+              li_class.push('current') if field.to_s == params[:field] and option_name.to_s == params[:query]
               
-              if field.to_s == params[:field] and query == params[:query]
-                li_class.push('current')
-              end
-              
-              count = nil
-              if @browse_counts[field.to_sym] && @browse_counts[field.to_sym][option_name.to_sym]
-                count = @browse_counts[field.to_sym][option_name.to_sym]
+              count = 0
+              if @browse_counts[field] && @browse_counts[field][option_name]
+                count = @browse_counts[field][option_name]
               end
             %>
               <li<%= ' class="' + li_class.join(" ") + '"' unless li_class.empty? %>>
                 <%=
                   link_to(
-                    text + ' <span class="count">(' + count.to_s + ')</span>',
-                    { :path => '/browse', :field => field, :query => query } 
+                    display_opts[:text] + ' <span class="count">(' + count.to_s + ')</span>',
+                    { :path => '/browse', :field => field, :query => option_name } 
                   )
                 %>
               </li>

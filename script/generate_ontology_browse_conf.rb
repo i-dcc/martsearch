@@ -8,7 +8,7 @@ require 'martsearch'
 CONF = {
   :mp => {
     :id               => 'mamalian-phenotype',
-    :index_field      => 'mp',
+    :index_field      => 'MP',
     :root_term        => 'MP:0000001',
     :display_name     => "Mamalian Phenotype",
     :descriptive_text => "browse for genes that when knocked-out have been annotated as causing a distinct phenotype (as classified by the <a href='http://www.obofoundry.org/cgi-bin/detail.cgi?id=mammalian_phenotype' target='_blank'>mamalian phenotype ontology</a>)",
@@ -16,7 +16,7 @@ CONF = {
   },
   :ma => {
     :id               => 'adult-mouse-anatomy',
-    :index_field      => 'ma',
+    :index_field      => 'MA',
     :root_term        => 'MA:0002405',
     :display_name     => "Adult Mouse Anatomy",
     :descriptive_text => "browse for genes that when knocked-out have been annotated as being expressed within a region (as classified by the <a href='http://www.obofoundry.org/cgi-bin/detail.cgi?id=adult_mouse_anatomy' target='_blank'>adult mouse anatomy ontology</a>)",
@@ -33,11 +33,9 @@ ARGV.each do |cmd|
   conf     = CONF[cmd.downcase.to_sym]
   
   generated_conf[ conf[:id] ] = {
-    "index_field"      => conf[:index_field],
     "display_name"     => conf[:display_name],
     "descriptive_text" => conf[:descriptive_text],
-    "exact_search"     => true,
-    "options"          => []
+    "options"          => {}
   }
   
   ontology        = MartSearch::OntologyTerm.new(conf[:root_term])
@@ -51,11 +49,11 @@ ARGV.each do |cmd|
     
     # puts "#{term} - #{term_name}"
     
-    generated_conf[ conf[:id] ]["options"].push({
-      "text"  => term_name,
-      "query" => term,
-      "slug"  => term_name.gsub(' ','-').gsub('/','-')
-    })
+    generated_conf[ conf[:id] ]["options"][ term_name.gsub(' ','-').gsub('/','-') ] = {
+        "text"  => term_name,
+        "query" => "#{conf[:index_field]}:#{term}"
+    }
+    
     
     if conf[:include_children]
       child.children.sort{ |a,b| a.term_name <=> b.term_name }.each do |grand_child|
@@ -66,12 +64,11 @@ ARGV.each do |cmd|
         
         # puts "#{term} - #{term_name}"
         
-        generated_conf[ conf[:id] ]["options"].push({
+        generated_conf[ conf[:id] ]["options"][ term_name.gsub(' ','-').gsub('/','-') ] = {
           "text"  => term_name,
-          "query" => term,
-          "slug"  => term_name.gsub(' ','-').gsub('/','-'),
+          "query" => "#{conf[:index_field]}:#{term}",
           "child" => true
-        })
+        }
       end
     end
   end
