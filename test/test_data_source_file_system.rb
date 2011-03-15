@@ -21,19 +21,20 @@ class MartSearchFileSystemDataSourceTest < Test::Unit::TestCase
     end
     
     should 'return the expeced data structure for search()' do
-      if @conf_obj.datasets[:'wtsi-phenotyping-abr'].nil?
-        skip( "Can't run a FileSystemDataSource.search() test without a configured dataset." )
-      else
-        dataset_conf = @conf_obj.datasets[:'wtsi-phenotyping-abr'].config()
-        ret          = @fs_datasource.search( ['MAMH','MAMJ'], dataset_conf[:searching] )
-        
-        assert( ret.is_a?(Array), 'search() does not return an array.' )
-        assert( ret.size > 0, 'the return from search() is empty - it should have data...' )
-        assert( ret[0].is_a?(Hash), 'The elements of the array from search() are not hashes.' )
-        
-        ret.each do |data_return|
-          assert( data_return.keys.include?( :file ), "The attribute :file is missing from the data hash." )
-        end
+      omit_if(
+        @conf_obj.datasets[:'wtsi-phenotyping-abr'].nil?,
+        "Can't run a FileSystemDataSource.search() test without a configured dataset."
+      )
+      
+      dataset_conf = @conf_obj.datasets[:'wtsi-phenotyping-abr'].config()
+      ret          = @fs_datasource.search( ['MAMH','MAMJ'], dataset_conf[:searching] )
+      
+      assert( ret.is_a?(Array), 'search() does not return an array.' )
+      assert( ret.size > 0, 'the return from search() is empty - it should have data...' )
+      assert( ret[0].is_a?(Hash), 'The elements of the array from search() are not hashes.' )
+      
+      ret.each do |data_return|
+        assert( data_return.keys.include?( :file ), "The attribute :file is missing from the data hash." )
       end
     end
     
