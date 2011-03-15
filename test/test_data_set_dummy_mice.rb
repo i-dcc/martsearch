@@ -10,11 +10,11 @@ require 'test_helper'
 # MBBZ          | 1 emma strain and 1 kermits mouse | MGI:1339795 | 1 |
 # MAVE          | no match b/w emma and kermits     | MGI:1336167 | 2 |
 
-class MartSearchDummyDataSetTest < Test::Unit::TestCase
-  context 'A MartSearch::DummyDataSet object' do
+class MartSearchDataSetDummyMiceTest < Test::Unit::TestCase
+  context 'The "dummy-mice" DataSet' do
     setup do
       VCR.insert_cassette('test_dummy_mice')
-      @conf_obj          = MartSearch::Controller.instance
+      @ms                = MartSearch::Controller.instance
       @mgi_accession_ids = {
         'MGI:1916976' => 1,
         'MGI:103147'  => 1,
@@ -29,14 +29,10 @@ class MartSearchDummyDataSetTest < Test::Unit::TestCase
       VCR.eject_cassette
     end
 
-    should 'instiantiate' do
-      assert @conf_obj
-    end
-
-    should 'return the correct number of dummy mice' do
+    should 'return the correct number of mouse records' do
       @mgi_accession_ids.each do |mgi_accession_id, expected_count|
-        assert_nothing_raised { @conf_obj.search(mgi_accession_id, 1, false) }
-        assert_equal expected_count, @conf_obj.search_data[mgi_accession_id.to_sym][:'dummy-mice'].size
+        assert_nothing_raised { @ms.search(mgi_accession_id, 1, false) }
+        assert_equal( expected_count, @ms.search_data[mgi_accession_id.to_sym][:'dummy-mice'].size, "dummy mice for #{mgi_accession_id} has the wrong count..." )
       end
     end
   end
