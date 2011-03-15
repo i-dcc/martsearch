@@ -224,7 +224,7 @@ module MartSearch
     def wtsi_phenotyping_heatmap_append_published_image_data( colony_prefix, published_image_data, result )
       images = published_image_data[colony_prefix]
       
-      ['adult_lac_z_expression','embryo_lac_z_expression','skin_histopathology'].each do |image_group|
+      ['adult_lac_z_expression','embryo_lac_z_expression','tail_epidermis_wholemount'].each do |image_group|
         if images && ( images[image_group.to_sym] && !images[image_group.to_sym].empty? )
           result["#{image_group}_data".to_sym]          ||= {}
           result["#{image_group}_data".to_sym][:images]   = images[image_group.to_sym]

@@ -137,14 +137,14 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
               next if test_url == 'eye-histopathology'
               
               test_title = case test_url
-              when 'abr'                   then 'Auditory Brainstem Response'
-              when 'adult-expression'      then 'Adult Expression'
-              when 'embryo-expression'     then 'Embryo Expression'
-              when 'homozygote-viability'  then 'Homozygote Viability'
-              when 'fertility'             then 'Fertility'
-              when 'skin-screen'           then 'Skin Screen'
+              when 'auditory-brainstem-response' then 'Auditory Brainstem Response'
+              when 'adult-lac-z-expression'      then 'Adult LacZ Expression'
+              when 'embryo-lac-z-expression'     then 'Embryo LacZ Expression'
+              when 'viability-at-weaning'        then 'Viability at Weaning'
+              when 'fertility'                   then 'Fertility'
+              when 'tail-epidermis-wholemount'   then 'Tail Epidermis Wholemount'
               else
-                test_data[:heatmap_group]
+                test_data[:test_group]
               end
               
               urls_to_hit.push({
@@ -160,9 +160,9 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
             urls_to_hit.each do |test_conf|
               visit test_conf[:url]
               assert_equal( "#{test_conf[:url]}", current_path, "WTSI Phenotyping - can't visit '#{test_conf[:url]}'!" )
-              assert( page.has_content?(test_conf[:title]) )
+              assert( page.has_content?(test_conf[:title]), "WTSI Phenotyping - '#{test_conf[:url]}' doesn't have the title '#{test_conf[:title]}'..." )
               
-              if test_conf[:test] == 'abr'
+              if test_conf[:test_group] == 'auditory-brainstem-response'
                 assert( page.has_css?('#abr-thresholds') )
                 href = page.first(:css, "#abr-thresholds a[rel='prettyPhoto']")[:href]
                 visit "#{test_conf[:url]}#{href}"
@@ -292,10 +292,10 @@ class MartSearchServerRackTest < Test::Unit::TestCase
           colonies_to_test = ['MAIG','MAKH','MBAD']
           
           colonies_to_test.each do |colony_prefix|
-            @browser.get "/phenotyping/#{colony_prefix}/abr"
+            @browser.get "/phenotyping/#{colony_prefix}/auditory-brainstem-response"
             @browser.follow_redirect!
-            assert( @browser.last_response.ok?, "/phenotyping/#{colony_prefix}/abr failed." )
-            assert( @browser.last_response.body.include?('Auditory Brainstem Response'), "/phenotyping/#{colony_prefix}/abr doesn't have the title 'Auditory Brainstem Response'." )
+            assert( @browser.last_response.ok?, "/phenotyping/#{colony_prefix}/auditory-brainstem-response failed." )
+            assert( @browser.last_response.body.include?('Auditory Brainstem Response'), "/phenotyping/#{colony_prefix}/auditory-brainstem-response doesn't have the title 'Auditory Brainstem Response'." )
           end
         end
       end
@@ -306,7 +306,11 @@ class MartSearchServerRackTest < Test::Unit::TestCase
         skip("Skipping WTSI Phenotyping report tests as the DataView is not active.")
       else
         VCR.use_cassette('test_server_wtsi_phenotyping_report_pages') do
-          tests_to_test    = ['abr','homozygote-viability','fertility','adult-expression','embryo-expression','dexa','hot-plate','skin-screen']
+          tests_to_test    = [
+            'auditory-brainstem-response', 'viability-at-weaning', 'fertility',
+            'adult-lac-z-expression','embryo-lac-z-expression','body-composition-dexa',
+            'hot-plate','tail-epidermis-wholemount'
+          ]
           colonies_to_test = ['FOOO','BAAR','BAAZ','ARRR']
           
           colonies_to_test.each do |colony_prefix|

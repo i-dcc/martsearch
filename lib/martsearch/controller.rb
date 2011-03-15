@@ -156,7 +156,7 @@ module MartSearch
           counts = {
             :standard_phenotyping => complete_mgp_genes_count( heatmap_mart, heatmap_test_groups_conf[:'Comprehensive Phenotyping Pipeline'][:tests] ),
             :infection_challenge  => complete_mgp_genes_count( heatmap_mart, heatmap_test_groups_conf[:'Infectious Challenges'][:tests] ),
-            :expression           => complete_mgp_genes_count( heatmap_mart, ['adult_expression','embryo_expression'] )
+            :expression           => complete_mgp_genes_count( heatmap_mart, ['adult_lac_z_expression','embryo_lac_z_expression'] )
           }
         rescue Biomart::BiomartError => error
           all_ok = false
@@ -212,17 +212,17 @@ module MartSearch
         complete_genes = []
         results        = mart.search(
           :process_results => true,
-          :attributes      => attributes.unshift('marker_symbol'),
+          :attributes      => attributes.unshift('allele_name'),
           :filters         => {}
         )
         
         results.each do |result|
           complete_test = true
           result.each do |key,value|
-            next if key == 'marker_symbol'
-            complete_test = false if value == 'Test pending'
+            next if key == 'allele_name'
+            complete_test = false if value == 'Pending'
           end
-          complete_genes.push( result['marker_symbol'] ) if complete_test
+          complete_genes.push( result['allele_name'] ) if complete_test
         end
         
         return complete_genes.uniq.size

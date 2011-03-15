@@ -1,5 +1,5 @@
 <div id="wtsi-phenotyping-report">
-  <h2>Embryo Expression Data for <%= @data[:marker_symbol] %> (<%= @colony_prefix %>)</h2>
+  <h2>Embryo LacZ Expression Data for <%= @data[:marker_symbol] %> (<%= @colony_prefix %>)</h2>
 
   <div id="test-overview" class="test-descriptor"> 
     <h4>Overview</h4> 

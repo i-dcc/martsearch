@@ -15,6 +15,7 @@
       "heatmap_graphs_test_group",
       "heatmap_graphs_test",
       "heatmap_graphs_test_description",
+      "heatmap_graphs_parameter",
       "heatmap_graphs_url",
       "heatmap_graphs_order_by"
     ],

@@ -26,9 +26,9 @@ module MartSearch
         
         unless sorted_results[ result[ joined_attribute ] ][ result[:colony_prefix].to_sym ]
           sorted_results[ result[ joined_attribute ] ][ result[:colony_prefix].to_sym ] = {
-            :adult_lac_z_expression  => [],
-            :embryo_lac_z_expression => [],
-            :skin_histopathology     => []
+            :adult_lac_z_expression    => [],
+            :embryo_lac_z_expression   => [],
+            :tail_epidermis_wholemount => []
           }
         end
         
@@ -47,7 +47,7 @@ module MartSearch
             result_data[:adult_lac_z_expression].push(result)
           end
         when 'Confocal Skin Screen'
-          result_data[:skin_histopathology].push(result)
+          result_data[:tail_epidermis_wholemount].push(result)
         end
       end
       
