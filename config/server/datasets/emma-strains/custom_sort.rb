@@ -15,6 +15,7 @@ module MartSearch
         
         # Add singular info first...
         singles = [
+          :gene_symbol,
           :emma_id,
           :international_strain_name,
           :common_name,
