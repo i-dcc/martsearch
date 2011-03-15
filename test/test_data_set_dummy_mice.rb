@@ -1,14 +1,15 @@
 require 'test_helper'
 
-# Test the return values for searches involving (NEEDS A BIT OF THOUGHT):
+# Test the return values for searches involving:
 #
-# Smyd3         | no emma data                      | MGI:1916976 | 1 |
-# Dync1h1       | no kermiks data                   | MGI:103147  | 1 |
-# Cbx1          | kermits and emma data             | MGI:105369  | 1 |
-# B020004C17Rik | no kermits or emma data           | MGI:3588236 | 1 |
-# MBBS          | 1 emma strain and 2 kermits mice  | MGI:107846  | 2 |
-# MBBZ          | 1 emma strain and 1 kermits mouse | MGI:1339795 | 1 |
-# MAVE          | no match b/w emma and kermits     | MGI:1336167 | 2 |
+# Gene          | What we got?                      | MGI Acc.    | No of mice expected after merge |
+# ---------------------------------------------------------------------------------------------------
+# Smyd3         | no emma data                      | MGI:1916976 | 1                               |
+# Dync1h1       | no kermiks data                   | MGI:103147  | 1                               |
+# Cbx1          | kermits and emma data             | MGI:105369  | 1                               |
+# MBBS          | 1 emma strain and 2 kermits mice  | MGI:107846  | 2                               |
+# MBBZ          | 1 emma strain and 1 kermits mouse | MGI:1339795 | 1                               |
+# MAVE          | no match b/w emma and kermits     | MGI:1336167 | 2                               |
 
 class MartSearchDataSetDummyMiceTest < Test::Unit::TestCase
   context 'The "dummy-mice" DataSet' do
