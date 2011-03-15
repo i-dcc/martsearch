@@ -18,11 +18,11 @@ class MartSearchDataSetDummyMiceTest < Test::Unit::TestCase
       @ms                = MartSearch::Controller.instance
       @mgi_accession_ids = {
         'MGI:1916976' => 1,
-        'MGI:103147'  => 1,
+        'MGI:103147'  => 3,
         'MGI:105369'  => 1,
         'MGI:107846'  => 2,
         'MGI:1339795' => 1,
-        'MGI:1336167' => 2,
+        'MGI:1336167' => 2
       }
     end
 
@@ -33,6 +33,14 @@ class MartSearchDataSetDummyMiceTest < Test::Unit::TestCase
     should 'return the correct number of mouse records' do
       @mgi_accession_ids.each do |mgi_accession_id, expected_count|
         assert_nothing_raised { @ms.search(mgi_accession_id, 1, false) }
+        
+        # puts "IKMC KERMITS"
+        # ap @ms.search_data[mgi_accession_id.to_sym][:'ikmc-kermits']
+        # puts "EMMA STRAINS"
+        # ap @ms.search_data[mgi_accession_id.to_sym][:'emma-strains']
+        # puts "DUMMY MICE"
+        # ap @ms.search_data[mgi_accession_id.to_sym][:'dummy-mice']
+        
         assert_equal( expected_count, @ms.search_data[mgi_accession_id.to_sym][:'dummy-mice'].size, "dummy mice for #{mgi_accession_id} has the wrong count..." )
       end
     end
