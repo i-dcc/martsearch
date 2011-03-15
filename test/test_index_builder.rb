@@ -77,6 +77,13 @@ class MartSearchIndexBuilderTest < Test::Unit::TestCase
     
     should 'correctly fetch all of the datasets for indexing' do
       VCR.use_cassette( 'test_index_builder_fetch_datasets' ) do
+        pwd = Dir.pwd
+        setup_and_move_to_work_directory()
+        Dir.chdir('dataset_dowloads/current')
+        system("rm -f *.marshal")
+        system("rm -f *.csv")
+        Dir.chdir(pwd)
+        
         # Run twice to make sure we run the file aging code...
         @index_builder.fetch_datasets()
         @index_builder.fetch_datasets()
