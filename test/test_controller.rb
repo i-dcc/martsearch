@@ -113,9 +113,9 @@ class MartSearchControllerTest < Test::Unit::TestCase
         assert( fresh_counts.is_a?(Hash) )
         
         @controller.config[:server][:browsable_content].each do |field,field_config|
-          assert_not_nil( fresh_counts[field.to_sym] )
-          field_config[:processed_options].each do |option,option_config|
-            assert_not_nil( fresh_counts[field.to_sym][option.to_sym] )
+          assert_not_nil( fresh_counts[field] )
+          field_config[:options].each do |option,option_config|
+            assert_not_nil( fresh_counts[field][option] )
           end
         end
       end
