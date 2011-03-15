@@ -12,48 +12,49 @@ module MartSearch
         # Empty the dummy mice and set default values for the columns we want
         result_data[:'dummy-mice'] = []
         columns_to_merge           = {
-                        :references => {},
-                      :availability => [],
-                           :emma_id => nil,
-         :international_strain_name => nil,
-                       :common_name => nil,
-                           :synonym => nil,
-             :maintained_background => nil,
-                :mutation_main_type => nil,
-                 :mutation_sub_type => nil,
-               :genetic_description => nil,
-             :phenotype_description => nil,
-                             :owner => nil,
-                       :allele_name => nil,
-                     :marker_symbol => nil,
-                           :sponsor => nil,
-                         :mi_centre => nil,
-               :distribution_centre => nil,
-                      :escell_clone => nil,
-                     :colony_prefix => nil,
-                     :escell_strain => nil,
-                 :test_cross_strain => nil,
-                 :back_cross_strain => nil,
-                            :status => nil,
-                       :allele_name => nil,
-                              :emma => nil,
-                  :qc_southern_blot => nil,
-              :qc_tv_backbone_assay => nil,
-              :qc_five_prime_lr_pcr => nil,
-                       :qc_loa_qpcr => nil,
-          :qc_homozygous_loa_sr_pcr => nil,
-                 :qc_neo_count_qpcr => nil,
-                    :qc_lacz_sr_pcr => nil,
-      :qc_five_prime_cass_integrity => nil,
-                     :qc_neo_sr_pcr => nil,
-         :qc_mutant_specific_sr_pcr => nil,
-              :qc_loxp_confirmation => nil,
-             :qc_three_prime_lr_pcr => nil,
-                       :allele_type => nil,
-                          :qc_count => 0,
-                   :ikmc_project_id => nil,
-                  :mgi_accession_id => nil,
-                :genetic_background => nil
+          :references                   => {},
+          :availability                 => [],
+          :emma_id                      => nil,
+          :international_strain_name    => nil,
+          :common_name                  => nil,
+          :synonym                      => nil,
+          :maintained_background        => nil,
+          :mutation_main_type           => nil,
+          :mutation_sub_type            => nil,
+          :genetic_description          => nil,
+          :phenotype_description        => nil,
+          :owner                        => nil,
+          :allele_name                  => nil,
+          :marker_symbol                => nil,
+          :sponsor                      => nil,
+          :mi_centre                    => nil,
+          :distribution_centre          => nil,
+          :escell_clone                 => nil,
+          :colony_prefix                => nil,
+          :escell_strain                => nil,
+          :test_cross_strain            => nil,
+          :back_cross_strain            => nil,
+          :status                       => nil,
+          :allele_name                  => nil,
+          :emma                         => nil,
+          :qc_southern_blot             => nil,
+          :qc_tv_backbone_assay         => nil,
+          :qc_five_prime_lr_pcr         => nil,
+          :qc_loa_qpcr                  => nil,
+          :qc_homozygous_loa_sr_pcr     => nil,
+          :qc_neo_count_qpcr            => nil,
+          :qc_lacz_sr_pcr               => nil,
+          :qc_five_prime_cass_integrity => nil,
+          :qc_neo_sr_pcr                => nil,
+          :qc_mutant_specific_sr_pcr    => nil,
+          :qc_loxp_confirmation         => nil,
+          :qc_three_prime_lr_pcr        => nil,
+          :allele_type                  => nil,
+          :qc_count                     => 0,
+          :ikmc_project_id              => nil,
+          :cassette_type                => nil,
+          :mgi_accession_id             => nil,
+          :genetic_background           => nil
         }
 
         if kermits.empty? and emma.empty?
@@ -70,7 +71,7 @@ module MartSearch
             result_data[:'dummy-mice'].push( columns_to_merge.merge(emma_strain) )
           end
         else
-          result_data[:'dummy-mice'] = merge_emma_and_kermits( emma, kermits, columns_to_merge )
+          result_data[:'dummy-mice'] = dummy_mice_merge_emma_and_kermits( emma, kermits, columns_to_merge )
         end
       end
 
@@ -83,10 +84,10 @@ module MartSearch
     # @param  [Array] kermits
     # @param  [Hash]  defaults
     # @return [Array]
-    def merge_emma_and_kermits( emma, kermits, defaults )
+    def dummy_mice_merge_emma_and_kermits( emma, kermits, defaults )
       results   = []
       emma_copy = emma.clone
-
+      
       # associate KERMITS mice to EMMA strains
       kermits.each do |mouse|
         strains = emma_copy.values.select { |strain| mouse[:escell_clone] == strain[:common_name] }
@@ -94,12 +95,12 @@ module MartSearch
         results.push(strain.merge(mouse))
         emma_copy.delete(strain[:emma_id])
       end
-
+      
       # check for EMMA mice with no corresponding KERMITS mouse
       emma_copy.values.each do |strain|
         results.push(defaults.merge(strain))
       end
-
+      
       return results
     end
   end

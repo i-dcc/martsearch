@@ -24,7 +24,12 @@
           <%= mouse_order_button( mouse[:mgi_accession_id], mouse[:marker_symbol], mouse[:sponsor], mouse[:ikmc_project_id], dist_flag, mouse[:mi_centre], mouse[:distribution_centre] ) %>
         </td>
         <td><%= mouse[:allele_name] %></td>
-        <td><%= mouse[:allele_type] %></td>
+        <td>
+          <%= mouse[:allele_type] %>
+          <% if mouse[:cassette_type] %>
+            (<%= mouse[:cassette_type] %> Cassette)
+          <% end %>
+        </td>
         <td><a href="<%= emma_link( mouse[:emma_id] ) %>" target="blank"><%= mouse[:emma_id] %></td>
         <td><%= mouse[:colony_prefix] %></td>
         <td>
