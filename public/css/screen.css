@@ -1,3 +1,4 @@
+/* @override http://localhost:3000/css/screen.css */
 
 /* Page Layout */
 
@@ -644,14 +645,14 @@ form#martsearchr {
 /* Data Browsing */
 
 #browse_controls {
-	width: 200px;
+	width: 210px;
 	float: left;
 	margin-top: 5px;
 	margin-bottom: 25px;
 }
 
 .browse_results {
-	margin-left: 210px;
+	margin-left: 220px;
 }
 
 #browse_controls h6 {
@@ -690,7 +691,7 @@ form#martsearchr {
 
 #browse_controls ul li.child {
 	padding-left: 16px;
-	background: url(../images/fugue/arrow-315-small.png) no-repeat 5px 2px;
+	background: url(../images/silk/bullet_arrow_right.png) no-repeat 5px 2px;
 }
 
 #browse_controls ul li:hover,
@@ -699,7 +700,7 @@ form#martsearchr {
 }
 
 #browse_controls ul li a {
-	width: 196px;
+	width: 206px;
 	display: inline-block;
 	position: relative;
 	padding: 2px 0 2px 5px;
@@ -707,7 +708,7 @@ form#martsearchr {
 }
 
 #browse_controls ul li.child a {
-	width: 180px;
+	width: 190px;
 	color: #999;
 	font-weight: normal;
 }
