@@ -131,27 +131,26 @@ module MartSearch
     ##
     
     get '/search/?' do
-      if params.empty?
-        redirect "#{request.script_name}/"
+      redirect "#{request.script_name}/" if params.empty?
+      
+      @current    = 'home'
+      @solr_query = params[:query]
+      @page_title = "Search Results for '#{@solr_query}'"
+      
+      # Marker.mark("running search") do
+        use_cache   = params[:fresh] == "true" ? false : true
+        @results    = @ms.search( @solr_query, params[:page].to_i, use_cache )
+      # end
+      @data       = @ms.search_data
+      @errors     = @ms.errors
+      
+      if params[:wt] == 'json'
+        content_type 'application/json', :charset => 'utf-8'
+        return @data.to_json
       else
-        @current    = 'home'
-        @page_title = "Search Results for '#{params[:query]}'"
-        
-        # Marker.mark("running search") do
-          use_cache   = params[:fresh] == "true" ? false : true
-          @results    = @ms.search( params[:query], params[:page].to_i, use_cache )
+        # Marker.mark("rendering page") do
+          erubis :search
         # end
-        @data       = @ms.search_data
-        @errors     = @ms.errors
-
-        if params[:wt] == 'json'
-          content_type 'application/json', :charset => 'utf-8'
-          return @data.to_json
-        else
-          # Marker.mark("rendering page") do
-            erubis :search
-          # end
-        end
       end
     end
     
@@ -162,6 +161,13 @@ module MartSearch
         status 301
         redirect url
       end
+    end
+    
+    get "/search_csv/?" do
+      redirect "#{request.script_name}/" if params.empty?
+      
+      erubis "woot '<%= params[:query] %>' ..."
+      
     end
     
     ##

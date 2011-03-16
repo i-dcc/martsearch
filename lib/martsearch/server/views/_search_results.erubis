@@ -1,9 +1,17 @@
-<div class="search_information">
-  <% @do_not_show_search_explaination ||= false %>
-  <% unless @do_not_show_search_explaination %>
-    <a id="search_explaination_toggle" class="button" href="#">Explain These Search Results</a>
-  <% end %>
-  <%= will_paginate @results %>
+<%= will_paginate @results %>
+
+<div id="search_information_wrapper">
+  <div id="search_information">
+    <%= link_to 'Download Summary CSV', "/search_csv?query=#{@solr_query}", { :id => 'download_search_results', :class => 'button save' } %>
+    <% @do_not_show_search_explaination ||= false %>
+    <% unless @do_not_show_search_explaination %>
+      <a id="search_explaination_toggle" class="button info" href="#">Explain These Search Results</a>
+    <% end %>
+  </div>
+</div>
+
+<div class="clear">
+  
 </div>
 
 <% @results.each do |result| %>
@@ -14,12 +22,8 @@
         <td width="30%">
           <h3 class="doc_title toggle-open">
             <%
-              doc_title = ''
-              if result_data[:index][:marker_symbol] != nil
-                doc_title = result_data[:index][:marker_symbol]
-              else
-                doc_title = result_data[:index][:mgi_accession_id]
-              end
+              doc_title = result_data[:index][:marker_symbol]
+              doc_title = result_data[:index][:mgi_accession_id] if doc_title.nil?
             %>
             <%= doc_title %>
           </h3>
@@ -32,12 +36,8 @@
               <% if view.display_for_result?( result_data, @errors[:datasets] ) %>
                 <%
                   dataset_errors = view.search_errors( @errors[:datasets] )
-                  uniq_id_str    = ''
-                  if result_data[:index][:marker_symbol] != nil
-                    uniq_id_str = "#{result_data[:index][:marker_symbol].downcase}-#{view.internal_name}"
-                  else
-                    uniq_id_str = "#{result_data[:index][:mgi_accession_id].gsub(':','_').downcase}-#{view.internal_name}"
-                  end
+                  uniq_id_str    = "#{result_data[:index][:marker_symbol].downcase}-#{view.internal_name}"
+                  uniq_id_str    = "#{result_data[:index][:mgi_accession_id].gsub(':','_').downcase}-#{view.internal_name}" if result_data[:index][:marker_symbol].nil?
                 %>
                 <% if dataset_errors[:required].empty? %>
                   <a href="#<%= uniq_id_str %>" class="dataset_returned dataset_link_bubble" title="<%= partial( "view_display_tooltip", :locals => { :view => view, :data_return => 'display' } ) %>"><%= view.name.gsub( " ", "&nbsp;" ) %></a>

@@ -197,6 +197,14 @@ a.button:hover, a.order:hover {
 	background-image: url(../images/silk/cart_error.png);
 }
 
+.info {
+	background-image: url(../images/silk/help.png);
+}
+
+.save {
+	background-image: url(../images/silk/page_save.png);
+}
+
 /* User Messages */
 
 .messages {
@@ -297,7 +305,9 @@ a.button:hover, a.order:hover {
 /* Pagination Controls */
 
 .pagination {
+	float: left;
 	padding-top: 6px;
+	padding-bottom: 6px;
 }
 
 .pagination a {
@@ -330,9 +340,14 @@ a.button:hover, a.order:hover {
 
 /* Search explaination */
 
-a#search_explaination_toggle {
-	float: right;
-	background-image: url(../images/silk/help.png);
+#search_information_wrapper {
+	margin-bottom: 12px;
+	text-align: right;
+	vertical-align: middle;
+}
+
+#search_information {
+	padding-top: 5px;
 }
 
 .search_explaination.help h6 {
