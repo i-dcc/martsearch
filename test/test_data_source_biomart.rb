@@ -2,7 +2,7 @@ require 'test_helper'
 
 class MartSearchBiomartDataSourceTest < Test::Unit::TestCase
   def setup
-    @conf_obj        = MartSearch::Controller.instance()
+    @ms              = MartSearch::Controller.instance()
     @kermits_biomart = MartSearch::BiomartDataSource.new( :url => 'http://www.knockoutmouse.org/biomart', :dataset => 'kermits' )
   end
   
@@ -28,7 +28,7 @@ class MartSearchBiomartDataSourceTest < Test::Unit::TestCase
     
     should 'return the expeced data structure for fetch_all_terms_for_indexing()' do
       VCR.use_cassette('test_biomart_data_source_index_fetch') do
-        ds_conf = @conf_obj.config[:index_builder][:datasets][:'ikmc-kermits']
+        ds_conf = @ms.config[:index_builder][:datasets][:'ikmc-kermits']
         ret     = @kermits_biomart.fetch_all_terms_for_indexing( ds_conf[:indexing] )
         assert( ret.is_a?(Hash), 'fetch_all_terms_for_indexing() does not return a hash.' )
         assert( ret[:headers] != nil, 'the returned hash from fetch_all_terms_for_indexing() contains a nil value for :headers.' )

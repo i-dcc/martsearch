@@ -1,6 +1,6 @@
 require "test_helper"
 
-class TestHandleBiomartErrors < Test::Unit::TestCase
+class TestProjectUtilsHandleBiomartErrors < Test::Unit::TestCase
   include MartSearch::ProjectUtils
   public  :handle_biomart_errors
 

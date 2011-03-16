@@ -2,7 +2,6 @@ require "test_helper"
 
 class MartSearchDummyDataSourceTest < Test::Unit::TestCase
   def setup
-    @conf_object      = MartSearch::Controller.instance
     @dummy_datasource = MartSearch::DummyDataSource.new({})
   end
   

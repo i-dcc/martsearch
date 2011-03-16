@@ -2,7 +2,7 @@ require 'test_helper'
 
 class MartSearchFileSystemDataSourceTest < Test::Unit::TestCase
   def setup
-    @conf_obj      = MartSearch::Controller.instance()
+    @ms            = MartSearch::Controller.instance()
     @fs_datasource = MartSearch::FileSystemDataSource.new( :location => "/tmp/pheno_abr" )
   end
   
@@ -22,11 +22,11 @@ class MartSearchFileSystemDataSourceTest < Test::Unit::TestCase
     
     should 'return the expeced data structure for search()' do
       omit_if(
-        @conf_obj.datasets[:'wtsi-phenotyping-abr'].nil?,
+        @ms.datasets[:'wtsi-phenotyping-abr'].nil?,
         "Can't run a FileSystemDataSource.search() test without a configured dataset."
       )
       
-      dataset_conf = @conf_obj.datasets[:'wtsi-phenotyping-abr'].config()
+      dataset_conf = @ms.datasets[:'wtsi-phenotyping-abr'].config()
       ret          = @fs_datasource.search( ['MAMH','MAMJ'], dataset_conf[:searching] )
       
       assert( ret.is_a?(Array), 'search() does not return an array.' )

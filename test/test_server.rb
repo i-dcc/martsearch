@@ -9,9 +9,9 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
   
   def setup
     # Capybara.current_driver = :selenium
-    Capybara.app            = MartSearch::Server.new
-    @controller             = MartSearch::Controller.instance()
-    @server_conf            = @controller.config[:server]
+    Capybara.app = MartSearch::Server.new
+    @ms          = MartSearch::Controller.instance()
+    @server_conf = @ms.config[:server]
   end
   
   context "A MartSearch::Server web app instance" do
@@ -77,7 +77,7 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
     
     should "enable browsing of the data..." do
       VCR.use_cassette('test_server_browsing') do
-        @controller.config[:server][:browsable_content].each do |name,conf|
+        @ms.config[:server][:browsable_content].each do |name,conf|
           # Select 5 random pages to hit - doing them all takes forever...
           conf[:options].keys.randomly_pick(5).each do |option_name|
             opts = conf[:options][option_name.to_sym]
@@ -112,7 +112,7 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
     
     should "render WTSI Phenotyping report pages" do
       omit_if(
-        @controller.dataviews_by_name[:'wtsi-phenotyping'].nil?,
+        @ms.dataviews_by_name[:'wtsi-phenotyping'].nil?,
         "Skipping WTSI Phenotyping report tests as the DataView is not active."
       )
       
@@ -127,7 +127,7 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
           assert_equal( '/search', current_path, "WTSI Phenotyping search for '#{colony_prefix}': The home page form didn't forward to /search." )
           assert( page.has_content?( "Search Results for '#{colony_prefix}'" ), "WTSI Phenotyping search for '#{colony_prefix}': /search doesn't show the search term we've just looked for..." )
           
-          cached_data = @controller.fetch_from_cache("wtsi-pheno-data:#{colony_prefix}")
+          cached_data = @ms.fetch_from_cache("wtsi-pheno-data:#{colony_prefix}")
           assert( !cached_data.nil?, "There is no cached phenotyping data for '#{colony_prefix}'!" )
           
           urls_to_hit = []
@@ -157,7 +157,7 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
           end
           
           # Clear the cache so we test the full stack...
-          @controller.cache.delete("wtsi-pheno-data:#{colony_prefix}/")
+          @ms.cache.delete("wtsi-pheno-data:#{colony_prefix}/")
           
           urls_to_hit.each do |test_conf|
             visit test_conf[:url]
@@ -182,8 +182,8 @@ end
 # We do the other tests separately as Capybara/Selenium doesn't like looking at certain things
 class MartSearchServerRackTest < Test::Unit::TestCase
   def setup
-    @controller  = MartSearch::Controller.instance()
-    @server_conf = @controller.config[:server]
+    @ms          = MartSearch::Controller.instance()
+    @server_conf = @ms.config[:server]
     @browser     = Rack::Test::Session.new( Rack::MockSession.new( MartSearch::Server ) )
   end
   
@@ -216,7 +216,7 @@ class MartSearchServerRackTest < Test::Unit::TestCase
     
     should 'enable browsing of the data and retrieve a JSON response...' do
       VCR.use_cassette('test_server_browsing') do
-        @controller.config[:server][:browsable_content].each do |name,conf|
+        @ms.config[:server][:browsable_content].each do |name,conf|
           # Select 5 random pages to hit - doing them all takes forever...
           conf[:options].keys.randomly_pick(5).each do |option_name|
             opts = conf[:options][option_name.to_sym]
@@ -261,7 +261,7 @@ class MartSearchServerRackTest < Test::Unit::TestCase
     end
     
     should 'render dataview css and javascript...' do
-      @controller.dataviews_by_name.each do |name,view|
+      @ms.dataviews_by_name.each do |name,view|
         unless view.stylesheet.nil?
           @browser.get "/dataview-css/#{name}.css"
           assert( @browser.last_response.ok?, "/dataview-css/#{name}.css failed." )
@@ -287,7 +287,7 @@ class MartSearchServerRackTest < Test::Unit::TestCase
     
     should "render WTSI Phenotyping (ABR) report pages with a redirect" do
       omit_if(
-        @controller.dataviews_by_name[:'wtsi-phenotyping'].nil?,
+        @ms.dataviews_by_name[:'wtsi-phenotyping'].nil?,
         "Skipping WTSI Phenotyping report tests as the DataView is not active."
       )
         
@@ -305,7 +305,7 @@ class MartSearchServerRackTest < Test::Unit::TestCase
     
     should "cope gracefully when monkeys start visiting WTSI Phenotyping report pages" do
       omit_if(
-        @controller.dataviews_by_name[:'wtsi-phenotyping'].nil?,
+        @ms.dataviews_by_name[:'wtsi-phenotyping'].nil?,
         "Skipping WTSI Phenotyping report tests as the DataView is not active."
       )
       
