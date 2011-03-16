@@ -165,9 +165,53 @@ module MartSearch
     
     get "/search_csv/?" do
       redirect "#{request.script_name}/" if params.empty?
+      keys, data = @ms.unpaged_search( params[:query] )
       
-      erubis "woot '<%= params[:query] %>' ..."
+      csv_string = CSV.generate do |csv|
+        header_csv = [
+          "Marker Symbol",
+          "MGI Accession ID",
+          "Chromosome",
+          "Start",
+          "End",
+          "Strand"
+        ]
+        
+        @ms.dataviews.each do |view|
+          next unless view.display
+          header_csv.push(view.name)
+        end
+        
+        csv << header_csv
+        
+        keys.each do |key|
+          gene_data  = data[key]
+          index_data = gene_data[:index]
+          csv_data   = [
+            index_data[:mgi_accession_id],
+            index_data[:marker_symbol],
+            index_data[:chromosome],
+            index_data[:coord_start],
+            index_data[:coord_end],
+            index_data[:strand]
+          ]
+          
+          @ms.dataviews.each do |view|
+            next unless view.display
+            if view.display_for_result?( gene_data, {} )
+              csv_data.push('yes')
+            else
+              csv_data.push('no')
+            end
+          end
+          
+          csv << csv_data
+        end
+      end
       
+      content_type 'text/comma-separated-values', :charset => 'utf-8'
+      # content_type 'text/plain'
+      return csv_string
     end
     
     ##

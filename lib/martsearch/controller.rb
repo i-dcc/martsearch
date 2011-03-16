@@ -32,9 +32,7 @@ module MartSearch
       @dataviews_by_name = @config[:server][:dataviews_by_name]
       
       # Stores for search result data and errors...
-      @errors         = { :index => [], :datasets => {} }
-      @search_data    = {}
-      @search_results = []
+      clear_instance_variables
     end
     
     # Function to perform the searches against the index and marts.
@@ -52,18 +50,19 @@ module MartSearch
     #
     # @param [String] query The query string to pass to the search index
     # @param [Integer] page The page of results to search for/return
-    # @param [Boolean] use_cache Use cached data if available
+    # @param [Boolean] use_index_cache Use cached index data if available
+    # @param [Boolean] use_dataset_cache Use cached dataset data if available
     # @param [Boolean] save_index_data Try to save the index return to the cache
     # @return [Array] A list of the search results (primary index fields)
-    def search( query, page=1, use_cache=true, save_index_data=true )
+    def search( query, page=1, use_index_cache=true, use_dataset_cache=true, save_index_data=true )
       page = 1 if page == 0
       clear_instance_variables
       
       cached_index_data = fetch_from_cache( "index:#{query}-page#{page}" )
-      if cached_index_data != nil and use_cache
+      if cached_index_data != nil and use_index_cache
         search_from_cached_index( cached_index_data )
       else
-        if search_from_fresh_index( query, page ) and save_index_data
+        if search_from_fresh_index( query, page )
           obj_to_cache    = {
             :search_data           => @search_data,
             :search_results        => @search_results,
@@ -71,7 +70,7 @@ module MartSearch
             :current_results_total => @index.current_results_total,
             :cache_timestamp       => DateTime.now.to_s
           }
-          write_to_cache( "index:#{query}-page#{page}", obj_to_cache )
+          write_to_cache( "index:#{query}-page#{page}", obj_to_cache ) if save_index_data
         end
       end
       
@@ -81,7 +80,7 @@ module MartSearch
         @search_data.each do |data_key,data|
           cached_dataset_data = fetch_from_cache( "datasets:#{data_key}" )
           
-          if cached_dataset_data != nil and use_cache
+          if cached_dataset_data != nil and use_dataset_cache
             @search_data[data_key] = cached_dataset_data.merge(data)
           else
             fresh_ds_queries_to_do.push(data_key)
@@ -102,6 +101,44 @@ module MartSearch
       
       # Return paged_results
       return @search_results
+    end
+    
+    def unpaged_search( query, use_cache=true )
+      return nil unless battle_station_operational?
+      
+      # First, reset the 'docs_per_page' configuration
+      increased_docs_per_page        = 250
+      default_docs_per_page          = config[:index][:docs_per_page]
+      config[:index][:docs_per_page] = increased_docs_per_page
+      
+      # Get on with stuff...
+      keys         = []
+      data         = {}
+      current_page = 1
+      total_pages  = ( @index.count( query ) / increased_docs_per_page ).to_i + 1
+      
+      while current_page <= total_pages
+        keys = keys + search( query, current_page, false, use_cache, false ).map{ |elm| elm[ @index.primary_field ].to_sym } 
+        data.merge!( @search_data )
+        current_page += 1
+      end
+      
+      # Clean up...
+      config[:index][:docs_per_page] = default_docs_per_page
+      clear_instance_variables
+      
+      return keys, data
+    end
+    
+    def battle_station_operational?
+      okay = true
+      
+      okay = false unless @index.is_alive?
+      @datasources.each do |name,datasource|
+        okay = false unless datasource.is_alive?
+      end
+      
+      return okay
     end
     
     # Function to load in the browsable content config and then query the index 
