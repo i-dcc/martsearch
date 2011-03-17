@@ -30,7 +30,7 @@ begin
       puts "Priming the search cache (#{no_genes_to_hit_at_once} genes at a time)..."
       
       conf[:options].each do |option_name|
-        if @ms.battle_station_operational?
+        if @ms.battle_station_fully_operational?
           opts = conf[:processed_options][option_name.to_sym]
           
           # First calc the total number of 'pages' to request...
