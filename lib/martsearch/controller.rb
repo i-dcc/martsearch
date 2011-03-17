@@ -58,6 +58,7 @@ module MartSearch
       page = 1 if page == 0
       clear_instance_variables
       
+      # Marker.mark("looking up index...") do
       cached_index_data = fetch_from_cache( "index:#{query}-page#{page}" )
       if cached_index_data != nil and use_index_cache
         search_from_cached_index( cached_index_data )
@@ -73,13 +74,15 @@ module MartSearch
           write_to_cache( "index:#{query}-page#{page}", obj_to_cache ) if save_index_data
         end
       end
+      # end
       
+      # Marker.mark("looking up datasets...") do
       unless @search_data.empty?
         fresh_ds_queries_to_do = []
         
         @search_data.each do |data_key,data|
           cached_dataset_data = fetch_from_cache( "datasets:#{data_key}" )
-          
+        
           if cached_dataset_data != nil and use_dataset_cache
             @search_data[data_key] = cached_dataset_data.merge(data)
           else
@@ -98,13 +101,14 @@ module MartSearch
           end
         end
       end
+      # end
       
       # Return paged_results
       return @search_results
     end
     
     def unpaged_search( query, use_cache=true )
-      return nil unless battle_station_operational?
+      return nil unless battle_station_fully_operational?
       
       # First, reset the 'docs_per_page' configuration
       increased_docs_per_page        = 250
@@ -117,11 +121,19 @@ module MartSearch
       current_page = 1
       total_pages  = ( @index.count( query ) / increased_docs_per_page ).to_i + 1
       
+      # Marker.mark("full search...") do
       while current_page <= total_pages
         keys = keys + search( query, current_page, false, use_cache, false ).map{ |elm| elm[ @index.primary_field ].to_sym } 
         data.merge!( @search_data )
         current_page += 1
       end
+      # end
+      
+      ##
+      ## TODO:  what would speed things up here is...
+      ##         - if we could cut down the amount of data coming back from the index
+      ##         - if we could hit the cache for more than one dataset entry at a time
+      ##
       
       # Clean up...
       config[:index][:docs_per_page] = default_docs_per_page
@@ -130,7 +142,7 @@ module MartSearch
       return keys, data
     end
     
-    def battle_station_operational?
+    def battle_station_fully_operational?
       okay = true
       
       okay = false unless @index.is_alive?
@@ -207,18 +219,31 @@ module MartSearch
     
     # Cache interaction helper - fetch data from the cache for a given key.
     # 
-    # @param [String] key The cache identifer to look up
-    # @return [Object/nil] The deserialized object from the cache, or nil if none found
-    def fetch_from_cache( key )
-      cached_data = @cache.fetch( key )
+    # @param [String/Array] name The cache identifer(s) to look up
+    # @return [Object/Hash/nil] The deserialized object from the cache, or nil if none found
+    def fetch_from_cache( name )
+      cached_data = nil
       
-      unless cached_data.nil?
-        cached_data = BSON.deserialize(cached_data) unless @cache.is_a?(MartSearch::MongoCache)
-        cached_data = cached_data.clean_hash if RUBY_VERSION < '1.9'
-        cached_data.recursively_symbolize_keys!
+      if name.is_a? String
+        cached_data = { name => @cache.read( name ) }
+      else
+        cached_data = @cache.read_multi( name )
       end
       
-      return cached_data
+      cached_data.each do |key,value|
+        unless value.nil?
+          value = BSON.deserialize(value) unless @cache.is_a?(MartSearch::MongoCache)
+          value = value.clean_hash if RUBY_VERSION < '1.9'
+          value.recursively_symbolize_keys!
+          cached_data[key] = value
+        end
+      end
+      
+      if name.is_a? String
+        return cached_data[name]
+      else
+        return cached_data
+      end
     end
     
     # Cache interaction helper - use this to store data in the cache.
