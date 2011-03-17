@@ -217,30 +217,27 @@ module MartSearch
       return counts
     end
     
-    # Cache interaction helper - fetch data from the cache for a given key.
+    # Cache interaction helper - fetch data from the cache for a given key 
+    # or set of keys.
     # 
-    # @param [String/Array] name The cache identifer(s) to look up
+    # @param [String/Array] names The cache identifer(s) to look up
     # @return [Object/Hash/nil] The deserialized object from the cache, or nil if none found
-    def fetch_from_cache( name )
-      cached_data = nil
-      
-      if name.is_a? String
-        cached_data = { name => @cache.read( name ) }
-      else
-        cached_data = @cache.read_multi( name )
+    def fetch_from_cache( *names )
+      sent_string = true
+      if names.first.is_a? Array
+        names       = names.first
+        sent_string = false
       end
+      
+      cached_data = {}
+      cached_data = @cache.read_multi( *names )
       
       cached_data.each do |key,value|
-        unless value.nil?
-          value = BSON.deserialize(value) unless @cache.is_a?(MartSearch::MongoCache)
-          value = value.clean_hash if RUBY_VERSION < '1.9'
-          value.recursively_symbolize_keys!
-          cached_data[key] = value
-        end
+        cached_data[key] = deserialize_cache_entry(value) unless value.nil?
       end
       
-      if name.is_a? String
-        return cached_data[name]
+      if sent_string && names.size == 1
+        return cached_data[names[0]]
       else
         return cached_data
       end
@@ -261,6 +258,15 @@ module MartSearch
     end
     
     private
+      
+      # Helper function for #fetch_from_cache.  Handles the data deserialization for data 
+      # coming back from the cache.
+      def deserialize_cache_entry( entry )
+        entry = BSON.deserialize(entry) unless @cache.is_a?(MartSearch::MongoCache)
+        entry = entry.clean_hash if RUBY_VERSION < '1.9'
+        entry.recursively_symbolize_keys!
+        return entry
+      end
       
       # Helper function for #wtsi_phenotyping_progress_counts. This function queries the 
       # MGP mart for a defined set of tests/attributes and computes the number of completed 

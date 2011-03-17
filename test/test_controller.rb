@@ -150,10 +150,17 @@ class MartSearchControllerTest < Test::Unit::TestCase
       @ms.cache.clear
       assert_equal( @ms.fetch_from_cache("foo"), nil )
       
-      data = { :a => 'a', :b => 23, :c => [1,2,3] }
+      data  = { :a => 'a', :b => 23, :c => [1,2,3] }
+      data2 = { :b => 'wibble' }
       
       @ms.write_to_cache( "foo", data )
+      @ms.write_to_cache( "bar", data2 )
+      
       assert_equal( data, @ms.fetch_from_cache("foo") )
+      assert_equal( data2, @ms.fetch_from_cache("bar") )
+      assert_equal( { "foo" => data, "bar" => data2 }, @ms.fetch_from_cache("foo","bar") )
+      assert_equal( { "foo" => data, "bar" => data2 }, @ms.fetch_from_cache(["foo","bar"]) )
+      assert_equal( { "foo" => data }, @ms.fetch_from_cache(["foo"]) )
     end
   end
   
