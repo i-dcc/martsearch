@@ -1,3 +1,12 @@
+GIT
+  remote: http://github.com/dazoakley/mongo_store.git
+  revision: 81407287f0a010ad3421d0c687e3847434e8b5d2
+  tag: v0.3.1
+  specs:
+    mongo_store (0.3.1)
+      activesupport (>= 2.2)
+      mongo (>= 1.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -50,9 +59,6 @@ GEM
     mime-types (1.16)
     mongo (1.2.1)
       bson (>= 1.2.1)
-    mongo_store (0.3.0)
-      activesupport (>= 2.2)
-      mongo (>= 1.0)
     mysql2 (0.2.6)
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
@@ -125,7 +131,7 @@ DEPENDENCIES
   json
   memcache-client (>= 1.8)
   mongo
-  mongo_store
+  mongo_store (= 0.3.1)!
   mysql2
   newrelic_rpm
   parallel

@@ -17,7 +17,7 @@ gem 'activesupport',          '>=3.0',    :require => false
 gem 'i18n',                               :require => false
 gem 'memcache-client',        '>=1.8',    :require => false
 gem 'mongo',                              :require => false
-gem 'mongo_store',                        :require => false
+gem 'mongo_store', '0.3.1', :git => 'http://github.com/dazoakley/mongo_store.git', :tag => 'v0.3.1', :require => false
 gem 'bson_ext',                           :require => true
 gem 'will_paginate',          '~>2.3',    :require => false
 gem 'hoptoad_notifier',                   :require => false

@@ -58,7 +58,7 @@ module MartSearch
       page = 1 if page == 0
       clear_instance_variables
       
-      # Marker.mark("looking up index...") do
+      Marker.mark("looking up index...") do
       cached_index_data = fetch_from_cache( "index:#{query}-page#{page}" )
       if cached_index_data != nil and use_index_cache
         search_from_cached_index( cached_index_data )
@@ -74,19 +74,18 @@ module MartSearch
           write_to_cache( "index:#{query}-page#{page}", obj_to_cache ) if save_index_data
         end
       end
-      # end
+      end
       
-      # Marker.mark("looking up datasets...") do
+      Marker.mark("looking up datasets...") do
       unless @search_data.empty?
         fresh_ds_queries_to_do = []
         
-        @search_data.each do |data_key,data|
-          cached_dataset_data = fetch_from_cache( "datasets:#{data_key}" )
-        
-          if cached_dataset_data != nil and use_dataset_cache
-            @search_data[data_key] = cached_dataset_data.merge(data)
-          else
+        cached_dataset_data = fetch_from_cache( @search_data.keys.map{ |data_key| "datasets:#{data_key}" } )
+        @search_data.keys.each do |data_key|
+          if cached_dataset_data["datasets:#{data_key}"].nil?
             fresh_ds_queries_to_do.push(data_key)
+          else
+            @search_data[data_key] = @search_data[data_key].merge(cached_dataset_data["datasets:#{data_key}"])
           end
         end
         
@@ -101,7 +100,7 @@ module MartSearch
           end
         end
       end
-      # end
+      end
       
       # Return paged_results
       return @search_results
@@ -121,18 +120,17 @@ module MartSearch
       current_page = 1
       total_pages  = ( @index.count( query ) / increased_docs_per_page ).to_i + 1
       
-      # Marker.mark("full search...") do
+      Marker.mark("full search...") do
       while current_page <= total_pages
         keys = keys + search( query, current_page, false, use_cache, false ).map{ |elm| elm[ @index.primary_field ].to_sym } 
         data.merge!( @search_data )
         current_page += 1
       end
-      # end
+      end
       
       ##
       ## TODO:  what would speed things up here is...
       ##         - if we could cut down the amount of data coming back from the index
-      ##         - if we could hit the cache for more than one dataset entry at a time
       ##
       
       # Clean up...
