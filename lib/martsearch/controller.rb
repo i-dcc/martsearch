@@ -106,6 +106,11 @@ module MartSearch
       return @search_results
     end
     
+    # Wrapper around #search.  Get's ALL results possible for a given search.
+    # 
+    # @param [String] query The query string to pass to the search index
+    # @param [Boolean] use_cache Use cached dataset data if available
+    # @return [Array] Returns an array of search data keys in the first element, and the search data hash in the second
     def unpaged_search( query, use_cache=true )
       return nil unless battle_station_fully_operational?
       
@@ -140,6 +145,9 @@ module MartSearch
       return keys, data
     end
     
+    # Function to let you know if everything (the index and datasources) is up and working as expected.
+    #
+    # @return [Boolean] true if all ok, false if not
     def battle_station_fully_operational?
       okay = true
       
