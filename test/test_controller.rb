@@ -102,6 +102,10 @@ class MartSearchControllerTest < Test::Unit::TestCase
       end
     end
     
+    ##
+    ## TODO: Test CSV searches....
+    ##
+    
     should "give a count of genes/items for each of the configured browsing options" do
       VCR.use_cassette( 'test_controller_browse_counts' ) do
         @ms.cache.clear
