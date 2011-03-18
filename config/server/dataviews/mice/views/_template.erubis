@@ -30,7 +30,7 @@
             (<%= mouse[:cassette_type] %> Cassette)
           <% end %>
         </td>
-        <td><a href="<%= emma_link( mouse[:emma_id] ) %>" target="blank"><%= mouse[:emma_id] %></td>
+        <td><a href="<%= emma_link_url( mouse[:emma_id] ) %>" target="blank"><%= mouse[:emma_id] %></td>
         <td><%= mouse[:colony_prefix] %></td>
         <td>
           <% if mouse[:escell_clone] %>

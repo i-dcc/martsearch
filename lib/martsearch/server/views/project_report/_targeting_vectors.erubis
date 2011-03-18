@@ -28,7 +28,7 @@
             </td>
             <td>
             <% if targvec[:design_id] %>
-              <a href="<%= htgt_design_link( targvec[:design_id] ) %>" target="_blank"><%= targvec[:design_id] %></a>
+              <a href="<%= htgt_design_url( targvec[:design_id] ) %>" target="_blank"><%= targvec[:design_id] %></a>
             <% else %>
               -
             <% end %>
