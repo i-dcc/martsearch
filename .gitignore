@@ -4,7 +4,7 @@
 config/ols_database.yml
 coverage.info
 coverage/*
-doc*
+doc/*
 lib/martsearch/server/public/css/martsearch-*.css
 lib/martsearch/server/public/js/martsearch-base-*.js
 lib/martsearch/server/public/js/martsearch-head-*.js

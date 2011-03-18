@@ -5,7 +5,6 @@ module MartSearch
   #
   # @author Darren Oakley
   class IndexBuilder
-    include MartSearch
     include MartSearch::Utils
     include MartSearch::IndexBuilderUtils
     
@@ -200,26 +199,26 @@ module MartSearch
       def fetch_dataset( ds, save_to_disk=true )
         ds_conf    = @builder_config[:datasets][ds.to_sym]
         datasource = @datasources_config[ ds_conf[:datasource].to_sym ]
-
+        
         # results = Marshal.load( File.new( "#{ds}.marshal", 'r' ) )
         results = datasource.fetch_all_terms_for_indexing( ds_conf[:indexing] )
-
+        
         if save_to_disk
           file = File.new( "#{ds}.marshal", "w" )
           file.write( Marshal.dump(results) )
           file.close
-
+          
           CSV.open( "#{ds}.csv", "w" ) do |csv|
             csv << results[:headers]
             results[:data].each do |line|
               csv << line
             end
           end
-
+          
           system "/bin/cp #{ds}.marshal ../current/#{ds}.marshal"
           system "/bin/cp #{ds}.csv ../current/#{ds}.csv"
         end
-
+        
         return results
       end
       
@@ -234,15 +233,15 @@ module MartSearch
         ds_conf       = @builder_config[:datasets][ds.to_sym]
         datasource    = @datasources_config[ ds_conf[:datasource].to_sym ]
         ds_index_conf = ds_conf[:indexing]
-
+        
         # Extract all of the needed index mapping data from "attribute_map"
         map_data = process_attribute_map( ds_index_conf[:attribute_map] )
-
+        
         # Do we need to cache lookup data?
         unless map_data[:map_to_index_field].to_sym == @index_config[:schema][:unique_key].to_sym
           cache_documents_by( map_data[:map_to_index_field] )
         end
-
+        
         # Now loop through the result data...
         count = 0
         results[:data].each do |data_row|
@@ -252,13 +251,13 @@ module MartSearch
           # First, create a hash out of the data_row and get the primary_attr_value
           data_row_obj       = convert_array_to_hash( results[:headers], data_row )
           primary_attr_value = data_row_obj[ map_data[:primary_attribute] ]
-
+          
           # First check we have something to map back to the index with - if not, move along...
           if primary_attr_value
             # Find us a doc object to map to...
             value_to_look_up_doc_on = extract_value_to_index( map_data[:primary_attribute], map_data[:attribute_map], data_row_obj, datasource.ds )
             doc                     = find_document( map_data[:map_to_index_field], value_to_look_up_doc_on )
-
+            
             # If we can't find one - see if we're allowed to create one
             if doc.nil?
               if ds_index_conf[:allow_document_creation]
@@ -266,13 +265,13 @@ module MartSearch
                 doc = get_document( value_to_look_up_doc_on )
               end
             end
-
+            
             # Okay, if we have a doc - process the returned attributes
             if doc
               data_row_obj.each do |attr_name,attr_value|
                 # Extract and index our initial data return
                 value_to_index = extract_value_to_index( attr_name, map_data[:attribute_map], data_row_obj, datasource.ds )
-
+                
                 if value_to_index and doc[ map_data[:attribute_map][attr_name][:idx] ]
                   if value_to_index.is_a?(Array)
                     value_to_index.each do |value|
@@ -282,18 +281,18 @@ module MartSearch
                     doc[ map_data[:attribute_map][attr_name][:idx] ].push( value_to_index )
                   end
                 end
-
+                
                 # Any further metadata to be extracted from here?
                 if value_to_index and map_data[:attribute_map][attr_name][:extract]
                   index_extracted_attributes( map_data[:attribute_map][attr_name][:extract], doc, value_to_index )
                 end
               end
-
+              
               # Do we have any attributes that we need to group together?
               if ds_index_conf[:grouped_attributes]
                 index_grouped_attributes( ds_index_conf[:grouped_attributes], doc, data_row_obj, map_data, datasource.ds )
               end
-
+              
               # Any ontology terms to index?
               if ds_index_conf[:ontology_terms]
                 index_ontology_terms( ds_index_conf[:ontology_terms], doc, data_row_obj, map_data, @ontology_cache )
@@ -303,7 +302,7 @@ module MartSearch
               if ds_index_conf[:concatenated_ontology_terms]
                 index_concatenated_ontology_terms( ds_index_conf[:concatenated_ontology_terms], doc, data_row_obj, map_data, @ontology_cache )
               end
-
+              
               # Finally - save the document to the cache
               doc_primary_key = doc[@index_config[:schema][:unique_key].to_sym][0]
               set_document( doc_primary_key, doc )
@@ -312,78 +311,5 @@ module MartSearch
         end
       end
       
-      # Get a document from the @document_cache.
-      #
-      # @param [String] key The unique @document_cache key
-      def get_document( key )
-        @document_cache[key]
-      end
-
-      # Save a document to the @document_cache.
-      #
-      # @param [String] key The unique @document_cache key
-      # @param [Object] value The object to store in the @document_cache
-      def set_document( key, value )
-        @document_cache_keys[key] = true
-        @document_cache[key] = value
-      end
-
-      # Utility function to find a specific document (i.e. for a gene).
-      #
-      # @param [Symbol] field The document field upon which to search within
-      # @param [String] search_term The term to search with
-      # @return A document object if found or nil
-      def find_document( field, search_term )
-        if field == @index_config[:schema][:unique_key].to_sym
-          return get_document( search_term )
-        else
-          map_term = @document_cache_lookup[field][search_term]
-          if map_term
-            return get_document( map_term )
-          else
-            return nil
-          end
-        end
-      end
-
-      # Utility function to cache a lookup for the @document_cache by a given field. 
-      # This allows a much faster lookup of documents when we are not linking by 
-      # the primary field.
-      #
-      # @param [Symbol] field The document field to cache the documents by
-      def cache_documents_by( field )
-        @document_cache_lookup[field] = {}
-
-        @document_cache_keys.each_key do |cache_key|
-          document = get_document(cache_key)
-          document[field].each do |lookup_value|
-            @document_cache_lookup[field][lookup_value] = cache_key
-          end
-        end
-      end
-
-      # Utility function to remove any duplication from the document cache.
-      def clean_document_cache
-        @document_cache_keys.each_key do |cache_key|
-          document = get_document(cache_key)
-
-          document.each do |index_field,index_values|
-            if index_values.size > 0
-              document[index_field] = index_values.uniq
-            end
-
-            # If we have multiple value entries in what should be a single valued 
-            # field, not the best solution, but just arbitrarily pick the first entry.
-            if !@index_config[:schema][:fields][index_field][:multi_valued] and index_values.size > 1
-              new_array = []
-              new_array.push(index_values[0])
-              document[index_field] = new_array
-            end
-          end
-
-          set_document( cache_key, document )
-        end
-      end
-    
   end
 end

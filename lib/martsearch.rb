@@ -67,6 +67,9 @@ require "#{MARTSEARCH_PATH}/lib/martsearch/controller"
 require "#{MARTSEARCH_PATH}/lib/martsearch/ontology_term"
 require "#{MARTSEARCH_PATH}/lib/martsearch/ontology_term_cache"
 
+require "#{MARTSEARCH_PATH}/lib/martsearch/index_builder_utils/document_cache"
+require "#{MARTSEARCH_PATH}/lib/martsearch/index_builder_utils/file_system"
+require "#{MARTSEARCH_PATH}/lib/martsearch/index_builder_utils/indexing"
 require "#{MARTSEARCH_PATH}/lib/martsearch/index_builder_utils"
 require "#{MARTSEARCH_PATH}/lib/martsearch/index_builder"
 
