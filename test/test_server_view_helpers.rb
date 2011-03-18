@@ -108,31 +108,6 @@ class MartSearchServerViewHelpersTest < Test::Unit::TestCase
     end
   end
   
-  def test_allele_type
-    assert_equal( "Knockout-First - Reporter Tagged Insertion", allele_type('tm1a(EUCOMM)WTSI') )
-    assert_equal( "Knockout-First - Reporter Tagged Insertion", allele_type('tm2a(EUCOMM)WTSI') )
-    assert_equal( "Knockout-First - Reporter Tagged Insertion", allele_type('tm10a(EUCOMM)WTSI') )
-    
-    assert_equal( "Knockout-First, Post-Cre - Reporter Tagged Deletion", allele_type('tm1b(EUCOMM)WTSI') )
-    assert_equal( "Knockout-First, Post-Cre - Reporter Tagged Deletion", allele_type('tm12b(EUCOMM)WTSI') )
-    
-    assert_equal( "Knockout-First, Post-Flp - Conditional", allele_type('tm1c(EUCOMM)WTSI') )
-    assert_equal( "Knockout-First, Post-Flp - Conditional", allele_type('tm12c(EUCOMM)WTSI') )
-    
-    assert_equal( "Knockout-First, Post-Flp and Cre - Deletion, No Reporter", allele_type('tm1d(EUCOMM)WTSI') )
-    assert_equal( "Knockout-First, Post-Flp and Cre - Deletion, No Reporter", allele_type('tm12d(EUCOMM)WTSI') )
-    
-    assert_equal( "Targeted Non-Conditional", allele_type('tm1e(EUCOMM)WTSI') )
-    assert_equal( "Targeted Non-Conditional", allele_type('tm12e(EUCOMM)WTSI') )
-    
-    assert_equal( "Deletion", allele_type('tm1(EUCOMM)WTSI') )
-    assert_equal( "Deletion", allele_type('tm12(EUCOMM)WTSI') )
-    
-    assert_equal( "", allele_type( nil, nil ) )
-    assert_equal( "Deletion", allele_type( nil, 'deletion' ) )
-    assert_equal( "Knockout-First", allele_type( nil, 'ko_first' ) )
-  end
-  
   ##
   ## DataView Helper Tests...
   ##
