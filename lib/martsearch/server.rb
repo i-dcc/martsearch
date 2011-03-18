@@ -94,6 +94,7 @@ module MartSearch
     helpers do
       include Rack::Utils
       include WillPaginate::ViewHelpers
+      include MartSearch::DataSetUtils
       include MartSearch::ServerViewHelpers
       
       alias_method :h, :escape_html

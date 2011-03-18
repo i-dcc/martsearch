@@ -71,7 +71,7 @@
         {
             "name":"PCS00030_B_D01",
             "design_id":"40651",
-            "design_type":"Conditional (Frameshift)"
+            "design_type":"Knockout-First - Reporter Tagged Insertion"
         }
     ],
     "targeting_vectors":
@@ -79,49 +79,49 @@
         {
             "name":"PG00030_B_3_D01",
             "design_id":"40651",
-            "design_type":"Conditional (Frameshift)",
+            "design_type":"Knockout-First - Reporter Tagged Insertion",
             "cassette":"L1L2_gt0",
             "backbone":"L3L4_pZero_DTA_kan"
         },
         {
             "name":"PG00030_C_1_D01",
             "design_id":"40651",
-            "design_type":"Conditional (Frameshift)",
+            "design_type":"Knockout-First - Reporter Tagged Insertion",
             "cassette":"L1L2_gt0",
             "backbone":"L3L4_pZero_DTA_kan"
         },
         {
             "name":"PG00030_C_2_D01",
             "design_id":"40651",
-            "design_type":"Conditional (Frameshift)",
+            "design_type":"Knockout-First - Reporter Tagged Insertion",
             "cassette":"L1L2_gt0",
             "backbone":"L3L4_pZero_DTA_kan"
         },
         {
             "name":"PG00030_C_3_D01",
             "design_id":"40651",
-            "design_type":"Conditional (Frameshift)",
+            "design_type":"Knockout-First - Reporter Tagged Insertion",
             "cassette":"L1L2_gt0",
             "backbone":"L3L4_pZero_DTA_kan"
         },
         {
             "name":"PG00030_C_4_D01",
             "design_id":"40651",
-            "design_type":"Conditional (Frameshift)",
+            "design_type":"Knockout-First - Reporter Tagged Insertion",
             "cassette":"L1L2_gt0",
             "backbone":"L3L4_pZero_DTA_kan"
         },
         {
             "name":"PGS00030_B_D01",
             "design_id":"40651",
-            "design_type":"Conditional (Frameshift)",
+            "design_type":"Knockout-First - Reporter Tagged Insertion",
             "cassette":"L1L2_gt0",
             "backbone":"L3L4_pZero_DTA_kan"
         },
         {
             "name":"PGS00030_C_D01",
             "design_id":"40651",
-            "design_type":"Conditional (Frameshift)",
+            "design_type":"Knockout-First - Reporter Tagged Insertion",
             "cassette":"L1L2_gt0",
             "backbone":"L3L4_pZero_DTA_kan"
         }
@@ -135,6 +135,7 @@
                 {
                     "name":"EPD0103_2_C01",
                     "allele_symbol_superscript":"tm1a(EUCOMM)Wtsi",
+                    "allele_type":"Knockout-First - Reporter Tagged Insertion",
                     "parental_cell_line":"JM8.F6",
                     "targeting_vector":"PGS00030_C_D01",
                     "mouse?":"yes",
@@ -168,6 +169,7 @@
                 {
                     "name":"EPD0103_2_A01",
                     "allele_symbol_superscript":"tm1a(EUCOMM)Wtsi",
+                    "allele_type":"Knockout-First - Reporter Tagged Insertion",
                     "parental_cell_line":"JM8.F6",
                     "targeting_vector":"PGS00030_C_D01",
                     "mouse?":"no",
@@ -201,6 +203,7 @@
                 {
                     "name":"EPD0103_2_A02",
                     "allele_symbol_superscript":"tm1a(EUCOMM)Wtsi",
+                    "allele_type":"Knockout-First - Reporter Tagged Insertion",
                     "parental_cell_line":"JM8.F6",
                     "targeting_vector":"PGS00030_C_D01",
                     "mouse?":"no",
@@ -234,6 +237,7 @@
                 {
                     "name":"EPD0103_2_E02",
                     "allele_symbol_superscript":"tm1a(EUCOMM)Wtsi",
+                    "allele_type":"Knockout-First - Reporter Tagged Insertion",
                     "parental_cell_line":"JM8.F6",
                     "targeting_vector":"PGS00030_C_D01",
                     "mouse?":"no",
@@ -267,6 +271,7 @@
                 {
                     "name":"EPD0103_2_E03",
                     "allele_symbol_superscript":"tm1a(EUCOMM)Wtsi",
+                    "allele_type":"Knockout-First - Reporter Tagged Insertion",
                     "parental_cell_line":"JM8.F6",
                     "targeting_vector":"PGS00030_C_D01",
                     "mouse?":"no",
@@ -300,6 +305,7 @@
                 {
                     "name":"EPD0103_2_H03",
                     "allele_symbol_superscript":"tm1a(EUCOMM)Wtsi",
+                    "allele_type":"Knockout-First - Reporter Tagged Insertion",
                     "parental_cell_line":"JM8.F6",
                     "targeting_vector":"PGS00030_C_D01",
                     "mouse?":"no",
@@ -333,7 +339,6 @@
             ],
             "allele_img":"http://www.knockoutmouse.org/targ_rep/alleles/4281/allele-image",
             "allele_gb":"http://www.knockoutmouse.org/targ_rep/alleles/4281/escell-clone-genbank-file",
-            "design_type":"Conditional (Frameshift)"
         },
         "targeted non-conditional":
         {
@@ -342,6 +347,7 @@
                 {
                     "name":"EPD0103_2_D01",
                     "allele_symbol_superscript":"tm1e(EUCOMM)Wtsi",
+                    "allele_type":"Targeted Non-Conditional",
                     "parental_cell_line":"JM8.F6",
                     "targeting_vector":"PGS00030_C_D01",
                     "mouse?":"no",
@@ -375,6 +381,7 @@
                 {
                     "name":"EPD0103_2_D02",
                     "allele_symbol_superscript":"tm1e(EUCOMM)Wtsi",
+                    "allele_type":"Targeted Non-Conditional",
                     "parental_cell_line":"JM8.F6",
                     "targeting_vector":"PGS00030_C_D01",
                     "mouse?":"no",
@@ -408,6 +415,7 @@
                 {
                     "name":"EPD0103_2_G03",
                     "allele_symbol_superscript":"tm1e(EUCOMM)Wtsi",
+                    "allele_type":"Targeted Non-Conditional",
                     "parental_cell_line":"JM8.F6",
                     "targeting_vector":"PGS00030_C_D01",
                     "mouse?":"no",
@@ -441,13 +449,13 @@
             ],
             "allele_img":"http://www.knockoutmouse.org/targ_rep/alleles/4282/allele-image",
             "allele_gb":"http://www.knockoutmouse.org/targ_rep/alleles/4282/escell-clone-genbank-file",
-            "design_type":"Targeted, Non-Conditional"
         }
     },
     "vector_image":"http://www.knockoutmouse.org/targ_rep/alleles/4282/vector-image",
     "vector_gb":"http://www.knockoutmouse.org/targ_rep/alleles/4282/targeting-vector-genbank-file",
     "floxed_start_exon":"ENSMUSE00000208803",
     "floxed_end_exon":"ENSMUSE00000208803",
+    "allele_design_type":"Knockout-First - Reporter Tagged Insertion",
     "stage":"mice",
     "stage_type":"normal"
 }
