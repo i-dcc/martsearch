@@ -305,7 +305,7 @@ module MartSearch
               'active'       => '1'
             },
             :attributes      => [
-                'status', 'allele_name', 'escell_clone', 'emma',
+                'status', 'allele_name', 'escell_clone', 'mouse_allele_name', 'emma',
                 'escell_strain', 'escell_line', 'mi_centre', 'distribution_centre',
                 qc_metrics
             ].flatten,
@@ -322,8 +322,12 @@ module MartSearch
           }
           
           results[:data].each do |result|
+            # Override the allele_name if we have a corrected one for the mouse...
+            result[:allele_name] = result[:mouse_allele_name] unless result[:mouse_allele_name].nil?
+            
             unless result[:allele_name].nil?
-              result[:allele_type] = allele_type(result[:allele_name])
+              result[:allele_name] = fix_superscript_text_in_attribute( result[:allele_name] )
+              result[:allele_type] = allele_type( result[:allele_name] )
             end
             
             # Test for QC data - set each empty qc_metric to '-' or count it
