@@ -877,6 +877,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
           {
             :status                        => "Genotype Confirmed",
             :allele_name                   => "Cbx1<sup>tm1a(EUCOMM)Wtsi</sup>",
+            :allele_type                   => "Knockout-First - Reporter Tagged Insertion",
             :escell_clone                  => "EPD0027_2_B01",
             :emma                          => "1",
             :escell_strain                 => "C57BL/6N",

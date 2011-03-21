@@ -338,7 +338,7 @@
                 }
             ],
             "allele_img":"http://www.knockoutmouse.org/targ_rep/alleles/4281/allele-image",
-            "allele_gb":"http://www.knockoutmouse.org/targ_rep/alleles/4281/escell-clone-genbank-file",
+            "allele_gb":"http://www.knockoutmouse.org/targ_rep/alleles/4281/escell-clone-genbank-file"
         },
         "targeted non-conditional":
         {
@@ -448,7 +448,7 @@
                 }
             ],
             "allele_img":"http://www.knockoutmouse.org/targ_rep/alleles/4282/allele-image",
-            "allele_gb":"http://www.knockoutmouse.org/targ_rep/alleles/4282/escell-clone-genbank-file",
+            "allele_gb":"http://www.knockoutmouse.org/targ_rep/alleles/4282/escell-clone-genbank-file"
         }
     },
     "vector_image":"http://www.knockoutmouse.org/targ_rep/alleles/4282/vector-image",
