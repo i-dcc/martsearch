@@ -33,7 +33,7 @@
               -
             <% end %>
             </td>
-            <td><%= targvec[:design_type] %></td>
+            <td><%= targvec[:design_type] %> (<%= targvec[:cassette_type] %> Cassette)</td>
             <td><%= targvec[:name] %></td>
             <td><%= @data[:floxed_exon_link] %></td>
             <td><%= targvec[:cassette] %></td>

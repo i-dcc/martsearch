@@ -89,7 +89,10 @@ module MartSearch
               unless data[:es_cells][symbol].nil?
                 # update the mouse status
                 data[:es_cells][symbol][:cells].each do |es_cell|
-                  es_cell.merge!({ "mouse?".to_sym => "yes" }) if mouse[:escell_clone] == es_cell[:name]
+                  if mouse[:escell_clone] == es_cell[:name]
+                    es_cell.merge!({ "mouse?".to_sym => "yes" })
+                    mouse.merge!({ :cassette => es_cell[:cassette], :cassette_type => es_cell[:cassette_type] })
+                  end
                 end
 
                 # then sort (by mice > qc_count > name)
@@ -407,6 +410,7 @@ module MartSearch
               'design_id',
               'mutation_subtype',
               'cassette',
+              'cassette_type',
               'backbone',
               'allele_gb_file',
               'vector_gb_file',
@@ -461,11 +465,12 @@ module MartSearch
           unless result['mutation_subtype'] == 'targeted_non_conditional'
             unless result['targeting_vector'].nil?
               data['targeting_vectors'].push(
-                'name'         => result['targeting_vector'],
-                'design_id'    => result['design_id'],
-                'design_type'  => allele_type( nil, result['mutation_subtype'] ),
-                'cassette'     => result['cassette'],
-                'backbone'     => result['backbone']
+                'name'          => result['targeting_vector'],
+                'design_id'     => result['design_id'],
+                'design_type'   => allele_type( nil, result['mutation_subtype'] ),
+                'cassette'      => result['cassette'],
+                'cassette_type' => result['cassette_type'],
+                'backbone'      => result['backbone']
               )
             end
           end
@@ -503,6 +508,8 @@ module MartSearch
               'allele_type'               => allele_type( result['allele_symbol_superscript'], result['mutation_subtype'] ),
               'parental_cell_line'        => result['parental_cell_line'],
               'targeting_vector'          => result['targeting_vector'],
+              'cassette'                  => result['cassette'],
+              'cassette_type'             => result['cassette_type'],
               'mouse?'                    => 'no' # default to no
             }.merge(qc_data)
           )

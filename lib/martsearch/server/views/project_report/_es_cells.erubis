@@ -64,7 +64,7 @@
                 <%= @data[:marker_symbol] %><sup><%= cell[:allele_symbol_superscript] %></sup>
               <% end %>
             </td>
-            <td><%= cell[:allele_type] %></td>
+            <td><%= cell[:allele_type] %> (<%= cell[:cassette_type] %> Cassette)</td>
             <td><%= @data[:floxed_exon_link] %></td>
             <td><%= cell[:parental_cell_line] %></td>
             <td class="hide_on_print">
