@@ -87,6 +87,7 @@ require "#{MARTSEARCH_PATH}/lib/martsearch/index_builder"
 
 require "#{MARTSEARCH_PATH}/lib/martsearch/server_utils"
 require "#{MARTSEARCH_PATH}/lib/martsearch/server_view_helpers/ensembl_links"
+require "#{MARTSEARCH_PATH}/lib/martsearch/server_view_helpers/ucsc_links"
 require "#{MARTSEARCH_PATH}/lib/martsearch/server_view_helpers/gbrowse_links"
 require "#{MARTSEARCH_PATH}/lib/martsearch/server_view_helpers/misc_db_links"
 require "#{MARTSEARCH_PATH}/lib/martsearch/server_view_helpers/order_buttons"

@@ -13,6 +13,7 @@ module MartSearch
   module ServerViewHelpers
     
     include MartSearch::ServerViewHelpers::EnsemblLinks
+    include MartSearch::ServerViewHelpers::UcscLinks
     include MartSearch::ServerViewHelpers::GbrowseLinks
     include MartSearch::ServerViewHelpers::MiscDbLinks
     include MartSearch::ServerViewHelpers::OrderButtons

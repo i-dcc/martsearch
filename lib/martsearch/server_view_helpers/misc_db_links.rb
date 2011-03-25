@@ -7,16 +7,6 @@ module MartSearch
     # @author Nelo Onyiah
     module MiscDbLinks
       
-      # Helper function to generate link URL to UCSC
-      #
-      # @param  [String] chromosome Chromosome
-      # @param  [Int]    start_pos Chromosome start position
-      # @param  [Int]    end_pos Chromosome end position
-      # @return [String] The URL for UCSC
-      def ucsc_link_url(chromosome, start_pos, end_pos)
-        "http://genome.ucsc.edu/cgi-bin/hgTracks?db=mm9&ikmc=pack&position=chr#{chromosome}:#{start_pos}-#{end_pos}"
-      end
-      
       # Helper function to generate a link URL to InterPro
       #
       # @param  [String] interpro_ac The InterPro ID
