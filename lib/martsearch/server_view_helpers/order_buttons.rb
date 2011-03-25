@@ -18,10 +18,20 @@ module MartSearch
       # @param [String] dist_centre The distribution centre for the mouse
       # @return [String] The html markup for a button
       def mouse_order_button( mgi_accession_id, marker_symbol, project, project_id, flagged_for_dist, mi_centre='', dist_centre='' )
-        order_url = ikmc_product_order_url( :mouse, project, project_id, mgi_accession_id, marker_symbol )
+        order_url        = ikmc_product_order_url( :mouse, project, project_id, mgi_accession_id, marker_symbol )
+        express_interest = false
         
         if not flagged_for_dist
-          order_url = ""
+          express_interest = true
+          centre = dist_centre ? dist_centre : mi_centre
+          
+          if centre == 'APN'
+            order_url = 'http://www.australianphenomics.org.au/contact/'
+          elsif project =~ /KOMP/
+            order_url = 'https://www.komp.org/index.php?link=3'
+          elsif project =~ /EUCOMM/
+            order_url = 'http://www.emmanet.org/contact.php'
+          end
         else
           centre = dist_centre ? dist_centre : mi_centre
           if project =~ /KOMP/ and centre == "WTSI"
@@ -29,7 +39,7 @@ module MartSearch
           end
         end
         
-        button_text = generic_order_button( project, order_url )
+        button_text = generic_order_button( project, order_url, express_interest )
         
         return button_text
       end
@@ -104,16 +114,16 @@ module MartSearch
         #
         # @param [String] project The IKMC pipeline name ['KOMP/KOMP-CSD','KOMP-Regeneron','NorCOMM','EUCOMM','mirKO']
         # @param [String] order_url The URL for the button to link to
+        # @param [Boolean] express_interest 
         # @return The HTML markup for the order button
-        def generic_order_button( project, order_url )
-          button_text = '<span class="order unavailable">currently&nbsp;unavailable</span>'
+        def generic_order_button( project, order_url, express_interest=false )
+          button_text      = '<span class="order unavailable">currently&nbsp;unavailable</span>'
+          express_interest = true if project == 'mirKO'
           
-          unless order_url.empty?
+          if express_interest
+            button_text = "<a href=\"#{order_url}\" class=\"order express_interest\">express&nbsp;interest</a>"
+          elsif !order_url.empty?
             button_text = "<a href=\"#{order_url}\" class=\"order\" target=\"_blank\">order</a>"
-          end
-          
-          if project == 'mirKO'
-            button_text = "<a href=\"#{order_url}\" class=\"order unavailable\">express&nbsp;interest</a>"
           end
           
           return button_text

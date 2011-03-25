@@ -81,7 +81,7 @@ module MartSearch
         ##
         
         mouse_data = nil
-        mouse_data = data[:mice][:genotype_confirmed] if data[:mice] and data[:mice][:genotype_confirmed]
+        mouse_data = data[:mice] if data[:mice]
         
         unless mouse_data.nil?
           mouse_data.each do |mouse|
@@ -310,6 +310,7 @@ module MartSearch
             :attributes      => [
                 'status', 'allele_name', 'escell_clone', 'mouse_allele_name', 'emma',
                 'escell_strain', 'escell_line', 'mi_centre', 'distribution_centre',
+                'back_cross_strain', 'test_cross_strain',
                 qc_metrics
             ].flatten,
             :required_attributes => ['status']
@@ -332,6 +333,8 @@ module MartSearch
               result[:allele_name] = fix_superscript_text_in_attribute( result[:allele_name] )
               result[:allele_type] = allele_type( result[:allele_name] )
             end
+            
+            result[:genetic_background] = ikmc_kermits_set_genetic_background(result)
             
             # Test for QC data - set each empty qc_metric to '-' or count it
             result[:qc_count] = 0
@@ -360,7 +363,7 @@ module MartSearch
             end
           end
 
-          results[:data] = { :mice => mouse_results }
+          results[:data] = { :mice => [ mouse_results[:genotype_confirmed], mouse_results[:mi_in_progress] ].flatten }
         end
 
         return results

@@ -4,18 +4,16 @@
     <table>
       <thead>
         <th class="hide_on_print"></th>
-        <th>Gene</th>
+        <th>Microinjection Status</th>
         <th>Allele</th>
         <th>Allele Type</th>
         <th>ES Cell Clone</th>
-        <th>Parental ES Cell Strain</th>
-        <th>Parental ES Cell Line</th>
-        <th>Microinjection Status</th>
+        <th>Genetic Background</th>
         <th>QC Data</th>
         <th>MI/Distribution Centre</th>
       </thead>
       <tbody>
-        <% @data[:mice][:genotype_confirmed].each do |mouse| %>
+        <% @data[:mice].each do |mouse| %>
           <tr>
             <td>
               <%
@@ -24,13 +22,11 @@
               %>
               <%= mouse_order_button( @data[:mgi_accession_id], @data[:marker_symbol], @data[:ikmc_project], @data[:project_id], dist_flag, mouse[:mi_centre], mouse[:distribution_centre] ) %>
             </td>
-            <td><%= @data[:marker_symbol] %></td>
+            <td><%= mouse[:status]%></td>
             <td><%= mouse[:allele_name] %></td>
             <td><%= mouse[:allele_type] %> (<%= mouse[:cassette_type] %> Cassette)</td>
             <td><%= mouse[:escell_clone] %></td>
-            <td><%= mouse[:escell_strain] %></td>
-            <td><%= mouse[:escell_line] %></td>
-            <td><%= mouse[:status]%></td>
+            <td><%= mouse[:genetic_background] %></td>
             <td>
               <% if mouse[:qc_count] > 0 %>
                 <a class="details_toggle">view</a>

@@ -41,39 +41,44 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
       ]
       expected_targ_vectors = [
         {
-          :name        => "PG00019_A_1_B11",
-          :design_id   => "39792",
-          :design_type => "Knockout-First - Reporter Tagged Insertion",
-          :cassette    => "L1L2_gt2",
-          :backbone    => "L3L4_pZero_kan",
+          :name           => "PG00019_A_1_B11",
+          :design_id      => "39792",
+          :design_type    => "Knockout-First - Reporter Tagged Insertion",
+          :cassette       => "L1L2_gt2",
+          :cassette_type  => "Promotorless",
+          :backbone       => "L3L4_pZero_kan",
         },
         {
-          :name        => "PG00019_A_2_B11",
-          :design_id   => "39792",
-          :design_type => "Knockout-First - Reporter Tagged Insertion",
-          :cassette    => "L1L2_gt2",
-          :backbone    => "L3L4_pZero_kan"
+          :name           => "PG00019_A_2_B11",
+          :design_id      => "39792",
+          :design_type    => "Knockout-First - Reporter Tagged Insertion",
+          :cassette       => "L1L2_gt2",
+          :cassette_type  => "Promotorless",
+          :backbone       => "L3L4_pZero_kan"
         },
         {
-          :name        => "PG00019_A_3_B11",
-          :design_id   => "39792",
-          :design_type => "Knockout-First - Reporter Tagged Insertion",
-          :cassette    => "L1L2_gt2",
-          :backbone    => "L3L4_pZero_kan"
+          :name           => "PG00019_A_3_B11",
+          :design_id      => "39792",
+          :design_type    => "Knockout-First - Reporter Tagged Insertion",
+          :cassette       => "L1L2_gt2",
+          :cassette_type  => "Promotorless",
+          :backbone       => "L3L4_pZero_kan"
         },
         {
-          :name        => "PG00019_A_4_B11",
-          :design_id   => "39792",
-          :design_type => "Knockout-First - Reporter Tagged Insertion",
-          :cassette    => "L1L2_gt2",
-          :backbone    => "L3L4_pZero_kan"
+          :name           => "PG00019_A_4_B11",
+          :design_id      => "39792",
+          :design_type    => "Knockout-First - Reporter Tagged Insertion",
+          :cassette       => "L1L2_gt2",
+          :cassette_type  => "Promotorless",
+          :backbone       => "L3L4_pZero_kan"
         },
         {
-          :name        => "PGS00019_A_B11",
-          :design_id   => "39792",
-          :design_type => "Knockout-First - Reporter Tagged Insertion",
-          :cassette    => "L1L2_gt2",
-          :backbone    => "L3L4_pZero_kan"
+          :name           => "PGS00019_A_B11",
+          :design_id      => "39792",
+          :design_type    => "Knockout-First - Reporter Tagged Insertion",
+          :cassette       => "L1L2_gt2",
+          :cassette_type  => "Promotorless",
+          :backbone       => "L3L4_pZero_kan"
         }
       ]
       expected_cells = {
@@ -85,6 +90,8 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_type                           => "Knockout-First - Reporter Tagged Insertion",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
+              :cassette                              => "L1L2_gt2",
+              :cassette_type                         => "Promotorless",
               :"mouse?"                              => "yes",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
@@ -119,6 +126,8 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_type                           => "Knockout-First - Reporter Tagged Insertion",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
+              :cassette                              => "L1L2_gt2",
+              :cassette_type                         => "Promotorless",
               :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
@@ -153,6 +162,8 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_type                           => "Knockout-First - Reporter Tagged Insertion",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
+              :cassette                              => "L1L2_gt2",
+              :cassette_type                         => "Promotorless",
               :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
@@ -187,6 +198,8 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_type                           => "Knockout-First - Reporter Tagged Insertion",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
+              :cassette                              => "L1L2_gt2",
+              :cassette_type                         => "Promotorless",
               :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
@@ -221,6 +234,8 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_type                           => "Knockout-First - Reporter Tagged Insertion",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
+              :cassette                              => "L1L2_gt2",
+              :cassette_type                         => "Promotorless",
               :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
@@ -255,6 +270,8 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_type                           => "Knockout-First - Reporter Tagged Insertion",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
+              :cassette                              => "L1L2_gt2",
+              :cassette_type                         => "Promotorless",
               :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
@@ -289,6 +306,8 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_type                           => "Knockout-First - Reporter Tagged Insertion",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
+              :cassette                              => "L1L2_gt2",
+              :cassette_type                         => "Promotorless",
               :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
@@ -323,6 +342,8 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_type                           => "Knockout-First - Reporter Tagged Insertion",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
+              :cassette                              => "L1L2_gt2",
+              :cassette_type                         => "Promotorless",
               :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
@@ -357,6 +378,8 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_type                           => "Knockout-First - Reporter Tagged Insertion",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
+              :cassette                              => "L1L2_gt2",
+              :cassette_type                         => "Promotorless",
               :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
@@ -391,6 +414,8 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_type                           => "Knockout-First - Reporter Tagged Insertion",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
+              :cassette                              => "L1L2_gt2",
+              :cassette_type                         => "Promotorless",
               :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
@@ -425,6 +450,8 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_type                           => "Knockout-First - Reporter Tagged Insertion",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
+              :cassette                              => "L1L2_gt2",
+              :cassette_type                         => "Promotorless",
               :"mouse?"                              => "no",
               :qc_count                              => 4,
               :production_qc_five_prime_screen       => "pass",
@@ -459,6 +486,8 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_type                           => "Knockout-First - Reporter Tagged Insertion",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
+              :cassette                              => "L1L2_gt2",
+              :cassette_type                         => "Promotorless",
               :"mouse?"                              => "no",
               :qc_count                              => 5,
               :production_qc_five_prime_screen       => "pass",
@@ -493,6 +522,8 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_type                           => "Knockout-First - Reporter Tagged Insertion",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
+              :cassette                              => "L1L2_gt2",
+              :cassette_type                         => "Promotorless",
               :"mouse?"                              => "no",
               :qc_count                              => 5,
               :production_qc_five_prime_screen       => "pass",
@@ -527,6 +558,8 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_type                           => "Knockout-First - Reporter Tagged Insertion",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
+              :cassette                              => "L1L2_gt2",
+              :cassette_type                         => "Promotorless",
               :"mouse?"                              => "no",
               :qc_count                              => 5,
               :production_qc_five_prime_screen       => "pass",
@@ -567,6 +600,8 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_type                           => "Targeted Non-Conditional",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
+              :cassette                              => "L1L2_gt2",
+              :cassette_type                         => "Promotorless",
               :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
@@ -601,6 +636,8 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_type                           => "Targeted Non-Conditional",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
+              :cassette                              => "L1L2_gt2",
+              :cassette_type                         => "Promotorless",
               :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
@@ -635,6 +672,8 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_type                           => "Targeted Non-Conditional",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
+              :cassette                              => "L1L2_gt2",
+              :cassette_type                         => "Promotorless",
               :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
@@ -669,6 +708,8 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_type                           => "Targeted Non-Conditional",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
+              :cassette                              => "L1L2_gt2",
+              :cassette_type                         => "Promotorless",
               :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
@@ -703,6 +744,8 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_type                           => "Targeted Non-Conditional",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
+              :cassette                              => "L1L2_gt2",
+              :cassette_type                         => "Promotorless",
               :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
@@ -737,6 +780,8 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_type                           => "Targeted Non-Conditional",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
+              :cassette                              => "L1L2_gt2",
+              :cassette_type                         => "Promotorless",
               :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
@@ -771,6 +816,8 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_type                           => "Targeted Non-Conditional",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
+              :cassette                              => "L1L2_gt2",
+              :cassette_type                         => "Promotorless",
               :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
@@ -805,6 +852,8 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_type                           => "Targeted Non-Conditional",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
+              :cassette                              => "L1L2_gt2",
+              :cassette_type                         => "Promotorless",
               :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
@@ -839,6 +888,8 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :allele_type                           => "Targeted Non-Conditional",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
+              :cassette                              => "L1L2_gt2",
+              :cassette_type                         => "Promotorless",
               :"mouse?"                              => "no",
               :qc_count                              => 3,
               :production_qc_five_prime_screen       => "pass",
@@ -872,35 +923,38 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
           :allele_gb   => "http://www.knockoutmouse.org/targ_rep/alleles/903/escell-clone-genbank-file",
         }
       }
-      expected_mice = {
-        :genotype_confirmed => [
-          {
-            :status                        => "Genotype Confirmed",
-            :allele_name                   => "Cbx1<sup>tm1a(EUCOMM)Wtsi</sup>",
-            :allele_type                   => "Knockout-First - Reporter Tagged Insertion",
-            :escell_clone                  => "EPD0027_2_B01",
-            :emma                          => "1",
-            :escell_strain                 => "C57BL/6N",
-            :escell_line                   => "JM8.N4 (p10)",
-            :mi_centre                     => "WTSI",
-            :distribution_centre           => "WTSI",
-            :qc_southern_blot              => "-",
-            :qc_tv_backbone_assay          => "pass",
-            :qc_five_prime_lr_pcr          => "na",
-            :qc_loa_qpcr                   => "na",
-            :qc_homozygous_loa_sr_pcr      => "pass",
-            :qc_neo_count_qpcr             => "pass",
-            :qc_lacz_sr_pcr                => "pass",
-            :qc_five_prime_cass_integrity  => "pass",
-            :qc_neo_sr_pcr                 => "na",
-            :qc_mutant_specific_sr_pcr     => "pass",
-            :qc_loxp_confirmation          => "pass",
-            :qc_three_prime_lr_pcr         => "na",
-            :qc_count                      => 11
-          }
-        ],
-        :mi_in_progress => []
-      }
+      expected_mice = [
+        {
+          :status                        => "Genotype Confirmed",
+          :allele_name                   => "Cbx1<sup>tm1a(EUCOMM)Wtsi</sup>",
+          :mouse_allele_name             => nil,
+          :escell_clone                  => "EPD0027_2_B01",
+          :emma                          => "1",
+          :escell_strain                 => "C57BL/6N",
+          :escell_line                   => "JM8.N4 (p10)",
+          :mi_centre                     => "WTSI",
+          :distribution_centre           => "WTSI",
+          :back_cross_strain             => "B6N/TacDen",
+          :test_cross_strain             => "B6JTyr<c-Brd>",
+          :qc_southern_blot              => "-",
+          :qc_tv_backbone_assay          => "pass",
+          :qc_five_prime_lr_pcr          => "na",
+          :qc_loa_qpcr                   => "na",
+          :qc_homozygous_loa_sr_pcr      => "pass",
+          :qc_neo_count_qpcr             => "pass",
+          :qc_lacz_sr_pcr                => "pass",
+          :qc_five_prime_cass_integrity  => "pass",
+          :qc_neo_sr_pcr                 => "na",
+          :qc_mutant_specific_sr_pcr     => "pass",
+          :qc_loxp_confirmation          => "pass",
+          :qc_three_prime_lr_pcr         => "na",
+          :allele_type                   => "Knockout-First - Reporter Tagged Insertion",
+          :genetic_background            => "B6N/TacDen;B6JTyr<c-Brd>;C57BL/6N",
+          :qc_count                      => 11,
+          :cassette                      => "L1L2_gt2",
+          :cassette_type                 => "Promotorless"
+        }
+      ]
 
       # sort the es cells ...
       [ ':targeted non-conditional', :conditional ].each do |symbol|
@@ -958,12 +1012,10 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
         end
       end
       
-      [ :genotype_confirmed, :mi_in_progress ].each do |symbol|
-        expected_data[:mice][symbol].sort! do |a, b|
-          res = a[:qc_count]     <=> b[:qc_count]
-          res = a[:escell_clone] <=> b[:escell_clone] if res == 0
-          res
-        end
+      expected_data[:mice].sort! do |a, b|
+        res = a[:qc_count]     <=> b[:qc_count]
+        res = a[:escell_clone] <=> b[:escell_clone] if res == 0
+        res
       end
       
       # So... test top-level data first
@@ -992,12 +1044,10 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
       end
       
       # Now mice...
-      [ :genotype_confirmed, :mi_in_progress ].each do |status|
-        expected_data[:mice][status][0].keys.each do |key|
-          expected_data[:mice][status].each_index do |index|
-            # puts "mice: testing [:mice][:#{status}][#{index}][:#{key}] - exp: '#{expected_data[:mice][status][index][key]}' vs obs: '#{observed_data[:mice][status][index][key]}'"
-            assert_equal( expected_data[:mice][status][index][key], observed_data[:mice][status][index][key], "Mouse data has changed... We're now getting: \n\n #{observed_data[:mice].to_json}" )
-          end
+      expected_data[:mice][0].keys.each do |key|
+        expected_data[:mice].each_index do |index|
+          # puts "mice: testing [:mice][#{index}][:#{key}] - exp: '#{expected_data[:mice][index][key]}' vs obs: '#{observed_data[:mice][index][key]}'"
+          assert_equal( expected_data[:mice][index][key], observed_data[:mice][index][key], "Mouse data has changed... We're now getting: \n\n #{observed_data[:mice].to_json}" )
         end
       end
       

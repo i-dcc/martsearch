@@ -197,6 +197,10 @@ a.button:hover, a.order:hover {
 	background-image: url(../images/silk/cart_error.png);
 }
 
+.express_interest {
+	background-image: url(../images/silk/cart_go.png);
+}
+
 /* User Messages */
 
 .messages {
@@ -893,6 +897,12 @@ table.ikmc-pipeline-progress-bar td.error,
 table.ikmc-pipeline-progress-bar td.warn {
   color: #fff;
   font-weight: bold;
+}
+
+table.ikmc-pipeline-progress-bar td.normal a,
+table.ikmc-pipeline-progress-bar td.error a,
+table.ikmc-pipeline-progress-bar td.warn a {
+  font-weight: normal;
 }
 
 table.ikmc-pipeline-progress-bar td.normal_normal {

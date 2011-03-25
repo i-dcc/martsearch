@@ -43,11 +43,7 @@
     
     <!-- Mice -->
     <% unless @data[:mice].nil? %>
-      <% unless @data[:mice][:genotype_confirmed].empty? %>
-        <%= partial("project_report/mice") %>
-      <% else %>
-        <%= partial("project_report/mice_in_progress") %>
-      <% end %>
+      <%= partial("project_report/mice") %>
     <% end %>
 
     <!-- Mutagenesis Predictions -->
