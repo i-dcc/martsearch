@@ -27,8 +27,8 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
     end
 
     should "have the correct human orthalog" do
-      expected = { :human_ensembl_gene => "ENSG00000108468" }
-      assert_equal( expected, get_human_orthalog( @datasources, "ENSMUSG00000018666" )[:data][0] )
+      human_orth_data = get_human_orthalog( @datasources, "ENSMUSG00000018666" )[:data]
+      assert_equal( "ENSG00000108468", human_orth_data[:human_ensembl_gene] )
     end
 
     should "have the expected results" do

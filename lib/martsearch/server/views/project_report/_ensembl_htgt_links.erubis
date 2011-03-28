@@ -36,6 +36,18 @@
     })
   end
   
+  unless @data[:human_ensembl_chromosome].nil? and @data[:human_ensembl_start].nil? and @data[:human_ensembl_end].nil?
+    tracks = { 'hgIkmc' => 'pack', 'ensGene' => 'pack' }
+    tracks['wgRNA'] = 'pack' if @data[:ikmc_project] == 'mirKO'
+    
+    links.push({
+      :url   => ucsc_link_url( :human, @data[:human_ensembl_chromosome], @data[:human_ensembl_start], @data[:human_ensembl_end], tracks ),
+      :class => 'button ucsc_button',
+      :text  => 'UCSC (human)',
+      :title => 'View the human ortholog of this gene in UCSC Genome Browser. This link will also enable the IKMC tracks in the UCSC Genome Browser, showing the exact location/structure of the mutation.'
+    })
+  end
+  
   links.push({
     :url   => "http://www.sanger.ac.uk/htgt/tools/restrictionenzymes?es_clone_name=#{escell}",
     :class => 'button link_button',

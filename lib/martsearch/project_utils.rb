@@ -36,7 +36,7 @@ module MartSearch
         
         if data[:ensembl_gene_id]
           human_orthalogs = get_human_orthalog( datasources, data[:ensembl_gene_id] )
-          data.merge!( human_orthalogs[:data][0] ) unless human_orthalogs[:data].empty?
+          data.merge!( human_orthalogs[:data] ) unless human_orthalogs[:data].empty?
           errors.push( human_orthalogs[:error] ) unless human_orthalogs[:error].empty?
         end
         
@@ -260,19 +260,40 @@ module MartSearch
       # @param [String] ensembl_gene_id The (mouse) Ensembl ID to look for Human orthalogs of
       # @return [Hash] The data relating to the human orthalog
       def get_human_orthalog( datasources, ensembl_gene_id )
-        ens_mart     = datasources[:'ensembl-mouse'].ds
+        ens_mouse    = datasources[:'ensembl-mouse'].ds
+        ens_human    = datasources[:'ensembl-human'].ds
+        
         error_string = "This supplies information on the human ensembl gene orthalog. As a result this data will not be available on the page."
         results      = handle_biomart_errors( "ensembl-mouse", error_string ) do
-          ens_mart.search({
+          data      = {}
+          mouse_res = ens_mouse.search({
             :process_results     => true,
             :filters             => { 'ensembl_gene_id' => ensembl_gene_id },
             :attributes          => [ 'human_ensembl_gene' ],
             :required_attributes => [ 'human_ensembl_gene' ]
           })
+          
+          unless mouse_res.empty?
+            human_ensembl_gene        = mouse_res[0]['human_ensembl_gene']
+            data[:human_ensembl_gene] = human_ensembl_gene
+            
+            human_res = ens_human.search({
+              :process_results     => true,
+              :filters             => { 'ensembl_gene_id' => human_ensembl_gene },
+              :attributes          => [ 'ensembl_gene_id','chromosome_name','start_position','end_position' ],
+              :required_attributes => [ 'chromosome_name' ]
+            })
+            
+            unless human_res.empty?
+              data[:human_ensembl_chromosome] = human_res[0]['chromosome_name']
+              data[:human_ensembl_start]      = human_res[0]['start_position']
+              data[:human_ensembl_end]        = human_res[0]['end_position']
+            end
+          end
+          
+          data
         end
-        unless results[:data].empty?
-          results[:data][0] = { :human_ensembl_gene => results[:data][0]['human_ensembl_gene'] }
-        end
+        
         return results
       end
       
