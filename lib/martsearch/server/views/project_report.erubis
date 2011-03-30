@@ -53,10 +53,7 @@
       <% end %>
     <% end %>
     
-    <%
-      @show_allele_and_vector_images = true
-      @show_allele_and_vector_images = false if ['mirKO'].include?( @data[:ikmc_project] )
-    %>
+    <% @show_allele_and_vector_images = true %>
     
     <% unless @data[:es_cells].nil? %>
       <!-- ES Cell Clones (Conditional) -->
