@@ -55,13 +55,6 @@
     :title => 'Southern Blot Tool: Find restriction enzymes suitable for a southern blot.'
   }) unless escell.nil?
   
-  links.push({
-    :url   => ucsc_link_url(@data[:chromosome], @data[:coord_start], @data[:coord_end]),
-    :class => 'button link_button',
-    :text  => 'view in UCSC',
-    :title => 'View this gene in UCSC genome browser.'
-  }) unless @data[:chromosome].nil? and @data[:coord_start].nil? and @data[:coord_end].nil?
-
   links.map! do |link|
     tag = "<a href=\"#{link[:url]}\" target=\"_blank\""
     tag << " class=\"#{link[:class]}\"" unless link[:class].nil?
