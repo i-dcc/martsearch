@@ -64,7 +64,7 @@ GEM
     newrelic_rpm (2.13.4)
     nokogiri (1.4.4)
     parallel (0.5.1)
-    rack (1.2.1)
+    rack (1.2.2)
     rack-contrib (1.1.0)
       rack (>= 0.9.1)
     rack-test (0.5.7)
@@ -83,9 +83,11 @@ GEM
     simplecov (0.4.0)
       simplecov-html (~> 0.4.0)
     simplecov-html (0.4.3)
-    sinatra (1.1.2)
+    simplecov-rcov (0.1.4)
+      simplecov
+    sinatra (1.2.1)
       rack (~> 1.1)
-      tilt (~> 1.2)
+      tilt (< 2.0, >= 1.2.2)
     sinatra-static-assets (0.5.0)
       emk-sinatra-url-for (>= 0.2.1)
       rack (>= 1.0.0)
@@ -135,6 +137,7 @@ DEPENDENCIES
   sequel (~> 3.0)
   shoulda (>= 2.11)
   simplecov
+  simplecov-rcov
   sinatra (~> 1.0)
   sinatra-static-assets
   test-unit

@@ -21,6 +21,7 @@
       "back_cross_strain",
       "status",
       "allele_name",
+      "mouse_allele_name",
       "emma",
       "qc_southern_blot",
       "qc_tv_backbone_assay",

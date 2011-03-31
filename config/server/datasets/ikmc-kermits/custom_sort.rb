@@ -13,6 +13,12 @@ module MartSearch
           # Correct the <> notation in several attributes...
           if result[:allele_name]
             result[:allele_name] = fix_superscript_text_in_attribute(result[:allele_name])
+            
+            # Override the allele_name if we have a corrected one for the mouse...
+            unless result[:mouse_allele_name].nil?
+              result[:allele_name] = fix_superscript_text_in_attribute(result[:mouse_allele_name])
+            end
+            
             result[:allele_type] = allele_type(result[:allele_name])
           end
           if result[:back_cross_strain]

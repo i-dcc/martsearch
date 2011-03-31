@@ -38,9 +38,9 @@
       "plasma_chemistry",
       "plasma_immunoglobulins",
       "haematology_cbc",
+      "peripheral_blood_lymphocytes",
       "micronuclei",
       "tissue_biobank",
-      "peripheral_blood_lymphocytes",
       "heart_weight",
       "heart_histology",
       "tail_epidermis_wholemount",
@@ -48,8 +48,8 @@
       "brain_histopathology",
       "eye_histopathology",
       "micro_ct_and_quantitative_faxitron",
-      "citrobacter_challenge",
-      "salmonella_challenge"
+      "salmonella_challenge",
+      "citrobacter_challenge"
     ],
     "filters": {}
   },

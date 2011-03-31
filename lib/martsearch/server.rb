@@ -22,7 +22,7 @@ module MartSearch
     # We're going to use the version number as a cache breaker for the CSS 
     # and javascript code. Update with each release of your portal (especially 
     # if you change the CSS or JS)!!!
-    VERSION = '0.1.13'
+    VERSION = '0.1.14'
     DEFAULT_CSS_FILES = [
       'reset.css',
       'jquery.prettyPhoto.css',
@@ -94,6 +94,7 @@ module MartSearch
     helpers do
       include Rack::Utils
       include WillPaginate::ViewHelpers
+      include MartSearch::DataSetUtils
       include MartSearch::ServerViewHelpers
       
       alias_method :h, :escape_html
