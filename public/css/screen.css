@@ -562,6 +562,24 @@ form#martsearchr {
 	margin-bottom: 0;
 }
 
+#search_results .result .dataset.no-data {
+	border-color: #d5d5d5;
+	border-width: 1px;
+	color: #999;
+	padding-bottom: 7px;
+}
+
+#search_results .result .dataset.no-data h4 {
+	margin: 0 16px;
+}
+
+#search_results .result .dataset.no-data h4 span.subtext {
+	font-weight: normal;
+	font-style: italic;
+	font-size: small;
+	float: right;
+}
+
 .doc_datasets_returned {
 	font-size: 0.8em;
 	text-align: right;

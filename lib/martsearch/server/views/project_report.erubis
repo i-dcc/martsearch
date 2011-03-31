@@ -42,20 +42,24 @@
     <%= partial("project_report/progress_bar") %>
     
     <!-- Mice -->
-    <% unless @data[:mice].nil? %>
+    <% if @data[:mice].blank? %>
+      <%= partial("no_data", :locals => { :title => 'Mice' }) %>
+    <% else %>
       <%= partial("project_report/mice") %>
     <% end %>
 
     <!-- Mutagenesis Predictions -->
-    <% unless @data[:mutagenesis_predictions].nil? or @data[:mutagenesis_predictions].empty? %>
-      <% unless @data[:mutagenesis_predictions][:transcripts].nil? or @data[:mutagenesis_predictions][:transcripts].empty? %>
-        <%= partial("project_report/mutagenesis_predictions") %>
-      <% end %>
+    <% if @data[:mutagenesis_predictions].blank? or @data[:mutagenesis_predictions][:transcripts].blank? %>
+      <%= partial("no_data", :locals => { :title => 'Mutagenesis Predictions' }) %>
+    <% else %>
+      <%= partial("project_report/mutagenesis_predictions") %>
     <% end %>
     
     <% @show_allele_and_vector_images = true %>
     
-    <% unless @data[:es_cells].nil? %>
+    <% if @data[:es_cells].blank? or ( @data[:es_cells][:conditional][:cells].empty? and @data[:es_cells][:'targeted non-conditional'][:cells].empty? ) %>
+      <%= partial("no_data", :locals => { :title => 'ES Cell Clones' }) %>
+    <% else %>
       <!-- ES Cell Clones (Conditional) -->
       <% unless @data[:es_cells][:conditional][:cells].empty? %>
         <%= partial("project_report/es_cells", :locals => { :cond_vs_noncond => :conditional, :show_allele_and_vector_images => @show_allele_and_vector_images }) %>
@@ -68,12 +72,16 @@
     <% end %>
     
     <!-- Targeting Vectors -->
-    <% unless @data[:targeting_vectors].nil? or @data[:targeting_vectors].empty? %>
+    <% if @data[:targeting_vectors].blank? %>
+      <%= partial("no_data", :locals => { :title => 'Targeting Vectors' }) %>
+    <% else %>
       <%= partial("project_report/targeting_vectors", :locals => { :show_allele_and_vector_images => @show_allele_and_vector_images } ) %>
     <% end %>
     
     <!-- Intermediate Vectors -->
-    <% unless @data[:intermediate_vectors].nil? or @data[:intermediate_vectors].empty? %>
+    <% if @data[:intermediate_vectors].blank? %>
+      <%= partial("no_data", :locals => { :title => 'Intermediate Vectors' }) %>
+    <% else %>
       <%= partial("project_report/intermediate_vectors") %>
     <% end %>
   </div>
