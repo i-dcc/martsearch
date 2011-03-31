@@ -384,7 +384,11 @@ module MartSearch
             end
           end
 
-          results[:data] = { :mice => [ mouse_results[:genotype_confirmed], mouse_results[:mi_in_progress] ].flatten }
+          # Hide all non 'Genotype Confirmed' mice - until an undisclosed point in the future when we're 
+          # told to show them again...
+          # results[:data] = { :mice => [ mouse_results[:genotype_confirmed], mouse_results[:mi_in_progress] ].flatten }
+          
+          results[:data] = { :mice => mouse_results[:genotype_confirmed] }
         end
 
         return results

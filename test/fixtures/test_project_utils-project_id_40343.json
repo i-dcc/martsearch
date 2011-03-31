@@ -38,29 +38,6 @@
           "qc_loxp_confirmation":"pass",
           "qc_three_prime_lr_pcr":"na",
           "qc_count":11
-      },
-      {
-          "status":"Genotype Confirmed",
-          "allele_name":"Abcd1<sup>tm1a(EUCOMM)Wtsi</sup>",
-          "escell_clone":"EPD0103_2_E03",
-          "emma":"0",
-          "escell_strain":"C57BL/6N",
-          "escell_line":"JM8.F6 (p11)",
-          "mi_centre":"WTSI",
-          "distribution_centre":"WTSI",
-          "qc_southern_blot":"-",
-          "qc_tv_backbone_assay":"na",
-          "qc_five_prime_lr_pcr":"na",
-          "qc_loa_qpcr":"na",
-          "qc_homozygous_loa_sr_pcr":"na",
-          "qc_neo_count_qpcr":"na",
-          "qc_lacz_sr_pcr":"na",
-          "qc_five_prime_cass_integrity":"na",
-          "qc_neo_sr_pcr":"na",
-          "qc_mutant_specific_sr_pcr":"pass",
-          "qc_loxp_confirmation":"na",
-          "qc_three_prime_lr_pcr":"na",
-          "qc_count":11
       }
     ],
     "intermediate_vectors":
@@ -134,46 +111,9 @@
     {
       "conditional":
       {
-        "cells":
-        [
+        "cells": [
           {
             "name":"EPD0103_2_C01",
-            "allele_symbol_superscript":"tm1a(EUCOMM)Wtsi",
-            "allele_type":"Knockout-First - Reporter Tagged Insertion",
-            "parental_cell_line":"JM8.F6",
-            "targeting_vector":"PGS00030_C_D01",
-            "cassette":"L1L2_gt0",
-            "cassette_type":"Promotorless",
-            "mouse?":"yes",
-            "qc_count":3,
-            "production_qc_five_prime_screen":"not attempted",
-            "production_qc_loxp_screen":"pass",
-            "production_qc_three_prime_screen":"pass",
-            "production_qc_loss_of_allele":"-",
-            "production_qc_vector_integrity":"-",
-            "distribution_qc_karyotype_high":"-",
-            "distribution_qc_karyotype_low":"-",
-            "distribution_qc_copy_number":"-",
-            "distribution_qc_five_prime_lr_pcr":"-",
-            "distribution_qc_five_prime_sr_pcr":"-",
-            "distribution_qc_three_prime_sr_pcr":"-",
-            "distribution_qc_thawing":"-",
-            "user_qc_southern_blot":"-",
-            "user_qc_map_test":"-",
-            "user_qc_karyotype":"-",
-            "user_qc_tv_backbone_assay":"-",
-            "user_qc_five_prime_lr_pcr":"-",
-            "user_qc_loss_of_wt_allele":"-",
-            "user_qc_neo_count_qpcr":"-",
-            "user_qc_lacz_sr_pcr":"-",
-            "user_qc_five_prime_cassette_integrity":"-",
-            "user_qc_neo_sr_pcr":"-",
-            "user_qc_mutant_specific_sr_pcr":"-",
-            "user_qc_loxp_confirmation":"-",
-            "user_qc_three_prime_lr_pcr":"-"
-          },
-          {
-            "name":"EPD0103_2_E03",
             "allele_symbol_superscript":"tm1a(EUCOMM)Wtsi",
             "allele_type":"Knockout-First - Reporter Tagged Insertion",
             "parental_cell_line":"JM8.F6",
@@ -317,7 +257,7 @@
             "user_qc_three_prime_lr_pcr":"-"
           },
           {
-            "name":"EPD0103_2_H03",
+            "name":"EPD0103_2_E03",
             "allele_symbol_superscript":"tm1a(EUCOMM)Wtsi",
             "allele_type":"Knockout-First - Reporter Tagged Insertion",
             "parental_cell_line":"JM8.F6",
@@ -351,6 +291,41 @@
             "user_qc_mutant_specific_sr_pcr":"-",
             "user_qc_loxp_confirmation":"-",
             "user_qc_three_prime_lr_pcr":"-"
+          },
+          {
+            "name":"EPD0103_2_H03",
+            "allele_symbol_superscript":"tm1a(EUCOMM)Wtsi",
+            "allele_type":"Knockout-First - Reporter Tagged Insertion",
+            "parental_cell_line":"JM8.F6",
+            "targeting_vector":"PGS00030_C_D01",
+            "cassette":"L1L2_gt0",
+            "cassette_type":"Promotorless",
+            "mouse?":"no",
+            "qc_count":3,"production_qc_five_prime_screen":"not attempted",
+            "production_qc_loxp_screen":"pass",
+            "production_qc_three_prime_screen":"pass",
+            "production_qc_loss_of_allele":"-",
+            "production_qc_vector_integrity":"-",
+            "distribution_qc_karyotype_high":"-",
+            "distribution_qc_karyotype_low":"-",
+            "distribution_qc_copy_number":"-",
+            "distribution_qc_five_prime_lr_pcr":"-",
+            "distribution_qc_five_prime_sr_pcr":"-",
+            "distribution_qc_three_prime_sr_pcr":"-",
+            "distribution_qc_thawing":"-",
+            "user_qc_southern_blot":"-",
+            "user_qc_map_test":"-",
+            "user_qc_karyotype":"-",
+            "user_qc_tv_backbone_assay":"-",
+            "user_qc_five_prime_lr_pcr":"-",
+            "user_qc_loss_of_wt_allele":"-",
+            "user_qc_neo_count_qpcr":"-",
+            "user_qc_lacz_sr_pcr":"-",
+            "user_qc_five_prime_cassette_integrity":"-",
+            "user_qc_neo_sr_pcr":"-",
+            "user_qc_mutant_specific_sr_pcr":"-",
+            "user_qc_loxp_confirmation":"-",
+            "user_qc_three_prime_lr_pcr":"-"
           }
         ],
         "allele_img":"http://www.knockoutmouse.org/targ_rep/alleles/4281/allele-image",
@@ -358,9 +333,8 @@
       },
       "targeted non-conditional":
       {
-        "cells":
-        [
-          {
+        "cells": [
+        {
             "name":"EPD0103_2_D01",
             "allele_symbol_superscript":"tm1e(EUCOMM)Wtsi",
             "allele_type":"Targeted Non-Conditional",
@@ -394,10 +368,7 @@
             "user_qc_neo_sr_pcr":"-",
             "user_qc_mutant_specific_sr_pcr":"-",
             "user_qc_loxp_confirmation":"-",
-            "user_qc_three_prime_lr_pcr":"-"
-          },
-          {
-            "name":"EPD0103_2_D02",
+            "user_qc_three_prime_lr_pcr":"-"},{"name":"EPD0103_2_D02",
             "allele_symbol_superscript":"tm1e(EUCOMM)Wtsi",
             "allele_type":"Targeted Non-Conditional",
             "parental_cell_line":"JM8.F6",
@@ -430,10 +401,7 @@
             "user_qc_neo_sr_pcr":"-",
             "user_qc_mutant_specific_sr_pcr":"-",
             "user_qc_loxp_confirmation":"-",
-            "user_qc_three_prime_lr_pcr":"-"
-          },
-          {
-            "name":"EPD0103_2_G03",
+            "user_qc_three_prime_lr_pcr":"-"},{"name":"EPD0103_2_G03",
             "allele_symbol_superscript":"tm1e(EUCOMM)Wtsi",
             "allele_type":"Targeted Non-Conditional",
             "parental_cell_line":"JM8.F6",
