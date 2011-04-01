@@ -44,6 +44,15 @@ module MartSearch
         return button_text
       end
       
+      # Helper function to build an order button Non-IKMC EMMA lines.
+      # 
+      # @param [String] emma_id The EMMA id for this line
+      # @return [String] The html markup for a button
+      def emma_mouse_order_button( emma_id )
+        url         = emma_link_url( emma_id )
+        button_text = generic_order_button( 'Non-IKMC', url )
+      end
+      
       # Helper function to centralise the logic for producing a button for 
       # ordering an ES cell.
       #
