@@ -142,7 +142,7 @@ module MartSearch
     end
     
     private
-
+      
       # Helper function to perform quick searches against the Solr index
       #
       # @param  [MartSearch::Index] index      the MartSearch index object
@@ -152,20 +152,21 @@ module MartSearch
         results = handle_biomart_errors( "solr index", "This provides extra information on the project." ) do
           index.quick_search("ikmc_project_id:#{project_id}")
         end
-        unless results[:data].empty? or results[:data].nil?
+        
+        unless results[:data].blank?
           results[:data][0].symbolize_keys!
+          
+          # currently we only need the coordinate information
+          results[:data] = {
+            :chromosome  => results[:data][0][:chromosome],
+            :coord_start => results[:data][0][:coord_start],
+            :coord_end   => results[:data][0][:coord_end]
+          }
         end
-
-        # currently we only need the coordinate information
-        results[:data] = {
-          :chromosome  => results[:data][0][:chromosome],
-          :coord_start => results[:data][0][:coord_start],
-          :coord_end   => results[:data][0][:coord_end]
-        }
-
+        
         return results
       end
-
+      
       # Helper function to setup links to the floxed/deleted exons and all the config 
       # needed for these activities in the templates.
       #
