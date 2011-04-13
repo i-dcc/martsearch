@@ -53,7 +53,7 @@ namespace :deploy do
     run "chgrp team87 #{var_run_path}/css && chmod g+w #{var_run_path}/css"
     
     # WTSI Phenotyping Heatmap
-    run "ln -nfs #{shared_path}/pheno_overview.xls #{release_path}/public/pheno_overview.xls"
+    run "ln -nfs /software/team87/brave_new_world/data/generated/pheno_overview.xls #{release_path}/tmp/pheno_overview.xls"
   end
   
   desc 'Set the permissions of the filesystem so that others in the team can deploy'
