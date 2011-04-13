@@ -8,6 +8,7 @@
     "wtsi-phenotyping-heatmap",
     "wtsi-phenotyping-adult_expression",
     "wtsi-phenotyping-published_images",
+    "wtsi-phenotyping-param_level_heatmap",
     "wtsi-bacs",
     "emma-strains",
     "ensembl-mouse-homologs-human",
