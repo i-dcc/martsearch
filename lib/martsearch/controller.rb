@@ -154,9 +154,9 @@ module MartSearch
         
         begin
           counts = {
-            :standard_phenotyping => complete_mgp_genes_count( heatmap_mart, ['haematology_cbc'], ['CompleteInteresting','CompleteNotInteresting'] ),
-            :infection_challenge  => complete_mgp_genes_count( heatmap_mart, ['salmonella_challenge','citrobacter_challenge'], ['CompleteInteresting','CompleteNotInteresting'] ),
-            :expression           => complete_mgp_genes_count( heatmap_mart, ['adult_lac_z_expression','embryo_lac_z_expression'], ['CompleteDataAvailable'] )
+            :standard_phenotyping => complete_mgp_alleles_count( heatmap_mart, ['haematology_cbc'], ['CompleteInteresting','CompleteNotInteresting'] ),
+            :infection_challenge  => complete_mgp_alleles_count( heatmap_mart, ['salmonella_challenge','citrobacter_challenge'], ['CompleteInteresting','CompleteNotInteresting'] ),
+            :expression           => complete_mgp_alleles_count( heatmap_mart, ['adult_lac_z_expression','embryo_lac_z_expression'], ['CompleteDataAvailable'] )
           }
         rescue Biomart::BiomartError => error
           all_ok = false
@@ -209,7 +209,7 @@ module MartSearch
       # @param [Array] attributes The list of tests/attributes to check for completeness
       # @param [Array] allowed_values The attribute values to look for to consider a result 'complete'
       # @return [Integer] The count of unique genes that have data on all the tests queried
-      def complete_mgp_genes_count( mart, attributes, allowed_values )
+      def complete_mgp_alleles_count( mart, attributes, allowed_values )
         complete_genes = []
         results        = mart.search(
           :process_results => true,
