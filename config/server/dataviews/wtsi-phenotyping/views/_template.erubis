@@ -44,7 +44,7 @@
 <%=
   link_to(
     'download a spreadsheet containing all WTSI phenotyping data',
-    '/pheno_overview.xls',
+    '/phenotyping/mgp_heatmap.xls',
     :title => 'Download the Phenotyping Overview',
     :class => 'wtsi-phenotyping-heatmap-link button'
   )

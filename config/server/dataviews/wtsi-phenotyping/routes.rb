@@ -2,6 +2,23 @@ module MartSearch
   class Server
     
     ##
+    ## Static route for serving the MGP spreadsheet
+    ##
+    
+    get "/phenotyping/mgp_heatmap.xls" do
+      file = "#{MARTSEARCH_PATH}/tmp/pheno_overview.xls"
+      if File.exists?(file)
+        content = IO.binread(file)
+        cache_control :no_cache
+        content_type MIME::Types.type_for(file)
+        return content
+      else
+        status 404
+        erubis :not_found
+      end
+    end
+    
+    ##
     ## Static routes for ABR - these are just forwarding static content.
     ##
     
@@ -33,11 +50,7 @@ module MartSearch
       file        = "#{fs_location}/#{@colony_prefix}/ABR/#{params[:splat][0]}"
       
       if File.exists?(file)
-        content = nil
-        File.open(file,"r") do |f|
-          content = f.read
-        end
-        
+        content = IO.binread(file)
         content_type MIME::Types.type_for(file)
         return content
       else
