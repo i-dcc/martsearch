@@ -259,13 +259,13 @@ class MartSearchIndexBuilderUtilsTest < Test::Unit::TestCase
         :attr       => 'annotations',
         :split_on   => '; ',
         :ontologies => {
-          :"^MA\\:\\d+$" => { :term => 'ma_id', :term_name => 'ma_term', :breadcrumb => 'ma_ontology' },
-          :"^MP\\:\\d+$" => { :term => 'mp_id', :term_name => 'mp_term', :breadcrumb => 'mp_ontology' }
+          :"^MA\\:\\d+" => { :term => 'ma_id', :term_name => 'ma_term', :breadcrumb => 'ma_ontology' },
+          :"^MP\\:\\d+" => { :term => 'mp_id', :term_name => 'mp_term', :breadcrumb => 'mp_ontology' }
         }
     }
     data_row_obj = {
       'colony_prefix' => 'MAMM',
-      'annotations'   => 'MA:0000053; MP:0003866'
+      'annotations'   => 'MA:0000053; mp:0003866 wibble flibble blip'
     }
     
     # Perform the search from fresh...
