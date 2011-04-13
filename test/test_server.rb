@@ -79,13 +79,13 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
       VCR.use_cassette('test_server_browsing') do
         @controller.config[:server][:browsable_content].each do |name,conf|
           # Select 5 random pages to hit - doing them all takes forever...
-          conf[:options].randomly_pick(5).each do |option_name|
-            opts = conf[:processed_options][option_name.to_sym]
+          conf[:options].keys.randomly_pick(5).each do |option_name|
+            opts = conf[:options][option_name.to_sym]
             
             page_no = 1
             while page_no < 3
-              visit "/browse/#{name}/#{opts[:link_arg]}/#{page_no}"
-              assert_equal( '/browse', current_path, "A request to '/browse/#{name}/#{opts[:link_arg]}/#{page_no}' failed!" )
+              visit "/browse/#{name}/#{option_name}/#{page_no}"
+              assert_equal( '/browse', current_path, "A request to '/browse/#{name}/#{option_name}/#{page_no}' failed!" )
               
               if page.has_css?('.pagination a.next_page')
                 page_no = page_no + 1
@@ -111,63 +111,64 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
     end
     
     should "render WTSI Phenotyping report pages" do
-      if @controller.dataviews_by_name[:'wtsi-phenotyping'].nil?
-        skip("Skipping WTSI Phenotyping report tests as the DataView is not active.")
-      else
-        VCR.use_cassette('test_server_wtsi_phenotyping_report_pages') do
-          colonies_to_test = ['MAHN','MAMH','MAMJ','MAAD','MAAJ']
+      omit_if(
+        @controller.dataviews_by_name[:'wtsi-phenotyping'].nil?,
+        "Skipping WTSI Phenotyping report tests as the DataView is not active."
+      )
+      
+      VCR.use_cassette('test_server_wtsi_phenotyping_report_pages') do
+        colonies_to_test = ['MAHN','MAMH','MAMJ','MAAD','MAAJ']
+        
+        colonies_to_test.each do |colony_prefix|
+          visit '/'
+          fill_in( 'query', :with => "#{colony_prefix}" )
+          click_button('Search')
           
-          colonies_to_test.each do |colony_prefix|
-            visit '/'
-            fill_in( 'query', :with => "#{colony_prefix}" )
-            click_button('Search')
+          assert_equal( '/search', current_path, "WTSI Phenotyping search for '#{colony_prefix}': The home page form didn't forward to /search." )
+          assert( page.has_content?( "Search Results for '#{colony_prefix}'" ), "WTSI Phenotyping search for '#{colony_prefix}': /search doesn't show the search term we've just looked for..." )
+          
+          cached_data = @controller.fetch_from_cache("wtsi-pheno-data:#{colony_prefix}")
+          assert( !cached_data.nil?, "There is no cached phenotyping data for '#{colony_prefix}'!" )
+          
+          urls_to_hit = []
+          
+          cached_data.each do |cached_data_key,test_data|
+            test_url = cached_data_key.to_s.gsub('_data','').gsub('_','-')
             
-            assert_equal( '/search', current_path, "WTSI Phenotyping search for '#{colony_prefix}': The home page form didn't forward to /search." )
-            assert( page.has_content?( "Search Results for '#{colony_prefix}'" ), "WTSI Phenotyping search for '#{colony_prefix}': /search doesn't show the search term we've just looked for..." )
+            # Don't test PDF downloads...
+            next if test_url == 'eye-histopathology'
             
-            cached_data = @controller.fetch_from_cache("wtsi-pheno-data:#{colony_prefix}")
-            assert( !cached_data.nil?, "There is no cached phenotyping data for '#{colony_prefix}'!" )
-            
-            urls_to_hit = []
-            
-            cached_data.each do |cached_data_key,test_data|
-              test_url = cached_data_key.to_s.gsub('_data','').gsub('_','-')
-              
-              # Don't test PDF downloads...
-              next if test_url == 'eye-histopathology'
-              
-              test_title = case test_url
-              when 'abr'                   then 'Auditory Brainstem Response'
-              when 'adult-expression'      then 'Adult Expression'
-              when 'embryo-expression'     then 'Embryo Expression'
-              when 'homozygote-viability'  then 'Homozygote Viability'
-              when 'fertility'             then 'Fertility'
-              when 'skin-screen'           then 'Skin Screen'
-              else
-                test_data[:heatmap_group]
-              end
-              
-              urls_to_hit.push({
-                :test  => test_url,
-                :url   => "/phenotyping/#{colony_prefix}/#{test_url}/",
-                :title => test_title
-              })
+            test_title = case test_url
+            when 'auditory-brainstem-response' then 'Auditory Brainstem Response'
+            when 'adult-lac-z-expression'      then 'Adult LacZ Expression'
+            when 'embryo-lac-z-expression'     then 'Embryo LacZ Expression'
+            when 'viability-at-weaning'        then 'Viability at Weaning'
+            when 'fertility'                   then 'Fertility'
+            when 'tail-epidermis-wholemount'   then 'Tail Epidermis Wholemount'
+            else
+              test_data[:test_group]
             end
             
-            # Clear the cache so we test the full stack...
-            @controller.cache.delete("wtsi-pheno-data:#{colony_prefix}/")
+            urls_to_hit.push({
+              :test  => test_url,
+              :url   => "/phenotyping/#{colony_prefix}/#{test_url}/",
+              :title => test_title
+            })
+          end
+          
+          # Clear the cache so we test the full stack...
+          @controller.cache.delete("wtsi-pheno-data:#{colony_prefix}/")
+          
+          urls_to_hit.each do |test_conf|
+            visit test_conf[:url]
+            assert_equal( "#{test_conf[:url]}", current_path, "WTSI Phenotyping - can't visit '#{test_conf[:url]}'!" )
+            assert( page.has_content?(test_conf[:title]), "WTSI Phenotyping - '#{test_conf[:url]}' doesn't have the title '#{test_conf[:title]}'..." )
             
-            urls_to_hit.each do |test_conf|
-              visit test_conf[:url]
-              assert_equal( "#{test_conf[:url]}", current_path, "WTSI Phenotyping - can't visit '#{test_conf[:url]}'!" )
-              assert( page.has_content?(test_conf[:title]) )
-              
-              if test_conf[:test] == 'abr'
-                assert( page.has_css?('#abr-thresholds') )
-                href = page.first(:css, "#abr-thresholds a[rel='prettyPhoto']")[:href]
-                visit "#{test_conf[:url]}#{href}"
-                visit "#{test_conf[:url]}foobarweewar.png"
-              end
+            if test_conf[:test_group] == 'auditory-brainstem-response'
+              assert( page.has_css?('#abr-thresholds') )
+              href = page.first(:css, "#abr-thresholds a[rel='prettyPhoto']")[:href]
+              visit "#{test_conf[:url]}#{href}"
+              visit "#{test_conf[:url]}foobarweewar.png"
             end
           end
         end
@@ -217,11 +218,11 @@ class MartSearchServerRackTest < Test::Unit::TestCase
       VCR.use_cassette('test_server_browsing') do
         @controller.config[:server][:browsable_content].each do |name,conf|
           # Select 5 random pages to hit - doing them all takes forever...
-          conf[:options].randomly_pick(5).each do |option_name|
-            opts = conf[:processed_options][option_name.to_sym]
+          conf[:options].keys.randomly_pick(5).each do |option_name|
+            opts = conf[:options][option_name.to_sym]
             
-            @browser.get "/browse?field=#{name}&query=#{opts[:link_arg]}&page=1&wt=json"
-            assert( @browser.last_response.ok?, "A request to '/browse?field=#{name}&query=#{opts[:link_arg]}&page=1&wt=json' failed!" )
+            @browser.get "/browse?field=#{name}&query=#{option_name}&page=1&wt=json"
+            assert( @browser.last_response.ok?, "A request to '/browse?field=#{name}&query=#{option_name}&page=1&wt=json' failed!" )
             json = JSON.parse( @browser.last_response.body )
             assert( json.is_a?(Hash) )
           end
@@ -285,35 +286,41 @@ class MartSearchServerRackTest < Test::Unit::TestCase
     end
     
     should "render WTSI Phenotyping (ABR) report pages with a redirect" do
-      if @controller.dataviews_by_name[:'wtsi-phenotyping'].nil?
-        skip("Skipping WTSI Phenotyping report tests as the DataView is not active.")
-      else
-        VCR.use_cassette('test_server_wtsi_phenotyping_report_pages') do
-          colonies_to_test = ['MAIG','MAKH','MBAD']
-          
-          colonies_to_test.each do |colony_prefix|
-            @browser.get "/phenotyping/#{colony_prefix}/abr"
-            @browser.follow_redirect!
-            assert( @browser.last_response.ok?, "/phenotyping/#{colony_prefix}/abr failed." )
-            assert( @browser.last_response.body.include?('Auditory Brainstem Response'), "/phenotyping/#{colony_prefix}/abr doesn't have the title 'Auditory Brainstem Response'." )
-          end
+      omit_if(
+        @controller.dataviews_by_name[:'wtsi-phenotyping'].nil?,
+        "Skipping WTSI Phenotyping report tests as the DataView is not active."
+      )
+        
+      VCR.use_cassette('test_server_wtsi_phenotyping_report_pages') do
+        colonies_to_test = ['MAIG','MAKH','MBAD']
+        
+        colonies_to_test.each do |colony_prefix|
+          @browser.get "/phenotyping/#{colony_prefix}/auditory-brainstem-response"
+          @browser.follow_redirect!
+          assert( @browser.last_response.ok?, "/phenotyping/#{colony_prefix}/auditory-brainstem-response failed." )
+          assert( @browser.last_response.body.include?('Auditory Brainstem Response'), "/phenotyping/#{colony_prefix}/auditory-brainstem-response doesn't have the title 'Auditory Brainstem Response'." )
         end
       end
     end
     
     should "cope gracefully when monkeys start visiting WTSI Phenotyping report pages" do
-      if @controller.dataviews_by_name[:'wtsi-phenotyping'].nil?
-        skip("Skipping WTSI Phenotyping report tests as the DataView is not active.")
-      else
-        VCR.use_cassette('test_server_wtsi_phenotyping_report_pages') do
-          tests_to_test    = ['abr','homozygote-viability','fertility','adult-expression','embryo-expression','dexa','hot-plate','skin-screen']
-          colonies_to_test = ['FOOO','BAAR','BAAZ','ARRR']
-          
-          colonies_to_test.each do |colony_prefix|
-            tests_to_test.each do |test|
-              @browser.get "/phenotyping/#{colony_prefix}/#{test}/"
-              assert_equal( 404, @browser.last_response.status, "WTF?!? '/phenotyping/#{colony_prefix}/#{test}/' is an ok url..." )
-            end
+      omit_if(
+        @controller.dataviews_by_name[:'wtsi-phenotyping'].nil?,
+        "Skipping WTSI Phenotyping report tests as the DataView is not active."
+      )
+      
+      VCR.use_cassette('test_server_wtsi_phenotyping_report_pages') do
+        tests_to_test    = [
+          'auditory-brainstem-response', 'viability-at-weaning', 'fertility',
+          'adult-lac-z-expression','embryo-lac-z-expression','body-composition-dexa',
+          'hot-plate','tail-epidermis-wholemount'
+        ]
+        colonies_to_test = ['FOOO','BAAR','BAAZ','ARRR']
+        
+        colonies_to_test.each do |colony_prefix|
+          tests_to_test.each do |test|
+            @browser.get "/phenotyping/#{colony_prefix}/#{test}/"
+            assert_equal( 404, @browser.last_response.status, "WTF?!? '/phenotyping/#{colony_prefix}/#{test}/' is an ok url..." )
           end
         end
       end

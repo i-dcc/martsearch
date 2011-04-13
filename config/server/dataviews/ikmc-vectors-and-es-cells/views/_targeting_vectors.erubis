@@ -1,0 +1,47 @@
+<h4>Targeting Vectors</h4>
+
+<% if targeting_vectors.length > 0 %>
+  <table>
+    <tr>
+      <th>Design</th>
+      <th>Targeting Vector</th>
+      <th>Intermediate Vector</th>
+      <th>Cassette</th>
+      <th>Backbone</th>
+      <th>Targeting Vector Genbank File</th>
+    </tr>
+    <% targeting_vectors.each do |targ_vec| %>
+      <tr>
+        <td>
+          <a href="http://www.sanger.ac.uk/htgt/design/designedit/refresh_design?design_id=<%= design_id %>"><%= design_id %></a> 
+          (<%= design_type %>)
+        </td>
+        <td>
+          <% if targ_vec[:targeting_vector] and ( pipeline === 'EUCOMM' or pipeline === 'KOMP-CSD' ) %>
+            <a href="http://www.sanger.ac.uk/htgt/plate/view?plate_name=<%= targ_vec[:targeting_vector][0..-5] %>"><%= targ_vec[:targeting_vector] %></a>
+          <% else %>
+            <%= targ_vec[:targeting_vector] %>
+          <% end %>
+        </td>
+        <td>
+          <% if targ_vec[:intermediate_vector] and ( pipeline === 'EUCOMM' or pipeline === 'KOMP-CSD' ) %>
+            <a href="http://www.sanger.ac.uk/htgt/plate/view?plate_name=<%= targ_vec[:intermediate_vector][0..-5] %>"><%= targ_vec[:intermediate_vector] %></a>
+          <% else %>
+            <%= targ_vec[:intermediate_vector] %>
+          <% end %>
+        </td>
+        <td><%= cassette %></td>
+        <td><%= backbone %></td>
+        <td>
+          <% if vector_gb %>
+            <a href="http://www.i-dcc.org/targ_rep/alleles/<%= targ_vec[:allele_id] %>/targeting-vector-genbank-file" class="file ext_link">view</a>
+          <% else %>
+            <span style="color:#999;">unavailable</span>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+<% else %>
+  <p>&nbsp;&nbsp;&nbsp;<em>No vectors available.</em></p>
+<% end %>

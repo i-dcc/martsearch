@@ -39,7 +39,7 @@ my $DATA = JSON->new->decode($data_json) or die "Unable to read data file '$HEAT
 
 # Use this variable to set the number of columns of data we have 
 # per-row before we print out the test results...
-my $no_of_leading_text_entries = 5;
+my $no_of_leading_text_entries = 3;
 
 # Set up the spreadsheet and apply some formatting...
 my $workbook = Spreadsheet::WriteExcel->new( $XLS_NAME );
@@ -147,13 +147,13 @@ sub _xls_test_result_format {
   my ( $tf, $result ) = @_;
   my $form;
   
-  if    ( $result eq "Test complete and data\/resources available" )  { $form = $tf->{completed_data_available}; }
-  elsif ( $result eq "Test complete and considered interesting" )     { $form = $tf->{significant_difference}; }
-  elsif ( $result eq "Test complete but not considered interesting" ) { $form = $tf->{no_significant_difference}; }
-  elsif ( $result eq "Early indication of possible phenotype" )       { $form = $tf->{early_indication}; }
-  elsif ( $result =~ /^Test not performed or applicable/i )           { $form = $tf->{not_applicable}; }
-  elsif ( $result eq "Test abandoned" )                               { $form = $tf->{test_abandoned}; }
-  else                                                                { $form = $tf->{test_pending}; }
+  if    ( $result eq "CompleteDataAvailable" )   { $form = $tf->{completed_data_available}; }
+  elsif ( $result eq "CompleteInteresting" )     { $form = $tf->{significant_difference}; }
+  elsif ( $result eq "CompleteNotInteresting" )  { $form = $tf->{no_significant_difference}; }
+  elsif ( $result eq "EarlyIndicator" )          { $form = $tf->{early_indication}; }
+  elsif ( $result eq "NotPerformedApplicable" )  { $form = $tf->{not_applicable}; }
+  elsif ( $result eq "Abandoned" )               { $form = $tf->{test_abandoned}; }
+  else                                           { $form = $tf->{test_pending}; }
   
   return $form;
 }
@@ -166,8 +166,8 @@ sub sorted_results_test_codes {
     early_indication          => 3,
     no_significant_difference => 4,
     not_applicable            => 5,
-    test_abandoned            => 6,
-    test_pending              => 7
+    test_pending              => 6,
+    test_abandoned            => 7
   };
   return $test_mapping;
 }
@@ -190,10 +190,10 @@ sub write_unsorted_legend {
   $worksheet->write( 7, $number_of_columns+2, "", $unlinked_formats->{no_significant_difference} );
   $worksheet->write( 8, $number_of_columns+3, "Test not performed or applicable e.g. no lacZ reporter therefore no expression" );
   $worksheet->write( 8, $number_of_columns+2, "", $unlinked_formats->{not_applicable} );
-  $worksheet->write( 9, $number_of_columns+3, "Test pending" );
-  $worksheet->write( 9, $number_of_columns+2, "", $unlinked_formats->{test_pending} );
-  $worksheet->write( 10, $number_of_columns+3, "Test abandoned" );
-  $worksheet->write( 10, $number_of_columns+2, "", $unlinked_formats->{test_abandoned} );
+  $worksheet->write( 9, $number_of_columns+3, "Test abandoned" );
+  $worksheet->write( 9, $number_of_columns+2, "", $unlinked_formats->{test_abandoned} );
+  $worksheet->write( 10, $number_of_columns+3, "Test pending" );
+  $worksheet->write( 10, $number_of_columns+2, "", $unlinked_formats->{test_pending} );
   $worksheet->write( 11, $number_of_columns+3, "Link to a phenotyping test report page" );
   $worksheet->write( 11, $number_of_columns+2, ">", $linked_formats->{test_pending} );
 }
@@ -217,12 +217,12 @@ sub write_sorted_legend {
   $worksheet->write( 7, $number_of_columns+2, $test_code->{no_significant_difference}, $test_formats->{no_significant_difference} );
   $worksheet->write( 8, $number_of_columns+3, "Test not performed or applicable e.g. no lacZ reporter therefore no expression" );
   $worksheet->write( 8, $number_of_columns+2, $test_code->{not_applicable}, $test_formats->{not_applicable} );
-  $worksheet->write( 9, $number_of_columns+3, "Test pending" );
-  $worksheet->write( 9, $number_of_columns+2, $test_code->{test_pending}, $test_formats->{test_pending} );
+  $worksheet->write( 9, $number_of_columns+3, "Test abandoned" );
+  $worksheet->write( 9, $number_of_columns+2, $test_code->{test_abandoned}, $test_formats->{test_abandoned} );
   $worksheet->write( 10, $number_of_columns+3, "Test pending" );
-  $worksheet->write( 10, $number_of_columns+2, $test_code->{test_abandoned}, $test_formats->{test_abandoned} );
+  $worksheet->write( 10, $number_of_columns+2, $test_code->{test_pending}, $test_formats->{test_pending} );
   $worksheet->write( 11, $number_of_columns+3, "Link to a phenotyping test report page" );
-  $worksheet->write( 11, $number_of_columns+2, ">", $linked_formats->{test_pending} );
+  $worksheet->write( 11, $number_of_columns+2, "  ", $linked_formats->{test_pending} );
   
 }
 

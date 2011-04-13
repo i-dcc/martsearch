@@ -3,28 +3,30 @@
   <div class="dataset_content">
     <table>
       <thead>
-        <th>Gene</th>
-        <th>Allele</th>
-        <th>ES Cell Clone</th>
-        <th>Parental ES Cell Strain</th>
-        <th>Parental ES Cell Line</th>
-        <th>Microinjection Centre</th>
+        <th class="hide_on_print"></th>
         <th>Microinjection Status</th>
-        <th>Distribution Centre</th>
+        <th>Allele</th>
+        <th>Allele Type</th>
+        <th>ES Cell Clone</th>
+        <th>Genetic Background</th>
         <th>QC Data</th>
-        <th class="noborder nobg hide_on_print"></th>
+        <th>MI/Distribution Centre</th>
       </thead>
       <tbody>
-        <% @data[:mice][:genotype_confirmed].each do |mouse| %>
+        <% @data[:mice].each do |mouse| %>
           <tr>
-            <td><%= @data[:marker_symbol] %></td>
-            <td><%= mouse[:allele_name] %></td>
-            <td><%= mouse[:escell_clone] %></td>
-            <td><%= mouse[:escell_strain] %></td>
-            <td><%= mouse[:escell_line] %></td>
-            <td><%= mouse[:mi_centre]%></td>
+            <td>
+              <%
+                dist_flag = false
+                dist_flag = true if mouse[:emma] == "1"
+              %>
+              <%= mouse_order_button( @data[:mgi_accession_id], @data[:marker_symbol], @data[:ikmc_project], @data[:project_id], dist_flag, mouse[:mi_centre], mouse[:distribution_centre] ) %>
+            </td>
             <td><%= mouse[:status]%></td>
-            <td><%= mouse[:distribution_centre]%></td>
+            <td><%= mouse[:allele_name] %></td>
+            <td><%= mouse[:allele_type] %> (<%= mouse[:cassette_type] %> Cassette)</td>
+            <td><%= mouse[:escell_clone] %></td>
+            <td><%= mouse[:genetic_background] %></td>
             <td>
               <% if mouse[:qc_count] > 0 %>
                 <a class="details_toggle">view</a>
@@ -34,18 +36,12 @@
               <br />
               (&nbsp;<a href="http://www.knockoutmouse.org/kb/entry/90/" target="_blank" class="ext_link">about</a>&nbsp;)
             </td>
-            <td class="nobg noborder hide_on_print">
-              <% 
-                dist_flag = false
-                dist_flag = true if mouse[:emma] == "1"
-              %>
-              <%= mouse_order_button( @data[:mgi_accession_id], @data[:marker_symbol], @data[:ikmc_project], @data[:project_id], dist_flag, mouse[:mi_centre], mouse[:distribution_centre] ) %>
-            </td>
+            <td><%= [ mouse[:mi_centre], mouse[:distribution_centre] ].uniq.join('/') %></td>
           </tr>
           <% if mouse[:qc_count] > 0 %>
             <tr class="details">
               <td colspan="9">
-                <%= partial('dataviews/ikmc-mice/qc_data', :locals => { :result => mouse }) %>
+                <%= partial('dataviews/mice/qc_data', :locals => { :result => mouse }) %>
               </td>
             </tr>
           <% end %>

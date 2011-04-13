@@ -6,10 +6,11 @@
   "attribution":           "The European Mouse Mutant Archive (EMMA)",
   "attribution_link":      "http://www.emmanet.org/",
   "searching": {
-    "joined_index_field": "emma_id",
-    "joined_filter":      "emma_id",
-    "joined_attribute":   "emma_id",
+    "joined_index_field": "marker_symbol",
+    "joined_filter":      "gene_symbol",
+    "joined_attribute":   "gene_symbol",
     "attributes": [
+      "gene_symbol",
       "emma_id",
       "international_strain_name",
       "common_name",

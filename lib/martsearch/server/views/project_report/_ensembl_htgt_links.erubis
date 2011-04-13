@@ -1,19 +1,52 @@
 <%
   links = []
   
-  links.push({
-    :url   => ensembl_link_url_from_gene( :mouse, @data[:ensembl_gene_id], ['das:http://das.sanger.ac.uk/das/ikmc_products'] ),
-    :class => 'button ensembl_button',
-    :text  => 'view in Ensembl (mouse)',
-    :title => "View this mutation in a genomic context in Ensembl. This link will also enable our DAS track ('KO Alleles'), showing the exact location/structure of the mutation."
-  }) unless @data[:ensembl_gene_id].nil?
+  if !@data[:ensembl_gene_id].nil?
+    links.push({
+      :url   => ensembl_link_url_from_gene( :mouse, @data[:ensembl_gene_id], ['das:http://das.sanger.ac.uk/das/ikmc_products'] ),
+      :class => 'button ensembl_button',
+      :text  => 'Ensembl (mouse)',
+      :title => "View this mutation in a genomic context in Ensembl. This link will also enable our DAS track ('KO Alleles'), showing the exact location/structure of the mutation."
+    })
+  elsif !@data[:chromosome].nil? and !@data[:coord_start].nil? and !@data[:coord_end].nil?
+    links.push({
+      :url   => ensembl_link_url_from_coords( :mouse, @data[:chromosome], @data[:coord_start], @data[:coord_end], ['das:http://das.sanger.ac.uk/das/ikmc_products'] ),
+      :class => 'button ensembl_button',
+      :text  => 'Ensembl (mouse)',
+      :title => "View this mutation in a genomic context in Ensembl. This link will also enable our DAS track ('KO Alleles'), showing the exact location/structure of the mutation."
+    })
+  end
   
   links.push({
     :url   => ensembl_link_url_from_gene( :human, @data[:human_ensembl_gene], ['das:http://das.sanger.ac.uk/das/mouse_KOs'] ),
     :class => 'button ensembl_button',
-    :text  => 'view in Ensembl (human)',
+    :text  => 'Ensembl (human)',
     :title => "View the human ortholog of this gene in Ensembl. This link will also enable our DAS track ('mouse_KOs'), showing the availability of IKMC products for orthologous human genes."
   }) unless @data[:human_ensembl_gene].nil?
+  
+  unless @data[:chromosome].nil? and @data[:coord_start].nil? and @data[:coord_end].nil?
+    tracks = { 'ikmc' => 'pack', 'ensGene' => 'pack' }
+    tracks['miRNA'] = 'pack' if @data[:ikmc_project] == 'mirKO'
+    
+    links.push({
+      :url   => ucsc_link_url( :mouse, @data[:chromosome], @data[:coord_start], @data[:coord_end], tracks ),
+      :class => 'button ucsc_button',
+      :text  => 'UCSC (mouse)',
+      :title => 'View this gene in UCSC Genome Browser. This link will also enable the IKMC tracks in the UCSC Genome Browser, showing the exact location/structure of the mutation.'
+    })
+  end
+  
+  unless @data[:human_ensembl_chromosome].nil? and @data[:human_ensembl_start].nil? and @data[:human_ensembl_end].nil?
+    tracks = { 'hgIkmc' => 'pack', 'ensGene' => 'pack' }
+    tracks['wgRNA'] = 'pack' if @data[:ikmc_project] == 'mirKO'
+    
+    links.push({
+      :url   => ucsc_link_url( :human, @data[:human_ensembl_chromosome], @data[:human_ensembl_start], @data[:human_ensembl_end], tracks ),
+      :class => 'button ucsc_button',
+      :text  => 'UCSC (human)',
+      :title => 'View the human ortholog of this gene in UCSC Genome Browser. This link will also enable the IKMC tracks in the UCSC Genome Browser, showing the exact location/structure of the mutation.'
+    })
+  end
   
   links.push({
     :url   => "http://www.sanger.ac.uk/htgt/tools/restrictionenzymes?es_clone_name=#{escell}",

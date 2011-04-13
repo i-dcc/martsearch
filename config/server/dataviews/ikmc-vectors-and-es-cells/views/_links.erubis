@@ -1,0 +1,36 @@
+<div class="ikmc-idcc_targ_rep_allele_progress_links">
+  <h4>Links</h4>
+  
+  <ul>
+    <!-- Ensembl Link -->
+    <li class="ensembl_link">
+    <% if ensembl_gene_id %>
+      <a href="<%= ensembl_link_url_from_gene( :mouse, ensembl_gene_id, ['das:http://das.sanger.ac.uk/das/ikmc_products'] ) %>" target="_blank">view this allele in Ensembl</a>
+    <% else %>
+      <a href="<%= ensembl_link_url_from_coords( :mouse, chromosome, start_pos, end_pos, ['das:http://das.sanger.ac.uk/das/ikmc_products'] ) %>" target="_blank">view this allele in Ensembl</a>
+    <% end %>
+    </li>
+    
+    <!-- UCSC link -->
+    <li class="ucsc_link">
+      <%
+        tracks = { 'ikmc' => 'pack', 'ensGene' => 'pack' }
+        tracks['miRNA'] = 'pack' if pipeline == 'mirKO'
+      %>
+      <a href="<%= ucsc_link_url( :mouse, chromosome, start_pos, end_pos, tracks ) %>" target="blank">view this allele in UCSC</a>
+    </li>
+    
+    <!-- HTGT Gene Report -->
+    <% if ikmc_project_id %>
+      <% unless pipeline == "KOMP-Regeneron" %>
+        <li class="ext_link"><a href="http://www.knockoutmouse.org/martsearch/project/<%= ikmc_project_id %>" target="_blank">view allele details (IKMC)</a></li>
+      <% end %>
+      <% if pipeline == "KOMP-Regeneron" %>
+        <% velocigene_id = ikmc_project_id.gsub("VG","") %>
+        <li class="ext_link"><a href="http://www.velocigene.com/komp/detail/<%= velocigene_id %>" target="_blank">view allele details (Regeneron)</a></li>
+      <% elsif pipeline == "NorCOMM" %>
+        <li class="ext_link"><a href="<%= "http://norcomm.org/Pipeline/Search.php?IKMC_ID=#{ikmc_project_id}" %>" target="_blank">view allele details (NorCOMM)</a></li>
+      <% end %>
+    <% end %>
+  </ul>
+</div>

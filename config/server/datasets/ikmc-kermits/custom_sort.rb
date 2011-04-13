@@ -13,12 +13,13 @@ module MartSearch
           # Correct the <> notation in several attributes...
           if result[:allele_name]
             result[:allele_name] = fix_superscript_text_in_attribute(result[:allele_name])
-            result[:allele_type] = case result[:allele_name]
-            when /tm\d+a/ then "Conditional Knockout-First"
-            when /tm\d+e/ then "Targeted Trap"
-            when /tm\d\(/ then "Deletion"
-            else               ""
+            
+            # Override the allele_name if we have a corrected one for the mouse...
+            unless result[:mouse_allele_name].nil?
+              result[:allele_name] = fix_superscript_text_in_attribute(result[:mouse_allele_name])
             end
+            
+            result[:allele_type] = allele_type(result[:allele_name])
           end
           if result[:back_cross_strain]
             result[:back_cross_strain] = fix_superscript_text_in_attribute(result[:back_cross_strain])
@@ -48,7 +49,10 @@ module MartSearch
               result[:qc_count] = result[:qc_count] + 1
             end
           end
-          
+
+          # set the genetic background
+          result[:genetic_background] = ikmc_kermits_set_genetic_background(result)
+
           # Store the result
           unless sorted_results[ result[ joined_attribute ] ]
             sorted_results[ result[ joined_attribute ] ] = []
@@ -61,6 +65,17 @@ module MartSearch
       
       return sorted_results
     end
-    
+
+    # Set the genetic background
+    #
+    # @param  [Hash] kermits_mouse the mouse you wish to update
+    # @return [String]
+    def ikmc_kermits_set_genetic_background( kermits_mouse )
+      genetic_background = []
+      genetic_background.push(kermits_mouse[:back_cross_strain]) if kermits_mouse[:back_cross_strain]
+      genetic_background.push(kermits_mouse[:test_cross_strain]) if kermits_mouse[:test_cross_strain]
+      genetic_background.push(kermits_mouse[:escell_strain])     if kermits_mouse[:escell_strain]
+      genetic_background.join(';')
+    end
   end
 end

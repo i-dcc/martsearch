@@ -1,0 +1,106 @@
+<h4>ES Cell Clones</h4>
+
+<% if conditional_clones or nonconditional_clones %>
+
+  <!-- ES Cell clones summary -->
+  <table style="margin-bottom:5px;">
+    <thead>
+      <tr>
+        <th>Cassette Type</th>
+        <% if !nonconditional_clones.empty? && nonconditional_clones.first[:allele_type] == "Deletion" %>
+          <th><%= nonconditional_clones.length %> Deletion Alleles</th>
+        <% else %>
+          <th><%= conditional_clones.length %> Knockout-First Alleles</th>
+          <th><%= nonconditional_clones.length %> Targeted Non-Conditional Alleles</th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><%= cassette_type %></td>
+        <% if !nonconditional_clones.empty? && nonconditional_clones.first[:allele_type] == "Deletion" %>
+          <td>
+            <%=
+              partial(
+                'dataviews/ikmc-vectors-and-es-cells/escell_clone_links',
+                :locals => {
+                  :pipeline  => pipeline,
+                  :allele_id => nonconditional_allele_id,
+                  :allele_gb => nonconditional_allele_gb,
+                  :vector_gb => vector_gb,
+                  :clones    => nonconditional_clones
+                }
+              )
+            %>
+          </td>
+        <% else %>
+          <td>
+            <%=
+              partial(
+                'dataviews/ikmc-vectors-and-es-cells/escell_clone_links',
+                :locals => {
+                  :pipeline  => pipeline,
+                  :allele_id => conditional_allele_id,
+                  :allele_gb => conditional_allele_gb,
+                  :vector_gb => vector_gb,
+                  :clones    => conditional_clones
+                }
+              )
+            %>
+          </td>
+          <td>
+            <%=
+              partial(
+                'dataviews/ikmc-vectors-and-es-cells/escell_clone_links',
+                :locals => {
+                  :pipeline  => pipeline,
+                  :allele_id => nonconditional_allele_id,
+                  :allele_gb => nonconditional_allele_gb,
+                  :vector_gb => vector_gb,
+                  :clones    => nonconditional_clones
+                }
+              )
+            %>
+          </td>
+        <% end %>
+      </tr>
+    </tbody>
+  </table>
+  
+  <!-- Conditional and Non-Conditional clones -->
+  <div>
+    <div><a class="ikmc-idcc_targ_rep_allele_progress_clones_toggle">view all available ES cell clones</a></div>
+    <div class="clear"></div>
+    <div class="ikmc-idcc_targ_rep_allele_progress_clones_content" style="clear:both;margin-top:10px">
+
+      <!-- Conditional Clones -->
+      <h5 style="margin-bottom:5px;">ES Cell Clones With Conditional Potential</h5>
+      <% unless conditional_clones.empty? %>
+        <%=
+          partial(
+            'dataviews/ikmc-vectors-and-es-cells/escell_clone_details',
+            :locals => { :pipeline => pipeline, :clones => conditional_clones, :cassette_type => cassette_type }
+          )
+        %>
+      <% else %>
+        <p><em>No clones available.</em></p>
+      <% end %>
+      
+      <!-- Non-Conditional Clones -->
+      <h5 style="margin-bottom:5px;">ES Cell Clones Without Conditional Potential</h5>
+      <% unless nonconditional_clones.empty? %>
+        <%=
+          partial(
+            'dataviews/ikmc-vectors-and-es-cells/escell_clone_details',
+            :locals => { :pipeline => pipeline, :clones => nonconditional_clones, :cassette_type => cassette_type }
+          )
+        %>
+      <% else %>
+        <p><em>No clones available.</em></p>
+      <% end %>
+      
+    </div>
+  </div>
+<% else %>
+  <p>&nbsp;&nbsp;&nbsp;<em>No clones available.</em></p>
+<% end %>

@@ -1,0 +1,96 @@
+<%
+  # Make progress bar from products availability
+  progress = ikmc_vectors_and_es_cells_get_progressbar_info( project )
+%>
+
+<table class="ikmc-pipeline-progress-bar" width="80%" style="margin-left:auto;margin-right:auto;">
+  <thead>
+    <tr>
+      <th width="20%" class="center"></th>
+      <th width="30%" class="center">Vectors</th>
+      <th width="30%" class="center">ES Cells</th>
+      <th></th>
+    </tr>
+  </thead>
+  
+  <!-- Progress bar row -->
+  <tbody>
+    <tr>
+      <!-- Pipeline name with link to IKMC project details -->
+      <td class="start_<%= progress[:vectors] %>">
+        <strong><%= project[:pipeline] %></strong><br />
+        
+        <% if project[:pipeline] === "KOMP-Regeneron" and project[:ikmc_project_id] %>
+          <!-- Regeneron with product available -->
+          <% velocigene_id = project[:ikmc_project_id].gsub("VG","") %>
+          (Project: <a href="http://www.velocigene.com/komp/detail/<%= velocigene_id %>" target="_blank"><%= project[:ikmc_project_id] %></a>)
+        <% elsif project[:ikmc_project_id] and not project[:no_products_available] %>
+          <!-- Any other pipeline with product available -->
+          (Project: <a href="http://www.knockoutmouse.org/martsearch/project/<%= project[:ikmc_project_id] %>" target="_blank"><%= project[:ikmc_project_id] %></a>)
+        <% else %>
+          <!-- Don't print anything if no ikmc_project_id -->
+        <% end %>
+      </td>
+      
+      <!-- Vectors -->
+      <td class="<%= progress[:vectors] %> <%= progress[:vectors] %>_<%= progress[:cells] %>">
+        <% if project[:vector_available] == '1' %>
+          <%=
+            vector_order_button(
+              project[:mgi_accession_id],
+              result_data[:index][:marker_symbol],
+              project[:pipeline],
+              project[:ikmc_project_id]
+            )
+          %>
+        <% elsif project[:no_products_available] and project[:status] %>
+          <span><%= project[:status] %></span>
+        <% end %>
+      </td>
+      
+      <!-- Cells -->
+      <td class="end_<%= progress[:cells] %> <%= progress[:cells] %>">
+        <% if project[:escell_available] == '1' %>
+          <%=
+            escell_order_button(
+              project[:mgi_accession_id],
+              result_data[:index][:marker_symbol],
+              project[:pipeline],
+              project[:ikmc_project_id]
+            )
+          %>
+        <% end %>
+      </td>
+      
+      <!-- Details -->
+      <td>
+        <% if project[:no_products_available] %>
+          <% if project[:project_ids] %>
+            Projects:
+            <%
+              project_links = []
+              project[:project_ids].each do |project_id|
+                project_links.push('<a href="http://www.knockoutmouse.org/martsearch/project/'+project_id+'" target="_blank">'+project_id+'</a>')
+              end
+            %>
+            <%= project_links.join(', ') %>
+          <% end %>
+        <% else %>
+          <a class="ikmc-idcc_targ_rep_allele_progress_details_toggle">
+            view&nbsp;details
+          </a>
+        <% end %>
+      </td>
+    </tr>
+    <% if project[:pipeline] == 'mirKO' %>
+      <tr>
+        <td colspan="5" style="text-align:left;color:#666;">
+          Public distribution of the mirKO reagents is pending. If you wish to 
+          express an interest in these reagents then please email 
+          <a href="mailto:mirKO@sanger.ac.uk">mirKO@sanger.ac.uk</a> 
+          and we shall inform you when the resource is able to fulfill general requests.
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

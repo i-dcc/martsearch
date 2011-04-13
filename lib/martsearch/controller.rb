@@ -115,14 +115,14 @@ module MartSearch
         all_ok = true
         counts = {}
         @config[:server][:browsable_content].each do |field,field_config|
-          counts[field.to_sym] = {}
-          Parallel.each( field_config[:processed_options].keys, :in_threads => 5 ) do |option|
+          counts[field] = {}
+          Parallel.each( field_config[:options].keys, :in_threads => 5 ) do |option|
             begin
-              option_config                       = field_config[:processed_options][option]
-              counts[field.to_sym][option.to_sym] = @index.count( option_config[:solr_query] )
+              option_config         = field_config[:options][option]
+              counts[field][option] = @index.count( option_config[:query] )
             rescue MartSearch::IndexSearchError => error
               all_ok                              = false
-              counts[field.to_sym][option.to_sym] = nil
+              counts[field][option] = nil
             end
           end
         end
@@ -145,13 +145,8 @@ module MartSearch
       heatmap_dataset = self.datasets[:'wtsi-phenotyping-heatmap']
       raise MartSearch::InvalidConfigError, "MartSearch::Controller.wtsi_phenotyping_progress_counts cannot be called if the 'wtsi-phenotyping-heatmap' dataset is inactive" if heatmap_dataset.nil?
       
-      counts = @cache.fetch( "wtsi_phenotyping_progress_counts" )
-      
-      if counts != nil and use_cache
-        counts = BSON.deserialize(counts) unless @cache.is_a?(MartSearch::MongoCache)
-        counts = counts.clean_hash if RUBY_VERSION < '1.9'
-        counts.symbolize_keys!
-      else
+      counts = fetch_from_cache( "wtsi_phenotyping_progress_counts" )
+      if counts.nil? || use_cache == false
         heatmap_test_groups_conf = heatmap_dataset.config[:test_groups]
         heatmap_mart             = heatmap_dataset.datasource.ds
         counts                   = {}
@@ -159,22 +154,15 @@ module MartSearch
         
         begin
           counts = {
-            :standard_phenotyping => complete_mgp_genes_count( heatmap_mart, heatmap_test_groups_conf[:'Comprehensive Phenotyping Pipeline'][:tests] ),
-            :infection_challenge  => complete_mgp_genes_count( heatmap_mart, heatmap_test_groups_conf[:'Infectious Challenges'][:tests] ),
-            :expression           => complete_mgp_genes_count( heatmap_mart, ['adult_expression','embryo_expression'] )
+            :standard_phenotyping => complete_mgp_genes_count( heatmap_mart, ['haematology_cbc'], ['CompleteInteresting','CompleteNotInteresting'] ),
+            :infection_challenge  => complete_mgp_genes_count( heatmap_mart, ['salmonella_challenge','citrobacter_challenge'], ['CompleteInteresting','CompleteNotInteresting'] ),
+            :expression           => complete_mgp_genes_count( heatmap_mart, ['adult_lac_z_expression','embryo_lac_z_expression'], ['CompleteDataAvailable'] )
           }
         rescue Biomart::BiomartError => error
           all_ok = false
         end
         
-        if all_ok
-          @cache.delete( "wtsi_phenotyping_progress_counts" )
-          if @cache.is_a?(MartSearch::MongoCache)
-            @cache.write( "wtsi_phenotyping_progress_counts", counts, { :expires_in => 36.hours } )
-          else
-            @cache.write( "wtsi_phenotyping_progress_counts", BSON.serialize(counts), { :expires_in => 36.hours } )
-          end
-        end
+        write_to_cache( "wtsi_phenotyping_progress_counts", counts ) if all_ok
       end
       
       return counts
@@ -214,27 +202,28 @@ module MartSearch
       
       # Helper function for #wtsi_phenotyping_progress_counts. This function queries the 
       # MGP mart for a defined set of tests/attributes and computes the number of completed 
-      # genes (by complete, we mean that all of the tests listed have a status other than 
-      # "Test pending").
+      # alleles (by complete, we mean that any of the tests listed have a status defined in the 
+      # allowed_values argument passed in).
       # 
       # @param [Biomart::Dataset] mart A Biomart::Dataset object for the MGP mart
       # @param [Array] attributes The list of tests/attributes to check for completeness
+      # @param [Array] allowed_values The attribute values to look for to consider a result 'complete'
       # @return [Integer] The count of unique genes that have data on all the tests queried
-      def complete_mgp_genes_count( mart, attributes )
+      def complete_mgp_genes_count( mart, attributes, allowed_values )
         complete_genes = []
         results        = mart.search(
           :process_results => true,
-          :attributes      => attributes.unshift('marker_symbol'),
+          :attributes      => attributes.unshift('allele_name'),
           :filters         => {}
         )
         
         results.each do |result|
-          complete_test = true
+          complete_test = false
           result.each do |key,value|
-            next if key == 'marker_symbol'
-            complete_test = false if value == 'Test pending'
+            next if key == 'allele_name'
+            complete_test = true if allowed_values.include?(value)
           end
-          complete_genes.push( result['marker_symbol'] ) if complete_test
+          complete_genes.push( result['allele_name'] ) if complete_test
         end
         
         return complete_genes.uniq.size

@@ -22,7 +22,7 @@ module MartSearch
     # We're going to use the version number as a cache breaker for the CSS 
     # and javascript code. Update with each release of your portal (especially 
     # if you change the CSS or JS)!!!
-    VERSION = '0.1.12'
+    VERSION = '0.1.14'
     DEFAULT_CSS_FILES = [
       'reset.css',
       'jquery.prettyPhoto.css',
@@ -94,6 +94,7 @@ module MartSearch
     helpers do
       include Rack::Utils
       include WillPaginate::ViewHelpers
+      include MartSearch::DataSetUtils
       include MartSearch::ServerViewHelpers
       
       alias_method :h, :escape_html
@@ -200,17 +201,17 @@ module MartSearch
         if !@config[:browsable_content].has_key?(params[:field].to_sym)
           status 404
           halt
-        elsif !@config[:browsable_content][params[:field].to_sym][:processed_options].has_key?(params[:query].to_sym)
+        elsif !@config[:browsable_content][params[:field].to_sym][:options].has_key?(params[:query].to_sym)
           status 404
           halt
         else
           browser_field_conf = @config[:browsable_content][params[:field].to_sym]
-          browser            = browser_field_conf[:processed_options][params[:query].to_sym]
+          browser            = browser_field_conf[:options][params[:query].to_sym]
           use_cache          = params[:fresh] == "true" ? false : true
           
-          @page_title    = "Browsing Data by #{browser_field_conf[:display_name]}: '#{browser[:display_arg]}'"
+          @page_title    = "Browsing Data by #{browser_field_conf[:display_name]}: '#{browser[:text]}'"
           @results_title = @page_title
-          @solr_query    = browser[:solr_query]
+          @solr_query    = browser[:query]
           @results       = @ms.search( @solr_query, params[:page].to_i, use_cache )
           @data          = @ms.search_data
           @errors        = @ms.errors

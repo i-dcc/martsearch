@@ -1,4 +1,5 @@
 <div class="search_information">
+  <% @do_not_show_search_explaination ||= false %>
   <% unless @do_not_show_search_explaination %>
     <a id="search_explaination_toggle" class="button" href="#">Explain These Search Results</a>
   <% end %>
@@ -135,6 +136,8 @@
               </div>
             <% end %>
           </div>
+        <% else %>
+          <%= partial("no_data", :locals => { :title => view.name }) %>
         <% end %>
       <% end %>
     </div>

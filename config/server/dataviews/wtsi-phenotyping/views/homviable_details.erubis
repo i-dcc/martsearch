@@ -1,6 +1,6 @@
 <div id="wtsi-phenotyping-report">
   <h2>
-    Homozygote Viability Data for <%= @data[:marker_symbol] %> (<%= @colony_prefix %>)
+    Viability at Weaning Data for <%= @data[:marker_symbol] %> (<%= @colony_prefix %>)
   </h2>
 
   <div class="test-descriptor">

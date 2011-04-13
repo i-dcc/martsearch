@@ -26,9 +26,9 @@ module MartSearch
         
         unless sorted_results[ result[ joined_attribute ] ][ result[:colony_prefix].to_sym ]
           sorted_results[ result[ joined_attribute ] ][ result[:colony_prefix].to_sym ] = {
-            :adult_expression  => [],
-            :embryo_expression => [],
-            :skin_screen       => []
+            :adult_lac_z_expression    => [],
+            :embryo_lac_z_expression   => [],
+            :tail_epidermis_wholemount => []
           }
         end
         
@@ -41,13 +41,13 @@ module MartSearch
         when 'Wholemount Expression'
           if result[:tissue].match('Embryo')
             if result[:tissue].match('14.5')
-              result_data[:embryo_expression].push(result)
+              result_data[:embryo_lac_z_expression].push(result)
             end
           else
-            result_data[:adult_expression].push(result)
+            result_data[:adult_lac_z_expression].push(result)
           end
         when 'Confocal Skin Screen'
-          result_data[:skin_screen].push(result)
+          result_data[:tail_epidermis_wholemount].push(result)
         end
       end
       

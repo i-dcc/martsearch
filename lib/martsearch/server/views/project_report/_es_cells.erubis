@@ -4,7 +4,7 @@
   if cond_vs_noncond == :conditional
     title = 'with conditional potential'
   else
-    if @data[:es_cells][cond_vs_noncond][:design_type] == 'Deletion'
+    if @data[:es_cells][cond_vs_noncond][:cells].first[:allele_type] == 'Deletion'
       if @data[:ikmc_project] == "NorCOMM"
         title   = ' (conditional ready)'
         img_txt = 'These mutations can be made conditional by a &quot;docking&quot; procedure which uses the attP/puro docking site in the cassette.'
@@ -26,7 +26,7 @@
   <div class="dataset_content">
     <%- cells = @data[:es_cells][cond_vs_noncond][:cells] -%>
     
-    <% unless @data[:es_cells][cond_vs_noncond][:allele_img].nil? %>
+    <% if !@data[:es_cells][cond_vs_noncond][:allele_img].nil? && show_allele_and_vector_images %>
       <img src="<%= @data[:es_cells][cond_vs_noncond][:allele_img] %>" width="930px" />
       <div class="clear"></div>
       
@@ -35,6 +35,7 @@
       <% end %>
     <% end %>
     
+    <div class="clear"></div>
     <%= partial( "project_report/ensembl_htgt_links", { :locals => { :escell => cells.first[:name] } }) %>
     
     <table>
@@ -43,6 +44,7 @@
         <th>ES Cell Clone</th>
         <th>Targeting Vector</th>
         <th>Allele</th>
+        <th>Allele Type</th>
         <th><%= @data[:deletion] ? "Deleted" : "Floxed" %> Exon<%= "s" if @data[:floxed_exon_count] > 1 %></th>
         <th>Parental ES Cell Line</th>
         <th class="hide_on_print">Genbank File</th>
@@ -57,7 +59,12 @@
             </td>
             <td><%= cell[:name] %></td>
             <td><%= cell[:targeting_vector] %></td>
-            <td><%= @data[:marker_symbol] %><sup><%= cell[:allele_symbol_superscript] %></sup></td>
+            <td>
+              <% unless cell[:allele_symbol_superscript].nil? %>
+                <%= @data[:marker_symbol] %><sup><%= cell[:allele_symbol_superscript] %></sup>
+              <% end %>
+            </td>
+            <td><%= cell[:allele_type] %> (<%= cell[:cassette_type] %> Cassette)</td>
             <td><%= @data[:floxed_exon_link] %></td>
             <td><%= cell[:parental_cell_line] %></td>
             <td class="hide_on_print">
@@ -80,8 +87,8 @@
           </tr>
           <% if cell[:qc_count] > 0 %>
             <tr class="details">
-              <td colspan="8">
-                <%= partial('dataviews/ikmc-targeted-products/escell_clone_qc', :locals => { :clone => cell }) %>
+              <td colspan="10">
+                <%= partial('dataviews/ikmc-vectors-and-es-cells/escell_clone_qc', :locals => { :clone => cell }) %>
               </td>
             </tr>
           <% end %>

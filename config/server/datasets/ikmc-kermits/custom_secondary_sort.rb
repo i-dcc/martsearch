@@ -10,10 +10,14 @@ module MartSearch
         # Cache the IKMC Project ID's for clones...
         escell_cache = {}
         result_data[:'ikmc-idcc_targ_rep'].each do |targ_rep_data|
+          next if targ_rep_data.nil? || targ_rep_data.empty?
           [:conditional_clones,:nonconditional_clones].each do |clone_type|
             unless targ_rep_data[clone_type].nil?
               targ_rep_data[clone_type].each do |clone|
-                escell_cache[ clone[:escell_clone] ] = clone[:ikmc_project_id]
+                escell_cache[ clone[:escell_clone] ] = { 
+                  :ikmc_project_id => targ_rep_data[:ikmc_project_id],
+                  :cassette_type   => targ_rep_data[:cassette_type]
+                }
               end
             end
           end
@@ -22,8 +26,13 @@ module MartSearch
         # Now relate the mice to the cells/projects
         mouse_data = []
         result_data[:'ikmc-kermits'].each do |mouse|
-          mouse[:ikmc_project_id]  = escell_cache[ mouse[:escell_clone] ]
           mouse[:mgi_accession_id] = result_data[:index][:mgi_accession_id]
+          
+          unless escell_cache[ mouse[:escell_clone] ].nil?
+            mouse[:ikmc_project_id]  = escell_cache[ mouse[:escell_clone] ][:ikmc_project_id]
+            mouse[:cassette_type]    = escell_cache[ mouse[:escell_clone] ][:cassette_type]
+          end
+          
           mouse_data.push(mouse)
         end
         

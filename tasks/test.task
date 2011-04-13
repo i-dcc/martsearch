@@ -2,6 +2,7 @@ begin
   require "rubygems"
   require "shoulda"
   require "rake/testtask"
+  require "test/unit"
 
   desc "Run the test suite under /test"
   Rake::TestTask.new do |t|
