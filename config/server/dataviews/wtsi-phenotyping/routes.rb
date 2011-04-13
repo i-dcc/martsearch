@@ -87,7 +87,7 @@ module MartSearch
         erubis :not_found
       else
         @page_title       = "#{@data[:marker_symbol]} (#{@colony_prefix}): Tail Epidermis Wholemount"
-        erubis :"dataviews/wtsi-phenotyping/skin_screen_details"
+        erubis :"dataviews/wtsi-phenotyping/tail_epidermis_wholemount_details"
       end
     end
     
