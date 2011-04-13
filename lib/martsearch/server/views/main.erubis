@@ -100,13 +100,13 @@
               <%=
                 link_to(
                   image_tag( '/images/heatmap.png', :alt => 'Download the Phenotyping Overview' ),
-                  '/pheno_overview.xls',
+                  '/phenotyping/mgp_heatmap.xls',
                   :title => 'Download the Phenotyping Overview'
                 )
               %>
             </td>
             <td style="vertical-align:middle;">
-              <%= link_to( 'Download', '/pheno_overview.xls', :title => 'Download the Phenotyping Overview' ) %>  
+              <%= link_to( 'Download', '/phenotyping/mgp_heatmap.xls', :title => 'Download the Phenotyping Overview' ) %>  
               a heat map of phenotyping results by assay.  This spreadsheet also links to the detailed phenotyping 
               data on this portal.<br/><br/>
               You can also access (and search) the same data via the 
