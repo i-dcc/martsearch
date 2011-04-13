@@ -1,61 +1,45 @@
-<% pheno_data = result_data[:'wtsi-phenotyping-heatmap-processed'] %>
+<%
+  pheno_data = result_data[:'wtsi-phenotyping-heatmap']
+  tests      = result_data[:'wtsi-phenotyping-heatmap-test_display_names']
+%>
 
-<div class="accordion">
-  <% pheno_data.each do |group,group_data| %>
-    <% unless group_data.nil? %>
-      <h6>
-        <a href="">
-          <%= group %>
-          <% if group_data[:results_of_interest] %>
-            - <span class="header_annotation">results of interest</span>
-          <% end %>
-        </a>
-      </h6>
-      <div>
-        <table class="wtsi-phenotyping_heatmap">
-          <thead>
-            <tr>
-              <th>Allele Name</th>
-              <th>Colony Prefix</th>
-              <% group_data[:tests].each do |test_name,test_display_name| %>
-                <th><span class="vertical_text"><%= test_display_name %></span></th>
+<table class="wtsi-phenotyping_heatmap">
+  <thead>
+    <tr>
+      <th>Allele Name</th>
+      <th>Colony Prefix</th>
+      <% tests.each do |test,display_name| %>
+        <th><span class="vertical_text"><%= display_name %></span></th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <% pheno_data.each do |result| %>
+      <tr>
+        <td><%= result[:allele_name] %></td>
+        <td><%= result[:colony_prefix] %></td>
+        <% tests.each do |test,display_name| %>
+          <td class="<%= wtsi_phenotyping_css_class_for_test(result[test]) %> pheno_result">
+            <% if result["#{test}_data".to_sym] %>
+              <% if test == :eye_histopathology %>
+                <% pdf = result["#{test}_data".to_sym][0] %>
+                <a href="<%= pdf[:url] %>" class="pdf_report"><%= image_tag( '/images/silk/page_white_acrobat.png', :alt => 'view pdf' ) %></a>
+              <% else %>
+                <%=
+                  link_to(
+                    image_tag( '/images/silk/chart_bar.png', :alt => 'view' ),
+                    "/phenotyping/#{result[:colony_prefix]}/#{test.to_s.gsub('_','-')}/",
+                    :class => 'html_report'
+                  )
+                %>
               <% end %>
-            </tr>
-          </thead>
-          <tbody>
-            <% group_data[:results].each do |result| %>
-              <tr>
-                <td><%= result[:allele_name] %></td>
-                <td><%= result[:colony_prefix] %></td>
-                <% group_data[:tests].each do |test_name,test_display_name| %>
-                  <td 
-                    class="<%= wtsi_phenotyping_css_class_for_test(result[test_name]) %> pheno_result" 
-                    title="<%= partial( 'dataviews/wtsi-phenotyping/heatmap_tooltip', :locals => { :result => result, :test_name => test_name, :test_display_name => test_display_name } ) %>" 
-                    rel="qtip">
-                  <% if result["#{test_name}_data".to_sym] %>
-                    <% if test_name == :eye_histopathology %>
-                      <% pdf = result["#{test_name}_data".to_sym][0] %>
-                      <a href="<%= pdf[:url] %>" class="pdf_report"><%= image_tag( '/images/silk/page_white_acrobat.png', :alt => 'view pdf' ) %></a>
-                    <% else %>
-                      <%=
-                        link_to(
-                          image_tag( '/images/silk/chart_bar.png', :alt => 'view' ),
-                          "/phenotyping/#{result[:colony_prefix]}/#{test_name.to_s.gsub('_','-')}/",
-                          :class => 'html_report'
-                        )
-                      %>
-                    <% end %>
-                  <% end %>
-                  </td>
-                <% end %>
-              </tr>
             <% end %>
-          </tbody>
-        </table>
-      </div>
+          </td>
+        <% end %>
+      </tr>
     <% end %>
-  <% end %>
-</div>
+  </tbody>
+</table>
 
 <%=
   link_to(
