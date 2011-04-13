@@ -218,12 +218,12 @@ module MartSearch
         )
         
         results.each do |result|
-          complete_test = false
+          pass_count = 0
           result.each do |key,value|
             next if key == 'allele_name'
-            complete_test = true if allowed_values.include?(value)
+            pass_count += 1 if allowed_values.include?(value)
           end
-          complete_genes.push( result['allele_name'] ) if complete_test
+          complete_genes.push( result['allele_name'] ) if pass_count == ( attributes.size - 1 )
         end
         
         return complete_genes.uniq.size
