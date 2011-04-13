@@ -107,11 +107,11 @@ module MartSearch
     get '/?' do
       @current               = 'home'
       @hide_side_search_form = true
+      @phenotyping_counts    = @ms.wtsi_phenotyping_progress_counts()
       @counts                = @ms.fetch_from_cache("wtsi_front_page_counts")
       
       if @counts.nil?
         @counts = {
-          :phenotyping        => { :query => 'sanger_phenotype:*' },
           :mice               => { :query => 'microinjection_centre_status:"WTSI - Genotype Confirmed"' },
           :escells            => { :query => 'ikmc_project_product_status_str:"KOMP-CSD ES Cell Available" OR ikmc_project_product_status_str:"EUCOMM ES Cell Available"' },
           :targ_vectors       => { :query => 'ikmc_project_product_status_str:"KOMP-CSD Vector Available" OR ikmc_project_product_status_str:"EUCOMM Vector Available"' },
@@ -119,7 +119,7 @@ module MartSearch
           :c57_bacs           => { :query => 'dna_library:"C57Bl/6J"' },
           :one_two_nine_bacs  => { :query => 'dna_library:"129S7"' }
         }
-
+        
         @counts.each do |param,details|
           details[:count] = @ms.index.count( details[:query] )
         end
