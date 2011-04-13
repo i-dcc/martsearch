@@ -34,7 +34,7 @@
       <td width="60%" style="padding: 0; padding-right: 10px;">
         <h2>Phenotyping Summary</h2>
         <p class="larger">
-          The table below displays the <strong>number of mouse lines</strong> that have completed 
+          The table below displays the <strong>number of alleles</strong> that have completed 
           different stages of the MGP Phenotyping pipeline (funded by <a href="http://www.sanger.ac.uk/Teams/Team109/">WTSI</a> 
           &amp; <a href="http://www.eumodic.org/">EUMODIC</a>)
         </p>
