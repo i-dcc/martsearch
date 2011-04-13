@@ -160,9 +160,14 @@ module MartSearch
           }
         rescue Biomart::BiomartError => error
           all_ok = false
+          counts = {
+            :standard_phenotyping => counts[:standard_phenotyping]  ? counts[:standard_phenotyping] : '-',
+            :infection_challenge  => counts[:infection_challenge]   ? counts[:infection_challenge]  : '-',
+            :expression           => counts[:expression]            ? counts[:expression]           : '-',
+          }
         end
         
-        write_to_cache( "wtsi_phenotyping_progress_counts", counts ) if all_ok
+        write_to_cache( "wtsi_phenotyping_progress_counts", counts, { :expires_in => 12.hours } ) if all_ok
       end
       
       return counts
