@@ -10,7 +10,7 @@ module MartSearch
       if File.exists?(file)
         content = IO.binread(file)
         cache_control :no_cache
-        content_type MIME::Types.type_for(file)
+        content_type Rack::Mime.mime_type('.xls')
         return content
       else
         status 404
@@ -51,7 +51,7 @@ module MartSearch
       
       if File.exists?(file)
         content = IO.binread(file)
-        content_type MIME::Types.type_for(file)
+        content_type Rack::Mime.mime_type( File.extname(file) )
         return content
       else
         status 404
