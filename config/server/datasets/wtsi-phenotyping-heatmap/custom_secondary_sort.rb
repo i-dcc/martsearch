@@ -10,13 +10,23 @@ module MartSearch
     def wtsi_phenotyping_heatmap_secondary_sort( search_data )
       ms          = MartSearch::Controller.instance()
       ds_attribs  = ms.datasources[:"wtsi-phenotyping"].ds.attributes
-      test_groups = @config[:test_groups]
       
+      # Work out the display names for the tests
+      test_display_names = {}
+      attribs            = @config[:searching][:attributes]
+      attribs.each do |attrib|
+        next if [:colony_prefix,:allele_name,:allele_type,:escell_clone,:strain_group].include?( attrib.to_sym )
+        test_display_names[attrib.to_sym] = ds_attribs[attrib] ? ds_attribs[attrib].display_name : attrib.to_s
+      end
+      
+      # Now process the heatmap
       search_data.each do |key,result_data|
         heatmap_raw_data = result_data[:'wtsi-phenotyping-heatmap']
         heatmap_data     = {}
         
         next if heatmap_raw_data.nil?
+        
+        result_data[:'wtsi-phenotyping-heatmap-test_display_names'] = test_display_names
         
         # First, append any supporting data to the basic heatmap return.
         heatmap_raw_data.each do |result|
@@ -58,39 +68,6 @@ module MartSearch
           result = wtsi_phenotyping_heatmap_append_published_image_data( colony_prefix, published_image_data, result ) unless published_image_data.nil?
         end
         
-        # Now, calculate what to display for each group bubble
-        test_groups.each do |group,group_conf|
-          tests             = group_conf[:tests]
-          allowed_pipelines = group_conf[:pipelines]
-          group_data        = {
-            :results_of_interest => false,
-            :tests               => {},
-            :results             => []
-          }
-          
-          # Work out the display headings for these tests...
-          tests.each do |test|
-            mart_attribute = ds_attribs[test]
-            group_data[:tests][test.to_sym] = mart_attribute.display_name unless mart_attribute.nil?
-          end
-          
-          heatmap_raw_data.each do |result|
-            group_data[:results].push(result)
-            
-            # On a group level - do we have 'results of interest' for this group?
-            unless group_data[:results_of_interest]
-              tests.each do |test|
-                if wtsi_phenotyping_css_class_for_test(result[test.to_sym]) == "significant_difference"
-                  group_data[:results_of_interest] = true
-                end
-              end
-            end
-          end
-          
-          heatmap_data[group.to_sym] = group_data
-        end
-        
-        result_data[:'wtsi-phenotyping-heatmap-processed'] = heatmap_data
       end
       
       # Run through the data one last time to cache the results details 

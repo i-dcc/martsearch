@@ -154,15 +154,20 @@ module MartSearch
         
         begin
           counts = {
-            :standard_phenotyping => complete_mgp_genes_count( heatmap_mart, ['haematology_cbc'], ['CompleteInteresting','CompleteNotInteresting'] ),
-            :infection_challenge  => complete_mgp_genes_count( heatmap_mart, ['salmonella_challenge','citrobacter_challenge'], ['CompleteInteresting','CompleteNotInteresting'] ),
-            :expression           => complete_mgp_genes_count( heatmap_mart, ['adult_lac_z_expression','embryo_lac_z_expression'], ['CompleteDataAvailable'] )
+            :standard_phenotyping => complete_mgp_alleles_count( heatmap_mart, ['haematology_cbc'], ['CompleteInteresting','CompleteNotInteresting'] ),
+            :infection_challenge  => complete_mgp_alleles_count( heatmap_mart, ['salmonella_challenge','citrobacter_challenge'], ['CompleteInteresting','CompleteNotInteresting'] ),
+            :expression           => complete_mgp_alleles_count( heatmap_mart, ['adult_lac_z_expression','embryo_lac_z_expression'], ['CompleteDataAvailable'] )
           }
         rescue Biomart::BiomartError => error
           all_ok = false
+          counts = {
+            :standard_phenotyping => counts[:standard_phenotyping]  ? counts[:standard_phenotyping] : '-',
+            :infection_challenge  => counts[:infection_challenge]   ? counts[:infection_challenge]  : '-',
+            :expression           => counts[:expression]            ? counts[:expression]           : '-',
+          }
         end
         
-        write_to_cache( "wtsi_phenotyping_progress_counts", counts ) if all_ok
+        write_to_cache( "wtsi_phenotyping_progress_counts", counts, { :expires_in => 12.hours } ) if all_ok
       end
       
       return counts
@@ -209,7 +214,7 @@ module MartSearch
       # @param [Array] attributes The list of tests/attributes to check for completeness
       # @param [Array] allowed_values The attribute values to look for to consider a result 'complete'
       # @return [Integer] The count of unique genes that have data on all the tests queried
-      def complete_mgp_genes_count( mart, attributes, allowed_values )
+      def complete_mgp_alleles_count( mart, attributes, allowed_values )
         complete_genes = []
         results        = mart.search(
           :process_results => true,
@@ -218,12 +223,12 @@ module MartSearch
         )
         
         results.each do |result|
-          complete_test = false
+          pass_count = 0
           result.each do |key,value|
             next if key == 'allele_name'
-            complete_test = true if allowed_values.include?(value)
+            pass_count += 1 if allowed_values.include?(value)
           end
-          complete_genes.push( result['allele_name'] ) if complete_test
+          complete_genes.push( result['allele_name'] ) if pass_count == ( attributes.size - 1 )
         end
         
         return complete_genes.uniq.size

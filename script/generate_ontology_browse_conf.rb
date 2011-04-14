@@ -7,10 +7,10 @@ require 'martsearch'
 # Configuration for the builder
 CONF = {
   :mp => {
-    :id               => 'mamalian-phenotype',
+    :id               => 'mammalian-phenotype',
     :index_field      => 'MP',
     :root_term        => 'MP:0000001',
-    :display_name     => "Mamalian Phenotype",
+    :display_name     => "Mammalian Phenotype",
     :descriptive_text => "browse for genes that when knocked-out have been annotated as causing a distinct phenotype (as classified by the <a href='http://www.obofoundry.org/cgi-bin/detail.cgi?id=mammalian_phenotype' target='_blank'>mamalian phenotype ontology</a>)",
     :gsub_term_name   => " phenotype"
   },

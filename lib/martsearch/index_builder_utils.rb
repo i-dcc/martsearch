@@ -242,11 +242,13 @@ module MartSearch
         terms_to_test = value_to_index.split(split_delimiter)
         terms_to_test.each do |test_term|
           concat_ont_term_conf[:ontologies].each do |ontology_matcher,ontology_conf|
-            regexp = Regexp.new(ontology_matcher.to_s)
+            regexp  = Regexp.new( ontology_matcher.to_s, Regexp::IGNORECASE )
+            matcher = test_term.upcase.match( regexp )
             
-            unless test_term.match(regexp).nil?
-              cached_data = cache[test_term]
-              term_conf   = {
+            unless matcher.nil?
+              matched_term = matcher.to_s
+              cached_data  = cache[matched_term]
+              term_conf    = {
                 :attr => attribute,
                 :idx  => {
                   :term       => ontology_conf[:term],
@@ -258,7 +260,7 @@ module MartSearch
               if cached_data != nil
                 index_ontology_terms_from_cache( doc, term_conf, cached_data )
               else
-                index_ontology_terms_from_fresh( doc, term_conf, test_term, cache )
+                index_ontology_terms_from_fresh( doc, term_conf, matched_term, cache )
               end
             end
           end

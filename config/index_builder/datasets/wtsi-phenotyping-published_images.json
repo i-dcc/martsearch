@@ -12,8 +12,8 @@
       "attr":     "published_images_annotations",
       "split_on": "; ",
       "ontologies": {
-        "^MA\\:\\d+$": { "term": "ma_id", "term_name": "ma_term", "breadcrumb": "ma_ontology" },
-        "^MP\\:\\d+$": { "term": "mp_id", "term_name": "mp_term", "breadcrumb": "mp_ontology" }
+        "^MA\\:\\d+": { "term": "ma_id", "term_name": "ma_term", "breadcrumb": "ma_ontology" },
+        "^MP\\:\\d+": { "term": "mp_id", "term_name": "mp_term", "breadcrumb": "mp_ontology" }
       }
     }
   }
