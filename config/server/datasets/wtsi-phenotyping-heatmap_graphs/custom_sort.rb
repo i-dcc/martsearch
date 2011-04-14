@@ -45,19 +45,24 @@ module MartSearch
           sorted_results[joined_attribute][colony_prefix][test_group]                           ||= {}
           sorted_results[joined_attribute][colony_prefix][test_group][:test_group]                = test_group
           
-          sorted_results[joined_attribute][colony_prefix][test_group][test]                     ||= {}
-          sorted_results[joined_attribute][colony_prefix][test_group][test][:graphs]            ||= []
-          sorted_results[joined_attribute][colony_prefix][test_group][test][:test_description]    = test_description
-          sorted_results[joined_attribute][colony_prefix][test_group][test][:pipeline]            = pipeline
-          sorted_results[joined_attribute][colony_prefix][test_group][test][:graphs].push(result)
+          # Use an MD5 hash of the test_description to correctly group the graphs - this 
+          # helps sort out protocols that have the SAME name but DIFFERENT descriptions!
+          test_desc_hash = Digest::MD5.hexdigest(test_description)
+          
+          sorted_results[joined_attribute][colony_prefix][test_group][test_desc_hash]                     ||= {}
+          sorted_results[joined_attribute][colony_prefix][test_group][test_desc_hash][:graphs]            ||= []
+          sorted_results[joined_attribute][colony_prefix][test_group][test_desc_hash][:test]                = test
+          sorted_results[joined_attribute][colony_prefix][test_group][test_desc_hash][:test_description]    = test_description
+          sorted_results[joined_attribute][colony_prefix][test_group][test_desc_hash][:pipeline]            = pipeline
+          sorted_results[joined_attribute][colony_prefix][test_group][test_desc_hash][:graphs].push(result)
         end
       end
       
       sorted_results.keys.each do |colony_prefix|
         sorted_results[colony_prefix][colony_prefix].each do |test_group,test_group_data|
           next if test_group_data.is_a? Array
-          test_group_data.each do |test,test_data|
-            next if test == :test_group
+          test_group_data.each do |test_desc_hash,test_data|
+            next if test_desc_hash == :test_group
             test_data[:graphs].sort!{ |a,b| a[:order_by] <=> b[:order_by] }
           end
         end
