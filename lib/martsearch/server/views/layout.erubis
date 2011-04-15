@@ -90,6 +90,14 @@
       
       <div id="browser_warnings" class="messages serious_errors" style="display:none;"></div>
       
+      <div class="messages dataset_error warning">
+        <p><strong>Scheduled Maintenance Warning</strong></p>
+        <p>
+          This service will be unavailable on Monday the 18th April from 9am BST for approximately one hour.  This is 
+          due to some essential maintenance that needs to be done on our server.  We apologise in advance for any 
+          inconvenience this may cause.
+        </p>
+      </div>
       
       <!--
       <div id="user_messages" class="messages">

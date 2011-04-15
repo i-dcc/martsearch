@@ -1,12 +1,4 @@
 <div class="larger">
-  <div class="messages dataset_error warning">
-    <p><strong>Scheduled Maintenance Warning</strong></p>
-    <p>
-      This service will be unavailable on Monday the 18th April from 9am BST for approximately one hour.  This is 
-      due to some essential maintenance that needs to be done on our server.  We apologise in advance for any 
-      inconvenience this may cause.
-    </p>
-  </div>
   <table class="welcome" style="margin-bottom:5px">
     <tr>
       <td width="50%">
