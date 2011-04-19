@@ -102,30 +102,6 @@
         "vision-eye":                   { "text": "vision/eye",                    "query": "MP:0005391" }
       }
     },
-    "adult-mouse-anatomy": {
-      "display_name":     "Adult Mouse Anatomy",
-      "descriptive_text": "browse for genes that when knocked-out have been annotated as being expressed within a region (as classified by the <a href='http://www.obofoundry.org/cgi-bin/detail.cgi?id=adult_mouse_anatomy' target='_blank'>adult mouse anatomy ontology</a>)",
-      "options": {
-        "anatomic-region":                            {"text":"anatomic region","query":"MA:0002433"},
-          "body-cavity-or-lining":                      {"text":"body cavity or lining","query":"MA:0000005","child":true},
-          "head-and-neck":                              {"text":"head and neck","query":"MA:0000006","child":true},
-          "limb":                                       {"text":"limb","query":"MA:0000007","child":true},
-          "tail":                                       {"text":"tail","query":"MA:0000008","child":true},
-          "trunk":                                      {"text":"trunk","query":"MA:0000004","child":true},
-        "organ-system":                               {"text":"organ system","query":"MA:0000003"},
-          "cardiovascular-system":                      {"text":"cardiovascular system","query":"MA:0000010","child":true},
-          "endocrine-system":                           {"text":"endocrine system","query":"MA:0000012","child":true},
-          "exocrine-system":                            {"text":"exocrine system","query":"MA:0002411","child":true},
-          "hemolymphoid-system":                        {"text":"hemolymphoid system","query":"MA:0000013","child":true},
-          "immune-system":                              {"text":"immune system","query":"MA:0002711","child":true},
-          "integumental-system":                        {"text":"integumental system","query":"MA:0000014","child":true},
-          "musculoskeletal-system":                     {"text":"musculoskeletal system","query":"MA:0002418","child":true},
-          "nervous-system":                             {"text":"nervous system","query":"MA:0000016","child":true},
-          "sensory-organ-system":                       {"text":"sensory organ system","query":"MA:0002442","child":true},
-          "set-of-connective-tissues":                  {"text":"set of connective tissues","query":"MA:0002887","child":true},
-          "visceral-organ-system":                      {"text":"visceral organ system","query":"MA:0000019","child":true}
-      }
-    },
     "chromosome": {
       "display_name":     "Chromosome",
       "descriptive_text": "browse for genes that are found on a given chromosome",
