@@ -18,7 +18,7 @@
     "ensembl-mouse-homologs-rat",
     "ensembl-mouse-homologs-zebrafish",
     "ensembl-mouse-interpro_features",
-    "ensembl-mouse-go_bio_process",
+    "ensembl-mouse-go",
     "ikmc-omim"
   ],
   "datasets": {}
