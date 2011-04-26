@@ -4,19 +4,13 @@
     "allow_document_creation": false,
     "days_between_downlads": 30,
     "attribute_map": [
-      { "attr": "ensembl_gene_id",          "idx": "ensembl_gene_id", "use_to_map": true },
-      { "attr": "go_biological_process_id", "idx": "go_id" },
-      { "attr": "name_1006",                "idx": "go_term" }
-    ],
-    "grouped_attributes": [
-      {
-        "attrs": ["go_biological_process_id","name_1006"],
-        "idx":   "go_biological_process"
-      }
+      { "attr": "ensembl_gene_id",  "idx": "ensembl_gene_id", "use_to_map": true },
+      { "attr": "go_id",            "idx": "go_id" },
+      { "attr": "name_1006",        "idx": "go_term" }
     ],
     "ontology_terms": [
       {
-        "attr": "go_biological_process_id",
+        "attr": "go_id",
         "idx": {
           "term":       "go_id",
           "term_name":  "go_term",
