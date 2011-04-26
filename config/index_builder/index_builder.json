@@ -19,8 +19,6 @@
     "ensembl-mouse-homologs-zebrafish",
     "ensembl-mouse-interpro_features",
     "ensembl-mouse-go_bio_process",
-    "ensembl-mouse-go_cell_component",
-    "ensembl-mouse-go_mol_function",
     "ikmc-omim"
   ],
   "datasets": {}
