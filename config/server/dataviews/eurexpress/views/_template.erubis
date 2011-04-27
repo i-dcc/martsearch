@@ -30,7 +30,8 @@
       <p>
         This ontology tree only contains the parts of the mouse embryo anatomy 
         that are relevant to this assay.  The numbers (in brackets) indicate the 
-        number of annotations recorded within the children of these terms.
+        number of annotations recorded within the children of these terms. Click the 'search' 
+        link to perform a search using the selected EMAP term.
       </p>
       <div>
         <a href="#" class="eurexpress_assay_ontology_open ontology_tree_open">open tree</a> | 

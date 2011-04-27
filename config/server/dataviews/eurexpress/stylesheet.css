@@ -1,38 +1,28 @@
 
 /* eurexpress custom css */
 
-.eurexpress_assay_ontology .strong,
-.eurexpress_assay_ontology .moderate,
-.eurexpress_assay_ontology .weak,
-.eurexpress_assay_ontology .possible,
-.eurexpress_assay_ontology .not_detected,
-.eurexpress_assay_ontology .not_examined {
+.eurexpress_assay_ontology .strong a,
+.eurexpress_assay_ontology .moderate a,
+.eurexpress_assay_ontology .weak a,
+.eurexpress_assay_ontology .possible a,
+.eurexpress_assay_ontology .not_detected a,
+.eurexpress_assay_ontology .not_examined a {
     font-weight: bold;
 }
 
-.eurexpress_assay_ontology .strong a {
-    color: #f00;
-}
+.eurexpress_assay_ontology .strong       a { color: #f00; }
+.eurexpress_assay_ontology .moderate     a { color: #d869ff; }
+.eurexpress_assay_ontology .weak         a { color: #00f; }
+.eurexpress_assay_ontology .possible     a { color: #3d9916; }
+.eurexpress_assay_ontology .not_detected a { color: #f99131; }
+.eurexpress_assay_ontology .not_examined a { color: #999; }
 
-.eurexpress_assay_ontology .moderate a {
-    color: #d869ff;
-}
-
-.eurexpress_assay_ontology .weak a {
-    color: #00f;
-}
-
-.eurexpress_assay_ontology .possible a {
-    color: #3d9916;
-}
-
-.eurexpress_assay_ontology .not_detected a {
-    color: #f99131;
-}
-
-.eurexpress_assay_ontology .not_examined a {
-    color: #999;
-}
+.eurexpress_assay_ontology .strong       a:hover { color: #f00; }
+.eurexpress_assay_ontology .moderate     a:hover { color: #d869ff; }
+.eurexpress_assay_ontology .weak         a:hover { color: #00f; }
+.eurexpress_assay_ontology .possible     a:hover { color: #3d9916; }
+.eurexpress_assay_ontology .not_detected a:hover { color: #f99131; }
+.eurexpress_assay_ontology .not_examined a:hover { color: #999; }
 
 .eurexpress_assay_ontology_key table td.strong,
 .eurexpress_assay_ontology_key td.moderate,
@@ -43,6 +33,16 @@
 	width: 10px;
 	height: 10px;
 	border: 1px solid #fff !important;
+}
+
+.eurexpress_assay_ontology .strong a a,
+.eurexpress_assay_ontology .moderate a a,
+.eurexpress_assay_ontology .weak a a,
+.eurexpress_assay_ontology .possible a a,
+.eurexpress_assay_ontology .not_detected a a,
+.eurexpress_assay_ontology .not_examined a a {
+	font-weight: normal;
+	color: #376598;
 }
 
 .eurexpress_assay_ontology_key table td.strong {

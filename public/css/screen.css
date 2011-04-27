@@ -121,7 +121,12 @@ a, .ui-widget-content a, .jstree li a a {
 	text-decoration: none;
 }
 
-a:hover, .ui-widget-content a:hover, .jstree li a a:hover {
+.ui-widget-content .jstree a:hover {
+	color: black;
+}
+
+a:hover, .ui-widget-content a:hover, .jstree li a a:hover,
+.ui-widget-content .jstree li a a:hover {
 	color: #963534;
 }
 
@@ -156,6 +161,15 @@ a:active, .ui-widget-content a:acitve, .jstree li a a:acitve {
 .mutagenesis_prediction_key {
 	float: right;
 	background-position: right top;
+}
+
+.re_search, .jstree li a a.re_search {
+	background: url(../images/fugue/magnifier-medium.png) no-repeat left center;
+	padding: 2px 0 2px 16px;
+}
+
+.jstree li a a.re_search {
+	padding: 0 0 0 16px;
 }
 
 a.feed {
