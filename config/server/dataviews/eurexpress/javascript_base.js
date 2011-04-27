@@ -1,7 +1,6 @@
 
 // Eurexpress custom javascript
 
-jQuery.jstree._themes = "css/jstree/"
 jQuery(document).ready(function() {
   
   jQuery(".eurexpress_assay_ontology").each( function() {

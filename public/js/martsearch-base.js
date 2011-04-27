@@ -34,6 +34,9 @@ jQuery(document).ready(function() {
     }
   );
   
+  // Small setup line for jstree
+  jQuery.jstree._themes = "css/jstree/"
+  
   // Add prettyPhoto to anything with the property 'rel="prettyPhoto"'
   jQuery("a[rel^='prettyPhoto']").prettyPhoto({ theme: 'facebook', show_title: false });
   

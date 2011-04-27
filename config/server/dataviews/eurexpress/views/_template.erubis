@@ -33,8 +33,8 @@
         number of annotations recorded within the children of these terms.
       </p>
       <div>
-        <a href="#" class="eurexpress_assay_ontology_open">open tree</a> | 
-        <a href="#" class="eurexpress_assay_ontology_close">close tree</a>
+        <a href="#" class="eurexpress_assay_ontology_open ontology_tree_open">open tree</a> | 
+        <a href="#" class="eurexpress_assay_ontology_close ontology_tree_close">close tree</a>
         <div class="clear"></div>
         <div class="eurexpress_assay_ontology_key">
           <table class="nobg nopadding noborder">
