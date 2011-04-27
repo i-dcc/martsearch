@@ -147,7 +147,7 @@ module MartSearch
 
         if params[:wt] == 'json'
           content_type 'application/json', :charset => 'utf-8'
-          return @data.to_json
+          return JSON.generate( @data, :max_nesting => false )
         else
           # Marker.mark("rendering page") do
             erubis :search
@@ -202,7 +202,7 @@ module MartSearch
       
       if params[:wt] == 'json'
         content_type 'application/json', :charset => 'utf-8'
-        return @data.to_json
+        return JSON.generate( @data, :max_nesting => false )
       else
         erubis :browse
       end
@@ -246,7 +246,7 @@ module MartSearch
         else
           if params[:wt] == 'json'
             content_type 'application/json', :charset => 'utf-8'
-            return @data.to_json
+            return JSON.generate( @data, :max_nesting => false )
           else
             erubis :project_report
           end
