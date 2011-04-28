@@ -326,5 +326,26 @@ class MartSearchServerRackTest < Test::Unit::TestCase
       end
     end
     
+    should "serve up JSON for Gene Ontology data" do
+      VCR.use_cassette('test_server_go_ontology_json') do
+        # First test for when we expect a return...
+        mgi_acc_ids_to_test = ['MGI:105369','MGI:2444584','MGI:104510']
+        mgi_acc_ids_to_test.each do |mgi|
+          @browser.get "/go_ontology?id=go-ontology-#{mgi.gsub(':','')}"
+          assert( @browser.last_response.ok?, "A request to '/go_ontology?id=go-ontology-#{mgi.gsub(':','')}' failed!" )
+          json = JSON.parse( @browser.last_response.body, :max_nesting => false )
+          assert( json.is_a?(Array) )
+          assert( json.first['data'] != nil )
+        end
+        
+        # Then for when we don't...
+        mgis_with_no_return = ['MGI:1921402']
+        mgis_with_no_return.each do |mgi|
+          @browser.get "/go_ontology?id=go-ontology-#{mgi.gsub(':','')}"
+          assert_equal( 404, @browser.last_response.status )
+        end
+      end
+    end
+    
   end
 end

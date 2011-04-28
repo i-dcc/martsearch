@@ -1,13 +1,15 @@
 
 // Eurexpress custom javascript
 
-jQuery.jstree._themes = "css/jstree/"
 jQuery(document).ready(function() {
   
   jQuery(".eurexpress_assay_ontology").each( function() {
     var id_arg = jQuery(this).attr('id');
 
     jQuery("#"+id_arg).jstree({
+      "core": {
+        "html_titles": true
+      },
       "json_data": {
         "ajax": {
           "url": martsearch_url + "/eurexpress_browse",
@@ -35,7 +37,7 @@ jQuery(document).ready(function() {
         }
       },
       "progressive_render": true,
-      "plugins": [ "json_data", "themes", "types", "ui" ]
+      "plugins": [ "json_data", "themes", "types" ]
     });
     
   });

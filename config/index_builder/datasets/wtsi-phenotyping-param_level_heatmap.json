@@ -5,13 +5,13 @@
     "days_between_downlads": 0,
     "attribute_map": [
       { "attr": "param_level_heatmap_colony_prefix", "idx": "colony_prefix", "use_to_map": true },
-      { "attr": "param_level_heatmap_mp_term", "idx": "mp_id" },
-      { "attr": "param_level_heatmap_mp_term_name", "idx": "mp_term" }
+      { "attr": "param_level_heatmap_mp_id", "idx": "mp_id" },
+      { "attr": "param_level_heatmap_mp_term", "idx": "mp_term" }
     ],
     "filters": {},
     "ontology_terms": [
       {
-        "attr": "param_level_heatmap_mp_term",
+        "attr": "param_level_heatmap_mp_id",
         "idx": {
           "term":       "mp_id",
           "term_name":  "mp_term",
