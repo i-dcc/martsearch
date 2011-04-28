@@ -116,27 +116,36 @@ p,dl,hr,h1,h2,h3,h4,h5,h6,ol,ul,pre,table,address,fieldset {
 
 /* Links */
 
-a, .ui-widget-content a {
+a, .ui-widget-content a, .jstree li a a {
 	color: #376598;
 	text-decoration: none;
 }
 
-a:hover, .ui-widget-content a:hover {
+.ui-widget-content .jstree a:hover {
+	color: black;
+}
+
+a:hover, .ui-widget-content a:hover, .jstree li a a:hover,
+.ui-widget-content .jstree li a a:hover {
 	color: #963534;
 }
 
-a:focus, .ui-widget-content a:focus {
+a:focus, .ui-widget-content a:focus, .jstree li a a:focus {
 	outline: none;
 	-moz-outline-style: none;
 }
 
-a:active, .ui-widget-content a:acitve {
+a:active, .ui-widget-content a:acitve, .jstree li a a:acitve {
 	outline: none;
 }
 
-.ext_link {
+.ext_link, .jstree li a a.ext_link {
 	background: url(../images/silk/bullet_go.png) no-repeat left center;
 	padding: 2px 0 2px 16px;
+}
+
+.jstree li a a.ext_link {
+	padding: 0 0 0 16px;
 }
 
 .ensembl_link {
@@ -152,6 +161,15 @@ a:active, .ui-widget-content a:acitve {
 .mutagenesis_prediction_key {
 	float: right;
 	background-position: right top;
+}
+
+.re_search, .jstree li a a.re_search {
+	background: url(../images/fugue/magnifier-medium.png) no-repeat left center;
+	padding: 2px 0 2px 16px;
+}
+
+.jstree li a a.re_search {
+	padding: 0 0 0 16px;
 }
 
 a.feed {
@@ -296,6 +314,18 @@ a.button:hover, a.order:hover {
 
 .toggle-open:hover, .toggle-close:hover, .toggle-up:hover {
 	cursor: pointer;
+}
+
+/* Ontology Tree Controls */
+
+a.ontology_tree_open,
+a.ontology_tree_close {
+    background: url(../images/silk/bullet_toggle_plus.png) no-repeat 0 center;
+    padding: 4px 2px 4px 16px;
+}
+
+a.ontology_tree_close {
+    background-image: url(../images/silk/bullet_toggle_minus.png);
 }
 
 /* Pagination Controls */

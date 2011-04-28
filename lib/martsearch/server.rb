@@ -22,7 +22,7 @@ module MartSearch
     # We're going to use the version number as a cache breaker for the CSS 
     # and javascript code. Update with each release of your portal (especially 
     # if you change the CSS or JS)!!!
-    VERSION = '0.1.15'
+    VERSION = '0.1.16'
     DEFAULT_CSS_FILES = [
       'reset.css',
       'jquery.prettyPhoto.css',
@@ -167,7 +167,7 @@ module MartSearch
 
         if params[:wt] == 'json'
           content_type 'application/json', :charset => 'utf-8'
-          return @data.to_json
+          return JSON.generate( @data, :max_nesting => false )
         else
           # Marker.mark("rendering page") do
             erubis :search
@@ -222,7 +222,7 @@ module MartSearch
       
       if params[:wt] == 'json'
         content_type 'application/json', :charset => 'utf-8'
-        return @data.to_json
+        return JSON.generate( @data, :max_nesting => false )
       else
         erubis :browse
       end
@@ -266,7 +266,7 @@ module MartSearch
         else
           if params[:wt] == 'json'
             content_type 'application/json', :charset => 'utf-8'
-            return @data.to_json
+            return JSON.generate( @data, :max_nesting => false )
           else
             erubis :project_report
           end

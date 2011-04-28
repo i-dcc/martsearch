@@ -27,7 +27,7 @@ module MartSearch
             :state => "open",
             :children => [
               {
-                :data     => "TS23, embryo",
+                :data     => "TS23, embryo #{link_to( 'search', '/search?query=EMAP:7148', { :class => 're_search' } )}",
                 :attr     => { :id => "#{options[0]}-#{options[1]}-EMAP7148" },
                 :state    => 'open',
                 :children => calc_emap_tree( options, tree.children, data[:annotations], 2 )
@@ -38,7 +38,7 @@ module MartSearch
           if data[:annotations].has_key?(:'EMAP:7148') and data[:annotations].size == 1
             tree_data[0][:children] = [
               {
-                :data     => "TS23, embryo",
+                :data     => "TS23, embryo #{link_to( 'search', '/search?query=EMAP:7148', { :class => 're_search' } )}",
                 :attr     => {
                   :id     => "#{options[0]}-#{options[1]}-EMAP7148",
                   :class  => data[:annotations][:'EMAP:7148'][:ann_strength].gsub(' ','_'),
@@ -68,7 +68,7 @@ module MartSearch
         anns_recorded = anns_recorded + 1 if annotations.has_key?(child.term.to_sym)
         
         child_data = {
-          :data  => "#{child.term_name.sub('TS23,','')} - (#{anns_recorded})",
+          :data  => "#{child.term_name.sub('TS23,','')} - (#{anns_recorded}) #{link_to( 'search', '/search?query=' + child.term, { :class => 're_search' } )}",
           :attr  => { :id => "#{get_options[0]}-#{get_options[1]}-#{child.term.gsub(':','')}" },
           :state => 'closed'
         }
@@ -78,7 +78,7 @@ module MartSearch
         elsif child_anns.size > 0
           child_data[:children] = []
         elsif annotations.has_key?(child.term.to_sym)
-          child_data[:data]         = child.term_name.sub('TS23,','')
+          child_data[:data]         = "#{child.term_name.sub('TS23,','')} #{link_to( 'search', '/search?query=' + child.term, { :class => 're_search' } )}"
           child_data[:attr][:class] = annotations[child.term.to_sym][:ann_strength].gsub(' ','_')
           child_data[:attr][:rel]   = 'leaf_node' 
           child_data[:state]        = 'open'
