@@ -120,6 +120,10 @@
       </div>
       
       <div id="footer">
+        <p style="float:left;">
+          <a href="http://www.sanger.ac.uk/datasharing/">Data Sharing</a> | 
+          <a href="http://www.sanger.ac.uk/legal/">Legal</a>
+        </p>
         <p>
           Powered by 
           <a href="http://github.com/i-dcc/martsearch">MartSearch</a>, 
