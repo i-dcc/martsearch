@@ -59,6 +59,20 @@
         <%= link_to "<h1>#{@portal_name}</h1>", '/' %>
       </div>
       
+      <div id="knockoutmouse_navigation">
+        <ul>
+          <li><a href="http://www.knockoutmouse.org/" title="International Knockout Mouse Consortium">Home</a></li>
+          <li><a href="http://www.knockoutmouse.org/aboutikmc">About IKMC</a></li>
+          <li><a href="http://www.knockoutmouse.org/martsearch">MartSearch</a></li>
+          <li><a href="http://www.knockoutmouse.org/download">Download</a></li>
+          <li><a href="http://www.knockoutmouse.org/content/ikmc-prototypes">Prototypes</a></li>
+          <li><a href="http://www.knockoutmouse.org/startnominategene">Nominate Gene</a></li>
+          <li><a href="http://www.knockoutmouse.org/faq">FAQ</a></li>
+          <li><a href="http://www.knockoutmouse.org/order-products">Order Products</a></li>
+          <li><a href="http://www.knockoutmouse.org/contact">Contact IKMC</a></li>
+        </ul>
+      </div>
+      
       <div id="navigation">
         <% unless @hide_side_search_form %>
           <span id="search">
@@ -69,6 +83,7 @@
           </span>
         <% end %>
         <ul>
+          <li id="navigation_label">MartSearch</li>
           <li<% if @current === "home" %> class="current"<% end %>><%= link_to 'Home', '/' %></li>
           <li<% if @current === "browse" %> class="current"<% end %>><%= link_to 'Browse', '/browse' %></li>
           <li<% if @current === "help" %> class="current"<% end %>><%= link_to 'Help', '/help' %></li>

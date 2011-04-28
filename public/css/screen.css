@@ -7,8 +7,6 @@
 }
 
 #wrapper {
-	width: 95%;
-	min-width: 995px;
 	margin: 10px auto 20px;
 }
 
@@ -25,6 +23,13 @@
 	padding-top: 10px;
 	margin-bottom: 20px;
 	color: #666;
+}
+
+#header, #content, #footer {
+	width: 95%;
+	min-width: 995px;
+	margin-right: auto;
+	margin-left: auto;
 }
 
 .clear {
@@ -407,7 +412,43 @@ span.highlight {
 	height: 26px;
 }
 
-/* Navigation Menu */
+/* Navigation Menus */
+
+#knockoutmouse_navigation {
+	border-top: 1px solid #b4d7f0;
+	border-bottom: 1px solid #b4d7f0;
+	margin: 2px 0 0;
+	color: #ffffff;
+	background: #002255;
+	font: 105% Arial, Helvetica, sans-serif;
+}
+
+#knockoutmouse_navigation ul {
+	font-weight: 600;
+	padding: 5px;
+	width: 95%;
+	list-style: none;
+	margin: 0 auto;
+}
+
+#knockoutmouse_navigation li {
+	background: #002255;
+	margin: 0 1px 0 1px;
+	display: inline;
+	list-style-type: none;
+}
+
+#knockoutmouse_navigation li a {
+	color: #ffffff;
+	padding: 5px 10px;
+}
+
+#knockoutmouse_navigation li a:hover,
+#knockoutmouse_navigation li a:active {
+	color: #002255;
+	background: #ffffff;
+	text-decoration: none;
+}
 
 #navigation {
 	border-top: 5px solid #376598;
@@ -415,20 +456,20 @@ span.highlight {
 }
 
 #navigation ul {
-	margin: 0;
-	margin-left: 10px;
+	width: 95%;
 	padding: 0;
 	list-style: none;
+	margin: 0 auto 5px;
 }
 
 #navigation li {
 	display: inline;
 	list-style-type: none;
-	margin: 0 2px 0 0;
+	margin: 0 2px 0 2px;
 	text-transform: uppercase;
 }
 
-#navigation li a {
+#navigation li a, #navigation li#navigation_label {
 	float: left;
 	display: block;
 	color: #333;
@@ -446,6 +487,16 @@ span.highlight {
 	-o-border-radius-bottomright: 5px;
 }
 
+#navigation li#navigation_label {
+	background: url(../images/silk/bullet_go.png) no-repeat right center;
+	padding-right: 16px;
+	text-transform: none;
+	font-size: 1.1em;
+	font-weight: bold;
+	padding-top: 7px;
+	padding-bottom: 5px;
+}
+
 #navigation li.current a,
 #navigation li a:hover {
 	color:#fff;
@@ -453,8 +504,9 @@ span.highlight {
 }
 
 #navigation #search {
-	float: right;
 	text-align: right;
+	float: right;
+	margin-right: 2%;
 }
 
 #navigation form {
