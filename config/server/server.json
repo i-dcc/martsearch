@@ -28,6 +28,7 @@
     "wtsi-phenotyping-fertility",
     "wtsi-phenotyping-heatmap",
     "wtsi-phenotyping-heatmap_graphs",
+    "wtsi-phenotyping-param_level_heatmap",
     "wtsi-phenotyping-hom_viability",
     "wtsi-phenotyping-published_images",
     "dummy-mice"

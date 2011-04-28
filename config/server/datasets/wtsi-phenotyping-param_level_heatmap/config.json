@@ -1,0 +1,31 @@
+{
+  "datasource":            "wtsi-phenotyping",
+  "enabled":               true,
+  "custom_sort":           true,
+  "custom_secondary_sort": false,
+  "attribution":           "The Wellcome Trust Sanger Institute (WTSI)",
+  "attribution_link":      "http://www.sanger.ac.uk/",
+  "searching": {
+    "joined_index_field": "colony_prefix",
+    "joined_filter":      "colony_prefix",
+    "joined_attribute":   "param_level_heatmap_colony_prefix",
+    "attributes": [
+      "param_level_heatmap_colony_prefix",
+      "param_level_heatmap_gender",
+      "param_level_heatmap_genotype",
+      "param_level_heatmap_pipeline",
+      "param_level_heatmap_test",
+      "param_level_heatmap_parameter",
+      "param_level_heatmap_parameter_order_by",
+      "param_level_heatmap_protocol",
+      "param_level_heatmap_protocol_description",
+      "param_level_heatmap_manual_call",
+      "param_level_heatmap_mp_id",
+      "param_level_heatmap_mp_term",
+      "param_level_heatmap_auto_call_is_significant",
+      "param_level_heatmap_auto_call_change_direction",
+      "param_level_heatmap_graph_url"
+    ],
+    "filters": {}
+  }
+}
