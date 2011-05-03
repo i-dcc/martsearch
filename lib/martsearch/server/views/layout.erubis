@@ -56,7 +56,7 @@
     <div id="wrapper">
       <div id="header">
         <span id="fontresize"></span>
-        <%= link_to "<h1>#{@portal_name}</h1>", 'http://www.knockoutmouse.org/' %>
+        <a href="http://www.knockoutmouse.org/" title="International Knockout Mouse Consortium"><h1><%= @portal_name %></h1></a>
       </div>
       
       <div id="knockoutmouse_navigation">
