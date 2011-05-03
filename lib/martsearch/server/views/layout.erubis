@@ -56,7 +56,7 @@
     <div id="wrapper">
       <div id="header">
         <span id="fontresize"></span>
-        <%= link_to "<h1>#{@portal_name}</h1>", '/' %>
+        <%= link_to "<h1>#{@portal_name}</h1>", 'http://www.knockoutmouse.org/' %>
       </div>
       
       <div id="knockoutmouse_navigation">
@@ -65,7 +65,6 @@
           <li><a href="http://www.knockoutmouse.org/aboutikmc">About IKMC</a></li>
           <li><a href="http://www.knockoutmouse.org/martsearch">MartSearch</a></li>
           <li><a href="http://www.knockoutmouse.org/download">Download</a></li>
-          <li><a href="http://www.knockoutmouse.org/content/ikmc-prototypes">Prototypes</a></li>
           <li><a href="http://www.knockoutmouse.org/startnominategene">Nominate Gene</a></li>
           <li><a href="http://www.knockoutmouse.org/faq">FAQ</a></li>
           <li><a href="http://www.knockoutmouse.org/order-products">Order Products</a></li>

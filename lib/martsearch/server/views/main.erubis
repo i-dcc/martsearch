@@ -4,7 +4,7 @@
       <td width="50%">
         <p>
           The IKMC MartSearch project integrates data from numerous 
-          <a href="http://www.biomart.org">Biomarts</a> to facilitate 
+          <a href="http://www.biomart.org">BioMarts</a> to facilitate 
           both simple and expert searches.  Use the search bar 
           to the right to perform simple searches of our data.
         </p>
@@ -72,12 +72,14 @@
 
   <hr />
 
-  <h2>The Biomarts</h2>
+  <h2>The BioMarts</h2>
   <p>
     This portal integrates information on IKMC mouse knockout resources with numerous 
     other relevant datasets, including Ensembl, Europhenome, EurExpress and EMMA.  For more 
     information about this portal and the way in which it unites and searches the data, 
-    please see the <%= link_to( 'about', '/about' ) %> page.
+    please see the <%= link_to( 'about', '/about' ) %> page.  If you wish to access any of these
+    BioMarts directly, click on the names of the datasets in the image below and you will be taken 
+    to the standard MartView interface.
   </p>
   <div style="text-align:center">
     <style type="text/css" media="screen">
@@ -101,7 +103,7 @@
       a#emma_link           {left:500px; top:326px;}
     </style>
 
-    <img class="image_map_img" src="<%= url_for '/images/about-page/ikmc-biomarts.png' %>" alt="The Biomarts Linked into this Portal" />
+    <img class="image_map_img" src="<%= url_for '/images/about-page/ikmc-biomarts.png' %>" alt="The BioMarts Linked into this Portal" />
     <dl class="image_map">
       <dd><a id="ikmc_proj_alle_link" title="IKMC Projects / Alleles" href="http://www.knockoutmouse.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=dcc.default.attributes.marker_symbol|dcc.default.attributes.mgi_accession_id|dcc.default.attributes.ikmc_project|dcc.default.attributes.ikmc_project_id|dcc.default.attributes.status|dcc.default.attributes.mouse_available|dcc.default.attributes.escell_available|dcc.default.attributes.vector_available&FILTERS=&VISIBLEPANEL=mainpanel"></a></dd>
       <dd><a id="ikmc_targ_prod_link" title="IKMC Targeted Products" href="http://www.knockoutmouse.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=idcc_targ_rep.default.attributes.pipeline|idcc_targ_rep.default.attributes.ikmc_project_id|idcc_targ_rep.default.attributes.mgi_accession_id|idcc_targ_rep.default.attributes.targeting_vector|idcc_targ_rep.default.attributes.escell_clone&FILTERS=&VISIBLEPANEL=mainpanel"></a></dd>
@@ -129,7 +131,7 @@
   </p>
   <ul>
     <li><a href="http://github.com/i-dcc/martsearch" target="_blank">All the code used to create this portal</a></li>
-    <li><a href="http://github.com/dazoakley/biomart" target="_blank">The ruby API used to interact with the Biomarts</a></li>
+    <li><a href="http://github.com/dazoakley/biomart" target="_blank">The ruby API used to interact with the BioMarts</a></li>
     <li><a href="http://github.com/i-dcc/martsearch/wiki/using-the-ikmc-search-engine-in-your-application" target="_blank">Using our search engine in your application</a></li>
   </ul>
 </div>
