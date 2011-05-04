@@ -27,6 +27,7 @@ gem 'newrelic_rpm',                       :require => false
 gem 'rubytree',               '~>0.7',    :require => 'tree'
 gem 'sequel',                 '~>3.0',    :require => false
 gem 'mysql2',                             :require => false
+# gem 'ruby-oci8',                          :require => false
 gem 'builder',                '~>2.1',    :require => false
 
 # Misc
