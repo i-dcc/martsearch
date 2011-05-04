@@ -47,17 +47,15 @@ begin
       
       puts "Priming the search cache (#{no_genes_to_hit_at_once} genes at a time)..."
       
-      conf[:options].each do |option_name|
+      conf[:options].each do |option_name,opts|
         if its_okay_to_run
-          opts = conf[:processed_options][option_name.to_sym]
-          
           # First calc the total number of 'pages' to request...
-          results     = @ms.index.search( opts[:solr_query] )
+          results     = @ms.index.search( opts[:query] )
           total_pages = ( @ms.index.current_results_total.to_i / @ms.config[:index][:docs_per_page].to_i ).round + 1
           
           (1..total_pages).each do |page_no|
-            puts "   - chromosome #{opts[:display_arg]}: batch #{page_no} / #{total_pages}"
-            @ms.search( opts[:solr_query], page_no, false, false )
+            puts "   - chromosome #{opts[:text]}: batch #{page_no} / #{total_pages}"
+            @ms.search( opts[:query], page_no, false, false )
           end
         else
           raise "Unable to proceed!"
