@@ -36,16 +36,40 @@ module MartSearch
           
           colony_prefix = result[:colony_prefix].to_sym
           
-          # wtsi-phenotyping-heatmap_graphs
-          result.keys.each do |test|
-            mart_attribute = ds_attribs[test.to_s]
+          # wtsi-phenotyping-param_level_heatmap
+          param_level_heatmap_data = result_data[:'wtsi-phenotyping-param_level_heatmap']
+          unless param_level_heatmap_data.nil? and param_level_heatmap_data[colony_prefix].nil?
+            graphs = param_level_heatmap_data[colony_prefix][:test_groups]
             
-            next if mart_attribute.nil?
-            
-            test_display_name = mart_attribute.display_name
-            heatmap_graphs    = result_data[:'wtsi-phenotyping-heatmap_graphs']
-            result.merge!( wtsi_phenotyping_heatmap_heatmap_graphs( colony_prefix, heatmap_graphs, test, test_display_name ) ) unless heatmap_graphs.nil?
+            result.keys.each do |test|
+              mart_attribute = ds_attribs[test.to_s]
+              
+              next if mart_attribute.nil?
+              
+              result.merge!( wtsi_phenotyping_heatmap_heatmap_graphs( colony_prefix, graphs, test, mart_attribute.display_name ) )
+            end
           end
+          
+          # wtsi-phenotyping-heatmap_graphs -- Eye Histopathology
+          # TODO - refactor this mart dataset to contain ONLY Eye Histopathology and othe collaboration data...
+          heatmap_graphs_data = result_data[:'wtsi-phenotyping-heatmap_graphs']
+          unless heatmap_graphs_data.nil? and heatmap_graphs_data[colony_prefix].nil?
+            heatmap_graphs = result_data[:'wtsi-phenotyping-heatmap_graphs'][colony_prefix]
+            
+            unless heatmap_graphs[:'Eye Histopathology'].nil?
+              result.merge!( wtsi_phenotyping_heatmap_heatmap_graphs( colony_prefix, heatmap_graphs, :'eye_histopathology', 'Eye Histopathology' ) )
+            end
+          end
+          
+          # result.keys.each do |test|
+          #   mart_attribute = ds_attribs[test.to_s]
+          #   
+          #   next if mart_attribute.nil?
+          #   
+          #   test_display_name = mart_attribute.display_name
+          #   heatmap_graphs    = result_data[:'wtsi-phenotyping-heatmap_graphs'][colony_prefix]
+          #   result.merge!( wtsi_phenotyping_heatmap_heatmap_graphs( colony_prefix, heatmap_graphs, test, test_display_name ) ) unless heatmap_graphs.nil?
+          # end
           
           # wtsi-phenotyping-fertility
           fertility_data = result_data[:'wtsi-phenotyping-fertility']
@@ -143,8 +167,7 @@ module MartSearch
     end
     
     # Helper function to return the heatmap_graphs data for a given colony.
-    def wtsi_phenotyping_heatmap_heatmap_graphs( colony_prefix, heatmap_graphs, test, test_display_name )
-      graphs     = heatmap_graphs[colony_prefix]
+    def wtsi_phenotyping_heatmap_heatmap_graphs( colony_prefix, graphs, test, test_display_name )
       graph_data = {}
       
       unless graphs.nil?
