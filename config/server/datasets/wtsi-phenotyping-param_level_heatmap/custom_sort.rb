@@ -98,14 +98,16 @@ module MartSearch
       # Set up a storage object - remove lots of redundancy in the data
       stored_result               = result.clone
       fields_to_omit_from_storage = [
-        :pipeline,
-        :colony_prefix,
-        :param_level_heatmap_colony_prefix,
-        :test,
-        :protocol,
-        :protocol_description
+        :pipeline, :colony_prefix, :param_level_heatmap_colony_prefix,
+        :test, :protocol, :protocol_description, :mp_id, :mp_term
       ]
       stored_result.delete_if { |key,value| fields_to_omit_from_storage.include?(key) }
+      
+      if result[:mp_id].nil?
+        stored_result[:mp_annotation] = {}
+      else
+        stored_result[:mp_annotation] = { result[:mp_id] => result[:mp_term] }
+      end
       
       if protocol_description.nil?
         # This is a PDF (or collaborator) download - they don't have descriptions in the MIG system
@@ -129,11 +131,20 @@ module MartSearch
         protocol_desc_hash = Digest::MD5.hexdigest(protocol_description)
         
         test_groups[test][significant][protocol_desc_hash]                        ||= {}
-        test_groups[test][significant][protocol_desc_hash][:graphs]               ||= []
+        test_groups[test][significant][protocol_desc_hash][:graphs]               ||= {}
         test_groups[test][significant][protocol_desc_hash][:protocol]               = protocol
         test_groups[test][significant][protocol_desc_hash][:protocol_description]   = protocol_description
         test_groups[test][significant][protocol_desc_hash][:pipeline]               = pipeline
-        test_groups[test][significant][protocol_desc_hash][:graphs].push(stored_result)
+        
+        graph_data = test_groups[test][significant][protocol_desc_hash][:graphs][result[:parameter_order_by]]
+        
+        if graph_data.nil?
+          graph_data = stored_result
+        else
+          graph_data[:mp_annotation].merge!(stored_result[:mp_annotation])
+        end
+        
+        test_groups[test][significant][protocol_desc_hash][:graphs][result[:parameter_order_by]] = graph_data
       end
       
     end
