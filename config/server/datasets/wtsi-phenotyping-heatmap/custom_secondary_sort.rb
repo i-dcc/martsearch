@@ -43,11 +43,22 @@ module MartSearch
             
             result.keys.each do |test|
               mart_attribute = ds_attribs[test.to_s]
-              
               next if mart_attribute.nil?
-              
               result.merge!( wtsi_phenotyping_heatmap_heatmap_graphs( colony_prefix, graphs, test, mart_attribute.display_name ) )
             end
+            
+            # Finally, add in some extra data from the 'main' heatmap and create a seperate
+            # entry for the mp_heatmap store...
+            result_data[:'wtsi-phenotyping-mp_heatmap'] ||= []
+            result_data[:'wtsi-phenotyping-mp_heatmap'].push(
+              {
+                :colony_prefix => result[:colony_prefix],
+                :allele_name   => result[:allele_name],
+                :allele_type   => result[:allele_type],
+                :escell_clone  => result[:escell_clone],
+                :mp_groups     => param_level_heatmap_data[colony_prefix][:mp_groups]
+              }
+            )
           end
           
           # wtsi-phenotyping-heatmap_graphs -- Eye Histopathology
@@ -60,16 +71,6 @@ module MartSearch
               result.merge!( wtsi_phenotyping_heatmap_heatmap_graphs( colony_prefix, heatmap_graphs, :'eye_histopathology', 'Eye Histopathology' ) )
             end
           end
-          
-          # result.keys.each do |test|
-          #   mart_attribute = ds_attribs[test.to_s]
-          #   
-          #   next if mart_attribute.nil?
-          #   
-          #   test_display_name = mart_attribute.display_name
-          #   heatmap_graphs    = result_data[:'wtsi-phenotyping-heatmap_graphs'][colony_prefix]
-          #   result.merge!( wtsi_phenotyping_heatmap_heatmap_graphs( colony_prefix, heatmap_graphs, test, test_display_name ) ) unless heatmap_graphs.nil?
-          # end
           
           # wtsi-phenotyping-fertility
           fertility_data = result_data[:'wtsi-phenotyping-fertility']
@@ -97,6 +98,23 @@ module MartSearch
       # Run through the data one last time to cache the results details 
       # ready for the report pages...
       wtsi_phenotyping_heatmap_cache_colony_report_data( ms, search_data )
+      
+      # We've now got a tonne of redundant data flowing around.  Let's clear some of
+      # it out so we don't rely on the stuff we shouldn't somewhere...
+      datasets_to_purge = [
+        :'wtsi-phenotyping-param_level_heatmap',
+        :'wtsi-phenotyping-heatmap_graphs',
+        :'wtsi-phenotyping-fertility',
+        :'wtsi-phenotyping-hom_viability',
+        :'wtsi-phenotyping-abr',
+        :'wtsi-phenotyping-adult_expression',
+        :'wtsi-phenotyping-published_images'
+      ]
+      search_data.each do |key,result_data|
+        datasets_to_purge.each do |dataset_name|
+          result_data[dataset_name] = true unless result_data[dataset_name].nil?
+        end
+      end
       
     end
     

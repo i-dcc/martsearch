@@ -20,6 +20,7 @@ module MartSearch
       end
       results = processed_results
       
+      # Group the data by colony_prefix...
       results.each do |result|
         # Setup the data object...
         joined_attribute = result[ @config[:searching][:joined_attribute].to_sym ]
@@ -29,7 +30,7 @@ module MartSearch
         mp_groups   = sorted_results[joined_attribute][joined_attribute.to_sym][:mp_groups]
         test_groups = sorted_results[joined_attribute][joined_attribute.to_sym][:test_groups]
         
-        # Now process and store the individual results data...
+        # process and store the individual results data...
         wtsi_phenotyping_param_level_heatmap_sort_mp_heatmap_data( result, mp_groups )
         wtsi_phenotyping_param_level_heatmap_sort_test_group_data( result, test_groups )
       end
@@ -56,30 +57,17 @@ module MartSearch
       
       unless mp_group.nil?
         mp_groups[mp_group] ||= {
-          :results               => { :significant => {}, :insignificant => {} },
-          :is_significant        => nil
-          
-          # :male_results          => { :significant => {}, :insignificant => {} },
-          # :female_results        => { :significant => {}, :insignificant => {} },
-          # :is_male_significant   => nil,
-          # :is_female_significant => nil
+          :significant   => {}, 
+          :insignificant => {},
+          :call          => nil
         }
         
-        # sex_basket       = "#{result[:gender].downcase}_results".to_sym
-        # sex_significance = "is_#{result[:gender].downcase}_significant".to_sym    
-        
         if result[:manual_call] == 'Significant'
-          wtsi_phenotyping_param_level_heatmap_sort_test_group_data( result, mp_groups[mp_group][:results][:significant] )
-          mp_groups[mp_group][:is_significant]  = true
-          
-          # wtsi_phenotyping_param_level_heatmap_sort_test_group_data( result, mp_groups[mp_group][sex_basket][:significant] )
-          # mp_groups[mp_group][sex_significance] = true
+          wtsi_phenotyping_param_level_heatmap_sort_test_group_data( result, mp_groups[mp_group][:significant] )
+          mp_groups[mp_group][:call] = 'significant'
         else
-          wtsi_phenotyping_param_level_heatmap_sort_test_group_data( result, mp_groups[mp_group][:results][:insignificant] )
-          mp_groups[mp_group][:is_significant]  = false if mp_groups[mp_group][:is_significant].nil?
-          
-          # wtsi_phenotyping_param_level_heatmap_sort_test_group_data( result, mp_groups[mp_group][sex_basket][:insignificant] )
-          # mp_groups[mp_group][sex_significance] = false if mp_groups[mp_group][sex_significance].nil?
+          wtsi_phenotyping_param_level_heatmap_sort_test_group_data( result, mp_groups[mp_group][:insignificant] )
+          mp_groups[mp_group][:call] = 'no_significant_annotations' unless mp_groups[mp_group][:call] == 'significant'
         end
       end
       
@@ -97,7 +85,8 @@ module MartSearch
       stored_result[:parameter_order_by] = stored_result[:parameter_order_by].to_i
       fields_to_omit_from_storage        = [
         :pipeline, :colony_prefix, :param_level_heatmap_colony_prefix,
-        :test, :protocol, :protocol_description, :mp_id, :mp_term
+        :test, :protocol, :protocol_description, :mp_id, :mp_term,
+        :parameter_order_by
       ]
       stored_result.delete_if { |key,value| fields_to_omit_from_storage.include?(key) }
       
@@ -127,12 +116,12 @@ module MartSearch
         protocol_desc_hash = Digest::MD5.hexdigest(protocol_description)
         
         test_groups[test][significant][protocol_desc_hash]                        ||= {}
-        test_groups[test][significant][protocol_desc_hash][:graphs]               ||= {}
+        test_groups[test][significant][protocol_desc_hash][:parameters]           ||= {}
         test_groups[test][significant][protocol_desc_hash][:protocol]               = protocol
         test_groups[test][significant][protocol_desc_hash][:protocol_description]   = protocol_description
         test_groups[test][significant][protocol_desc_hash][:pipeline]               = pipeline
         
-        graph_data = test_groups[test][significant][protocol_desc_hash][:graphs][result[:parameter_order_by].to_sym]
+        graph_data = test_groups[test][significant][protocol_desc_hash][:parameters][result[:parameter_order_by].to_sym]
         
         if graph_data.nil?
           graph_data = stored_result
@@ -140,7 +129,7 @@ module MartSearch
           graph_data[:mp_annotation].merge!(stored_result[:mp_annotation])
         end
         
-        test_groups[test][significant][protocol_desc_hash][:graphs][result[:parameter_order_by].to_sym] = graph_data
+        test_groups[test][significant][protocol_desc_hash][:parameters][result[:parameter_order_by].to_sym] = graph_data
       end
       
     end
