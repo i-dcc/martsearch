@@ -1,18 +1,17 @@
 <div id="wtsi-phenotyping-report">
   <h2><%= @test_name %> Data for <%= @marker_symbol %> (<%= @colony_prefix %>)</h2>
 
-  <% @data.each do |protocol_desc_hash,protocol_data| %>
-    <% next if [:marker_symbol,:test_group].include?(protocol_desc_hash) %>
+  <% @data[:significant].each do |protocol_desc_hash,protocol_data| %>
     <div id="test-overview" class="test-descriptor">
       <h4>Overview</h4>
       <div class="test-descriptor-content">
-        <%= protocol_data[:test_description] %>
+        <%= protocol_data[:protocol_description] %>
       </div>
     </div>
     
     <div id="test-images">
-      <% protocol_data[:graphs].each do |img| %>
-        <img src="<%= img[:url] %>" alt="<%= img[:parameter] %>" />
+      <% protocol_data[:parameters].each do |order_by,parameter| %>
+        <img src="<%= parameter[:graph_url] %>" alt="<%= parameter[:parameter] %>" />
       <% end %>
     </div>
   <% end %>

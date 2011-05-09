@@ -145,7 +145,7 @@ module MartSearch
         erubis :not_found
       else
         @marker_symbol = @data[:marker_symbol]
-        @test_name     = @data[:test_group]
+        @test_name     = @data[:test]
         @page_title    = "#{@marker_symbol} (#{@colony_prefix}): #{@test_name}"
         erubis :"dataviews/wtsi-phenotyping/test_details"
       end
