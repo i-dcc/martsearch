@@ -1,0 +1,44 @@
+<table class="wtsi-phenotyping_heatmap">
+  <thead>
+    <tr>
+      <th>Allele Name</th>
+      <th>Colony Prefix</th>
+      <% mp_groups.each do |mp_group| %>
+        <th><span class="vertical_text"><%= mp_group[:name] %></span></th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <% mp_based_pheno_data.each do |result| %>
+      <tr>
+        <td><%= result[:allele_name] %></td>
+        <td><%= result[:colony_prefix] %></td>
+        <% mp_groups.each do |mp_group| %>
+          <%
+            mp_data  = result[:mp_groups][ mp_group[:term].to_sym ]
+            mp_class = 'no_data'
+            mp_class = mp_data[:call] unless mp_data.nil?
+            puts "#{mp_group[:name]} => #{mp_class}"
+          %>
+          <td class="<%= mp_class %> pheno_result">
+            
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<table class="wtsi-phenotyping_heatmap_legend">
+  <tr>
+    <td class="noborder"><strong>Legend:</strong></td>
+    <td class="pheno_result no_data" width="12px"></td>
+    <td class="noborder">No Raw Data</td>
+    <td class="noborder"></td>
+    <td class="pheno_result no_significant_annotations" width="12px"></td>
+    <td class="noborder">No Significant Annotations</td>
+    <td class="noborder"></td>
+    <td class="pheno_result significant" width="12px"></td>
+    <td class="noborder">Significant Annotation Present</td>
+  </tr>
+</table>

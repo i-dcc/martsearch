@@ -9,6 +9,11 @@
 .wtsi-phenotyping table td.not_applicable {	background-color: #ccc; }
 .wtsi-phenotyping table td.early_indication_of_possible_phenotype {	background-color: #fcfe66; }
 .wtsi-phenotyping table td.test_abandoned { background: transparent url(../images/diagonal_line.png) no-repeat center center; }
+
+.wtsi-phenotyping table td.no_data { background-color: #f1f1f1; }
+.wtsi-phenotyping table td.no_significant_annotations { background-color: #6998cb; }
+.wtsi-phenotyping table td.significant { background-color: #de2920; }
+
 .wtsi-phenotyping table td.pheno_result {
 	text-align: center;
 	vertical-align: middle;
