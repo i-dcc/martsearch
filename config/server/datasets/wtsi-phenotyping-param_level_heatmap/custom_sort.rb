@@ -47,11 +47,11 @@ module MartSearch
         
         if result[:mp_id]
           # Can we test by MP term?
-          mp_group = mp_conf[:term] if mp_conf[:child_terms].include?( result[:mp_id] )
+          mp_group = mp_conf[:term].to_sym if mp_conf[:child_terms].include?( result[:mp_id] )
         else
           # No MP term - try to match via "test|prototcol|parameter"
           param_key = [ result[:test], result[:protocol], result[:parameter] ].join('|')
-          mp_group  = mp_conf[:term] if mp_conf[:mgp_parameters].include?( param_key )
+          mp_group  = mp_conf[:term].to_sym if mp_conf[:mgp_parameters].include?( param_key )
         end
       end
       
@@ -74,64 +74,35 @@ module MartSearch
     end
     
     def wtsi_phenotyping_param_level_heatmap_sort_test_group_data( result, test_groups )
-      pipeline             = result[:pipeline]
-      colony_prefix        = result[:colony_prefix]
-      test                 = result[:test]
-      protocol             = result[:protocol]
-      protocol_description = result[:protocol_description]
+      test                   = result[:test]
+      protocol_description   = result[:protocol_description]
+      parameter              = result[:parameter]
       
-      # Set up a storage object - remove lots of redundancy in the data
-      stored_result                      = result.clone
-      stored_result[:parameter_order_by] = stored_result[:parameter_order_by].to_i
-      fields_to_omit_from_storage        = [
-        :pipeline, :colony_prefix, :param_level_heatmap_colony_prefix,
-        :test, :protocol, :protocol_description, :mp_id, :mp_term,
-        :parameter_order_by
-      ]
-      stored_result.delete_if { |key,value| fields_to_omit_from_storage.include?(key) }
+      # Use an MD5 hash of the test_description to correctly group the graphs - this 
+      # helps sort out protocols that have the SAME name but DIFFERENT descriptions!
+      protocol_desc_hash = Digest::MD5.hexdigest(protocol_description)
       
-      if result[:mp_id].nil?
-        stored_result[:mp_annotation] = {}
-      else
-        stored_result[:mp_annotation] = { result[:mp_id] => result[:mp_term] }
-      end
+      test_groups[test]    ||= { :test => test, :significant => {}, :all => {} }
       
-      if protocol_description.nil?
-        # This is a PDF (or collaborator) download - they don't have descriptions in the MIG system
-        test_groups[test] ||= { :test => test, :significant => [], :insignificant => [] }
-
-        significant = :insignificant
-        significant = :significant if result[:manual_call] == 'Significant'
-
-        test_groups[test][significant].push(result)
-      else
-        # 'Regular' published graphs...
-        test_groups[test] ||= { :test => test, :significant => {}, :insignificant => {} }
+      baskets_to_add_to = [:all]
+      baskets_to_add_to.push(:significant) if result[:manual_call] == 'Significant'
+      
+      baskets_to_add_to.each do |basket|
+        graph_url         = result[:graph_url]
+        per_protocol_data = test_groups[test][basket][protocol_desc_hash] ||= {
+          :protocol             => result[:protocol],
+          :protocol_description => protocol_description,
+          :pipeline             => result[:pipeline],
+          :parameters           => {}
+        }
         
-        significant = :insignificant
-        significant = :significant if result[:manual_call] == 'Significant'
-        
-        # Use an MD5 hash of the test_description to correctly group the graphs - this 
-        # helps sort out protocols that have the SAME name but DIFFERENT descriptions!
-        protocol_desc_hash = Digest::MD5.hexdigest(protocol_description)
-        
-        test_groups[test][significant][protocol_desc_hash]                        ||= {}
-        test_groups[test][significant][protocol_desc_hash][:parameters]           ||= {}
-        test_groups[test][significant][protocol_desc_hash][:protocol]               = protocol
-        test_groups[test][significant][protocol_desc_hash][:protocol_description]   = protocol_description
-        test_groups[test][significant][protocol_desc_hash][:pipeline]               = pipeline
-        
-        graph_data = test_groups[test][significant][protocol_desc_hash][:parameters][result[:parameter_order_by].to_sym]
-        
-        if graph_data.nil?
-          graph_data = stored_result
-        else
-          graph_data[:mp_annotation].merge!(stored_result[:mp_annotation])
+        unless graph_url.blank?
+          param_data = per_protocol_data[:parameters][parameter] ||= { :order_by => result[:parameter_order_by].to_i, :graphs => [] }
+          param_data[:graphs].push( graph_url ) unless param_data[:graphs].include?( graph_url )
         end
         
-        test_groups[test][significant][protocol_desc_hash][:parameters][result[:parameter_order_by].to_sym] = graph_data
+        test_groups[test][basket][protocol_desc_hash] = per_protocol_data
       end
-      
     end
     
   end

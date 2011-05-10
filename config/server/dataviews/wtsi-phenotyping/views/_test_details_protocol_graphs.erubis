@@ -1,0 +1,26 @@
+<div id="test-overview" class="test-descriptor">
+  <h4><%= protocol_data[:protocol] %></h4>
+  <div class="test-descriptor-content">
+    <%= protocol_data[:protocol_description] %>
+  </div>
+</div>
+
+<%
+  graphs = []
+  protocol_data[:parameters].sort_by{ |k,v| v[:order_by] }.each do |parameter,parameter_data|
+    parameter_data[:graphs].each do |graph_url|
+      graphs.push([ graph_url, parameter ])
+    end
+  end
+  graphs.uniq!
+%>
+
+<% if graphs.empty? %>
+  no graphs
+<% else %>
+  <div id="test-images">
+    <% graphs.each do |graph_data| %>
+      <img src="<%= graph_data[0] %>" alt="<%= graph_data[1] %>" />
+    <% end %>
+  </div>
+<% end %>

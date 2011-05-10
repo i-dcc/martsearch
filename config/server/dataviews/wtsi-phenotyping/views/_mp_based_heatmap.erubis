@@ -18,7 +18,6 @@
             mp_data  = result[:mp_groups][ mp_group[:term].to_sym ]
             mp_class = 'no_data'
             mp_class = mp_data[:call] unless mp_data.nil?
-            puts "#{mp_group[:name]} => #{mp_class}"
           %>
           <td class="<%= mp_class %> pheno_result">
             

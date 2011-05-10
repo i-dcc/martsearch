@@ -26,6 +26,9 @@
       "param_level_heatmap_protocol",
       "param_level_heatmap_protocol_description"
     ],
+    "required_attributes": [
+      "param_level_heatmap_graph_url"
+    ],
     "filters": {}
   },
   "mp_heatmap_config": [
