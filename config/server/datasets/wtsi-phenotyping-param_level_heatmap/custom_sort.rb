@@ -41,29 +41,35 @@ module MartSearch
     private
     
     def wtsi_phenotyping_param_level_heatmap_sort_mp_heatmap_data( result, mp_groups )
-      mp_group = nil
+      mp_group_conf = nil
       @config[:mp_heatmap_config].each do |mp_conf|
-        next unless mp_group.nil?
+        next unless mp_group_conf.nil?
         
         if result[:mp_id]
           # Can we test by MP term?
-          mp_group = mp_conf[:term].to_sym if mp_conf[:child_terms].include?( result[:mp_id] )
+          mp_group_conf = mp_conf if mp_conf[:child_terms].include?( result[:mp_id] )
         else
           # No MP term - try to match via "test|prototcol|parameter"
           param_key = [ result[:test], result[:protocol], result[:parameter] ].join('|')
-          mp_group  = mp_conf[:term].to_sym if mp_conf[:mgp_parameters].include?( param_key )
+          mp_group_conf  = mp_conf if mp_conf[:mgp_parameters].include?( param_key )
         end
       end
       
-      unless mp_group.nil?
-        mp_groups[mp_group] ||= { :test_data => {}, :call => nil }
+      unless mp_group_conf.nil?
+        slug = mp_group_conf[:slug].to_sym
+        mp_groups[slug] ||= {
+          :mp_id     => mp_group_conf[:term],
+          :mp_term   => mp_group_conf[:name],
+          :test_data => {},
+          :call      => nil
+        }
         
-        wtsi_phenotyping_param_level_heatmap_sort_test_group_data( result, mp_groups[mp_group][:test_data] )
+        wtsi_phenotyping_param_level_heatmap_sort_test_group_data( result, mp_groups[slug][:test_data] )
         
         if result[:manual_call] == 'Significant'
-          mp_groups[mp_group][:call] = 'significant'
+          mp_groups[slug][:call] = 'significant'
         else
-          mp_groups[mp_group][:call] = 'no_significant_annotations' unless mp_groups[mp_group][:call] == 'significant'
+          mp_groups[slug][:call] = 'no_significant_annotations' unless mp_groups[slug][:call] == 'significant'
         end
       end
       

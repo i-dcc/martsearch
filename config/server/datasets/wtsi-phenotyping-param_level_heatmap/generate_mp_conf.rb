@@ -41,6 +41,7 @@ mp_ontology.children.sort{ |a,b| a.term_name <=> b.term_name }.each do |child|
   conf_data = {
     'term'                => child.term,
     'name'                => child.term_name.gsub(' phenotype',''),
+    'slug'                => child.term_name.gsub(' phenotype','').gsub(/[\/\s\-]/,'-').downcase,
     'child_terms'         => [ child.term, child.all_child_terms ].flatten,
     'mgp_parameters'      => []
   }

@@ -15,12 +15,20 @@
         <td><%= result[:colony_prefix] %></td>
         <% mp_groups.each do |mp_group| %>
           <%
-            mp_data  = result[:mp_groups][ mp_group[:term].to_sym ]
+            mp_data  = result[:mp_groups][ mp_group[:slug].to_sym ]
             mp_class = 'no_data'
             mp_class = mp_data[:call] unless mp_data.nil?
           %>
           <td class="<%= mp_class %> pheno_result">
-            
+            <% unless mp_class == 'no_data' %>
+              <%=
+                link_to(
+                  image_tag( '/images/silk/chart_bar.png', :alt => 'view' ),
+                  "/phenotyping/#{result[:colony_prefix]}/mp-report/#{mp_group[:slug]}/",
+                  :class => 'html_report'
+                )
+              %>
+            <% end %>
           </td>
         <% end %>
       </tr>
@@ -31,13 +39,16 @@
 <table class="wtsi-phenotyping_heatmap_legend">
   <tr>
     <td class="noborder"><strong>Legend:</strong></td>
-    <td class="pheno_result no_data" width="12px"></td>
+    <td class="pheno_result no_data"></td>
     <td class="noborder">No Raw Data</td>
     <td class="noborder"></td>
-    <td class="pheno_result no_significant_annotations" width="12px"></td>
+    <td class="pheno_result no_significant_annotations"></td>
     <td class="noborder">No Significant Annotations</td>
     <td class="noborder"></td>
-    <td class="pheno_result significant" width="12px"></td>
+    <td class="pheno_result significant"></td>
     <td class="noborder">Significant Annotation Present</td>
+    <td class="noborder"></td>
+    <td class="pheno_result noborder"><%= image_tag( '/images/silk/chart_bar.png', :alt => 'Link to a Test Report Page' ) %></td>
+    <td class="noborder">Link to a test report page</td>
   </tr>
 </table>

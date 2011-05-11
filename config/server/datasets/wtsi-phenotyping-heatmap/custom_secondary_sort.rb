@@ -49,16 +49,21 @@ module MartSearch
             
             # Finally, add in some extra data from the 'main' heatmap and create a seperate
             # entry for the mp_heatmap store...
+            
+            mp_heatmap_data = {
+              :marker_symbol => result_data[:index][:marker_symbol],
+              :colony_prefix => result[:colony_prefix],
+              :allele_name   => result[:allele_name],
+              :allele_type   => result[:allele_type],
+              :escell_clone  => result[:escell_clone],
+              :mp_groups     => param_level_heatmap_data[colony_prefix][:mp_groups]
+            }
+            
             result_data[:'wtsi-phenotyping-mp_heatmap'] ||= []
-            result_data[:'wtsi-phenotyping-mp_heatmap'].push(
-              {
-                :colony_prefix => result[:colony_prefix],
-                :allele_name   => result[:allele_name],
-                :allele_type   => result[:allele_type],
-                :escell_clone  => result[:escell_clone],
-                :mp_groups     => param_level_heatmap_data[colony_prefix][:mp_groups]
-              }
-            )
+            result_data[:'wtsi-phenotyping-mp_heatmap'].push(mp_heatmap_data)
+            
+            # Now cache this for easy access in the reports pages...
+            ms.write_to_cache( "wtsi-pheno-mp-data:#{colony_prefix.to_s.upcase}", mp_heatmap_data )
           end
           
           # wtsi-phenotyping-heatmap_graphs -- Eye Histopathology
@@ -97,7 +102,7 @@ module MartSearch
       
       # Run through the data one last time to cache the results details 
       # ready for the report pages...
-      wtsi_phenotyping_heatmap_cache_colony_report_data( ms, search_data )
+      wtsi_phenotyping_heatmap_cache_colony_heatmap_data( ms, search_data )
       
       # We've now got a tonne of redundant data flowing around.  Let's clear some of
       # it out so we don't rely on the stuff we shouldn't somewhere...
@@ -254,7 +259,7 @@ module MartSearch
     
     # Helper function to group all of the *_data fields from the processed heatmap by 
     # colony and stuff them into the cache so it's easier to produce the MGP report pages.
-    def wtsi_phenotyping_heatmap_cache_colony_report_data( ms, search_data )
+    def wtsi_phenotyping_heatmap_cache_colony_heatmap_data( ms, search_data )
       search_data.each do |key,result_data|
         heatmap_data  = result_data[:'wtsi-phenotyping-heatmap']
         marker_symbol = result_data[:index][:marker_symbol]

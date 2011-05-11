@@ -135,6 +135,20 @@ module MartSearch
     ## Routes for everything else
     ##
     
+    get "/phenotyping/:colony_prefix/mp-report/:mp_slug/?" do
+      @colony_prefix = params[:colony_prefix].upcase
+      @data          = wtsi_phenotyping_fetch_mp_report_data( @colony_prefix, params[:mp_slug].downcase )
+      
+      if @data.nil?
+        status 404
+        erubis :not_found
+      else
+        @marker_symbol = @data[:marker_symbol]
+        @page_title    = "#{@marker_symbol} (#{@colony_prefix}): #{@data[:mp_id]} - #{@data[:mp_term]}"
+        erubis :"dataviews/wtsi-phenotyping/mp_test_details"
+      end
+    end
+    
     get "/phenotyping/:colony_prefix/:pheno_test/?" do
       test           = params[:pheno_test].downcase.gsub('-','_')
       @colony_prefix = params[:colony_prefix].upcase

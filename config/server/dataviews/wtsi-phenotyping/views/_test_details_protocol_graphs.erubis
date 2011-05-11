@@ -1,5 +1,4 @@
 <div id="test-overview" class="test-descriptor">
-  <h4><%= protocol_data[:protocol] %></h4>
   <div class="test-descriptor-content">
     <%= protocol_data[:protocol_description] %>
   </div>

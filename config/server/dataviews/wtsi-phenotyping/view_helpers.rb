@@ -42,3 +42,25 @@ def wtsi_phenotyping_fetch_report_data( colony_prefix, pheno_test )
     return nil
   end
 end
+
+def wtsi_phenotyping_fetch_mp_report_data( colony_prefix, mp_slug )
+  ms = MartSearch::Controller.instance()
+  
+  cached_data = ms.fetch_from_cache("wtsi-pheno-mp-data:#{colony_prefix}")
+  if cached_data.nil?
+    ms.search("colony_prefix:#{colony_prefix}")
+    cached_data = ms.fetch_from_cache("wtsi-pheno-mp-data:#{colony_prefix}")
+  end
+  
+  if cached_data != nil
+    mp_data = cached_data[:mp_groups][mp_slug.to_sym]
+    cached_data.keys.each do |key|
+      next if key == :mp_groups
+      mp_data[key] = cached_data[key]
+    end
+    
+    return mp_data
+  else
+    return nil
+  end
+end
