@@ -6,13 +6,18 @@
 # @return [String] The short css class for this test result
 def wtsi_phenotyping_css_class_for_test(status_desc)
   case status_desc
-  when "CompleteDataAvailable"  then "completed_data_available"
-  when "CompleteInteresting"    then "significant_difference"
-  when "CompleteNotInteresting" then "no_significant_difference"
-  when "EarlyIndicator"         then "early_indication_of_possible_phenotype"
-  when "NotPerformedApplicable" then "not_applicable"
-  when "Abandoned"              then "test_abandoned"
-  else                               "test_pending"
+  when "Complete and data/resources available"  then "completed_data_available"
+  when "CompleteDataAvailable"                  then "completed_data_available"
+  when "Significant"                            then "significant_difference"
+  when "CompleteInteresting"                    then "significant_difference"
+  when "Not Significant"                        then "no_significant_difference"
+  when "CompleteNotInteresting"                 then "no_significant_difference"
+  when "Early indication of possible phenotype" then "early_indication_of_possible_phenotype"
+  when "EarlyIndicator"                         then "early_indication_of_possible_phenotype"
+  when "Not performed or applicable"            then "not_applicable"
+  when "NotPerformedApplicable"                 then "not_applicable"
+  when "Abandoned"                              then "test_abandoned"
+  else                                               "test_pending"
   end
 end
 

@@ -1,3 +1,4 @@
+/* @override http://localhost:3000/dataview-css/wtsi-phenotyping.css */
 
 /* wtsi-phenotyping custom css */
 
@@ -101,6 +102,27 @@ table.wtsi-phenotyping_heatmap_legend {
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 	-o-border-radius: 2px;
+}
+
+table.wtsi_pheno_parameter_details th {
+	vertical-align: middle;
+}
+
+table.wtsi_pheno_parameter_details th.parameter_name {
+	min-width: 250px;
+}
+
+table.wtsi_pheno_parameter_details th.gender_genotype {
+	min-width: 55px;
+}
+
+table.wtsi_pheno_parameter_details th.graph_link_column {
+	min-width: 100px;
+}
+
+a.wtsi_pheno_graph_link {
+	background: url(../images/silk/chart_curve.png) no-repeat left center;
+	padding: 4px 2px 4px 20px;
 }
 
 /* ABR pages */

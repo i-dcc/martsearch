@@ -1,0 +1,40 @@
+<div class='wtsi-phenotyping'>
+  <table class='wtsi_pheno_parameter_details'>
+    <thead>
+      <tr>
+        <th>Protocol</th>
+        <th>Parameter</th>
+        <% cells.each do |cell| %>
+          <th class='gender_genotype center'><%= cell.to_s.split('_').join('<br/>') %></th>
+        <% end %>
+        <th>MP Annotation</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><%= protocol %></td>
+        <td><%= parameter %></td>
+        <% cells.each do |cell| %>
+          <%
+            cell_class = 'no_data'
+            unless parameter_data[cell.to_sym].nil?
+              cell_class = wtsi_phenotyping_css_class_for_test(parameter_data[cell.to_sym][:manual_call])
+            end
+          %>
+          <td class='<%= cell_class %> pheno_result'></td>
+        <% end %>
+        <td>
+          <% unless parameter_data[:mp_annotation].nil? %>
+            <%
+              terms = []
+              parameter_data[:mp_annotation].sort_by{ |k,v| k.to_s }.each do |mp_id,mp_term|
+                terms.push("#{mp_id} - #{mp_term}")
+              end
+            %>
+              <%= terms.join('<br/>') %>
+          <% end %>
+        </td>
+      </tr>
+    </tbody>
+  </table>  
+</div>

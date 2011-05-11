@@ -56,17 +56,13 @@ module MartSearch
       end
       
       unless mp_group.nil?
-        mp_groups[mp_group] ||= {
-          :significant   => {}, 
-          :insignificant => {},
-          :call          => nil
-        }
+        mp_groups[mp_group] ||= { :test_data => {}, :call => nil }
+        
+        wtsi_phenotyping_param_level_heatmap_sort_test_group_data( result, mp_groups[mp_group][:test_data] )
         
         if result[:manual_call] == 'Significant'
-          wtsi_phenotyping_param_level_heatmap_sort_test_group_data( result, mp_groups[mp_group][:significant] )
           mp_groups[mp_group][:call] = 'significant'
         else
-          wtsi_phenotyping_param_level_heatmap_sort_test_group_data( result, mp_groups[mp_group][:insignificant] )
           mp_groups[mp_group][:call] = 'no_significant_annotations' unless mp_groups[mp_group][:call] == 'significant'
         end
       end
@@ -82,27 +78,35 @@ module MartSearch
       # helps sort out protocols that have the SAME name but DIFFERENT descriptions!
       protocol_desc_hash = Digest::MD5.hexdigest(protocol_description)
       
-      test_groups[test]    ||= { :test => test, :significant => {}, :all => {} }
+      test_groups[test]    ||= { :test => test, :protocol_data => {} }
       
-      baskets_to_add_to = [:all]
-      baskets_to_add_to.push(:significant) if result[:manual_call] == 'Significant'
+      graph_url         = result[:graph_url]
+      gender_genotype   = :"#{result[:gender]}_#{result[:genotype]}"
+      per_protocol_data = test_groups[test][:protocol_data][protocol_desc_hash] ||= {
+        :protocol             => result[:protocol],
+        :protocol_description => protocol_description,
+        :pipeline             => result[:pipeline],
+        :parameters           => {}
+      }
       
-      baskets_to_add_to.each do |basket|
-        graph_url         = result[:graph_url]
-        per_protocol_data = test_groups[test][basket][protocol_desc_hash] ||= {
-          :protocol             => result[:protocol],
-          :protocol_description => protocol_description,
-          :pipeline             => result[:pipeline],
-          :parameters           => {}
-        }
-        
-        unless graph_url.blank?
-          param_data = per_protocol_data[:parameters][parameter] ||= { :order_by => result[:parameter_order_by].to_i, :graphs => [] }
-          param_data[:graphs].push( graph_url ) unless param_data[:graphs].include?( graph_url )
-        end
-        
-        test_groups[test][basket][protocol_desc_hash] = per_protocol_data
-      end
+      param_data = per_protocol_data[:parameters][parameter] ||= {
+        :order_by      => result[:parameter_order_by].to_i,
+        :graphs        => [],
+        :mp_annotation => {}
+      }
+      
+      param_data[:graphs].push( graph_url ) unless param_data[:graphs].include?( graph_url )
+      param_data[:mp_annotation].merge!({ result[:mp_id] => result[:mp_term] }) unless result[:mp_id].blank?
+      
+      param_data[gender_genotype] ||= {
+        :gender                     => result[:gender],
+        :genotype                   => result[:genotype],
+        :manual_call                => result[:manual_call],
+        :auto_call_is_significant   => result[:auto_call_is_significant],
+        :auto_call_change_direction => result[:auto_call_change_direction]
+      }        
+      
+      test_groups[test][:protocol_data][protocol_desc_hash] = per_protocol_data
     end
     
   end
