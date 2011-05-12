@@ -38,7 +38,7 @@ module MartSearch
           
           # wtsi-phenotyping-param_level_heatmap
           param_level_heatmap_data = result_data[:'wtsi-phenotyping-param_level_heatmap']
-          unless param_level_heatmap_data.nil? and param_level_heatmap_data[colony_prefix].nil?
+          unless param_level_heatmap_data.nil? or param_level_heatmap_data[colony_prefix].nil?
             graphs = param_level_heatmap_data[colony_prefix][:test_groups]
             
             result.keys.each do |test|
@@ -69,7 +69,7 @@ module MartSearch
           # wtsi-phenotyping-heatmap_graphs -- Eye Histopathology
           # TODO - refactor this mart dataset to contain ONLY Eye Histopathology and othe collaboration data...
           heatmap_graphs_data = result_data[:'wtsi-phenotyping-heatmap_graphs']
-          unless heatmap_graphs_data.nil? and heatmap_graphs_data[colony_prefix].nil?
+          unless heatmap_graphs_data.nil? or heatmap_graphs_data[colony_prefix].nil?
             heatmap_graphs = result_data[:'wtsi-phenotyping-heatmap_graphs'][colony_prefix]
             
             unless heatmap_graphs[:'Eye Histopathology'].nil?
