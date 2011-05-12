@@ -1,55 +1,37 @@
-<%
-  pheno_data = result_data[:'wtsi-phenotyping-heatmap']
-  tests      = result_data[:'wtsi-phenotyping-heatmap-test_display_names']
-%>
-
-<table class="wtsi-phenotyping_heatmap">
-  <thead>
-    <tr>
-      <th>Allele Name</th>
-      <th>Colony Prefix</th>
-      <% tests.each do |test,display_name| %>
-        <th><span class="vertical_text"><%= display_name %></span></th>
-      <% end %>
-    </tr>
-  </thead>
-  <tbody>
-    <% pheno_data.each do |result| %>
-      <tr>
-        <td><%= result[:allele_name] %></td>
-        <td><%= result[:colony_prefix] %></td>
-        <% tests.each do |test,display_name| %>
-          <td class="<%= wtsi_phenotyping_css_class_for_test(result[test]) %> pheno_result">
-            <% if result["#{test}_data".to_sym] %>
-              <% if test == :eye_histopathology %>
-                <% pdf = result["#{test}_data".to_sym][0] %>
-                <a href="<%= pdf[:url] %>" class="pdf_report"><%= image_tag( '/images/silk/page_white_acrobat.png', :alt => 'view pdf' ) %></a>
-              <% else %>
-                <%=
-                  link_to(
-                    image_tag( '/images/silk/chart_bar.png', :alt => 'view' ),
-                    "/phenotyping/#{result[:colony_prefix]}/#{test.to_s.gsub('_','-')}/",
-                    :class => 'html_report'
-                  )
-                %>
-              <% end %>
-            <% end %>
-          </td>
-        <% end %>
-      </tr>
+<div class="accordion active">
+  <h6><a href="">MP Ontology Based Heatmap</a></h6>
+  <div>
+    <%
+      mp_based_pheno_data = result_data[:'wtsi-phenotyping-mp_heatmap']
+      mp_groups           = @ms.datasets[:'wtsi-phenotyping-param_level_heatmap'].config()[:mp_heatmap_config]
+    %>
+    
+    <% if mp_based_pheno_data.nil? %>
+      <div class="messages dataset_error">
+        Sorry, this ontology based heatmap is currently unavailable, please check back shortly.
+      </div>
+    <% else %>
+      <%= 
+        partial(
+          'dataviews/wtsi-phenotyping/mp_based_heatmap',
+          :locals => { :mp_based_pheno_data => mp_based_pheno_data, :mp_groups => mp_groups }
+        )
+      %>
     <% end %>
-  </tbody>
-</table>
-
-<%=
-  link_to(
-    'download a spreadsheet containing all WTSI phenotyping data',
-    '/phenotyping/mgp_heatmap.xls',
-    :title => 'Download the Phenotyping Overview',
-    :class => 'wtsi-phenotyping-heatmap-link button'
-  )
-%>
-
-<div class="clear"></div>
-
-<%= partial( 'dataviews/wtsi-phenotyping/heatmap_legend' ) %>
+  </div>
+  
+  <h6><a href="">Phenotyping Test Based Heatmap</a></h6>
+  <div>
+    <%
+      test_based_pheno_data = result_data[:'wtsi-phenotyping-heatmap']
+      test_display_names    = result_data[:'wtsi-phenotyping-heatmap-test_display_names']
+    %>
+    
+    <%= 
+      partial(
+        'dataviews/wtsi-phenotyping/test_based_heatmap',
+        :locals => { :test_based_pheno_data => test_based_pheno_data, :test_display_names => test_display_names }
+      )
+    %>
+  </div>
+</div>
