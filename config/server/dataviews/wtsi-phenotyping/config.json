@@ -16,6 +16,7 @@
       "wtsi-phenotyping-adult_expression",
       "wtsi-phenotyping-published_images",
       "wtsi-phenotyping-heatmap_graphs",
+      "wtsi-phenotyping-param_level_heatmap",
       "wtsi-phenotyping-fertility",
       "wtsi-phenotyping-hom_viability",
       "wtsi-phenotyping-abr"

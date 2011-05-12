@@ -67,16 +67,16 @@ module MartSearch
           if result_data[:mp_groups][mp_group].nil?
             result_data[:mp_groups][mp_group] = {
               :results               => { :significant => [], :insignificant => [] },
-              :male_results          => { :significant => [], :insignificant => [] },
-              :female_results        => { :significant => [], :insignificant => [] },
-              :is_significant        => nil,
-              :is_male_significant   => nil,
-              :is_female_significant => nil,
+              # :male_results          => { :significant => [], :insignificant => [] },
+              # :female_results        => { :significant => [], :insignificant => [] },
+              :is_significant        => nil
+              # :is_male_significant   => nil,
+              # :is_female_significant => nil,
             }
           end
           
-          sex_basket       = "#{result[:sex].downcase}_results".to_sym
-          sex_significance = "is_#{result[:sex].downcase}_significant".to_sym
+          # sex_basket       = "#{result[:sex].downcase}_results".to_sym
+          # sex_significance = "is_#{result[:sex].downcase}_significant".to_sym
           data_to_save = {
             :sex                => result[:sex],
             :parameter_name     => result[:parameter_name],
@@ -91,14 +91,14 @@ module MartSearch
           # Assess the significance of the result, then store the data...
           if BigDecimal.new(result[:significance]).to_f < europhenome_significance_cutoff
             result_data[:mp_groups][mp_group][:results][:significant].push(data_to_save)
-            result_data[:mp_groups][mp_group][sex_basket][:significant].push(data_to_save)
+            # result_data[:mp_groups][mp_group][sex_basket][:significant].push(data_to_save)
             result_data[:mp_groups][mp_group][:is_significant]  = true
-            result_data[:mp_groups][mp_group][sex_significance] = true
+            # result_data[:mp_groups][mp_group][sex_significance] = true
           else
             result_data[:mp_groups][mp_group][:results][:insignificant].push(data_to_save)
-            result_data[:mp_groups][mp_group][sex_basket][:insignificant].push(data_to_save)
+            # result_data[:mp_groups][mp_group][sex_basket][:insignificant].push(data_to_save)
             result_data[:mp_groups][mp_group][:is_significant]  = false if result_data[:mp_groups][mp_group][:is_significant].nil?
-            result_data[:mp_groups][mp_group][sex_significance] = false if result_data[:mp_groups][mp_group][sex_significance].nil?
+            # result_data[:mp_groups][mp_group][sex_significance] = false if result_data[:mp_groups][mp_group][sex_significance].nil?
           end
         end
         
@@ -110,7 +110,9 @@ module MartSearch
         sorted_results_data.each do |result_data_key,result_data|
           next if result_data.nil? or result_data[:mp_groups].nil?
           result_data[:mp_groups].each do |mp_term,mp_term_data|
-            [:results,:male_results,:female_results].each do |results_group|
+            # groups = [:results,:male_results,:female_results]
+            groups = [:results]
+            groups.each do |results_group|
               next if mp_term_data[results_group].nil?
               [:significant, :insignificant].each do |signif_group|
                 mp_term_data[results_group][signif_group].sort! { |a,b| a[:parameter_eslim_id] <=> b[:parameter_eslim_id] }
