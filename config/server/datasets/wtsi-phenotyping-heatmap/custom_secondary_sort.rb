@@ -9,7 +9,7 @@ module MartSearch
     # @return [Hash] The search_data hash with the :'processed-wtsi-phenotyping-heatmap' data inserted
     def wtsi_phenotyping_heatmap_secondary_sort( search_data )
       ms          = MartSearch::Controller.instance()
-      ds_attribs  = ms.datasources[:"wtsi-phenotyping"].ds.attributes
+      ds_attribs  = ms.datasources[:"wtsi-phenotyping"].ds_attributes
       
       # Work out the display names for the tests
       test_display_names = {}
