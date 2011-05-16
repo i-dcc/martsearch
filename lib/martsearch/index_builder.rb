@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module MartSearch
   
   # This class is responsible for building and updating of a Solr search 

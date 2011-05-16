@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module MartSearch
   module DataSetUtils
     
@@ -41,10 +43,10 @@ module MartSearch
           unless param_level_heatmap_data.nil? or param_level_heatmap_data[colony_prefix].nil?
             graphs = param_level_heatmap_data[colony_prefix][:test_groups]
             
-            result.keys.each do |test|
+            graphs.keys.each do |test|
               mart_attribute = ds_attribs[test.to_s]
               next if mart_attribute.nil?
-              result.merge!( wtsi_phenotyping_heatmap_heatmap_graphs( colony_prefix, graphs, test ) )
+              result.merge!({ "#{test}_data".to_sym => graphs[test] })
             end
             
             # Finally, add in some extra data from the 'main' heatmap and create a seperate
@@ -71,10 +73,10 @@ module MartSearch
           unless collaborator_data.nil? or collaborator_data[colony_prefix].nil?
             collaborator_data_for_colony = collaborator_data[colony_prefix]
             
-            collaborator_data_for_colony.each do |test,test_data|
+            collaborator_data_for_colony.keys.each do |test|
               mart_attribute = ds_attribs[test.to_s]
               next if mart_attribute.nil?
-              result.merge!( wtsi_phenotyping_heatmap_heatmap_graphs( colony_prefix, collaborator_data_for_colony, test ) )
+              result.merge!({ "#{test}_data".to_sym => collaborator_data_for_colony[test] })
             end
           end
           
@@ -188,19 +190,6 @@ module MartSearch
       end
       
       return result
-    end
-    
-    # Helper function to return the heatmap_graphs data for a given colony.
-    def wtsi_phenotyping_heatmap_heatmap_graphs( colony_prefix, graphs, test )
-      graph_data = {}
-      
-      unless graphs.nil?
-        graphs.each do |heatmap_group,image_data|
-          graph_data["#{test}_data".to_sym] = image_data if heatmap_group.to_s == test.to_s
-        end
-      end
-      
-      return graph_data
     end
     
     # Helper function to return the fertility data for a given colony.

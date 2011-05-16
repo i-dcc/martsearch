@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module MartSearch
   
   # Singleton controller class for MartSearch.  This is the central contoller 

@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module MartSearch
   
   # DataView class for modelling a display of data.

@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 HoptoadNotifier.configure do |config|
   config.api_key          = '68676feedcd392d8c97dae123e7750b9'
   config.host             = 'htgt.internal.sanger.ac.uk'

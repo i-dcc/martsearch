@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module MartSearch
   
   dbc    = YAML.load_file("#{MARTSEARCH_PATH}/config/ols_database.yml")[MartSearch::ENVIRONMENT]

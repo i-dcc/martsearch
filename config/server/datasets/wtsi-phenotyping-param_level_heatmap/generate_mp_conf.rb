@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# encoding: utf-8
 
 MP_TOP    = 'MP:0000001'
 CURR_PATH = File.expand_path(File.dirname(__FILE__))

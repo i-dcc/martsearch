@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module MartSearch
   
   # Custom DataSource class for interacting with BioMart based datasources.

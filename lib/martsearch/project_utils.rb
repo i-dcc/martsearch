@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module MartSearch
   
   # Utility module to house all of the data gathering logic for the IKMC 

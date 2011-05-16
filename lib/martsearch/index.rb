@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module MartSearch
   
   # Error class for when an index search misbehaves

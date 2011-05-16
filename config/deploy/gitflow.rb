@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 Capistrano::Configuration.instance(true).load do
   before "deploy:update_code", "gitflow:calculate_tag"
   namespace :gitflow do

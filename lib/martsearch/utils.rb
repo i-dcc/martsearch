@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module MartSearch
   
   # Utility module containing generic helper funcions.
