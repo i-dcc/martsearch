@@ -13,6 +13,11 @@ module MartSearch
       @ds = Biomart::Dataset.new( @url, { :name => @conf[:dataset] } )
     end
     
+    def ds_attributes
+      @ds_attributes = @ds.attributes if @ds_attributes.nil?
+      return @ds_attributes
+    end
+    
     # Simple heartbeat function to check that the datasource is online.
     #
     # @see MartSearch::DataSource#is_alive?

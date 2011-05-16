@@ -288,10 +288,18 @@ a.button:hover, a.order:hover {
 }
 
 .help {
-	background: #f1f1f1 url(../images/silk/help.png) no-repeat 5px 5px;
-	border-color: #ccc;
+	background: #f1f1f1 url(../images/silk/help.png) no-repeat 5px 6px;
+	border: 1px solid #ccc;
+	border-radius: 2px;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	-o-border-radius: 2px;
 	margin-bottom: 15px;
     padding: 7px 7px 7px 27px;
+}
+
+.help h6, .help p {
+	margin-bottom: 9px;
 }
 
 /* Toggle Controls */
