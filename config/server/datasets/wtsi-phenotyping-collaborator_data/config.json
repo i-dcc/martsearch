@@ -1,0 +1,20 @@
+{
+  "datasource":            "wtsi-phenotyping",
+  "enabled":               true,
+  "custom_sort":           true,
+  "custom_secondary_sort": false,
+  "attribution":           "The Wellcome Trust Sanger Institute (WTSI)",
+  "attribution_link":      "http://www.sanger.ac.uk/",
+  "searching": {
+    "joined_index_field": "colony_prefix",
+    "joined_filter":      "colony_prefix",
+    "joined_attribute":   "collaborator_data_colony_prefix",
+    "attributes": [
+      "collaborator_data_colony_prefix",
+      "collaborator_data_test",
+      "collaborator_data_url"
+    ],
+    "required_attributes": [ "collaborator_data_colony_prefix" ],
+    "filters": {}
+  }
+}
