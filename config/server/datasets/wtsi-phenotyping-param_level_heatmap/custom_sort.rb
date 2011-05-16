@@ -77,20 +77,14 @@ module MartSearch
     
     def wtsi_phenotyping_param_level_heatmap_sort_test_group_data( result, test_groups )
       test                   = result[:test]
-      protocol_description   = result[:protocol_description]
       parameter              = result[:parameter]
-      
-      # Use an MD5 hash of the test_description to correctly group the graphs - this 
-      # helps sort out protocols that have the SAME name but DIFFERENT descriptions!
-      protocol_desc_hash = Digest::MD5.hexdigest(protocol_description)
+      protocol_id_key        = result[:protocol_id].to_sym
       
       test_groups[test]    ||= { :test => test, :protocol_data => {} }
       
-      graph_url         = result[:graph_url]
-      gender_genotype   = :"#{result[:gender]}_#{result[:genotype]}"
-      per_protocol_data = test_groups[test][:protocol_data][protocol_desc_hash] ||= {
+      per_protocol_data = test_groups[test][:protocol_data][protocol_id_key] ||= {
         :protocol             => result[:protocol],
-        :protocol_description => protocol_description,
+        :protocol_description => result[:protocol_description],
         :pipeline             => result[:pipeline],
         :parameters           => {}
       }
@@ -101,18 +95,19 @@ module MartSearch
         :mp_annotation => {}
       }
       
+      graph_url         = result[:graph_url]
+      gender_genotype   = :"#{result[:gender]}_#{result[:genotype]}"
+      
       param_data[:graphs].push( graph_url ) unless param_data[:graphs].include?( graph_url )
       param_data[:mp_annotation].merge!({ result[:mp_id] => result[:mp_term] }) unless result[:mp_id].blank?
       
       param_data[gender_genotype] ||= {
         :gender                     => result[:gender],
         :genotype                   => result[:genotype],
-        :manual_call                => result[:manual_call],
-        :auto_call_is_significant   => result[:auto_call_is_significant],
-        :auto_call_change_direction => result[:auto_call_change_direction]
+        :manual_call                => result[:manual_call]
       }        
       
-      test_groups[test][:protocol_data][protocol_desc_hash] = per_protocol_data
+      test_groups[test][:protocol_data][protocol_id_key] = per_protocol_data
     end
     
   end

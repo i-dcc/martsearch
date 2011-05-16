@@ -16,14 +16,14 @@
       "param_level_heatmap_manual_call",
       "param_level_heatmap_mp_id",
       "param_level_heatmap_mp_term",
-      "param_level_heatmap_auto_call_is_significant",
-      "param_level_heatmap_auto_call_change_direction",
       "param_level_heatmap_graph_url",
       "param_level_heatmap_pipeline",
       "param_level_heatmap_test",
       "param_level_heatmap_parameter",
       "param_level_heatmap_parameter_order_by",
       "param_level_heatmap_protocol",
+      "param_level_heatmap_protocol_id",
+      "param_level_heatmap_protocol_order_by",
       "param_level_heatmap_protocol_description"
     ],
     "required_attributes": [
