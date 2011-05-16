@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class Marker
   def self.mark(msg)
     start = Time.now

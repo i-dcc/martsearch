@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 set :application, 'martsearch'
 set :repository,  'http://github.com/i-dcc/martsearch.git'
 set :branch, 'master'

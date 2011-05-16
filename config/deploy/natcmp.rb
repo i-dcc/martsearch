@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # natcmp.rb
 #
 # Natural order comparison of two strings

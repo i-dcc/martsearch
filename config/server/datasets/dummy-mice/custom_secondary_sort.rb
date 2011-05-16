@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module MartSearch
   module DataSetUtils
     # Sort the mouse data from EMMA and KERMITS
