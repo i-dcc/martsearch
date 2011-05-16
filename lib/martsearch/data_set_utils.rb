@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module MartSearch
   
   # Utility module for the DataSet class.
@@ -24,21 +26,25 @@ module MartSearch
     
     # Helper function to retrieve the allele type
     #
-    # @param  [String] allele_symbol the allele symbol superscript
-    # @param  [String] design_type   the design type
+    # @param  [String] allele_symbol The allele symbol superscript
+    # @param  [String] design_type   The design type
     # @return [String]
-    def allele_type( allele_symbol, design_type = nil )
+    def allele_type( allele_symbol, design_type=nil )
        case allele_symbol
-       when /tm\d+a/ then "Knockout-First"
+       when /tm\d+a/ then "Knockout-First - Reporter Tagged Insertion"
+       when /tm\d+b/ then "Knockout-First, Post-Cre - Reporter Tagged Deletion"
+       when /tm\d+c/ then "Knockout-First, Post-Flp - Conditional"
+       when /tm\d+d/ then "Knockout-First, Post-Flp and Cre - Deletion, No Reporter"
        when /tm\d+e/ then "Targeted Non-Conditional"
-       when /tm\d\(/ then "Deletion"
+       when /tm\d+\(/ then "Deletion"
        else
          case design_type
          when nil          then ""
          when /deletion/i  then "Deletion"
-         else                   "Knockout-First"
+         else                   "Knockout-First - Reporter Tagged Insertion"
          end
        end
     end
+    
   end
 end

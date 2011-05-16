@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module MartSearch
   
   dbc    = YAML.load_file("#{MARTSEARCH_PATH}/config/ols_database.yml")[MartSearch::ENVIRONMENT]
@@ -111,7 +113,7 @@ module MartSearch
       get_children
       super
     end
-
+    
     # Returns a flat array containing all the possible child terms
     # for this given ontology term.
     #
@@ -220,7 +222,8 @@ module MartSearch
             and subject_term.identifier = ?
         SQL
         
-        MartSearch::OLS_DB[ sql, node.term ].each do |row|
+        # FIXME: This does not take into account terms that have multiple parents... we need to model this.
+        MartSearch::OLS_DB.fetch( sql, node.term ).first(1).each do |row|
           parent           = OntologyTerm.new( row[:parent_identifier], row[:parent_term] )
           parent.root_term = true if row[:parent_is_root].to_i == 1
           parent << node
@@ -278,8 +281,9 @@ module MartSearch
     # Function that merges one OntologyTerm tree into another.
     #
     # @param [OntologyTerm] tree The tree that is to be merged into self
+    # @param [Boolean] do_not_expand_trees Stop the merged ontology trees from dynamically expanding from thier current state?
     # @return [OntologyTerm] The merged tree
-    def merge( tree )
+    def merge( tree, do_not_expand_trees=true )
       unless tree.is_a?(MartSearch::OntologyTerm)
         raise TypeError, "You can only merge in another OntologyTerm tree!"
       end
@@ -297,7 +301,13 @@ module MartSearch
       #
       # @param [OntologyTerm] tree1 The target tree to merge into
       # @param [OntologyTerm] tree2 The donor tree (that will be merged into target)
-      def merge_subtrees( tree1, tree2 )
+      # @param [Boolean] do_not_expand_trees Stop the merged ontology trees from dynamically expanding from thier current state?
+      def merge_subtrees( tree1, tree2, do_not_expand_trees=true )
+        if do_not_expand_trees
+          tree1.instance_variable_set( :@already_fetched_children, true )
+          tree2.instance_variable_set( :@already_fetched_children, true )
+        end
+        
         names1 = tree1.has_children? ? tree1.children.map { |child| child.name } : []
         names2 = tree2.has_children? ? tree2.children.map { |child| child.name } : []
 

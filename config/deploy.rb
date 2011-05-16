@@ -1,5 +1,7 @@
+# encoding: utf-8
+
 set :application, 'martsearch'
-set :repository,  'git://github.com/i-dcc/martsearch.git'
+set :repository,  'http://github.com/i-dcc/martsearch.git'
 set :branch, 'master'
 set :user, `whoami`.chomp
 

@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module MartSearch
   module DataSetUtils
     
@@ -18,7 +20,7 @@ module MartSearch
       
       # Finally, ensure that the data in the arrays is unique
       sorted_results.each do |key,result_data|
-        result_data.keys.each do |field,field_data|
+        result_data.each do |field,field_data|
           field_data.uniq! if field_data.is_a?(Array)
         end
       end

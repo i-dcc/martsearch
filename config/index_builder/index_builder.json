@@ -8,6 +8,7 @@
     "wtsi-phenotyping-heatmap",
     "wtsi-phenotyping-adult_expression",
     "wtsi-phenotyping-published_images",
+    "wtsi-phenotyping-param_level_heatmap",
     "wtsi-bacs",
     "eurexpress",
     "europhenome",
@@ -17,9 +18,7 @@
     "ensembl-mouse-homologs-rat",
     "ensembl-mouse-homologs-zebrafish",
     "ensembl-mouse-interpro_features",
-    "ensembl-mouse-go_bio_process",
-    "ensembl-mouse-go_cell_component",
-    "ensembl-mouse-go_mol_function",
+    "ensembl-mouse-go",
     "ikmc-omim"
   ],
   "datasets": {}

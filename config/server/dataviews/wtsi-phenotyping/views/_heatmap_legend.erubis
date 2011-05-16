@@ -56,6 +56,12 @@
       }
     ]
   ]
+  
+  dont_show_report_links ||= false
+  if dont_show_report_links
+    legend_rows_conf[2].delete_at(2)
+    legend_rows_conf[2].delete_at(1)
+  end
 %>
 
 <table class="wtsi-phenotyping_heatmap_legend">

@@ -12,6 +12,7 @@
   "datasets": [
     "emma-strains",
     "ensembl-mouse-homologs",
+    "ensembl-mouse-go",
     "eurexpress",
     "europhenome",
     "ikmc-dcc-knockout_attempts",
@@ -26,9 +27,10 @@
     "wtsi-phenotyping-adult_expression",
     "wtsi-phenotyping-fertility",
     "wtsi-phenotyping-heatmap",
-    "wtsi-phenotyping-heatmap_graphs",
+    "wtsi-phenotyping-param_level_heatmap",
     "wtsi-phenotyping-hom_viability",
     "wtsi-phenotyping-published_images",
+    "wtsi-phenotyping-collaborator_data",
     "dummy-mice"
   ],
   "dataviews": [
@@ -70,8 +72,8 @@
           "tigm-vectors":             { "text": "TIGM Vectors",             "query": "ikmc_project_product_status_str:\"TIGM Vector Available\"",             "child": true }
       }
     },
-    "mamalian-phenotype": {
-      "display_name":     "Mamalian Phenotype",
+    "mammalian-phenotype": {
+      "display_name":     "Mammalian Phenotype",
       "descriptive_text": "browse for genes that when knocked-out have been annotated as causing a distinct phenotype (as classified by the <a href='http://www.obofoundry.org/cgi-bin/detail.cgi?id=mammalian_phenotype' target='_blank'>mamalian phenotype ontology</a>)",
       "options": {
         "adipose-tissue":               { "text": "adipose tissue",                "query": "MP:0005375" },

@@ -29,9 +29,9 @@
     <th>Synonyms:</th>
     <%
       synonyms = []
-      [ result_data[:'mgi-markers'][:synonyms], result_data[:index][:synonym] ].each do |source|
-        if source and source.is_a?(Array)
-          source.each { |syn| synonyms.push(syn) unless syn.nil? }
+      [ result_data[:'mgi-markers'][:synonyms], result_data[:index][:synonym] ].each do |synonym_source|
+        if synonym_source and synonym_source.is_a?(Array)
+          synonym_source.each { |syn| synonyms.push(syn) unless syn.nil? }
         end
       end
     %>
@@ -119,8 +119,13 @@
       </tr>
     </table>
     
-    <%= partial( 'dataviews/gene-details/gene_ontology', :locals => { :result_data => result_data } ) %>
-    <%= partial( 'dataviews/gene-details/interpro',      :locals => { :result_data => result_data } ) %>
-    <%= partial( 'dataviews/gene-details/orthalogs',     :locals => { :result_data => result_data } ) %>
+    <div class="go_ontology_wrapper">
+      <%= partial( 'dataviews/gene-details/gene_ontology', :locals => { :result_data => result_data } ) %>
+    </div>
+    
+    <div class="interpro_orthalog_wrapper">
+      <%= partial( 'dataviews/gene-details/interpro',      :locals => { :result_data => result_data } ) %>
+      <%= partial( 'dataviews/gene-details/orthalogs',     :locals => { :result_data => result_data } ) %>
+    </div>
   </div>
 </div>

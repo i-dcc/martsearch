@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'test_helper'
 
 class MartSearchServerViewHelpersTest < Test::Unit::TestCase
@@ -106,6 +108,13 @@ class MartSearchServerViewHelpersTest < Test::Unit::TestCase
         mouse[:distribution_centre]
       ) )
     end
+  end
+  
+  def test_emma_mouse_order_button
+    order_button = emma_mouse_order_button( 'EM:05020' )
+    assert_match( /EM\:\d+/, order_button )
+    assert_match( /emmanet/, order_button )
+    assert_match( /order/, order_button )
   end
   
   ##

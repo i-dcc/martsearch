@@ -8,18 +8,13 @@
   "searching": {
     "joined_index_field": "colony_prefix",
     "joined_filter":      "colony_prefix",
-    "joined_attribute":   "heatmap_graphs_colony_prefix",
+    "joined_attribute":   "collaborator_data_colony_prefix",
     "attributes": [
-      "heatmap_graphs_colony_prefix",
-      "heatmap_graphs_pipeline",
-      "heatmap_graphs_test_group",
-      "heatmap_graphs_test",
-      "heatmap_graphs_test_description",
-      "heatmap_graphs_parameter",
-      "heatmap_graphs_url",
-      "heatmap_graphs_order_by"
+      "collaborator_data_colony_prefix",
+      "collaborator_data_test",
+      "collaborator_data_url"
     ],
-    "required_attributes": [ "heatmap_graphs_colony_prefix" ],
+    "required_attributes": [ "collaborator_data_colony_prefix" ],
     "filters": {}
   }
 }

@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module MartSearch
   
   # Singleton controller class for MartSearch.  This is the central contoller 
@@ -90,7 +92,8 @@ module MartSearch
         end
         
         unless fresh_ds_queries_to_do.empty?
-          if search_from_fresh_datasets( prepare_dataset_search_terms( fresh_ds_queries_to_do ) )
+          grouped_search_terms = prepare_dataset_search_terms( fresh_ds_queries_to_do )
+          if search_from_fresh_datasets( fresh_ds_queries_to_do, grouped_search_terms )
             fresh_ds_queries_to_do.each do |data_key|
               unless @search_data[data_key].nil?
                 @search_data[data_key][:cache_timestamp] = DateTime.now.to_s
@@ -209,15 +212,20 @@ module MartSearch
         
         begin
           counts = {
-            :standard_phenotyping => complete_mgp_genes_count( heatmap_mart, heatmap_test_groups_conf[:'Comprehensive Phenotyping Pipeline'][:tests] ),
-            :infection_challenge  => complete_mgp_genes_count( heatmap_mart, heatmap_test_groups_conf[:'Infectious Challenges'][:tests] ),
-            :expression           => complete_mgp_genes_count( heatmap_mart, ['adult_lac_z_expression','embryo_lac_z_expression'] )
+            :standard_phenotyping => complete_mgp_alleles_count( heatmap_mart, ['haematology_cbc'], ['CompleteInteresting','CompleteNotInteresting'] ),
+            :infection_challenge  => complete_mgp_alleles_count( heatmap_mart, ['salmonella_challenge','citrobacter_challenge'], ['CompleteInteresting','CompleteNotInteresting'] ),
+            :expression           => complete_mgp_alleles_count( heatmap_mart, ['adult_lac_z_expression','embryo_lac_z_expression'], ['CompleteDataAvailable'] )
           }
         rescue Biomart::BiomartError => error
           all_ok = false
+          counts = {
+            :standard_phenotyping => counts[:standard_phenotyping]  ? counts[:standard_phenotyping] : '-',
+            :infection_challenge  => counts[:infection_challenge]   ? counts[:infection_challenge]  : '-',
+            :expression           => counts[:expression]            ? counts[:expression]           : '-',
+          }
         end
         
-        write_to_cache( "wtsi_phenotyping_progress_counts", counts ) if all_ok
+        write_to_cache( "wtsi_phenotyping_progress_counts", counts, { :expires_in => 12.hours } ) if all_ok
       end
       
       return counts
@@ -276,13 +284,14 @@ module MartSearch
       
       # Helper function for #wtsi_phenotyping_progress_counts. This function queries the 
       # MGP mart for a defined set of tests/attributes and computes the number of completed 
-      # genes (by complete, we mean that all of the tests listed have a status other than 
-      # "Test pending").
+      # alleles (by complete, we mean that any of the tests listed have a status defined in the 
+      # allowed_values argument passed in).
       # 
       # @param [Biomart::Dataset] mart A Biomart::Dataset object for the MGP mart
       # @param [Array] attributes The list of tests/attributes to check for completeness
+      # @param [Array] allowed_values The attribute values to look for to consider a result 'complete'
       # @return [Integer] The count of unique genes that have data on all the tests queried
-      def complete_mgp_genes_count( mart, attributes )
+      def complete_mgp_alleles_count( mart, attributes, allowed_values )
         complete_genes = []
         results        = mart.search(
           :process_results => true,
@@ -291,12 +300,12 @@ module MartSearch
         )
         
         results.each do |result|
-          complete_test = true
+          pass_count = 0
           result.each do |key,value|
             next if key == 'allele_name'
-            complete_test = false if value == 'Pending'
+            pass_count += 1 if allowed_values.include?(value)
           end
-          complete_genes.push( result['allele_name'] ) if complete_test
+          complete_genes.push( result['allele_name'] ) if pass_count == ( attributes.size - 1 )
         end
         
         return complete_genes.uniq.size
@@ -373,15 +382,16 @@ module MartSearch
       # Utility function that performs the dataset searches and 
       # post-search sorting routines
       #
-      # @param [Hash] grouped_terms A hash of terms (grouped by index field) that can be used to drive the dataset searches
+      # @params [Array] terms_to_query An array of @search_data keys that we should be feeding data into here...
+      # @param [Hash] grouped_search_terms A hash of terms (grouped by index field) that can be used to drive the dataset searches
       # @return [Boolean] true/false reporting if the searches went without error (actual results are stored in @search_data)
-      def search_from_fresh_datasets( grouped_terms )
+      def search_from_fresh_datasets( terms_to_query, grouped_search_terms )
         success = true
         
         Parallel.each( @datasets.keys, :in_threads => 10 ) do |ds_name|
           begin
             dataset      = @datasets[ds_name]
-            search_terms = grouped_terms[ dataset.joined_index_field.to_sym ]
+            search_terms = grouped_search_terms[ dataset.joined_index_field.to_sym ]
             results      = dataset.search( search_terms )
             add_dataset_results_to_search_data( dataset.joined_index_field.to_sym, ds_name.to_sym, results )
           rescue MartSearch::DataSourceError => error
@@ -408,9 +418,13 @@ module MartSearch
           end
         end
         
+        # Run the dataset secondary sorts in serial, BUT only run them on the results we 
+        # haven't pulled them from the cache.
         @datasets.each do |dataset_name,dataset|
           if dataset.config[:custom_secondary_sort]
-            @search_data = dataset.secondary_sort( @search_data )
+            search_data_copy = @search_data.clone
+            search_data_copy.keys.each { |key| search_data_copy.delete(key) unless terms_to_query.include?(key) }
+            @search_data.merge( dataset.secondary_sort( search_data_copy ) )
           end
         end
         

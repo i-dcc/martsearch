@@ -12,11 +12,8 @@
     "attributes": [
       "ensembl_gene_id",
       "human_ensembl_gene",
-      "human_homolog_ensembl_peptide",
       "zebrafish_ensembl_gene",
-      "zebrafish_homolog_ensembl_peptide",
-      "rat_ensembl_gene",
-      "rat_homolog_ensembl_peptide"
+      "rat_ensembl_gene"
     ],
     "filters": {}
   }

@@ -1,3 +1,4 @@
+/* @override http://localhost:3000/dataview-css/wtsi-phenotyping.css */
 
 /* wtsi-phenotyping custom css */
 
@@ -9,6 +10,11 @@
 .wtsi-phenotyping table td.not_applicable {	background-color: #ccc; }
 .wtsi-phenotyping table td.early_indication_of_possible_phenotype {	background-color: #fcfe66; }
 .wtsi-phenotyping table td.test_abandoned { background: transparent url(../images/diagonal_line.png) no-repeat center center; }
+
+.wtsi-phenotyping table td.no_data { background-color: #f1f1f1; }
+.wtsi-phenotyping table td.no_significant_annotations { background-color: #6998cb; }
+.wtsi-phenotyping table td.significant { background-color: #de2920; }
+
 .wtsi-phenotyping table td.pheno_result {
 	text-align: center;
 	vertical-align: middle;
@@ -29,7 +35,7 @@
 
 .wtsi-phenotyping_heatmap th {
 	vertical-align:	bottom;
-	height: 280px;
+	height: 205px;
 	min-width: 16px;
 	white-space: nowrap;
 }
@@ -50,14 +56,6 @@ table.wtsi-phenotyping_heatmap_legend {
 }
 
 /* Phenotyping details pages */
-
-#wtsi-phenotyping-report #test-images {
-  text-align: center;
-}
-
-#wtsi-phenotyping-report #test-images img {
-	margin-bottom: 7px;
-}
 
 #wtsi-phenotyping-report .test-descriptor {  
 	border: 1px solid #ccc;
@@ -96,6 +94,27 @@ table.wtsi-phenotyping_heatmap_legend {
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 	-o-border-radius: 2px;
+}
+
+table.wtsi_pheno_parameter_details th {
+	vertical-align: middle;
+}
+
+table.wtsi_pheno_parameter_details th.parameter_name {
+	min-width: 250px;
+}
+
+table.wtsi_pheno_parameter_details th.gender_genotype {
+	min-width: 55px;
+}
+
+table.wtsi_pheno_parameter_details th.graph_link_column {
+	min-width: 100px;
+}
+
+a.wtsi_pheno_graph_link {
+	background: url(../images/silk/chart_curve.png) no-repeat left center;
+	padding: 4px 2px 4px 20px;
 }
 
 /* ABR pages */

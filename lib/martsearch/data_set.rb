@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module MartSearch
   
   # DataSet class for modelling a search for data.

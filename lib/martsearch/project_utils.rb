@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module MartSearch
   
   # Utility module to house all of the data gathering logic for the IKMC 
@@ -9,6 +11,7 @@ module MartSearch
   module ProjectUtils
 
     include MartSearch::Utils
+    include MartSearch::DataSetUtils
     include MartSearch::ServerViewHelpers
     
     # Wrapper function to collate all of the data for a given IKMC project.
@@ -20,28 +23,48 @@ module MartSearch
       index       = MartSearch::Controller.instance().index
       data        = { :project_id => project_id.to_s }
       errors      = []
-
+      
       top_level_data = get_top_level_project_info( datasources, project_id )
-
+      
       if top_level_data[:data].nil? or top_level_data[:data].empty?
         return { :data => nil }
       else
         data.merge!( top_level_data[:data][0] )
         errors.push( top_level_data[:error] ) unless top_level_data[:error].empty?
-
-        # Look for human orthalog's
+        
+        ##
+        ## Look for human orthalog's
+        ##
+        
         if data[:ensembl_gene_id]
           human_orthalogs = get_human_orthalog( datasources, data[:ensembl_gene_id] )
-          data.merge!( human_orthalogs[:data][0] ) unless human_orthalogs[:data].empty?
+          data.merge!( human_orthalogs[:data] ) unless human_orthalogs[:data].empty?
           errors.push( human_orthalogs[:error] ) unless human_orthalogs[:error].empty?
         end
-
-        # Now search the targ_rep for vectors and es cells
+        
+        ##
+        ## Now search the targ_rep for vectors and es cells
+        ##
+        
         vectors_and_cells = get_vectors_and_cells( datasources, project_id )
         data.merge!( vectors_and_cells[:data] )
         errors.push( vectors_and_cells[:error] ) unless vectors_and_cells[:error].empty?
-
-        # Search Kermits for mice
+        
+        # Calculate the intended allele type
+        allele_design_type = nil
+        if !data[:es_cells][:conditional].nil? && !data[:es_cells][:conditional][:cells].empty?
+          allele_design_type = data[:es_cells][:conditional][:cells].first[:allele_type]
+        elsif !data[:targeting_vectors].nil? && !data[:targeting_vectors].empty?
+          allele_design_type = data[:targeting_vectors].first[:design_type]
+        elsif !data[:intermediate_vectors].nil? && !data[:intermediate_vectors].empty?
+          allele_design_type = data[:intermediate_vectors].first[:design_type]
+        end
+        data[:allele_design_type] = allele_design_type
+        
+        ##
+        ## Search Kermits for mice
+        ##
+        
         es_cell_names = []
         [ :"targeted non-conditional", :conditional ].each do |symbol|
           es_cell_names.push( data[:es_cells][symbol][:cells] ) unless data[:es_cells][symbol].nil?
@@ -54,10 +77,13 @@ module MartSearch
           errors.push( mice[:error] ) unless mice[:error].empty?
         end
         
-        # Ammend the es cells data to say which cells have been made into a mouse, then sort the cells as 
-        # we do in the current code (by mice, followed by qc count).
+        ##
+        ## Ammend the es cells data to say which cells have been made into a mouse, then sort the cells as 
+        ## we do in the current code (by mice, followed by qc count).
+        ##
+        
         mouse_data = nil
-        mouse_data = data[:mice][:genotype_confirmed] if data[:mice] and data[:mice][:genotype_confirmed]
+        mouse_data = data[:mice] if data[:mice]
         
         unless mouse_data.nil?
           mouse_data.each do |mouse|
@@ -65,7 +91,10 @@ module MartSearch
               unless data[:es_cells][symbol].nil?
                 # update the mouse status
                 data[:es_cells][symbol][:cells].each do |es_cell|
-                  es_cell.merge!({ "mouse?".to_sym => "yes" }) if mouse[:escell_clone] == es_cell[:name]
+                  if mouse[:escell_clone] == es_cell[:name]
+                    es_cell.merge!({ "mouse?".to_sym => "yes" })
+                    mouse.merge!({ :cassette => es_cell[:cassette], :cassette_type => es_cell[:cassette_type] })
+                  end
                 end
 
                 # then sort (by mice > qc_count > name)
@@ -79,23 +108,35 @@ module MartSearch
             end
           end
         end
-
-        # Add the mutagenesis predictions
+        
+        ##
+        ## Add the mutagenesis predictions
+        ##
+        
         unless ['KOMP-Regeneron','mirKO'].include?(data[:ikmc_project])
           mutagenesis_predictions        = get_mutagenesis_predictions( project_id )
           data[:mutagenesis_predictions] = mutagenesis_predictions[:data]
           errors.push( mutagenesis_predictions[:error] ) unless mutagenesis_predictions[:error].empty?
         end
         
-        # Add the conf for the floxed exon display
+        ##
+        ## Add the conf for the floxed exon display
+        ##
+        
         data.merge!( floxed_exon_display_conf( data ) )
-
-        # Add the coordinate information
+        
+        ##
+        ## Add the coordinate information
+        ##
+        
         search_engine_data = search_engine_data( index, project_id )
         data.merge!( search_engine_data[:data] )  unless search_engine_data[:data].empty?
         errors.push( search_engine_data[:error] ) unless search_engine_data[:error].empty?
-
-        # Finally, categorize the stage of the pipeline that we are in
+        
+        ##
+        ## Finally, categorize the stage of the pipeline that we are in
+        ##
+        
         data.merge!( get_pipeline_stage( data[:status]) ) if data[:status]
       end
       
@@ -103,7 +144,7 @@ module MartSearch
     end
     
     private
-
+      
       # Helper function to perform quick searches against the Solr index
       #
       # @param  [MartSearch::Index] index      the MartSearch index object
@@ -113,20 +154,21 @@ module MartSearch
         results = handle_biomart_errors( "solr index", "This provides extra information on the project." ) do
           index.quick_search("ikmc_project_id:#{project_id}")
         end
-        unless results[:data].empty? or results[:data].nil?
+        
+        unless results[:data].blank?
           results[:data][0].symbolize_keys!
+          
+          # currently we only need the coordinate information
+          results[:data] = {
+            :chromosome  => results[:data][0][:chromosome],
+            :coord_start => results[:data][0][:coord_start],
+            :coord_end   => results[:data][0][:coord_end]
+          }
         end
-
-        # currently we only need the coordinate information
-        results[:data] = {
-          :chromosome  => results[:data][0][:chromosome],
-          :coord_start => results[:data][0][:coord_start],
-          :coord_end   => results[:data][0][:coord_end]
-        }
-
+        
         return results
       end
-
+      
       # Helper function to setup links to the floxed/deleted exons and all the config 
       # needed for these activities in the templates.
       #
@@ -154,7 +196,7 @@ module MartSearch
         
         # Also, extablish id these are "Floxed" or "Deleted" exons...
         new_data[:deletion] = false
-        new_data[:deletion] = true if data[:design_type].include?('Deletion')
+        new_data[:deletion] = true if data[:allele_design_type] == 'Deletion'
         
         return new_data
       end
@@ -221,19 +263,40 @@ module MartSearch
       # @param [String] ensembl_gene_id The (mouse) Ensembl ID to look for Human orthalogs of
       # @return [Hash] The data relating to the human orthalog
       def get_human_orthalog( datasources, ensembl_gene_id )
-        ens_mart     = datasources[:'ensembl-mouse'].ds
+        ens_mouse    = datasources[:'ensembl-mouse'].ds
+        ens_human    = datasources[:'ensembl-human'].ds
+        
         error_string = "This supplies information on the human ensembl gene orthalog. As a result this data will not be available on the page."
         results      = handle_biomart_errors( "ensembl-mouse", error_string ) do
-          ens_mart.search({
+          data      = {}
+          mouse_res = ens_mouse.search({
             :process_results     => true,
             :filters             => { 'ensembl_gene_id' => ensembl_gene_id },
             :attributes          => [ 'human_ensembl_gene' ],
             :required_attributes => [ 'human_ensembl_gene' ]
           })
+          
+          unless mouse_res.empty?
+            human_ensembl_gene        = mouse_res[0]['human_ensembl_gene']
+            data[:human_ensembl_gene] = human_ensembl_gene
+            
+            human_res = ens_human.search({
+              :process_results     => true,
+              :filters             => { 'ensembl_gene_id' => human_ensembl_gene },
+              :attributes          => [ 'ensembl_gene_id','chromosome_name','start_position','end_position' ],
+              :required_attributes => [ 'chromosome_name' ]
+            })
+            
+            unless human_res.empty?
+              data[:human_ensembl_chromosome] = human_res[0]['chromosome_name']
+              data[:human_ensembl_start]      = human_res[0]['start_position']
+              data[:human_ensembl_end]        = human_res[0]['end_position']
+            end
+          end
+          
+          data
         end
-        unless results[:data].empty?
-          results[:data][0] = { :human_ensembl_gene => results[:data][0]['human_ensembl_gene'] }
-        end
+        
         return results
       end
       
@@ -269,14 +332,15 @@ module MartSearch
               'active'       => '1'
             },
             :attributes      => [
-                'status', 'allele_name', 'escell_clone', 'emma',
+                'status', 'allele_name', 'escell_clone', 'mouse_allele_name', 'emma',
                 'escell_strain', 'escell_line', 'mi_centre', 'distribution_centre',
+                'back_cross_strain', 'test_cross_strain',
                 qc_metrics
             ].flatten,
             :required_attributes => ['status']
           })
         end
-
+        
         unless results[:data].empty?
           results[:data].recursively_symbolize_keys!
           
@@ -284,9 +348,19 @@ module MartSearch
             :genotype_confirmed => [],
             :mi_in_progress     => []
           }
-
-          # Test for QC data - set each empty qc_metric to '-' or count it
+          
           results[:data].each do |result|
+            # Override the allele_name if we have a corrected one for the mouse...
+            result[:allele_name] = result[:mouse_allele_name] unless result[:mouse_allele_name].nil?
+            
+            unless result[:allele_name].nil?
+              result[:allele_name] = fix_superscript_text_in_attribute( result[:allele_name] )
+              result[:allele_type] = allele_type( result[:allele_name] )
+            end
+            
+            result[:genetic_background] = ikmc_kermits_set_genetic_background(result)
+            
+            # Test for QC data - set each empty qc_metric to '-' or count it
             result[:qc_count] = 0
             qc_metrics.each do |metric|
               if result[metric.to_sym].nil?
@@ -296,6 +370,7 @@ module MartSearch
               end
             end
             
+            # Now push the mouse into the correct category....
             if result[:status] == 'Genotype Confirmed' and result[:emma] == '1'
               mouse_results[:genotype_confirmed].push(result)
             else
@@ -312,7 +387,11 @@ module MartSearch
             end
           end
 
-          results[:data] = { :mice => mouse_results }
+          # Hide all non 'Genotype Confirmed' mice - until an undisclosed point in the future when we're 
+          # told to show them again...
+          # results[:data] = { :mice => [ mouse_results[:genotype_confirmed], mouse_results[:mi_in_progress] ].flatten }
+          
+          results[:data] = { :mice => mouse_results[:genotype_confirmed] }
         end
 
         return results
@@ -362,6 +441,7 @@ module MartSearch
               'design_id',
               'mutation_subtype',
               'cassette',
+              'cassette_type',
               'backbone',
               'allele_gb_file',
               'vector_gb_file',
@@ -378,7 +458,6 @@ module MartSearch
         end
       
         data = {
-          'design_type'          => [],
           'intermediate_vectors' => [],
           'targeting_vectors'    => [],
           'es_cells'             => {
@@ -393,14 +472,6 @@ module MartSearch
             data['vector_gb']    = "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/targeting-vector-genbank-file"
           end
           
-          design_type = case result['mutation_subtype']
-            when 'conditional_ready'        then 'Conditional (Frameshift)'
-            when 'deletion'                 then 'Deletion'
-            when 'targeted_non_conditional' then 'Targeted, Non-Conditional'
-            else ''
-          end
-          
-          data['design_type'].push(design_type) unless data['design_type'].include?(design_type)
           data['floxed_start_exon'] = result['floxed_start_exon']
           data['floxed_end_exon']   = result['floxed_end_exon']
           
@@ -413,7 +484,7 @@ module MartSearch
               data['intermediate_vectors'].push(
                 'name'              => result['intermediate_vector'],
                 'design_id'         => result['design_id'],
-                'design_type'       => design_type
+                'design_type'       => allele_type( nil, result['mutation_subtype'] )
               )
             end
           end
@@ -425,11 +496,12 @@ module MartSearch
           unless result['mutation_subtype'] == 'targeted_non_conditional'
             unless result['targeting_vector'].nil?
               data['targeting_vectors'].push(
-                'name'         => result['targeting_vector'],
-                'design_id'    => result['design_id'],
-                'design_type'  => design_type,
-                'cassette'     => result['cassette'],
-                'backbone'     => result['backbone']
+                'name'          => result['targeting_vector'],
+                'design_id'     => result['design_id'],
+                'design_type'   => allele_type( nil, result['mutation_subtype'] ),
+                'cassette'      => result['cassette'],
+                'cassette_type' => result['cassette_type'],
+                'backbone'      => result['backbone']
               )
             end
           end
@@ -453,24 +525,25 @@ module MartSearch
               qc_data['qc_count'] = qc_data['qc_count'] + 1
             end
           end
-
+          
+          # Genbank files
           if result['allele_gb_file'] == 'yes'
             data['es_cells'][push_to]['allele_img'] = "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/allele-image"
             data['es_cells'][push_to]['allele_gb']  = "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/escell-clone-genbank-file"
           end
+          
           data['es_cells'][push_to]['cells'].push(
             {
               'name'                      => result['escell_clone'],
               'allele_symbol_superscript' => result['allele_symbol_superscript'],
+              'allele_type'               => allele_type( result['allele_symbol_superscript'], result['mutation_subtype'] ),
               'parental_cell_line'        => result['parental_cell_line'],
               'targeting_vector'          => result['targeting_vector'],
+              'cassette'                  => result['cassette'],
+              'cassette_type'             => result['cassette_type'],
               'mouse?'                    => 'no' # default to no
             }.merge(qc_data)
           )
-
-          if design_type != 'conditional_ready'
-            data['es_cells'][push_to]['design_type'] = design_type
-          end
         end
 
         unless data.empty?

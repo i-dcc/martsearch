@@ -116,27 +116,36 @@ p,dl,hr,h1,h2,h3,h4,h5,h6,ol,ul,pre,table,address,fieldset {
 
 /* Links */
 
-a, .ui-widget-content a {
+a, .ui-widget-content a, .jstree li a a {
 	color: #376598;
 	text-decoration: none;
 }
 
-a:hover, .ui-widget-content a:hover {
+.ui-widget-content .jstree a:hover {
+	color: black;
+}
+
+a:hover, .ui-widget-content a:hover, .jstree li a a:hover,
+.ui-widget-content .jstree li a a:hover {
 	color: #963534;
 }
 
-a:focus, .ui-widget-content a:focus {
+a:focus, .ui-widget-content a:focus, .jstree li a a:focus {
 	outline: none;
 	-moz-outline-style: none;
 }
 
-a:active, .ui-widget-content a:acitve {
+a:active, .ui-widget-content a:acitve, .jstree li a a:acitve {
 	outline: none;
 }
 
-.ext_link {
+.ext_link, .jstree li a a.ext_link {
 	background: url(../images/silk/bullet_go.png) no-repeat left center;
 	padding: 2px 0 2px 16px;
+}
+
+.jstree li a a.ext_link {
+	padding: 0 0 0 16px;
 }
 
 .ensembl_link {
@@ -152,6 +161,15 @@ a:active, .ui-widget-content a:acitve {
 .mutagenesis_prediction_key {
 	float: right;
 	background-position: right top;
+}
+
+.re_search, .jstree li a a.re_search {
+	background: url(../images/fugue/magnifier-medium.png) no-repeat left center;
+	padding: 2px 0 2px 16px;
+}
+
+.jstree li a a.re_search {
+	padding: 0 0 0 16px;
 }
 
 a.feed {
@@ -203,6 +221,10 @@ a.button:hover, a.order:hover {
 
 .save {
 	background-image: url(../images/silk/page_save.png);
+}
+
+.express_interest {
+	background-image: url(../images/silk/cart_go.png);
 }
 
 /* User Messages */
@@ -275,10 +297,18 @@ a.button:hover, a.order:hover {
 }
 
 .help {
-	background: #f1f1f1 url(../images/silk/help.png) no-repeat 5px 5px;
-	border-color: #ccc;
+	background: #f1f1f1 url(../images/silk/help.png) no-repeat 5px 6px;
+	border: 1px solid #ccc;
+	border-radius: 2px;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	-o-border-radius: 2px;
 	margin-bottom: 15px;
     padding: 7px 7px 7px 27px;
+}
+
+.help h6, .help p {
+	margin-bottom: 9px;
 }
 
 /* Toggle Controls */
@@ -300,6 +330,18 @@ a.button:hover, a.order:hover {
 
 .toggle-open:hover, .toggle-close:hover, .toggle-up:hover {
 	cursor: pointer;
+}
+
+/* Ontology Tree Controls */
+
+a.ontology_tree_open,
+a.ontology_tree_close {
+    background: url(../images/silk/bullet_toggle_plus.png) no-repeat 0 center;
+    padding: 4px 2px 4px 16px;
+}
+
+a.ontology_tree_close {
+    background-image: url(../images/silk/bullet_toggle_minus.png);
 }
 
 /* Pagination Controls */
@@ -571,6 +613,25 @@ form#martsearchr {
 
 #search_results table.result-header h3 {
 	margin-bottom: 0;
+}
+
+#search_results .result .dataset.no-data {
+	border-color: #c8c8c8;
+	border-width: 1px;
+	color: #cacaca;
+	padding-bottom: 7px;
+	background-color: #f5f5f5;
+}
+
+#search_results .result .dataset.no-data h4 {
+	margin: 0 16px;
+}
+
+#search_results .result .dataset.no-data h4 span.subtext {
+	font-weight: normal;
+	font-style: italic;
+	font-size: small;
+	float: right;
 }
 
 .doc_datasets_returned {
@@ -908,6 +969,12 @@ table.ikmc-pipeline-progress-bar td.error,
 table.ikmc-pipeline-progress-bar td.warn {
   color: #fff;
   font-weight: bold;
+}
+
+table.ikmc-pipeline-progress-bar td.normal a,
+table.ikmc-pipeline-progress-bar td.error a,
+table.ikmc-pipeline-progress-bar td.warn a {
+  font-weight: normal;
 }
 
 table.ikmc-pipeline-progress-bar td.normal_normal {

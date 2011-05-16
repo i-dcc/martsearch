@@ -1,0 +1,21 @@
+{
+  "datasource":            "ensembl-mouse",
+  "enabled":               true,
+  "custom_sort":           false,
+  "custom_secondary_sort": true,
+  "attribution":           "Ensembl",
+  "attribution_link":      "http://www.ensembl.org/",
+  "searching": {
+    "joined_index_field": "ensembl_gene_id",
+    "joined_filter":      "ensembl_gene_id",
+    "joined_attribute":   "ensembl_gene_id",
+    "attributes": [
+      "ensembl_gene_id",
+      "go_id"
+    ],
+    "required_attributes": [
+      "go_id"
+    ],
+    "filters": {}
+  }
+}

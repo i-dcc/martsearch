@@ -6,13 +6,18 @@
 # @return [String] The short css class for this test result
 def wtsi_phenotyping_css_class_for_test(status_desc)
   case status_desc
-  when "CompleteDataAvailable"  then "completed_data_available"
-  when "CompleteInteresting"    then "significant_difference"
-  when "CompleteNotInteresting" then "no_significant_difference"
-  when "EarlyIndicator"         then "early_indication_of_possible_phenotype"
-  when "NotPerformedApplicable" then "not_applicable"
-  when "Abandoned"              then "test_abandoned"
-  else                               "test_pending"
+  when "Complete and data/resources available"  then "completed_data_available"
+  when "CompleteDataAvailable"                  then "completed_data_available"
+  when "Significant"                            then "significant_difference"
+  when "CompleteInteresting"                    then "significant_difference"
+  when "Not Significant"                        then "no_significant_difference"
+  when "CompleteNotInteresting"                 then "no_significant_difference"
+  when "Early indication of possible phenotype" then "early_indication_of_possible_phenotype"
+  when "EarlyIndicator"                         then "early_indication_of_possible_phenotype"
+  when "Not performed or applicable"            then "not_applicable"
+  when "NotPerformedApplicable"                 then "not_applicable"
+  when "Abandoned"                              then "test_abandoned"
+  else                                               "test_pending"
   end
 end
 
@@ -33,6 +38,28 @@ def wtsi_phenotyping_fetch_report_data( colony_prefix, pheno_test )
   
   if cached_data != nil
     return cached_data[ "#{pheno_test}_data".to_sym ]
+  else
+    return nil
+  end
+end
+
+def wtsi_phenotyping_fetch_mp_report_data( colony_prefix, mp_slug )
+  ms = MartSearch::Controller.instance()
+  
+  cached_data = ms.fetch_from_cache("wtsi-pheno-mp-data:#{colony_prefix}")
+  if cached_data.nil?
+    ms.search("colony_prefix:#{colony_prefix}")
+    cached_data = ms.fetch_from_cache("wtsi-pheno-mp-data:#{colony_prefix}")
+  end
+  
+  if cached_data != nil
+    mp_data = cached_data[:mp_groups][mp_slug.to_sym]
+    cached_data.keys.each do |key|
+      next if key == :mp_groups
+      mp_data[key] = cached_data[key]
+    end
+    
+    return mp_data
   else
     return nil
   end

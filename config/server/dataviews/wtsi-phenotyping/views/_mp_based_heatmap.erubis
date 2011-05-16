@@ -1,0 +1,84 @@
+<table class="wtsi-phenotyping_heatmap">
+  <thead>
+    <tr>
+      <th>Allele Name</th>
+      <th>Colony Prefix</th>
+      <% mp_groups.each do |mp_group| %>
+        <th><span class="vertical_text"><%= mp_group[:name] %></span></th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <% mp_based_pheno_data.each do |result| %>
+      <tr>
+        <td><%= result[:allele_name] %></td>
+        <td><%= result[:colony_prefix] %></td>
+        <% mp_groups.each do |mp_group| %>
+          <%
+            mp_data  = result[:mp_groups][ mp_group[:slug].to_sym ]
+            mp_class = 'no_data'
+            mp_class = mp_data[:call] unless mp_data.nil?
+          %>
+          <td class="<%= mp_class %> pheno_result">
+            <% unless mp_class == 'no_data' %>
+              <%=
+                link_to(
+                  image_tag( '/images/silk/chart_bar.png', :alt => 'view' ),
+                  "/phenotyping/#{result[:colony_prefix]}/mp-report/#{mp_group[:slug]}/",
+                  :class => 'html_report'
+                )
+              %>
+            <% end %>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<table class="wtsi-phenotyping_heatmap_legend">
+  <tr>
+    <td class="noborder"><strong>Legend:</strong></td>
+    <td class="pheno_result no_data"></td>
+    <td class="noborder">No Raw Data</td>
+    <td class="noborder"></td>
+    <td class="pheno_result no_significant_annotations"></td>
+    <td class="noborder">No Significant Annotations</td>
+    <td class="noborder"></td>
+    <td class="pheno_result significant"></td>
+    <td class="noborder">Significant Annotation Present</td>
+    <td class="noborder"></td>
+    <td class="pheno_result noborder"><%= image_tag( '/images/silk/chart_bar.png', :alt => 'Link to a Test Report Page' ) %></td>
+    <td class="noborder">Link to a test report page</td>
+  </tr>
+</table>
+
+<div class="help">
+  <h6>About This Heatmap</h6>
+  <p>
+    This heatmap is built up of top-level terms from the <a href="http://www.obofoundry.org/cgi-bin/detail.cgi?id=mammalian_phenotype" target="_blank">MP (Mammalian Phenotype) ontology</a>. 
+    We have mapped a majority of the parameters in our tests to appropriate MP terms, so when we perform a given test 
+    we can say if it should be annotated with the given MP term (if the phenotype is significant).  This is what you 
+    see in this heatmap - if a significant result has been annotated to a top-level MP term (or any of its children), 
+    the cell will be red, if the result was not significant, the cell will be blue.
+  </p>
+  <p>
+    <strong>Please Note:</strong> as mentioned above we do not annotate all of our phenotyping tests to the MP ontology.  
+    The tests that are excluded are:
+      'Adult LacZ Expression', 
+      'Brain/Eye/Skin Histopathology', 
+      'Embryo LacZ Expression', 
+      'Fertility', 
+      'Heart Histology', 
+      'Micronuclei', 
+      'MicroCT &amp; Quantitative Faxitron', 
+      'Plasma Immunoglobulins', 
+      'Prepulse Inhibition', 
+      'Recessive Lethal Study', 
+      'Tail Epidermis Wholemount', 
+      'Tissue Biobank' and 
+      'Viability at Weaning'.
+      
+    You can find our results for these tests in the 'Phenotyping Test Based Heatmap' below.
+  </p>
+</div>

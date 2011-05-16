@@ -28,12 +28,12 @@
             </td>
             <td>
             <% if targvec[:design_id] %>
-              <a href="<%= htgt_design_link( targvec[:design_id] ) %>" target="_blank"><%= targvec[:design_id] %></a>
+              <a href="<%= htgt_design_url( targvec[:design_id] ) %>" target="_blank"><%= targvec[:design_id] %></a>
             <% else %>
               -
             <% end %>
             </td>
-            <td><%= targvec[:design_type] %></td>
+            <td><%= targvec[:design_type] %> (<%= targvec[:cassette_type] %> Cassette)</td>
             <td><%= targvec[:name] %></td>
             <td><%= @data[:floxed_exon_link] %></td>
             <td><%= targvec[:cassette] %></td>

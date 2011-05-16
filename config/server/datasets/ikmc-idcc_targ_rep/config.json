@@ -18,6 +18,7 @@
       "chromosome",
       "strand",
       "cassette",
+      "cassette_type",
       "backbone",
       "homology_arm_start",
       "homology_arm_end",

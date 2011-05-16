@@ -21,7 +21,11 @@
             dist_flag = false
             dist_flag = true if mouse[:emma] == "1"
           %>
-          <%= mouse_order_button( mouse[:mgi_accession_id], mouse[:marker_symbol], mouse[:sponsor], mouse[:ikmc_project_id], dist_flag, mouse[:mi_centre], mouse[:distribution_centre] ) %>
+          <% if mouse[:sponsor].blank? and !mouse[:emma_id].blank? %>
+            <%= emma_mouse_order_button( mouse[:emma_id] ) %>
+          <% else %>
+            <%= mouse_order_button( mouse[:mgi_accession_id], mouse[:marker_symbol], mouse[:sponsor], mouse[:ikmc_project_id], dist_flag, mouse[:mi_centre], mouse[:distribution_centre] ) %>
+          <% end %>
         </td>
         <td><%= mouse[:allele_name] %></td>
         <td>
@@ -30,7 +34,7 @@
             (<%= mouse[:cassette_type] %> Cassette)
           <% end %>
         </td>
-        <td><a href="<%= emma_link( mouse[:emma_id] ) %>" target="blank"><%= mouse[:emma_id] %></td>
+        <td><a href="<%= emma_link_url( mouse[:emma_id] ) %>" target="blank"><%= mouse[:emma_id] %></td>
         <td><%= mouse[:colony_prefix] %></td>
         <td>
           <% if mouse[:escell_clone] %>

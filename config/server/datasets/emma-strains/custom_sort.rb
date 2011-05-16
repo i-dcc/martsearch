@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module MartSearch
   module DataSetUtils
     
@@ -15,7 +17,6 @@ module MartSearch
         
         # Add singular info first...
         singles = [
-          :gene_symbol,
           :emma_id,
           :international_strain_name,
           :common_name,
@@ -32,8 +33,9 @@ module MartSearch
           emma_record[attribute] = result[attribute]
         end
         
-        # Allele name...
-        emma_record[:allele_name] = fix_superscript_text_in_attribute(result[:alls_form])
+        emma_record[:emma]          = true
+        emma_record[:marker_symbol] = result[:gene_symbol]
+        emma_record[:allele_name]   = fix_superscript_text_in_attribute(result[:alls_form])
         
         # References...
         pubmed_id = result[:pubmed_id]

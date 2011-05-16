@@ -3,63 +3,13 @@
 * in the base of the html.
 */
 
-jQuery(document).ready(function() {
-  setup_toggles();
-  check_browser_compatibility();
-  
-  // Add tooltips for the returned dataset links.
-  jQuery('div.doc_datasets_returned').delegate(
-    '.dataset_link_bubble',
-    'mouseover',
-    function(event) {
-      jQuery(this).attr( "tooltip", jQuery(this).attr("title") );
-      jQuery(this).attr( "title", "" );
-      jQuery(this).qtip({
-        content:   jQuery(this).attr("tooltip"),
-        overwrite: false,
-        style: {
-          tip: "topRight",
-          classes: "ui-tooltip-light ui-tooltip-rounded ui-tooltip-shadow"
-        },
-        position: {
-          at: "bottom left",
-          my: "top right"
-        },
-        show: {
-          event: event.type,
-          ready: true
-        }
-      });
-      event
-    }
-  );
-  
-  // Add prettyPhoto to anything with the property 'rel="prettyPhoto"'
-  jQuery("a[rel^='prettyPhoto']").prettyPhoto({ theme: 'facebook', show_title: false });
-  
-  // Add tablesorter to anything with the class 'tablesorter'
-  jQuery("table.tablesorter").tablesorter({ widgets: ['zebra'], dateFormat: "uk" });
-  
-  // Add the accordion effect to anything with the class 'accordion'
-  jQuery(".accordion").accordion({
-    collapsible: true,
-    active:      false,
-    autoHeight:  false,
-    icons: {
-      header: "ui-icon-circle-arrow-e",
-      headerSelected: "ui-icon-circle-arrow-s"
-    }
-  });
-  
-  // For 'active' accordions - open the first element
-  jQuery(".accordion.active").each( function() {
-    jQuery(this).accordion( "activate", 0 );
-  });
-  
-  // Add font resizing buttons
-  jQuery("#fontresize").fontResize();
-});
+setup_toggles();
+check_browser_compatibility();
+setup_plugins();
 
+/*
+* Finish setting up the togglers that were intialised in the header javascript.
+*/
 function setup_toggles() {
   // Single parent togglers...
   jQuery(".single_parent_toggler_content").not(".open").hide();
@@ -92,7 +42,6 @@ function check_browser_compatibility() {
     }
     else {
       show_warning = true;
-      jQuery(".csstransforms_warning").show();
       jQuery(".vertical_text").toggleClass("vertical_text");
     }
   }
@@ -101,4 +50,55 @@ function check_browser_compatibility() {
     jQuery("#browser_warnings").html( warning_string );
     jQuery("#browser_warnings").show();
   }
+}
+
+/*
+* Setup all of the jQuery plugins we use...
+*/
+function setup_plugins() {
+  // Add tooltips for the returned dataset links.
+  jQuery('div.doc_datasets_returned').delegate(
+    '.dataset_link_bubble',
+    'mouseover',
+    function(event) {
+      jQuery(this).attr( "tooltip", jQuery(this).attr("title") );
+      jQuery(this).attr( "title", "" );
+      jQuery(this).qtip({
+        content:    jQuery(this).attr("tooltip"),
+        overwrite:  false,
+        style:      { tip: "topRight", classes: "ui-tooltip-light ui-tooltip-rounded ui-tooltip-shadow" },
+        position:   { at: "bottom left", my: "top right" },
+        show:       { event: event.type, ready: true }
+      });
+      event
+    }
+  );
+
+  // Small setup line for jstree
+  jQuery.jstree._themes = "css/jstree/"
+
+  // Add prettyPhoto to anything with the property 'rel="prettyPhoto"'
+  jQuery("a[rel^='prettyPhoto']").prettyPhoto({ theme: 'facebook', show_title: false });
+
+  // Add tablesorter to anything with the class 'tablesorter'
+  jQuery("table.tablesorter").tablesorter({ widgets: ['zebra'], dateFormat: "uk" });
+
+  // Add the accordion effect to anything with the class 'accordion'
+  jQuery(".accordion").accordion({
+    collapsible: true,
+    active:      false,
+    autoHeight:  false,
+    icons: {
+      header: "ui-icon-circle-arrow-e",
+      headerSelected: "ui-icon-circle-arrow-s"
+    }
+  });
+
+  // For 'active' accordions - open the first element
+  jQuery(".accordion.active").each( function() {
+    jQuery(this).accordion( "activate", 0 );
+  });
+
+  // Add font resizing buttons
+  jQuery("#fontresize").fontResize();
 }

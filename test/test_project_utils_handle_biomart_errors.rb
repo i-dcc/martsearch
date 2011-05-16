@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require "test_helper"
 
 class TestProjectUtilsHandleBiomartErrors < Test::Unit::TestCase

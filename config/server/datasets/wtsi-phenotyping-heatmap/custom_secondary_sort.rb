@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module MartSearch
   module DataSetUtils
     
@@ -9,14 +11,24 @@ module MartSearch
     # @return [Hash] The search_data hash with the :'processed-wtsi-phenotyping-heatmap' data inserted
     def wtsi_phenotyping_heatmap_secondary_sort( search_data )
       ms          = MartSearch::Controller.instance()
-      ds_attribs  = ms.datasources[:"wtsi-phenotyping"].ds.attributes
-      test_groups = @config[:test_groups]
+      ds_attribs  = ms.datasources[:"wtsi-phenotyping"].ds_attributes
       
+      # Work out the display names for the tests
+      test_display_names = {}
+      attribs            = @config[:searching][:attributes]
+      attribs.each do |attrib|
+        next if [:colony_prefix,:allele_name,:allele_type,:escell_clone,:strain_group].include?( attrib.to_sym )
+        test_display_names[attrib.to_sym] = ds_attribs[attrib] ? ds_attribs[attrib].display_name : attrib.to_s
+      end
+      
+      # Now process the heatmap
       search_data.each do |key,result_data|
         heatmap_raw_data = result_data[:'wtsi-phenotyping-heatmap']
         heatmap_data     = {}
         
         next if heatmap_raw_data.nil?
+        
+        result_data[:'wtsi-phenotyping-heatmap-test_display_names'] = test_display_names
         
         # First, append any supporting data to the basic heatmap return.
         heatmap_raw_data.each do |result|
@@ -26,15 +38,46 @@ module MartSearch
           
           colony_prefix = result[:colony_prefix].to_sym
           
-          # wtsi-phenotyping-heatmap_graphs
-          result.keys.each do |test|
-            mart_attribute = ds_attribs[test.to_s]
+          # wtsi-phenotyping-param_level_heatmap
+          param_level_heatmap_data = result_data[:'wtsi-phenotyping-param_level_heatmap']
+          unless param_level_heatmap_data.nil? or param_level_heatmap_data[colony_prefix].nil?
+            graphs = param_level_heatmap_data[colony_prefix][:test_groups]
             
-            next if mart_attribute.nil?
+            graphs.keys.each do |test|
+              mart_attribute = ds_attribs[test.to_s]
+              next if mart_attribute.nil?
+              result.merge!({ "#{test}_data".to_sym => graphs[test] })
+            end
             
-            test_display_name = mart_attribute.display_name
-            heatmap_graphs    = result_data[:'wtsi-phenotyping-heatmap_graphs']
-            result.merge!( wtsi_phenotyping_heatmap_heatmap_graphs( colony_prefix, heatmap_graphs, test, test_display_name ) ) unless heatmap_graphs.nil?
+            # Finally, add in some extra data from the 'main' heatmap and create a seperate
+            # entry for the mp_heatmap store...
+            
+            mp_heatmap_data = {
+              :marker_symbol => result_data[:index][:marker_symbol],
+              :colony_prefix => result[:colony_prefix],
+              :allele_name   => result[:allele_name],
+              :allele_type   => result[:allele_type],
+              :escell_clone  => result[:escell_clone],
+              :mp_groups     => param_level_heatmap_data[colony_prefix][:mp_groups]
+            }
+            
+            result_data[:'wtsi-phenotyping-mp_heatmap'] ||= []
+            result_data[:'wtsi-phenotyping-mp_heatmap'].push(mp_heatmap_data)
+            
+            # Now cache this for easy access in the reports pages...
+            ms.write_to_cache( "wtsi-pheno-mp-data:#{colony_prefix.to_s.upcase}", mp_heatmap_data )
+          end
+          
+          # wtsi-phenotyping-collaborator_data
+          collaborator_data = result_data[:'wtsi-phenotyping-collaborator_data']
+          unless collaborator_data.nil? or collaborator_data[colony_prefix].nil?
+            collaborator_data_for_colony = collaborator_data[colony_prefix]
+            
+            collaborator_data_for_colony.keys.each do |test|
+              mart_attribute = ds_attribs[test.to_s]
+              next if mart_attribute.nil?
+              result.merge!({ "#{test}_data".to_sym => collaborator_data_for_colony[test] })
+            end
           end
           
           # wtsi-phenotyping-fertility
@@ -58,44 +101,28 @@ module MartSearch
           result = wtsi_phenotyping_heatmap_append_published_image_data( colony_prefix, published_image_data, result ) unless published_image_data.nil?
         end
         
-        # Now, calculate what to display for each group bubble
-        test_groups.each do |group,group_conf|
-          tests             = group_conf[:tests]
-          allowed_pipelines = group_conf[:pipelines]
-          group_data        = {
-            :results_of_interest => false,
-            :tests               => {},
-            :results             => []
-          }
-          
-          # Work out the display headings for these tests...
-          tests.each do |test|
-            mart_attribute = ds_attribs[test]
-            group_data[:tests][test.to_sym] = mart_attribute.display_name unless mart_attribute.nil?
-          end
-          
-          heatmap_raw_data.each do |result|
-            group_data[:results].push(result)
-            
-            # On a group level - do we have 'results of interest' for this group?
-            unless group_data[:results_of_interest]
-              tests.each do |test|
-                if wtsi_phenotyping_css_class_for_test(result[test.to_sym]) == "significant_difference"
-                  group_data[:results_of_interest] = true
-                end
-              end
-            end
-          end
-          
-          heatmap_data[group.to_sym] = group_data
-        end
-        
-        result_data[:'wtsi-phenotyping-heatmap-processed'] = heatmap_data
       end
       
       # Run through the data one last time to cache the results details 
       # ready for the report pages...
-      wtsi_phenotyping_heatmap_cache_colony_report_data( ms, search_data )
+      wtsi_phenotyping_heatmap_cache_colony_heatmap_data( ms, search_data )
+      
+      # We've now got a tonne of redundant data flowing around.  Let's clear some of
+      # it out so we don't rely on the stuff we shouldn't somewhere...
+      datasets_to_purge = [
+        :'wtsi-phenotyping-param_level_heatmap',
+        :'wtsi-phenotyping-collaborator_data',
+        :'wtsi-phenotyping-fertility',
+        :'wtsi-phenotyping-hom_viability',
+        :'wtsi-phenotyping-abr',
+        :'wtsi-phenotyping-adult_expression',
+        :'wtsi-phenotyping-published_images'
+      ]
+      search_data.each do |key,result_data|
+        datasets_to_purge.each do |dataset_name|
+          result_data[dataset_name] = true unless result_data[dataset_name].nil?
+        end
+      end
       
     end
     
@@ -165,22 +192,6 @@ module MartSearch
       return result
     end
     
-    # Helper function to return the heatmap_graphs data for a given colony.
-    def wtsi_phenotyping_heatmap_heatmap_graphs( colony_prefix, heatmap_graphs, test, test_display_name )
-      graphs     = heatmap_graphs[colony_prefix]
-      graph_data = {}
-      
-      unless graphs.nil?
-        graphs.each do |heatmap_group,image_data|
-          if test_display_name.gsub("\(","").gsub("\)","") =~ Regexp.new(heatmap_group.to_s, true)
-            graph_data["#{test}_data".to_sym] = image_data
-          end
-        end
-      end
-      
-      return graph_data
-    end
-    
     # Helper function to return the fertility data for a given colony.
     def wtsi_phenotyping_heatmap_fertility_data( colony_prefix, fertility_data )
       data_to_return                  = {}
@@ -236,7 +247,7 @@ module MartSearch
     
     # Helper function to group all of the *_data fields from the processed heatmap by 
     # colony and stuff them into the cache so it's easier to produce the MGP report pages.
-    def wtsi_phenotyping_heatmap_cache_colony_report_data( ms, search_data )
+    def wtsi_phenotyping_heatmap_cache_colony_heatmap_data( ms, search_data )
       search_data.each do |key,result_data|
         heatmap_data  = result_data[:'wtsi-phenotyping-heatmap']
         marker_symbol = result_data[:index][:marker_symbol]

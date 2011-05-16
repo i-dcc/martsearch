@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 HoptoadNotifier.configure do |config|
   config.api_key          = ''
   config.host             = 'htgt.internal.sanger.ac.uk'
@@ -22,7 +24,7 @@ module MartSearch
     # We're going to use the version number as a cache breaker for the CSS 
     # and javascript code. Update with each release of your portal (especially 
     # if you change the CSS or JS)!!!
-    VERSION = '0.1.13'
+    VERSION = '0.1.16'
     DEFAULT_CSS_FILES = [
       'reset.css',
       'jquery.prettyPhoto.css',
@@ -94,6 +96,7 @@ module MartSearch
     helpers do
       include Rack::Utils
       include WillPaginate::ViewHelpers
+      include MartSearch::DataSetUtils
       include MartSearch::ServerViewHelpers
       
       alias_method :h, :escape_html
@@ -251,7 +254,7 @@ module MartSearch
       
       if params[:wt] == 'json'
         content_type 'application/json', :charset => 'utf-8'
-        return @data.to_json
+        return JSON.generate( @data, :max_nesting => false )
       else
         erubis :browse
       end
@@ -295,7 +298,7 @@ module MartSearch
         else
           if params[:wt] == 'json'
             content_type 'application/json', :charset => 'utf-8'
-            return @data.to_json
+            return JSON.generate( @data, :max_nesting => false )
           else
             erubis :project_report
           end

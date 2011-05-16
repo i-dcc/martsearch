@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'test_helper'
 
 require 'capybara'
@@ -110,7 +112,7 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
       end
     end
     
-    should "render WTSI Phenotyping report pages" do
+    should "render WTSI Phenotyping (test based) report pages" do
       omit_if(
         @ms.dataviews_by_name[:'wtsi-phenotyping'].nil?,
         "Skipping WTSI Phenotyping report tests as the DataView is not active."
@@ -146,7 +148,7 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
             when 'fertility'                   then 'Fertility'
             when 'tail-epidermis-wholemount'   then 'Tail Epidermis Wholemount'
             else
-              test_data[:test_group]
+              test_data[:test]
             end
             
             urls_to_hit.push({
@@ -162,7 +164,7 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
           urls_to_hit.each do |test_conf|
             visit test_conf[:url]
             assert_equal( "#{test_conf[:url]}", current_path, "WTSI Phenotyping - can't visit '#{test_conf[:url]}'!" )
-            assert( page.has_content?(test_conf[:title]), "WTSI Phenotyping - '#{test_conf[:url]}' doesn't have the title '#{test_conf[:title]}'..." )
+            assert( page.first(:css,'h2').text.include?(test_conf[:title]), "WTSI Phenotyping - '#{test_conf[:url]}' doesn't have the title '#{test_conf[:title]}'..." )
             
             if test_conf[:test_group] == 'auditory-brainstem-response'
               assert( page.has_css?('#abr-thresholds') )
@@ -170,6 +172,37 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
               visit "#{test_conf[:url]}#{href}"
               visit "#{test_conf[:url]}foobarweewar.png"
             end
+          end
+        end
+      end
+    end
+    
+    should "render WTSI Phenotyping (MP based) report pages" do
+      omit_if(
+        @controller.dataviews_by_name[:'wtsi-phenotyping'].nil?,
+        "Skipping WTSI Phenotyping report tests as the DataView is not active."
+      )
+      
+      VCR.use_cassette('test_server_wtsi_phenotyping_mp_report_pages') do
+        colonies_to_test = ['MAHN','MAMH','MAMJ','MAAD','MAAJ']
+        
+        colonies_to_test.each do |colony_prefix|
+          visit '/'
+          fill_in( 'query', :with => "#{colony_prefix}" )
+          click_button('Search')
+          
+          assert_equal( '/search', current_path, "WTSI Phenotyping search for '#{colony_prefix}': The home page form didn't forward to /search." )
+          assert( page.has_content?( "Search Results for '#{colony_prefix}'" ), "WTSI Phenotyping search for '#{colony_prefix}': /search doesn't show the search term we've just looked for..." )
+          
+          cached_data = @controller.fetch_from_cache("wtsi-pheno-mp-data:#{colony_prefix}")
+          assert( !cached_data.nil?, "There is no cached phenotyping mp data for '#{colony_prefix}'!" )
+          
+          cached_data[:mp_groups].each do |mp_group,mp_group_data|
+            url = "/phenotyping/#{colony_prefix}/mp-report/#{mp_group}/"
+            visit url
+            assert_equal( url, current_path, "WTSI Phenotyping - can't visit '#{url}'!" )
+            assert( page.has_content?(mp_group_data[:mp_id]), "WTSI Phenotyping - '#{url}' doesn't include the MP id '#{mp_group_data[:mp_id]}'")
+            assert( page.has_content?(mp_group_data[:mp_term]), "WTSI Phenotyping - '#{url}' doesn't include the MP term '#{mp_group_data[:mp_term]}'")
           end
         end
       end
@@ -322,6 +355,27 @@ class MartSearchServerRackTest < Test::Unit::TestCase
             @browser.get "/phenotyping/#{colony_prefix}/#{test}/"
             assert_equal( 404, @browser.last_response.status, "WTF?!? '/phenotyping/#{colony_prefix}/#{test}/' is an ok url..." )
           end
+        end
+      end
+    end
+    
+    should "serve up JSON for Gene Ontology data" do
+      VCR.use_cassette('test_server_go_ontology_json') do
+        # First test for when we expect a return...
+        mgi_acc_ids_to_test = ['MGI:105369','MGI:2444584','MGI:104510']
+        mgi_acc_ids_to_test.each do |mgi|
+          @browser.get "/go_ontology?id=go-ontology-#{mgi.gsub(':','')}"
+          assert( @browser.last_response.ok?, "A request to '/go_ontology?id=go-ontology-#{mgi.gsub(':','')}' failed!" )
+          json = JSON.parse( @browser.last_response.body, :max_nesting => false )
+          assert( json.is_a?(Array) )
+          assert( json.first['data'] != nil )
+        end
+        
+        # Then for when we don't...
+        mgis_with_no_return = ['MGI:1921402']
+        mgis_with_no_return.each do |mgi|
+          @browser.get "/go_ontology?id=go-ontology-#{mgi.gsub(':','')}"
+          assert_equal( 404, @browser.last_response.status )
         end
       end
     end

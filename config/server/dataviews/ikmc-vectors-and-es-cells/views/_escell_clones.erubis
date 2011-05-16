@@ -4,64 +4,67 @@
 
   <!-- ES Cell clones summary -->
   <table style="margin-bottom:5px;">
-    <tr>
-      <th>Cassette Type</th>
-      <td><%= cassette_type %></td>
-    </tr>
-    <% if !nonconditional_clones.empty? && nonconditional_clones.first[:allele_type] == "Deletion" %>
+    <thead>
       <tr>
-        <th><%= nonconditional_clones.length %> Deletion Alleles</th>
-        <td>
-          <%=
-            partial(
-              'dataviews/ikmc-vectors-and-es-cells/escell_clone_links',
-              :locals => {
-                :pipeline  => pipeline,
-                :allele_id => nonconditional_allele_id,
-                :allele_gb => nonconditional_allele_gb,
-                :vector_gb => vector_gb,
-                :clones    => nonconditional_clones
-              }
-            )
-          %>
-        </td>
+        <th>Cassette Type</th>
+        <% if !nonconditional_clones.empty? && nonconditional_clones.first[:allele_type] == "Deletion" %>
+          <th><%= nonconditional_clones.length %> Deletion Alleles</th>
+        <% else %>
+          <th><%= conditional_clones.length %> Knockout-First Alleles</th>
+          <th><%= nonconditional_clones.length %> Targeted Non-Conditional Alleles</th>
+        <% end %>
       </tr>
-    <% else %>
+    </thead>
+    <tbody>
       <tr>
-        <th><%= conditional_clones.length %> Knockout-First Alleles</th>
-        <td>
-          <%=
-            partial(
-              'dataviews/ikmc-vectors-and-es-cells/escell_clone_links',
-              :locals => {
-                :pipeline  => pipeline,
-                :allele_id => conditional_allele_id,
-                :allele_gb => conditional_allele_gb,
-                :vector_gb => vector_gb,
-                :clones    => conditional_clones
-              }
-            )
-          %>
-        </td>
+        <td><%= cassette_type %></td>
+        <% if !nonconditional_clones.empty? && nonconditional_clones.first[:allele_type] == "Deletion" %>
+          <td>
+            <%=
+              partial(
+                'dataviews/ikmc-vectors-and-es-cells/escell_clone_links',
+                :locals => {
+                  :pipeline  => pipeline,
+                  :allele_id => nonconditional_allele_id,
+                  :allele_gb => nonconditional_allele_gb,
+                  :vector_gb => vector_gb,
+                  :clones    => nonconditional_clones
+                }
+              )
+            %>
+          </td>
+        <% else %>
+          <td>
+            <%=
+              partial(
+                'dataviews/ikmc-vectors-and-es-cells/escell_clone_links',
+                :locals => {
+                  :pipeline  => pipeline,
+                  :allele_id => conditional_allele_id,
+                  :allele_gb => conditional_allele_gb,
+                  :vector_gb => vector_gb,
+                  :clones    => conditional_clones
+                }
+              )
+            %>
+          </td>
+          <td>
+            <%=
+              partial(
+                'dataviews/ikmc-vectors-and-es-cells/escell_clone_links',
+                :locals => {
+                  :pipeline  => pipeline,
+                  :allele_id => nonconditional_allele_id,
+                  :allele_gb => nonconditional_allele_gb,
+                  :vector_gb => vector_gb,
+                  :clones    => nonconditional_clones
+                }
+              )
+            %>
+          </td>
+        <% end %>
       </tr>
-      <tr>
-        <th><%= nonconditional_clones.length %> Targeted Non-Conditional Alleles</th>
-        <td>
-          <%=
-            partial(
-              'dataviews/ikmc-vectors-and-es-cells/escell_clone_links',
-              :locals => {
-                :pipeline  => pipeline,
-                :allele_id => nonconditional_allele_id,
-                :allele_gb => nonconditional_allele_gb,
-                :vector_gb => vector_gb,
-                :clones    => nonconditional_clones
-              }
-            )
-          %>
-        </td>
-      </tr>
-    <% end %>
+    </tbody>
   </table>
   
   <!-- Conditional and Non-Conditional clones -->

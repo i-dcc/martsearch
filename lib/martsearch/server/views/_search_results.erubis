@@ -136,6 +136,8 @@
               </div>
             <% end %>
           </div>
+        <% else %>
+          <%= partial("no_data", :locals => { :title => view.name }) %>
         <% end %>
       <% end %>
     </div>

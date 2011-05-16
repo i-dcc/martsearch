@@ -1,71 +1,37 @@
-<% pheno_data = result_data[:'wtsi-phenotyping-heatmap-processed'] %>
-
-<div class="accordion">
-  <% pheno_data.each do |group,group_data| %>
-    <% unless group_data.nil? %>
-      <h6>
-        <a href="">
-          <%= group %>
-          <% if group_data[:results_of_interest] %>
-            - <span class="header_annotation">results of interest</span>
-          <% end %>
-        </a>
-      </h6>
-      <div>
-        <table class="wtsi-phenotyping_heatmap">
-          <thead>
-            <tr>
-              <th>Allele Name</th>
-              <th>Colony Prefix</th>
-              <% group_data[:tests].each do |test_name,test_display_name| %>
-                <th><span class="vertical_text"><%= test_display_name %></span></th>
-              <% end %>
-            </tr>
-          </thead>
-          <tbody>
-            <% group_data[:results].each do |result| %>
-              <tr>
-                <td><%= result[:allele_name] %></td>
-                <td><%= result[:colony_prefix] %></td>
-                <% group_data[:tests].each do |test_name,test_display_name| %>
-                  <td 
-                    class="<%= wtsi_phenotyping_css_class_for_test(result[test_name]) %> pheno_result" 
-                    title="<%= partial( 'dataviews/wtsi-phenotyping/heatmap_tooltip', :locals => { :result => result, :test_name => test_name, :test_display_name => test_display_name } ) %>" 
-                    rel="qtip">
-                  <% if result["#{test_name}_data".to_sym] %>
-                    <% if test_name == :eye_histopathology %>
-                      <% pdf = result["#{test_name}_data".to_sym][0] %>
-                      <a href="<%= pdf[:url] %>" class="pdf_report"><%= image_tag( '/images/silk/page_white_acrobat.png', :alt => 'view pdf' ) %></a>
-                    <% else %>
-                      <%=
-                        link_to(
-                          image_tag( '/images/silk/chart_bar.png', :alt => 'view' ),
-                          "/phenotyping/#{result[:colony_prefix]}/#{test_name.to_s.gsub('_','-')}/",
-                          :class => 'html_report'
-                        )
-                      %>
-                    <% end %>
-                  <% end %>
-                  </td>
-                <% end %>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
+<div class="accordion active">
+  <h6><a href="">MP Ontology Based Heatmap</a></h6>
+  <div>
+    <%
+      mp_based_pheno_data = result_data[:'wtsi-phenotyping-mp_heatmap']
+      mp_groups           = @ms.datasets[:'wtsi-phenotyping-param_level_heatmap'].config()[:mp_heatmap_config]
+    %>
+    
+    <% if mp_based_pheno_data.nil? %>
+      <div class="messages dataset_error">
+        Sorry, this ontology based heatmap is currently unavailable, please check back shortly.
       </div>
+    <% else %>
+      <%= 
+        partial(
+          'dataviews/wtsi-phenotyping/mp_based_heatmap',
+          :locals => { :mp_based_pheno_data => mp_based_pheno_data, :mp_groups => mp_groups }
+        )
+      %>
     <% end %>
-  <% end %>
+  </div>
+  
+  <h6><a href="">Phenotyping Test Based Heatmap</a></h6>
+  <div>
+    <%
+      test_based_pheno_data = result_data[:'wtsi-phenotyping-heatmap']
+      test_display_names    = result_data[:'wtsi-phenotyping-heatmap-test_display_names']
+    %>
+    
+    <%= 
+      partial(
+        'dataviews/wtsi-phenotyping/test_based_heatmap',
+        :locals => { :test_based_pheno_data => test_based_pheno_data, :test_display_names => test_display_names }
+      )
+    %>
+  </div>
 </div>
-
-<%=
-  link_to(
-    'download a spreadsheet containing all WTSI phenotyping data',
-    '/pheno_overview.xls',
-    :title => 'Download the Phenotyping Overview',
-    :class => 'wtsi-phenotyping-heatmap-link button'
-  )
-%>
-
-<div class="clear"></div>
-
-<%= partial( 'dataviews/wtsi-phenotyping/heatmap_legend' ) %>

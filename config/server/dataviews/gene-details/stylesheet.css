@@ -1,0 +1,13 @@
+
+/* gene-details custom css */
+
+.gene-details .go_ontology_wrapper {
+	float: right;
+	width: 55%;
+	margin-bottom: 14px;
+}
+
+.gene-details .interpro_orthalog_wrapper {
+	width: 40%;
+}
+

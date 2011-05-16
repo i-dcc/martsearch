@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module MartSearch
   module DataSetUtils
     
@@ -28,6 +30,7 @@ module MartSearch
           :design_id               => result[:design_id],
           :design_type             => result[:design_type],
           :cassette                => cassette,
+          :cassette_type           => result[:cassette_type],
           :backbone                => backbone,
           :targeting_vectors       => [],
           :conditional_clones      => [],
@@ -41,12 +44,6 @@ module MartSearch
         # Get the ikmc_project_id
         ikmc_project_id           = result[:ikmc_project_id] || project[:ikmc_project_id]
         project[:ikmc_project_id] = ikmc_project_id if project[:ikmc_project_id].nil?
-        
-        # Cassette type
-        project[:cassette_type] = case cassette
-        when /_P$/ then "Promotorless"
-        else            "Promotor Driven"
-        end
         
         # ES Cells
         if result[:escell_clone]

@@ -16,9 +16,19 @@
         <%= counts[:mut_nmd_rescue_transcripts] %> are possibly subject to NMD rescue in the mutant.
       <% end %>
       
-      The table below shows the <strong>predicted</strong> structure of the gene transcripts 
-      after successful mutation. Click the 'view' button for each transcript to see the full
-      prediction for that transcript.
+      <% if @data[:allele_design_type] == 'Deletion' %>
+        This mutation is of type '<%= @data[:allele_design_type] %>' (more information on IKMC alleles can be found 
+        <a href="http://www.knockoutmouse.org/about/targeting-strategies">here</a>). The table below 
+        shows the <strong>predicted</strong> structure of the gene transcripts. 
+        Click the 'view' button for each transcript to see the full prediction for that transcript.
+      <% else %>
+        The original allele for this mutation is of type '<%= @data[:allele_design_type] %>'. The table below 
+        shows the <strong>predicted</strong> structure of the gene transcripts after application of Flp and Cre 
+        (forming a '<%= allele_type('tm1d') %>' allele - more information on IKMC alleles can be found 
+        <a href="http://www.knockoutmouse.org/about/targeting-strategies">here</a>). 
+        Click the 'view' button for each transcript to see the full prediction for that transcript.
+      <% end %>
+      
     </p>    
 
     <table class="border">
