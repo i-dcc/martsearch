@@ -6,7 +6,7 @@
   <% else %>
     <div class="accordion active">
       <% @data[:test_data].each do |test,test_data| %>
-        <% test_data[:protocol_data].each do |protocol_desc_hash,protocol_data| %>
+        <% test_data[:protocol_data].sort_by{ |k,v| v[:order_by] }.each do |protocol_desc_hash,protocol_data| %>
           <% title = "#{test_data[:test]}: #{protocol_data[:protocol]}" %>
           <%= 
             partial(

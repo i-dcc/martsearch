@@ -86,6 +86,7 @@ module MartSearch
       per_protocol_data = test_groups[test_key][:protocol_data][protocol_id_key] ||= {
         :protocol               => result[:protocol],
         :protocol_description   => result[:protocol_description],
+        :order_by               => result[:protocol_order_by],
         :pipeline               => result[:pipeline],
         :parameters             => {},
         :significant_parameters => false
