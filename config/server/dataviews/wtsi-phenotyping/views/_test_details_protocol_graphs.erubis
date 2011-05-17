@@ -1,74 +1,84 @@
-<div class="test-descriptor">
-  <div class="test-descriptor-content">
-    <%= protocol_data[:protocol_description] %>
+<h6>
+  <a href="">
+    <%= title %>
+    <% if protocol_data[:significant_parameters] %>
+      - <span class="header_annotation">significant parameters</span>
+    <% end %>
+  </a>
+</h6>
+<div>
+  <div class="test-descriptor">
+    <div class="test-descriptor-content">
+      <%= protocol_data[:protocol_description] %>
+    </div>
   </div>
-</div>
 
-<%
-  cells = []
-  protocol_data[:parameters].each do |parameter,parameter_data|
-    parameter_data.keys.each do |key|
-      next if [:graphs,:order_by,:mp_annotation].include?(key)
-      cells.push(key) unless cells.include?(key)
+  <%
+    cells = []
+    protocol_data[:parameters].each do |parameter,parameter_data|
+      parameter_data.keys.each do |key|
+        next if [:graphs,:order_by,:mp_annotation].include?(key)
+        cells.push(key) unless cells.include?(key)
+      end
     end
-  end
-  cells.sort!
-%>
+    cells.sort!
+  %>
 
-<div style="margin-bottom:7px">
-  <a href="#" class="single_parent_toggler_toggle slide">view legend</a>
-  <div class="single_parent_toggler_content">
-    <%= partial('dataviews/wtsi-phenotyping/heatmap_legend', :locals => { :dont_show_report_links => true }) %>
+  <div style="margin-bottom:7px">
+    <a href="#" class="single_parent_toggler_toggle slide">view legend</a>
+    <div class="single_parent_toggler_content">
+      <%= partial('dataviews/wtsi-phenotyping/heatmap_legend', :locals => { :dont_show_report_links => true }) %>
+    </div>
   </div>
-</div>
 
-<table class="wtsi_pheno_parameter_details">
-  <thead>
-    <tr>
-      <th class="parameter_name">Parameter</th>
-      <% cells.each do |cell| %>
-        <th class="gender_genotype center"><%= cell.to_s.split('_').join('<br/>') %></th>
-      <% end %>
-      <th class="graph_link_column">Graph</th>
-      <th>MP Annotation</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% protocol_data[:parameters].sort_by{ |k,v| v[:order_by] }.each do |parameter,parameter_data| %>
+  <table class="wtsi_pheno_parameter_details">
+    <thead>
       <tr>
-        <td><%= parameter %></td>
+        <th class="parameter_name">Parameter</th>
         <% cells.each do |cell| %>
-          <%
-            cell_class = 'no_data'
-            unless parameter_data[cell.to_sym].nil?
-              cell_class = wtsi_phenotyping_css_class_for_test(parameter_data[cell.to_sym][:manual_call])
-            end
-          %>
-          <td class="<%= cell_class %> pheno_result"></td>
+          <th class="gender_genotype center"><%= cell.to_s.split('_').join('<br/>') %></th>
         <% end %>
-        <td class="center">
-          <% parameter_data[:graphs].each do |graph_url| %>
-            <% next if graph_url.blank? %>
-            <a
-              href="<%= graph_url %>"
-              rel="prettyPhoto[<%= "#{protocol_data[:protocol].gsub(/[%\s\(\)]/,'_')}_#{unique_id}" %>]"
-              title="<%= partial( "dataviews/wtsi-phenotyping/test_details_protocol_graph_legend", :locals => { :cells => cells, :protocol => protocol_data[:protocol], :parameter => parameter, :parameter_data => parameter_data } ) %>" 
-              class="wtsi_pheno_graph_link"
-              >view graph</a>
-          <% end %>
-        </td>
-        <td>
-          <% unless parameter_data[:mp_annotation].nil? %>
+        <th class="graph_link_column">Graph</th>
+        <th>MP Annotation</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% protocol_data[:parameters].sort_by{ |k,v| v[:order_by] }.each do |parameter,parameter_data| %>
+        <tr>
+          <td><%= parameter %></td>
+          <% cells.each do |cell| %>
             <%
-              terms = []
-              parameter_data[:mp_annotation].sort_by{ |k,v| k.to_s }.each do |mp_id,mp_term|
-                terms.push("#{mp_id} - #{mp_term}")
+              cell_class = 'no_data'
+              unless parameter_data[cell.to_sym].nil?
+                cell_class = wtsi_phenotyping_css_class_for_test(parameter_data[cell.to_sym][:manual_call])
               end
             %>
-              <%= terms.join('<br/>') %>
+            <td class="<%= cell_class %> pheno_result"></td>
           <% end %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+          <td class="center">
+            <% parameter_data[:graphs].each do |graph_url| %>
+              <% next if graph_url.blank? %>
+              <a
+                href="<%= graph_url %>"
+                rel="prettyPhoto[<%= "#{protocol_data[:protocol].gsub(/[%\s\(\)]/,'_')}" %>]"
+                title="<%= partial( "dataviews/wtsi-phenotyping/test_details_protocol_graph_legend", :locals => { :cells => cells, :protocol => protocol_data[:protocol], :parameter => parameter, :parameter_data => parameter_data } ) %>" 
+                class="wtsi_pheno_graph_link"
+                >view graph</a>
+            <% end %>
+          </td>
+          <td>
+            <% unless parameter_data[:mp_annotation].nil? %>
+              <%
+                terms = []
+                parameter_data[:mp_annotation].sort_by{ |k,v| k.to_s }.each do |mp_id,mp_term|
+                  terms.push("#{mp_id} - #{mp_term}")
+                end
+              %>
+                <%= terms.join('<br/>') %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
