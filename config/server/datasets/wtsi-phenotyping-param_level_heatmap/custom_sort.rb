@@ -84,11 +84,14 @@ module MartSearch
       test_groups[test_key] ||= { :test => result[:test], :protocol_data => {} }
       
       per_protocol_data = test_groups[test_key][:protocol_data][protocol_id_key] ||= {
-        :protocol             => result[:protocol],
-        :protocol_description => result[:protocol_description],
-        :pipeline             => result[:pipeline],
-        :parameters           => {}
+        :protocol               => result[:protocol],
+        :protocol_description   => result[:protocol_description],
+        :pipeline               => result[:pipeline],
+        :parameters             => {},
+        :significant_parameters => false
       }
+      
+      per_protocol_data[:significant_parameters] = true if result[:manual_call] == 'Significant'
       
       param_data = per_protocol_data[:parameters][parameter] ||= {
         :order_by      => result[:parameter_order_by].to_i,

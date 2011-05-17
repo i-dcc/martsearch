@@ -184,7 +184,11 @@ module MartSearch
       cached_data = @cache.fetch( key )
       
       unless cached_data.nil?
-        cached_data = BSON.deserialize(cached_data) unless @cache.is_a?(MartSearch::MongoCache)
+        if @cache.is_a?(MartSearch::MongoCache)
+          cached_data = JSON.parse( cached_data['json'], :max_nesting => false )
+        else
+          cached_data = JSON.parse( cached_data, :max_nesting => false )
+        end
         cached_data = cached_data.clean_hash if RUBY_VERSION < '1.9'
         cached_data.recursively_symbolize_keys!
       end
@@ -200,9 +204,9 @@ module MartSearch
     def write_to_cache( key, value, options={} )
       @cache.delete( key )
       if @cache.is_a?(MartSearch::MongoCache)
-        @cache.write( key, value, { :expires_in => 36.hours }.merge(options) )
+        @cache.write( key, { 'json' => JSON.generate( value, :max_nesting => false ) }, { :expires_in => 36.hours }.merge(options) )
       else
-        @cache.write( key, BSON.serialize(value), { :expires_in => 36.hours }.merge(options) )
+        @cache.write( key, JSON.generate( value, :max_nesting => false ), { :expires_in => 36.hours }.merge(options) )
       end
     end
     
