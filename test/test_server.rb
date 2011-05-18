@@ -179,7 +179,7 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
     
     should "render WTSI Phenotyping (MP based) report pages" do
       omit_if(
-        @controller.dataviews_by_name[:'wtsi-phenotyping'].nil?,
+        @ms.dataviews_by_name[:'wtsi-phenotyping'].nil?,
         "Skipping WTSI Phenotyping report tests as the DataView is not active."
       )
       
@@ -194,7 +194,7 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
           assert_equal( '/search', current_path, "WTSI Phenotyping search for '#{colony_prefix}': The home page form didn't forward to /search." )
           assert( page.has_content?( "Search Results for '#{colony_prefix}'" ), "WTSI Phenotyping search for '#{colony_prefix}': /search doesn't show the search term we've just looked for..." )
           
-          cached_data = @controller.fetch_from_cache("wtsi-pheno-mp-data:#{colony_prefix}")
+          cached_data = @ms.fetch_from_cache("wtsi-pheno-mp-data:#{colony_prefix}")
           assert( !cached_data.nil?, "There is no cached phenotyping mp data for '#{colony_prefix}'!" )
           
           cached_data[:mp_groups].each do |mp_group,mp_group_data|

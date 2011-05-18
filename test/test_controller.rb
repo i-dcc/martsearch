@@ -83,7 +83,7 @@ class MartSearchControllerTest < Test::Unit::TestCase
         grouped_search_terms = @ms.send( :prepare_dataset_search_terms, @ms.search_data.keys )
         
         # Now drive the dataset searches
-        dataset_results = @controller.send( :search_from_fresh_datasets, search_data.keys, grouped_search_terms )
+        dataset_results = @ms.send( :search_from_fresh_datasets, search_data.keys, grouped_search_terms )
         assert( dataset_results.is_a?(TrueClass) || dataset_results.is_a?(FalseClass) )
         
         @ms.search_data.each do |key,value|
