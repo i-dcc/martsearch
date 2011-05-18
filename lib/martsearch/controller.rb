@@ -87,7 +87,7 @@ module MartSearch
           if cached_dataset_data["datasets:#{data_key}"].nil?
             fresh_ds_queries_to_do.push(data_key)
           else
-            @search_data[data_key] = @search_data[data_key].merge(cached_dataset_data["datasets:#{data_key}"])
+            @search_data[data_key] = @search_data[data_key].merge( cached_dataset_data["datasets:#{data_key}"] )
           end
         end
         
@@ -265,9 +265,9 @@ module MartSearch
     def write_to_cache( key, value, options={} )
       @cache.delete( key )
       if @cache.is_a?(MartSearch::MongoCache)
-        @cache.write( key, value, { :expires_in => 36.hours }.merge(options) )
+        @cache.write( key, { 'json' => JSON.generate( value, :max_nesting => false ) }, { :expires_in => 36.hours }.merge(options) )
       else
-        @cache.write( key, BSON.serialize(value), { :expires_in => 36.hours }.merge(options) )
+        @cache.write( key, JSON.generate( value, :max_nesting => false ), { :expires_in => 36.hours }.merge(options) )
       end
     end
     
@@ -276,7 +276,11 @@ module MartSearch
       # Helper function for #fetch_from_cache.  Handles the data deserialization for data 
       # coming back from the cache.
       def deserialize_cache_entry( entry )
-        entry = BSON.deserialize(entry) unless @cache.is_a?(MartSearch::MongoCache)
+        if @cache.is_a?(MartSearch::MongoCache)
+          entry = JSON.parse( entry['json'], :max_nesting => false )
+        else
+          entry = JSON.parse( entry, :max_nesting => false )
+        end
         entry = entry.clean_hash if RUBY_VERSION < '1.9'
         entry.recursively_symbolize_keys!
         return entry

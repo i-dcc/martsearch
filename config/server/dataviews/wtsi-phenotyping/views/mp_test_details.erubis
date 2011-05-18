@@ -6,11 +6,17 @@
   <% else %>
     <div class="accordion active">
       <% @data[:test_data].each do |test,test_data| %>
-        <% test_data[:protocol_data].each do |protocol_desc_hash,protocol_data| %>
-          <h6><a href=""><%= test_data[:test] %> - <%= protocol_data[:protocol] %></a></h6>
-          <div>
-            <%= partial('dataviews/wtsi-phenotyping/test_details_protocol_graphs', :locals => { :protocol_data => protocol_data, :unique_id => 'all' }) %>
-          </div>
+        <% test_data[:protocol_data].sort_by{ |k,v| v[:order_by] }.each do |protocol_desc_hash,protocol_data| %>
+          <% title = "#{test_data[:test]}: #{protocol_data[:protocol]}" %>
+          <%= 
+            partial(
+              'dataviews/wtsi-phenotyping/test_details_protocol_graphs', 
+              :locals => { 
+                :title         => title,
+                :protocol_data => protocol_data
+              }
+            ) 
+          %>
         <% end %>
       <% end %>
     </div>
