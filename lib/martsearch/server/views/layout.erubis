@@ -42,7 +42,7 @@
       
       // Google Analytics
       var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', '']);
+      _gaq.push(['_setAccount', 'UA-317752-8']);
       _gaq.push(['_trackPageview']);
       
       (function() {
