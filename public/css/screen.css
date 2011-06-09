@@ -153,9 +153,13 @@ a:active, .ui-widget-content a:acitve, .jstree li a a:acitve {
 	padding: 4px 0 4px 24px;
 }
 
-.ucsc_link {
+a.ucsc_link, li.ucsc_link {
 	background: url(../images/ucsc_link.png) no-repeat left center;
 	padding: 4px 0 4px 24px;
+}
+
+a.ucsc_link {
+	padding: 4px 0 4px 20px;
 }
 
 .mutagenesis_prediction_key {

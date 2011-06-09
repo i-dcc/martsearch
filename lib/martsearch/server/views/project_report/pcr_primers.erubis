@@ -1,0 +1,9 @@
+<h5>LRPCR Genotyping Primers</h5>
+<table>
+  <% @data[:pcr_primers].each do |name,seq| %>
+    <tr>
+      <th><%= name %></th>
+      <td><pre style="margin-bottom:0"><%= seq %></pre></td>
+    </tr>
+  <% end %>
+</table>
