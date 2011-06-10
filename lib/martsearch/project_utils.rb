@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module MartSearch
   
   # Utility module to house all of the data gathering logic for the IKMC 
@@ -108,13 +110,19 @@ module MartSearch
         end
         
         ##
-        ## Add the mutagenesis predictions
+        ## Add the mutagenesis predictions and PCR primers
         ##
         
         unless ['KOMP-Regeneron','mirKO'].include?(data[:ikmc_project])
           mutagenesis_predictions        = get_mutagenesis_predictions( project_id )
           data[:mutagenesis_predictions] = mutagenesis_predictions[:data]
           errors.push( mutagenesis_predictions[:error] ) unless mutagenesis_predictions[:error].empty?
+        end
+        
+        if ['KOMP-CSD','EUCOMM'].include?(data[:ikmc_project])
+          pcr_primers                    = get_pcr_primers( project_id )
+          data[:pcr_primers]             = pcr_primers[:data]
+          errors.push( pcr_primers[:error] ) unless pcr_primers[:error].empty?
         end
         
         ##
@@ -680,6 +688,61 @@ module MartSearch
         
         count[:wt_non_coding_transcripts] = count[:wt_transcripts] - count[:wt_proteien_coding_transcripts]
         return count
+      end
+      
+      # Retrieve the pcr primers for the project_id from HTGT.
+      #
+      # @param  [String] project_id The IKMC project ID
+      # @return [Hash] The pcr primer hash from HTGT
+      def get_pcr_primers( project_id )
+        result  = { :data => {}, :error => {} }
+        message = "There was a problem retrieving pcr primers for this project.  As a result this data will not be available on the page.  Please try refreshing your browser or come back in 10 minutes to obtain this data."
+        begin
+          uri         = URI.parse( "http://www.sanger.ac.uk/htgt/tools/genotypingprimers/#{project_id}" )
+          http_client = build_http_client()
+          response    = nil
+          
+          http_client.start( uri.host, uri.port ) do |http|
+            http.read_timeout = 10
+            http.open_timeout = 10
+            response          = http.request( Net::HTTP::Get.new(uri.request_uri) )
+          end
+          
+          raise Exception.new("PCR primer data unavailable.") unless response.code.to_i == 200
+          
+          raw_primer_data = JSON.parse( response.body ).recursively_symbolize_keys!
+          result[:data]   = process_pcr_primers( raw_primer_data )
+        rescue JSON::ParserError => error
+          result[:error] = {
+            :text  => message,
+            :error => "Problem parsing the JSON returned.",
+            :type  => error.class
+          }
+        rescue Exception => error
+          result[:error] = {
+            :text  => message,
+            :error => error.to_s,
+            :type  => error.class
+          }
+        end
+        return result
+      end
+      
+      def process_pcr_primers( raw_primer_data )
+        processed_primers = {}
+        
+        raw_primer_data.each do |key,seq|
+          case key
+          when /^GF/  then processed_primers["5' Gene Specific (#{key})"] = seq
+          when /^GR/  then processed_primers["3' Gene Specific (#{key})"] = seq
+          when /^LAR/ then processed_primers["5' Universal (#{key})"]     = seq
+          when /^RAF/ then processed_primers["3' Universal (#{key})"]     = seq
+          when 'PNF'  then processed_primers["3' Universal (#{key})"]     = seq
+          when 'R2R'  then processed_primers["3' Universal (#{key})"]     = seq
+          end
+        end
+        
+        return processed_primers
       end
   end
   

@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module MartSearch
   
   # Error class raised when there is an error whilst interacting with a DataSource.

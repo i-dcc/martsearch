@@ -1,0 +1,24 @@
+<div id="wtsi-phenotyping-report" class="wtsi-phenotyping">
+  <h2>Phenotyping Data for <%= @marker_symbol %> (<%= @colony_prefix %>) Associated with '<%= @data[:mp_term] %>' (<%= @data[:mp_id] %>)</h2>
+  
+  <% if @data[:test_data].empty? %>
+    <div><em>No data reported</em></div>
+  <% else %>
+    <div class="accordion active">
+      <% @data[:test_data].each do |test,test_data| %>
+        <% test_data[:protocol_data].sort_by{ |k,v| v[:order_by] }.each do |protocol_desc_hash,protocol_data| %>
+          <% title = "#{test_data[:test]}: #{protocol_data[:protocol]}" %>
+          <%= 
+            partial(
+              'dataviews/wtsi-phenotyping/test_details_protocol_graphs', 
+              :locals => { 
+                :title         => title,
+                :protocol_data => protocol_data
+              }
+            ) 
+          %>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

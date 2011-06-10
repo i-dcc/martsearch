@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module MartSearch
   
   # Singleton controller class for MartSearch.  This is the central contoller 
@@ -89,7 +91,8 @@ module MartSearch
         end
         
         unless fresh_ds_queries_to_do.empty?
-          if search_from_fresh_datasets( prepare_dataset_search_terms( fresh_ds_queries_to_do ) )
+          grouped_search_terms = prepare_dataset_search_terms( fresh_ds_queries_to_do )
+          if search_from_fresh_datasets( fresh_ds_queries_to_do, grouped_search_terms )
             fresh_ds_queries_to_do.each do |data_key|
               unless @search_data[data_key].nil?
                 @search_data[data_key][:cache_timestamp] = DateTime.now.to_s
@@ -181,7 +184,11 @@ module MartSearch
       cached_data = @cache.fetch( key )
       
       unless cached_data.nil?
-        cached_data = BSON.deserialize(cached_data) unless @cache.is_a?(MartSearch::MongoCache)
+        if @cache.is_a?(MartSearch::MongoCache)
+          cached_data = JSON.parse( cached_data['json'], :max_nesting => false )
+        else
+          cached_data = JSON.parse( cached_data, :max_nesting => false )
+        end
         cached_data = cached_data.clean_hash if RUBY_VERSION < '1.9'
         cached_data.recursively_symbolize_keys!
       end
@@ -197,9 +204,9 @@ module MartSearch
     def write_to_cache( key, value, options={} )
       @cache.delete( key )
       if @cache.is_a?(MartSearch::MongoCache)
-        @cache.write( key, value, { :expires_in => 36.hours }.merge(options) )
+        @cache.write( key, { 'json' => JSON.generate( value, :max_nesting => false ) }, { :expires_in => 36.hours }.merge(options) )
       else
-        @cache.write( key, BSON.serialize(value), { :expires_in => 36.hours }.merge(options) )
+        @cache.write( key, JSON.generate( value, :max_nesting => false ), { :expires_in => 36.hours }.merge(options) )
       end
     end
     
@@ -305,15 +312,16 @@ module MartSearch
       # Utility function that performs the dataset searches and 
       # post-search sorting routines
       #
-      # @param [Hash] grouped_terms A hash of terms (grouped by index field) that can be used to drive the dataset searches
+      # @params [Array] terms_to_query An array of @search_data keys that we should be feeding data into here...
+      # @param [Hash] grouped_search_terms A hash of terms (grouped by index field) that can be used to drive the dataset searches
       # @return [Boolean] true/false reporting if the searches went without error (actual results are stored in @search_data)
-      def search_from_fresh_datasets( grouped_terms )
+      def search_from_fresh_datasets( terms_to_query, grouped_search_terms )
         success = true
         
         Parallel.each( @datasets.keys, :in_threads => 10 ) do |ds_name|
           begin
             dataset      = @datasets[ds_name]
-            search_terms = grouped_terms[ dataset.joined_index_field.to_sym ]
+            search_terms = grouped_search_terms[ dataset.joined_index_field.to_sym ]
             results      = dataset.search( search_terms )
             add_dataset_results_to_search_data( dataset.joined_index_field.to_sym, ds_name.to_sym, results )
           rescue MartSearch::DataSourceError => error
@@ -340,9 +348,13 @@ module MartSearch
           end
         end
         
+        # Run the dataset secondary sorts in serial, BUT only run them on the results we 
+        # haven't pulled them from the cache.
         @datasets.each do |dataset_name,dataset|
           if dataset.config[:custom_secondary_sort]
-            @search_data = dataset.secondary_sort( @search_data )
+            search_data_copy = @search_data.clone
+            search_data_copy.keys.each { |key| search_data_copy.delete(key) unless terms_to_query.include?(key) }
+            @search_data.merge( dataset.secondary_sort( search_data_copy ) )
           end
         end
         

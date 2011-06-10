@@ -1,18 +1,21 @@
-<div id="wtsi-phenotyping-report">
+<div id="wtsi-phenotyping-report" class="wtsi-phenotyping">
   <h2><%= @test_name %> Data for <%= @marker_symbol %> (<%= @colony_prefix %>)</h2>
-
-  <% @data.each do |protocol_desc_hash,protocol_data| %>
-    <% next if [:marker_symbol,:test_group].include?(protocol_desc_hash) %>
-    <div id="test-overview" class="test-descriptor">
-      <h4>Overview</h4>
-      <div class="test-descriptor-content">
-        <%= protocol_data[:test_description] %>
-      </div>
-    </div>
-    
-    <div id="test-images">
-      <% protocol_data[:graphs].each do |img| %>
-        <img src="<%= img[:url] %>" alt="<%= img[:parameter] %>" />
+  
+  <% if @data[:protocol_data].empty? %>
+    <div><em>No data reported</em></div>
+  <% else %>
+    <div class="accordion active">
+      <% @data[:protocol_data].sort_by{ |k,v| v[:order_by] }.each do |protocol_desc_hash,protocol_data| %>
+        <% title = protocol_data[:protocol] %>
+        <%= 
+          partial(
+            'dataviews/wtsi-phenotyping/test_details_protocol_graphs', 
+            :locals => { 
+              :title         => title,
+              :protocol_data => protocol_data
+            }
+          ) 
+        %>
       <% end %>
     </div>
   <% end %>

@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # Small extensions to the String class.
 module MartSearch
   module StringExtensions

@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module MartSearch
   
   # Custom DataSource class for interacting with BioMart based datasources.
@@ -11,6 +13,11 @@ module MartSearch
     def initialize( conf )
       super
       @ds = Biomart::Dataset.new( @url, { :name => @conf[:dataset] } )
+    end
+    
+    def ds_attributes
+      @ds_attributes = @ds.attributes if @ds_attributes.nil?
+      return @ds_attributes
     end
     
     # Simple heartbeat function to check that the datasource is online.

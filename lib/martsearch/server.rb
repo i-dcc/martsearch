@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 HoptoadNotifier.configure do |config|
   config.api_key          = '1fad0eaacba687ba1ded863171b814c4'
   config.host             = 'htgt.internal.sanger.ac.uk'
@@ -22,7 +24,7 @@ module MartSearch
     # We're going to use the version number as a cache breaker for the CSS 
     # and javascript code. Update with each release of your portal (especially 
     # if you change the CSS or JS)!!!
-    VERSION = '0.1.16'
+    VERSION = '0.1.17'
     DEFAULT_CSS_FILES = [
       'reset.css',
       'jquery.prettyPhoto.css',
@@ -228,17 +230,7 @@ module MartSearch
         
         @current    = "home"
         @page_title = "IKMC Project: #{project_id}"
-        @data       = @ms.fetch_from_cache("project-report-#{project_id}")
-        
-        if @data.nil? or params[:fresh] == "true"
-          results = get_ikmc_project_page_data( project_id )
-          @data   = results[:data]
-          @errors = { :project_page_errors => results[:errors] }
-          
-          unless @data.nil?
-            @ms.write_to_cache( "project-report-#{project_id}", @data )
-          end
-        end
+        get_project_page_data( project_id, params )
         
         if @data.nil?
           status 404
@@ -250,6 +242,38 @@ module MartSearch
           else
             erubis :project_report
           end
+        end
+      end
+    end
+    
+    get '/project/:id/pcr_primers/?' do
+      project_id = params[:id]
+      
+      if project_id.nil?
+        status 404
+        erubis :not_found
+      else
+        get_project_page_data( project_id, params )
+        
+        if @data[:pcr_primers].nil?
+          status 404
+          erubis :not_found
+        else
+          erubis :'project_report/pcr_primers', :layout => :ajax_layout
+        end
+      end
+    end
+    
+    def get_project_page_data( project_id, params )
+      @data = @ms.fetch_from_cache("project-report-#{project_id}")
+      
+      if @data.nil? or params[:fresh] == "true"
+        results = get_ikmc_project_page_data( project_id )
+        @data   = results[:data]
+        @errors = { :project_page_errors => results[:errors] }
+        
+        unless @data.nil?
+          @ms.write_to_cache( "project-report-#{project_id}", @data )
         end
       end
     end

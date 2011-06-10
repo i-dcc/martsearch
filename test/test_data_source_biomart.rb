@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'test_helper'
 
 class MartSearchBiomartDataSourceTest < Test::Unit::TestCase
@@ -23,6 +25,8 @@ class MartSearchBiomartDataSourceTest < Test::Unit::TestCase
         assert( @kermits_biomart.ds.alive? )
         assert( @kermits_biomart.ds.list_attributes.is_a?(Array) )
         assert( @kermits_biomart.ds.list_filters.is_a?(Array) )
+        assert( @kermits_biomart.ds_attributes.is_a?(Hash) )
+        assert( @kermits_biomart.ds_attributes == @kermits_biomart.ds.attributes )
       end
     end
     
