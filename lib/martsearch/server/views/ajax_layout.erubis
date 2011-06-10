@@ -25,6 +25,10 @@
         <% end %>
       <% end %>
     <% end %>
+    
+    <style type="text/css" media="screen">
+      #header, #content, #footer { min-width: 50px !important; }
+    </style>
   </head>
   <body>
     <div id="content">
