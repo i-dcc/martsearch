@@ -140,6 +140,4 @@ begin
   
 rescue LoadError
   puts "[ERROR] Unable to load 'wtsi' tasks - please run 'bundle install'"
-rescue Mongo::ConnectionFailure
-  # safe to ignore...
 end

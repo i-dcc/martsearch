@@ -44,6 +44,4 @@ begin
   
 rescue LoadError
   puts "[ERROR] Unable to load 'index' tasks - please run 'bundle install'"
-rescue Mongo::ConnectionFailure
-  # safe to ignore...
 end
