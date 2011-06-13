@@ -64,7 +64,7 @@ namespace :vlad do
     commands = [
       "umask #{umask}",
       "mkdir -p #{shared_path}/config",
-      "cp /software/team87/brave_new_world/conf/ols_database.yml #{shared_path}/config/ols_database.yml"
+      "ln -nfs /software/team87/brave_new_world/conf/ols_database.yml #{shared_path}/config/ols_database.yml"
     ]
     
     run commands.join(' && ')
