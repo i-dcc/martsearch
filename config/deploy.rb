@@ -4,10 +4,7 @@ set :application,       'ikmc_portal'
 set :repository,        'git@github.com:i-dcc/martsearch.git'
 set :revision,          'origin/ikmc_portal'
 
-# set :domain,            'htgt.internal.sanger.ac.uk'
-set :domain,            'localhost'
-set :ssh_flags,         '-p 10027'
-
+set :domain,            'htgt.internal.sanger.ac.uk'
 set :service_user,      'team87'
 set :bnw_env,           '/software/bin/perl -I/software/team87/brave_new_world/lib/perl5 -I/software/team87/brave_new_world/lib/perl5/x86_64-linux-thread-multi /software/team87/brave_new_world/bin/htgt-env.pl --live' 
 set :bundle_cmd,        "#{bnw_env} bundle"
@@ -58,8 +55,8 @@ namespace :vlad do
   
   desc "Fixes the permissions on the 'current' deployment"
   remote_task :fix_perms, :roles => :app do
-    fix_perms_you     = "find #{current_path}/ -user #{`whoami`.chomp}" + ' \! \( -perm -u+rw -a -perm -g+rw \) -exec chmod -v ug=rwX,o=rX {} \;'
-    fix_perms_service = "sudo -u #{service_user} find #{releases_path}/ -user #{service_user}" + ' \! \( -perm -u+rw -a -perm -g+rw \) -exec chmod -v ug=rwX,o=rX {} \;'
+    fix_perms_you     = "find #{deploy_to}/ -user #{`whoami`.chomp}" + ' \! \( -perm -u+rw -a -perm -g+rw \) -exec chmod -v ug=rwX,o=rX {} \;'
+    fix_perms_service = "sudo -u #{deploy_to} find #{releases_path}/ -user #{service_user}" + ' \! \( -perm -u+rw -a -perm -g+rw \) -exec chmod -v ug=rwX,o=rX {} \;'
     
     run fix_perms_you
     run fix_perms_service
