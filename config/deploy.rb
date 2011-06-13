@@ -75,4 +75,9 @@ namespace :vlad do
     
     run commands.join(' && ')
   end
+  
+  Rake.clear_tasks('vlad:start_app')
+  remote_task :start_app, :roles => :app do
+    run "touch #{current_path}/tmp/restart.txt"
+  end
 end
