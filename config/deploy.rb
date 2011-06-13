@@ -1,65 +1,61 @@
 # encoding: utf-8
 
-set :application, 'ikmc_portal'
-set :repository,  'http://github.com/i-dcc/martsearch.git'
-set :branch, 'ikmc_portal'
-set :user, `whoami`.chomp
+set :application,       'ikmc_portal'
+set :repository,        'git@github.com:i-dcc/martsearch.git'
+set :revision,          'origin/ikmc_portal'
 
-set :scm, :git
-set :deploy_via, :export
-set :copy_compression, :bz2
+# set :domain,            'htgt.internal.sanger.ac.uk'
+set :domain,            'localhost'
+set :ssh_flags,         '-p 10027'
 
-set :keep_releases, 5
-set :use_sudo, false
+set :service_user,      'team87'
+set :bnw_env,           '/software/bin/perl -I/software/team87/brave_new_world/lib/perl5 -I/software/team87/brave_new_world/lib/perl5/x86_64-linux-thread-multi /software/team87/brave_new_world/bin/htgt-env.pl --live' 
+set :bundle_cmd,        "#{bnw_env} bundle"
+set :web_command,       "#{bnw_env} sudo -u #{service_user} /software/team87/brave_new_world/services/apache2-ruby19"
 
-role :web, 'etch-dev64.internal.sanger.ac.uk'
-role :app, 'etch-dev64.internal.sanger.ac.uk'
+##
+## Environments
+##
 
-set :default_environment, {
-  'PATH'      => '/software/team87/brave_new_world/bin:/software/perl-5.8.8/bin:/usr/bin:/bin',
-  'PERL5LIB'  => '/software/team87/brave_new_world/lib/perl5:/software/team87/brave_new_world/lib/perl5/x86_64-linux-thread-multi'
-}
-
-set :bundle_cmd, '/software/team87/brave_new_world/bin/htgt-env.pl --environment Ruby19 /software/team87/brave_new_world/app/ruby-1.9.2-p0/lib/ruby/gems/1.9/bin/bundle'
-
-namespace :deploy do
-  desc 'Restart Passenger'
-  task :restart, :roles => :app, :except => { :no_release => true } do
-    run "touch #{File.join(current_path,'tmp','restart.txt')}"
-  end
-  
-  desc 'Symlink shared configs and folders on each release.'
-  task :symlink_shared do
-    # OLS conf
-    run "ln -nfs #{shared_path}/ols_database.yml #{release_path}/config/ols_database.yml"
-    
-    # /log
-    run "rm -rf #{release_path}/log"
-    run "ln -nfs #{shared_path}/log #{release_path}/log"
-    
-    # /tmp
-    run "mkdir -m 777 -p #{var_run_path}/tmp"
-    run "rm -rf #{release_path}/tmp"
-    run "ln -nfs #{var_run_path}/tmp #{release_path}/tmp"
-    
-    # /public/js - the server needs write access...
-    run "rm -rf #{var_run_path}/js"
-    run "mv #{release_path}/public/js #{var_run_path}/js"
-    run "ln -nfs #{var_run_path}/js #{release_path}/public/js"
-    run "chgrp team87 #{var_run_path}/js && chmod g+w #{var_run_path}/js"
-    
-    # /public/css - the server needs write access...
-    run "rm -rf #{var_run_path}/css"
-    run "mv #{release_path}/public/css #{var_run_path}/css"
-    run "ln -nfs #{var_run_path}/css #{release_path}/public/css"
-    run "chgrp team87 #{var_run_path}/css && chmod g+w #{var_run_path}/css"
-  end
-  
-  desc 'Set the permissions of the filesystem so that others in the team can deploy'
-  task :fix_perms do
-    run "chmod g+w #{release_path}"
-  end
+task :production do
+  set :deploy_location, "/nfs/team87/services/vlad_managed_apps/production/#{application}"
 end
 
-after 'deploy:update_code', 'deploy:symlink_shared'
-after 'deploy:symlink', 'deploy:fix_perms'
+task :staging do
+  set :deploy_location, "/nfs/team87/services/vlad_managed_apps/staging/#{application}"
+end
+
+##
+## Tasks
+##
+
+task :define_role do
+  raise "You have to specify an environment name i.e. 'rake production deploy'" if deploy_location.nil?
+  set :deploy_to, deploy_location
+end
+
+desc "Full deployment cycle: update, bundle, symlink, restart, cleanup"
+task :deploy => %w[
+  define_role
+  vlad:update
+  vlad:bundle:install
+  vlad:symlink_config
+  vlad:start_app
+  vlad:fix_perms
+  vlad:cleanup
+]
+
+namespace :vlad do
+  desc "Symlinks the configuration files"
+  remote_task :symlink_config, :roles => :app do
+    %w[ ols_database.yml ].each do |file|
+      run "ln -s #{shared_path}/config/#{file} #{current_path}/config/#{file}"
+    end
+  end
+  
+  desc "Fixes the permissions on the 'current' deployment"
+  remote_task :fix_perms, :roles => :app do
+    fix_perms = "find #{current_path}/ -user #{`whoami`.chomp}" + ' \! \( -perm -u+rw -a -perm -g+rw \) -exec chmod -v ug=rwX,o=rX {} \;'
+    run fix_perms
+  end
+end
