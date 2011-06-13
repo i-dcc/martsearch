@@ -72,4 +72,6 @@ begin
   
 rescue LoadError
   puts "[ERROR] Unable to load 'wtsi_phenotyping' tasks - please run 'bundle install'"
+rescue Mongo::ConnectionFailure
+  # safe to ignore...
 end
