@@ -43,7 +43,7 @@ namespace :vlad do
   desc "Symlinks the configuration files"
   remote_task :symlink_config, :roles => :app do
     %w[ ols_database.yml ].each do |file|
-      run "ln -s #{shared_path}/config/#{file} #{current_path}/config/#{file}"
+      run "ln -nfs #{shared_path}/config/#{file} #{current_path}/config/#{file}"
     end
   end
   
@@ -51,5 +51,19 @@ namespace :vlad do
   remote_task :fix_perms, :roles => :app do
     fix_perms = "find #{current_path}/ -user #{`whoami`.chomp}" + ' \! \( -perm -u+rw -a -perm -g+rw \) -exec chmod -v ug=rwX,o=rX {} \;'
     run fix_perms
+  end
+  
+  task :setup do
+    Rake::Task['vlad:setup_shared'].invoke
+  end
+  
+  remote_task :setup_shared, :roles => :app do
+    commands = [
+      "umask #{umask}",
+      "mkdir -p #{shared_path}/config",
+      "cp /software/team87/brave_new_world/conf/ols_database.yml #{shared_path}/config/ols_database.yml"
+    ]
+    
+    run commands.join(' && ')
   end
 end
