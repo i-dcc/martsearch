@@ -39,6 +39,15 @@ task :deploy => %w[
   vlad:cleanup
 ]
 
+# only ever run this ONCE for a server/config
+task :setup_new_instance => %w[
+  vlad:setup
+  vlad:update
+  vlad:bundle:install
+  vlad:symlink_config
+  vlad:fix_perms
+]
+
 namespace :vlad do
   desc "Symlinks the configuration files"
   remote_task :symlink_config, :roles => :app do
