@@ -49,8 +49,11 @@ namespace :vlad do
   
   desc "Fixes the permissions on the 'current' deployment"
   remote_task :fix_perms, :roles => :app do
-    fix_perms = "find #{current_path}/ -user #{`whoami`.chomp}" + ' \! \( -perm -u+rw -a -perm -g+rw \) -exec chmod -v ug=rwX,o=rX {} \;'
-    run fix_perms
+    fix_perms_you     = "find #{current_path}/ -user #{`whoami`.chomp}" + ' \! \( -perm -u+rw -a -perm -g+rw \) -exec chmod -v ug=rwX,o=rX {} \;'
+    fix_perms_service = "sudo -u #{service_user} find #{releases_path}/ -user #{service_user}" + ' \! \( -perm -u+rw -a -perm -g+rw \) -exec chmod -v ug=rwX,o=rX {} \;'
+    
+    run fix_perms_you
+    run fix_perms_service
   end
   
   task :setup do
