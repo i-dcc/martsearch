@@ -18,25 +18,19 @@ set :web_command,       "#{bnw_env} sudo -u #{service_user} /software/team87/bra
 ##
 
 task :production do
-  set :deploy_location, "/nfs/team87/services/vlad_managed_apps/production/#{application}"
+  set :deploy_to, "/nfs/team87/services/vlad_managed_apps/production/#{application}"
 end
 
 task :staging do
-  set :deploy_location, "/nfs/team87/services/vlad_managed_apps/staging/#{application}"
+  set :deploy_to, "/nfs/team87/services/vlad_managed_apps/staging/#{application}"
 end
 
 ##
 ## Tasks
 ##
 
-task :define_role do
-  raise "You have to specify an environment name i.e. 'rake production deploy'" if deploy_location.nil?
-  set :deploy_to, deploy_location
-end
-
 desc "Full deployment cycle: update, bundle, symlink, restart, cleanup"
 task :deploy => %w[
-  define_role
   vlad:update
   vlad:bundle:install
   vlad:symlink_config
