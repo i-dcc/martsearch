@@ -4,10 +4,7 @@ set :application,       'martsearch'
 set :repository,        'git@github.com:i-dcc/martsearch.git'
 set :revision,          'origin/master'
 
-# set :domain,            'htgt.internal.sanger.ac.uk'
-set :domain,            'localhost'
-set :ssh_flags,         '-p 10027'
-
+set :domain,            'htgt.internal.sanger.ac.uk'
 set :service_user,      'team87'
 set :bnw_env,           '/software/bin/perl -I/software/team87/brave_new_world/lib/perl5 -I/software/team87/brave_new_world/lib/perl5/x86_64-linux-thread-multi /software/team87/brave_new_world/bin/htgt-env.pl --live' 
 set :bundle_cmd,        "#{bnw_env} bundle"
