@@ -1,0 +1,11 @@
+begin
+  require 'vlad'
+  require 'bundler/vlad'
+  require 'tmpdir'
+  require 'thread'
+  
+  Vlad.load({ :app => :passenger, :scm => :git })
+  
+rescue LoadError
+  puts "[ERROR] Unable to load 'vlad' (deployment) tasks - please run 'bundle install'"
+end
