@@ -32,6 +32,9 @@ gem 'builder',                '~>3.0',    :require => false
 
 # Misc
 gem 'awesome_print',                      :require => false
+gem 'vlad',                               :require => false
+gem 'vlad-git',                           :require => false
+gem 'hoe',                                :require => false
 
 group :development, :test do
   gem 'yard',                             :require => false
@@ -40,9 +43,6 @@ group :development, :test do
   gem 'webmock',                          :require => false
   gem 'rack-test',            '>=0.5',    :require => false
   gem 'capybara',             '>=0.4.0',  :require => false
-  gem 'capistrano',           '>=2.5',    :require => false
-  gem 'capistrano-ext',                   :require => false
-  gem 'railsless-deploy',                 :require => false
   gem 'simplecov',                        :require => false,  :platforms => :ruby_19
   gem 'simplecov-rcov',                   :require => false,  :platforms => :ruby_19
   gem 'wirble',                           :require => false

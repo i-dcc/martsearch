@@ -29,7 +29,7 @@ require 'mongo_store'
 
 require 'awesome_print'
 
-MARTSEARCH_PATH = "#{File.expand_path(File.dirname(__FILE__))}/.."
+MARTSEARCH_PATH = "#{File.expand_path(File.dirname(__FILE__))}/.." unless Object.const_defined? :MARTSEARCH_PATH
 
 require "#{MARTSEARCH_PATH}/lib/martsearch/array"
 require "#{MARTSEARCH_PATH}/lib/martsearch/hash"
@@ -56,7 +56,7 @@ end
 # @author Darren Oakley
 module MartSearch
   
-  ENVIRONMENT = ENV['RACK_ENV'] ? ENV['RACK_ENV'] : 'development'
+  ENVIRONMENT = ENV['RACK_ENV'] ? ENV['RACK_ENV'] : 'development' unless MartSearch.const_defined? :ENVIRONMENT
   
   # Error class raised when there is an error with the supplied configuration files.
   class InvalidConfigError < StandardError; end

@@ -1,68 +1,89 @@
 # encoding: utf-8
 
-set :application, 'wtsi_portal'
-set :repository,  'http://github.com/i-dcc/martsearch.git'
-set :branch, 'wtsi_portal'
-set :user, `whoami`.chomp
+set :application,       'wtsi_portal'
+set :repository,        'git@github.com:i-dcc/martsearch.git'
+set :revision,          'origin/wtsi_portal'
 
-set :scm, :git
-set :deploy_via, :export
-set :copy_compression, :bz2
+set :domain,            'htgt.internal.sanger.ac.uk'
+set :service_user,      'team87'
+set :bnw_env,           '/software/bin/perl -I/software/team87/brave_new_world/lib/perl5 -I/software/team87/brave_new_world/lib/perl5/x86_64-linux-thread-multi /software/team87/brave_new_world/bin/htgt-env.pl --live' 
+set :bundle_cmd,        "#{bnw_env} bundle"
+set :web_command,       "#{bnw_env} sudo -u #{service_user} /software/team87/brave_new_world/services/apache2-ruby19"
 
-set :keep_releases, 5
-set :use_sudo, false
+##
+## Environments
+##
 
-role :web, 'etch-dev64.internal.sanger.ac.uk'
-role :app, 'etch-dev64.internal.sanger.ac.uk'
-
-set :default_environment, {
-  'PATH'      => '/software/team87/brave_new_world/bin:/software/perl-5.8.8/bin:/usr/bin:/bin',
-  'PERL5LIB'  => '/software/team87/brave_new_world/lib/perl5:/software/team87/brave_new_world/lib/perl5/x86_64-linux-thread-multi'
-}
-
-set :bundle_cmd, '/software/team87/brave_new_world/bin/htgt-env.pl --environment Ruby19 /software/team87/brave_new_world/app/ruby-1.9.2-p0/lib/ruby/gems/1.9/bin/bundle'
-
-namespace :deploy do
-  desc 'Restart Passenger'
-  task :restart, :roles => :app, :except => { :no_release => true } do
-    run "touch #{File.join(current_path,'tmp','restart.txt')}"
-  end
-  
-  desc 'Symlink shared configs and folders on each release.'
-  task :symlink_shared do
-    # OLS conf
-    run "ln -nfs #{shared_path}/ols_database.yml #{release_path}/config/ols_database.yml"
-    
-    # /log
-    run "rm -rf #{release_path}/log"
-    run "ln -nfs #{shared_path}/log #{release_path}/log"
-    
-    # /tmp
-    run "mkdir -m 777 -p #{var_run_path}/tmp"
-    run "rm -rf #{release_path}/tmp"
-    run "ln -nfs #{var_run_path}/tmp #{release_path}/tmp"
-    
-    # /public/js - the server needs write access...
-    run "rm -rf #{var_run_path}/js"
-    run "mv #{release_path}/public/js #{var_run_path}/js"
-    run "ln -nfs #{var_run_path}/js #{release_path}/public/js"
-    run "chgrp team87 #{var_run_path}/js && chmod g+w #{var_run_path}/js"
-    
-    # /public/css - the server needs write access...
-    run "rm -rf #{var_run_path}/css"
-    run "mv #{release_path}/public/css #{var_run_path}/css"
-    run "ln -nfs #{var_run_path}/css #{release_path}/public/css"
-    run "chgrp team87 #{var_run_path}/css && chmod g+w #{var_run_path}/css"
-    
-    # WTSI Phenotyping Heatmap
-    run "ln -nfs /software/team87/brave_new_world/data/generated/pheno_overview.xls #{release_path}/tmp/pheno_overview.xls"
-  end
-  
-  desc 'Set the permissions of the filesystem so that others in the team can deploy'
-  task :fix_perms do
-    run "chmod g+w #{release_path}"
-  end
+task :production do
+  set :deploy_to, "/nfs/team87/services/vlad_managed_apps/production/#{application}"
 end
 
-after 'deploy:update_code', 'deploy:symlink_shared'
-after 'deploy:symlink', 'deploy:fix_perms'
+task :staging do
+  set :deploy_to, "/nfs/team87/services/vlad_managed_apps/staging/#{application}"
+end
+
+##
+## Tasks
+##
+
+desc "Full deployment cycle: update, bundle, symlink, restart, cleanup"
+task :deploy => %w[
+  vlad:update
+  vlad:bundle:install
+  vlad:symlink_config
+  vlad:symlink_wtsi_phenotyping_heatmap
+  vlad:start_app
+  vlad:fix_perms
+  vlad:cleanup
+]
+
+# only ever run this ONCE for a server/config
+task :setup_new_instance => %w[
+  vlad:setup
+  vlad:update
+  vlad:bundle:install
+  vlad:symlink_config
+  vlad:fix_perms
+]
+
+namespace :vlad do
+  desc "Symlinks the configuration files"
+  remote_task :symlink_config, :roles => :app do
+    %w[ ols_database.yml ].each do |file|
+      run "ln -nfs #{shared_path}/config/#{file} #{current_path}/config/#{file}"
+    end
+  end
+  
+  desc "Symlinks the WTSI Phenotyping Heatmap"
+  remote_task :symlink_wtsi_phenotyping_heatmap, :roles => :app do
+    run "ln -nfs /software/team87/brave_new_world/data/generated/pheno_overview.xls #{current_path}/tmp/pheno_overview.xls"
+  end
+  
+  desc "Fixes the permissions on the 'current' deployment"
+  remote_task :fix_perms, :roles => :app do
+    fix_perms_you     = "find #{deploy_to}/ -user #{`whoami`.chomp}" + ' \! \( -perm -u+rw -a -perm -g+rw \) -exec chmod -v ug=rwX,o=rX {} \;'
+    fix_perms_service = "sudo -u #{deploy_to} find #{releases_path}/ -user #{service_user}" + ' \! \( -perm -u+rw -a -perm -g+rw \) -exec chmod -v ug=rwX,o=rX {} \;'
+    
+    run fix_perms_you
+    run fix_perms_service
+  end
+  
+  task :setup do
+    Rake::Task['vlad:setup_shared'].invoke
+  end
+  
+  remote_task :setup_shared, :roles => :app do
+    commands = [
+      "umask #{umask}",
+      "mkdir -p #{shared_path}/config",
+      "ln -nfs /software/team87/brave_new_world/conf/ols_database.yml #{shared_path}/config/ols_database.yml"
+    ]
+    
+    run commands.join(' && ')
+  end
+  
+  Rake.clear_tasks('vlad:start_app')
+  remote_task :start_app, :roles => :app do
+    run "touch #{current_path}/tmp/restart.txt"
+  end
+end

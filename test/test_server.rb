@@ -263,7 +263,7 @@ class MartSearchServerRackTest < Test::Unit::TestCase
       end
     end
     
-    should 'render IKMC project pages as JSON...' do
+    should 'render IKMC project pages...' do
       VCR.use_cassette('test_server_project_page') do
         project_ids_to_test = ['35505','27042','42474','82403','23242','VG12252','VG11490']
     
@@ -272,6 +272,14 @@ class MartSearchServerRackTest < Test::Unit::TestCase
           assert( @browser.last_response.ok?, "A request to '/project/#{project_id}?wt=json' failed!" )
           json = JSON.parse( @browser.last_response.body )
           assert( json.is_a?(Hash) )
+          
+          @browser.get "/project/#{project_id}/pcr_primers"
+          if json['pcr_primers']
+            assert( @browser.last_response.ok?, "A request to '/project/#{project_id}/pcr_primers' failed!" )
+            assert( @browser.last_response.body.include?("LRPCR Genotyping Primers") )
+          else
+            assert_equal( 404, @browser.last_response.status )
+          end
         end
     
         @browser.get "/project/foobar"

@@ -14,19 +14,6 @@ GEM
     bson (1.2.4)
     bson_ext (1.2.4)
     builder (3.0.0)
-    capistrano (2.5.20)
-      highline
-      highline
-      net-scp
-      net-scp (>= 1.0.0)
-      net-sftp
-      net-sftp (>= 2.0.0)
-      net-ssh (>= 2.0.14)
-      net-ssh
-      net-ssh-gateway
-      net-ssh-gateway (>= 1.0.0)
-    capistrano-ext (1.2.1)
-      capistrano (>= 1.0.0)
     capybara (0.4.1.2)
       celerity (>= 0.7.9)
       culerity (>= 0.2.4)
@@ -48,7 +35,8 @@ GEM
       abstract (>= 1.0.0)
     ffi (1.0.7)
       rake (>= 0.8.7)
-    highline (1.6.1)
+    hoe (2.9.4)
+      rake (>= 0.8.7)
     hoptoad_notifier (2.4.9)
       activesupport
       builder
@@ -63,13 +51,6 @@ GEM
       activesupport (>= 2.2)
       mongo (>= 1.0)
     mysql2 (0.2.7)
-    net-scp (1.0.4)
-      net-ssh (>= 1.99.1)
-    net-sftp (2.0.5)
-      net-ssh (>= 2.0.9)
-    net-ssh (2.1.3)
-    net-ssh-gateway (1.0.1)
-      net-ssh (>= 1.99.1)
     newrelic_rpm (3.0.0)
     nokogiri (1.4.4)
     open4 (1.0.1)
@@ -79,7 +60,6 @@ GEM
       rack (>= 0.9.1)
     rack-test (0.6.0)
       rack (>= 1.0)
-    railsless-deploy (1.0.2)
     rake (0.8.7)
     rubytree (0.8.1)
     rubyzip (0.9.4)
@@ -104,6 +84,10 @@ GEM
     test-unit (2.2.0)
     tilt (1.3)
     vcr (1.7.2)
+    vlad (1.4.0)
+      open4
+      rake (>= 0.8.1)
+    vlad-git (2.1.0)
     webmock (1.6.2)
       addressable (>= 2.2.2)
       crack (>= 0.1.7)
@@ -125,11 +109,10 @@ DEPENDENCIES
   bson_ext
   builder (~> 3.0)
   bundler (>= 1.0.0)
-  capistrano (>= 2.5)
-  capistrano-ext
   capybara (>= 0.4.0)
   closure-compiler
   erubis
+  hoe
   hoptoad_notifier
   i18n
   json
@@ -142,7 +125,6 @@ DEPENDENCIES
   rack (>= 1.0)
   rack-contrib
   rack-test (>= 0.5)
-  railsless-deploy
   rubytree (~> 0.7)
   sequel (~> 3.0)
   shoulda (>= 2.11)
@@ -152,6 +134,8 @@ DEPENDENCIES
   sinatra-static-assets
   test-unit
   vcr (>= 1.1)
+  vlad
+  vlad-git
   webmock
   will_paginate (~> 2.3)
   wirble
