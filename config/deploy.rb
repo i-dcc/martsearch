@@ -43,6 +43,7 @@ task :setup_new_instance => %w[
   vlad:update
   vlad:bundle:install
   vlad:symlink_config
+  vlad:symlink_wtsi_phenotyping_heatmap
   vlad:fix_perms
 ]
 
