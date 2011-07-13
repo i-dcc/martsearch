@@ -9,7 +9,8 @@
 <table class="europhenome-data" style="margin:0">
   <thead>
     <tr>
-      <th></th>
+      <th>Allele Name</th>
+      <th>Zygosity</th>
       <% mp_groups.each do |mp_group| %>
         <th><span class="vertical_text"><%= mp_group[:name] %></span></th>
       <% end %>
