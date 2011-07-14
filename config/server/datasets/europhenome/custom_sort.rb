@@ -30,7 +30,7 @@ module MartSearch
             :line_name      => result[:line_name],
             :zygosity       => het_hom,
             :allele_id      => result[:allele_id],
-            :allele_name    => result[:allele_name],
+            :allele_name    => fix_superscript_text_in_attribute(result[:allele_name]),
             :emma_id        => result[:emma_id],
             :escell_clone   => result[:escell_clone],
             :stocklist_id   => result[:stocklist_id],
