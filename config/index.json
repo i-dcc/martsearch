@@ -15,9 +15,9 @@
       "mgi":                         { "type": "textTight", "indexed": true, "stored": false },
       "secondary_mgi_accession_id":  { "type": "textTight", "indexed": true, "stored": true, "multi_valued": true },
       
-      "marker_symbol":               { "type": "text", "indexed": true, "stored": true },
+      "marker_symbol":               { "type": "gene_symbol", "indexed": true, "stored": true },
       "marker_symbol_str":           { "type": "string", "indexed": true, "stored": false },
-      "symbol":                      { "type": "text", "indexed": true, "stored": false },
+      "symbol":                      { "type": "gene_symbol", "indexed": true, "stored": false },
       
       "marker_name":                 { "type": "text", "indexed": true, "stored": true, "multi_valued": true },
       "marker_type":                 { "type": "text", "indexed": true, "stored": true },
