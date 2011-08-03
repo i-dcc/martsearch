@@ -24,7 +24,7 @@
       </td>
     </tr>
   </table>
-  
+
   <h3>Viewing IKMC Data in Ensembl</h3>
   <p>
     Most of the products/data found within this portal can also be viewed as <a href="http://en.wikipedia.org/wiki/Distributed_Annotation_System" target="_blank">DAS</a> 
@@ -92,7 +92,8 @@
       a#ikmc_targ_prod_link {left:105px; top:69px;}
       a#ikmc_mous_prod_link {left:105px; top:103px;}
       a#ikmc_omim_link      {left:105px; top:137px;}
-      a#mgi_features_link   {left:358px; top:77px;}
+      a#mgi_features_link   {left:358px; top:43px;}
+      a#mgi_gxd_link        {left:358px; top:77px;}
       a#ikmc_unitrap_link   {left:58px; top:224px;}
       a#europhenome_link    {left:500px; top:155px;}
       a#eurexpress_link     {left:535px; top:241px;}
@@ -108,7 +109,8 @@
       <dd><a id="ikmc_targ_prod_link" title="IKMC Targeted Products" href="http://www.knockoutmouse.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=idcc_targ_rep.default.attributes.pipeline|idcc_targ_rep.default.attributes.ikmc_project_id|idcc_targ_rep.default.attributes.mgi_accession_id|idcc_targ_rep.default.attributes.targeting_vector|idcc_targ_rep.default.attributes.escell_clone&FILTERS=&VISIBLEPANEL=mainpanel"></a></dd>
       <dd><a id="ikmc_mous_prod_link" title="IKMC Mouse Production" href="http://www.knockoutmouse.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=kermits.default.attributes.sponsor|kermits.default.attributes.marker_symbol|kermits.default.attributes.status&FILTERS=&VISIBLEPANEL=mainpanel"></a></dd>
       <dd><a id="ikmc_omim_link" title="OMIM" href="http://www.knockoutmouse.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=omim.default.attributes.omim_id|omim.default.attributes.title|omim.default.attributes.human_gene_symbol|omim.default.attributes.mouse_gene_symbol|omim.default.attributes.mgi_accession_id|omim.default.attributes.location|omim.default.attributes.gene_status|omim.default.attributes.mapping_method|omim.default.attributes.disorder_name|omim.default.attributes.disorder_type|omim.default.attributes.tentative&FILTERS=&VISIBLEPANEL=mainpanel"></a></dd>
-      <dd><a id="mgi_features_link" title="MGI Features" href="http://biomart.informatics.jax.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=markers.default.markers_attributes.marker_symbol_107|markers.default.markers_attributes.marker_name_107&FILTERS=&VISIBLEPANEL=mainpanel"></a></dd>
+      <dd><a id="mgi_features_link" title="Genes &amp; Geneome Features" href="http://biomart.informatics.jax.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=markers.default.markers_attributes.marker_symbol_107|markers.default.markers_attributes.marker_name_107&FILTERS=&VISIBLEPANEL=mainpanel"></a></dd>
+      <dd><a id="mgi_gxd_link" title="Gene Expression Data (GXD)" href="http://biomart.informatics.jax.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=result.default.naive_attributes.markersymbol|result.default.naive_attributes.assaymgiid|result.default.naive_attributes.assaytype|result.default.naive_attributes.mutantalleles|result.default.naive_attributes.age|result.default.naive_attributes.stagenumber|result.default.naive_attributes.printname|result.default.naive_attributes.strength|result.default.naive_attributes.pattern|result.default.naive_attributes.imagefigure&FILTERS=&VISIBLEPANEL=mainpanel"></a></dd>
       <dd><a id="ikmc_unitrap_link" title="UniTrap" href="http://biomart.helmholtz-muenchen.de/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=unitrap.default.attributes.marker_symbol|unitrap.default.attributes.ensembl_gene_id|unitrap.default.attributes.unitrap_accession_id|unitrap.default.attributes.genbank_id|unitrap.default.attributes.genbank_accession_id|unitrap.default.attributes.project|unitrap.default.attributes.escell_clone&FILTERS=&VISIBLEPANEL=mainpanel"></a></dd>
       <dd><a id="europhenome_link" title="Europhenome" href='http://www.europhenome.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=europhenome.default.naive_attributes.ensembl_gene_id|europhenome.default.naive_attributes.stocklist_id|europhenome.default.naive_attributes.sex|europhenome.default.naive_attributes.escell_clone|europhenome.default.naive_attributes.allele_name|europhenome.default.naive_attributes.marker_name|europhenome.default.naive_attributes.line_name|europhenome.default.naive_attributes.emma_id|europhenome.default.naive_attributes.effect_size|europhenome.default.naive_attributes.significance|europhenome.default.naive_attributes.mp_term_name|europhenome.default.naive_attributes.zygosity|europhenome.default.naive_attributes.europhenome_id|europhenome.default.naive_attributes.parameter_eslim_id|europhenome.default.naive_attributes.pipeline|europhenome.default.naive_attributes.mp_term|europhenome.default.naive_attributes.ikmc_project_id|europhenome.default.naive_attributes.marker_symbol|europhenome.default.naive_attributes.parameter_name|europhenome.default.naive_attributes.mgi_accession_id&FILTERS=europhenome.default.naive_filters.significance."0.05"&VISIBLEPANEL=mainpanel'></a></dd>
       <dd><a id="eurexpress_link" title="Eurexpress" href="http://biomart.eurexpress.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=template.default.attributes.tmp_template_id_key|template.default.attributes.tmp_gene_symbol|template.default.attributes.tmp_gene_description|template.default.attributes.tmp_chromosone_location|template.default.attributes.tmp_aliases|template.default.attributes.ass_assay_id_key|template.default.attributes.assay_image|template.default.attributes.emap_term&FILTERS=&VISIBLEPANEL=mainpanel"></a></dd>
