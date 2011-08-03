@@ -34,6 +34,7 @@ gem 'builder',                '~>3.0',    :require => false
 gem 'awesome_print',                      :require => false
 gem 'vlad',                               :require => false
 gem 'vlad-git',                           :require => false
+gem 'hoe',                                :require => false
 
 group :development, :test do
   gem 'yard',                             :require => false

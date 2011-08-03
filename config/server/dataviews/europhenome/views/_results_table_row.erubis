@@ -1,5 +1,6 @@
 <tr>
-  <td><%= line_data[:line_name] %>&nbsp;(<%= line_data[:zygosity] %>)</td>
+  <td><%= line_data[:allele_name] %></td>
+  <td><%= line_data[:zygosity] %></td>
   <% mp_groups.each do |mp_group| %>
     <%
       cell_class = 'no-data'

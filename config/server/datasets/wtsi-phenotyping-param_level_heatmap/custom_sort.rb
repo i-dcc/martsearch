@@ -35,6 +35,10 @@ module MartSearch
         # process and store the individual results data...
         wtsi_phenotyping_param_level_heatmap_sort_mp_heatmap_data( result, mp_groups )
         wtsi_phenotyping_param_level_heatmap_sort_test_group_data( result, test_groups )
+        
+        # TODO: When MIG gets their collab data in the param level heatmap we can ditch this clause!
+        test_groups.delete( :eye_histopathology )
+        
       end
       
       return sorted_results
