@@ -3,7 +3,7 @@
 module MartSearch
   module DataSetUtils
 
-    def ikmc_kermits_sort_results( results )
+    def ikmc_imits_sort_results( results )
       sorted_results = {}
 
       results.each do |result|
