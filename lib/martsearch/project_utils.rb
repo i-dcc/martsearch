@@ -306,7 +306,7 @@ module MartSearch
         return results
       end
       
-      # This function hits the ikmc-kermits mart for data on mice.
+      # This function hits the ikmc-imits mart for data on mice.
       #
       # @param [Hash] datasources The hash of prepared datasources from {MartSearch::Controller#datasources}
       # @param [String] escell_clones The escell clone names to search the mart by
@@ -320,52 +320,75 @@ module MartSearch
           'qc_homozygous_loa_sr_pcr',
           'qc_neo_count_qpcr',
           'qc_lacz_sr_pcr',
-          'qc_five_prime_cass_integrity',
+          'qc_five_prime_cassette_integrity',
           'qc_neo_sr_pcr',
           'qc_mutant_specific_sr_pcr',
           'qc_loxp_confirmation',
           'qc_three_prime_lr_pcr'
         ]
 
-        kermits_mart = datasources[:'ikmc-kermits'].ds
-        error_string = "This supplies information on mouse breeding. As a result this data will not be available on the page."
-        results      = handle_biomart_errors( "ikmc-kermits", error_string ) do
-          kermits_mart.search({
+        imits_mart  = datasources[:'ikmc-imits'].ds
+        targ_rep_mart = datasources[:'ikmc-idcc_targ_rep'].ds
+        error_string  = "This supplies information on mouse breeding. As a result this data will not be available on the page."
+        results       = handle_biomart_errors( "ikmc-imits", error_string ) do
+          targ_rep_mart.search(
             :process_results => true,
-            :filters         => {
-              'escell_clone' => escell_clones,
-              'status'       => ['Genotype Confirmed','Germline transmission achieved','Chimera mating complete','Recipient Littered','Micro-injected','Pending'],
-              'active'       => '1'
-            },
-            :attributes      => [
-                'status', 'allele_name', 'escell_clone', 'mouse_allele_name', 'emma',
-                'escell_strain', 'escell_line', 'mi_centre', 'distribution_centre',
-                'back_cross_strain', 'test_cross_strain',
-                qc_metrics
-            ].flatten,
-            :required_attributes => ['status']
-          })
+            :filters => { 'escell_clone' => escell_clones },
+            :attributes => ['escell_strain'],
+            :federate => [
+              {
+                :dataset => imits_mart,
+                :filters => {
+                  'escell_clone'          => escell_clones,
+                  'microinjection_status' => ['Genotype confirmed','Micro-injection in progress']
+                },
+                :attributes => [
+                  'microinjection_status',
+                  'marker_symbol',
+                  'allele_symbol_superscript',
+                  'mouse_allele_symbol_superscript',
+                  'escell_clone',
+                  'emma',
+                  'production_centre',
+                  'distribution_centre',
+                  'colony_background_strain',
+                  'test_cross_strain',
+                  'is_active',
+                  qc_metrics
+                ].flatten
+              }
+            ]
+          )
         end
-        
+
+        results[:data].reject! { |result| result['is_active'] == '0' }
+
+
         unless results[:data].empty?
           results[:data].recursively_symbolize_keys!
-          
-          mouse_results = {
-            :genotype_confirmed => [],
-            :mi_in_progress     => []
-          }
-          
+
+          mouse_results = { :genotype_confirmed => [], :mi_in_progress => [] }
+
           results[:data].each do |result|
-            # Override the allele_name if we have a corrected one for the mouse...
-            result[:allele_name] = result[:mouse_allele_name] unless result[:mouse_allele_name].nil?
-            
-            unless result[:allele_name].nil?
-              result[:allele_name] = fix_superscript_text_in_attribute( result[:allele_name] )
-              result[:allele_type] = allele_type( result[:allele_name] )
+            # Try and set the allele_name
+            unless result[:allele_symbol_superscript].blank?
+              result[:allele_name] = "#{result[:marker_symbol]}<sup>#{result[:allele_symbol_superscript]}</sup>"
+
+              # Override the allele_name if we have a corrected one for the mouse...
+              unless result[:mouse_allele_symbol_superscript].blank?
+                result[:allele_name] = "#{result[:marker_symbol]}<sup>#{result[:mouse_allele_symbol_superscript]}</sup>"
+              end
+
+              result[:allele_type] = allele_type(result[:allele_name])
             end
-            
-            result[:genetic_background] = ikmc_kermits_set_genetic_background(result)
-            
+
+            # Fix the strain names
+            [:colony_background_strain, :test_cross_strain, :escell_strain].each do |strain_type|
+              result[strain_type] = fix_superscript_text_in_attribute(result[strain_type]) unless result[strain_type].blank?
+            end
+
+            result[:genetic_background] = ikmc_imits_set_genetic_background(result)
+
             # Test for QC data - set each empty qc_metric to '-' or count it
             result[:qc_count] = 0
             qc_metrics.each do |metric|
@@ -375,9 +398,9 @@ module MartSearch
                 result[:qc_count] = result[:qc_count] + 1
               end
             end
-            
+
             # Now push the mouse into the correct category....
-            if result[:status] == 'Genotype Confirmed' and result[:emma] == '1'
+            if result[:microinjection_status] == 'Genotype confirmed' and result[:emma] == '1'
               mouse_results[:genotype_confirmed].push(result)
             else
               mouse_results[:mi_in_progress].push(result)
@@ -396,13 +419,12 @@ module MartSearch
           # Hide all non 'Genotype Confirmed' mice - until an undisclosed point in the future when we're 
           # told to show them again...
           # results[:data] = { :mice => [ mouse_results[:genotype_confirmed], mouse_results[:mi_in_progress] ].flatten }
-          
           results[:data] = { :mice => mouse_results[:genotype_confirmed] }
         end
 
         return results
       end
-      
+
       # This function hits the ikmc-idcc_targ_rep mart for data on the vectors and cells.
       #
       # @param [Hash] datasources The hash of prepared datasources from {MartSearch::Controller#datasources}
