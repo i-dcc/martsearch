@@ -4,7 +4,7 @@
   <% if @data[:test_data].empty? %>
     <div><em>No data reported</em></div>
   <% else %>
-    <div class="accordion active">
+    <div class="accordion">
       <% @data[:test_data].each do |test,test_data| %>
         <% test_data[:protocol_data].sort_by{ |k,v| v[:order_by] }.each do |protocol_desc_hash,protocol_data| %>
           <% title = "#{test_data[:test]}: #{protocol_data[:protocol]}" %>
