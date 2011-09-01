@@ -2,13 +2,13 @@
 
 module MartSearch
   module DataSetUtils
-    # Sort the mouse data from EMMA and KERMITS
+    # Sort the mouse data from EMMA and iMits
     #
     # @param  [Hash] search_data
     # @return [Hash]
     def dummy_mice_secondary_sort( search_data )
       search_data.each do |key,result_data|
-        kermits = result_data[:'ikmc-kermits'] || []
+        imits = result_data[:'ikmc-imits'] || []
         emma    = result_data[:'emma-strains'] || {}
 
         # Empty the dummy mice and set default values for the columns we want
@@ -59,50 +59,50 @@ module MartSearch
           :genetic_background               => nil
         }
 
-        if kermits.empty? and emma.empty?
-          result_data.delete(:'ikmc-kermits')
+        if imits.empty? and emma.empty?
+          result_data.delete(:'ikmc-imits')
           result_data.delete(:'emma-strains')
           result_data.delete(:'dummy-mice')
           next
-        elsif !kermits.empty? and emma.empty?
-          kermits.each do |kermits_mouse|
-            result_data[:'dummy-mice'].push( columns_to_merge.merge(kermits_mouse) )
+        elsif !imits.empty? and emma.empty?
+          imits.each do |imits_mouse|
+            result_data[:'dummy-mice'].push( columns_to_merge.merge(imits_mouse) )
           end
-        elsif kermits.empty? and !emma.empty?
+        elsif imits.empty? and !emma.empty?
           emma.values.each do |emma_strain|
             result_data[:'dummy-mice'].push( columns_to_merge.merge(emma_strain) )
           end
         else
-          result_data[:'dummy-mice'] = dummy_mice_merge_emma_and_kermits( emma, kermits, columns_to_merge )
+          result_data[:'dummy-mice'] = dummy_mice_merge_emma_and_imits( emma, imits, columns_to_merge )
         end
       end
 
       return search_data
     end
 
-    # Merge the EMMA and KERMITS data
+    # Merge the EMMA and iMits data
     #
     # @param  [Hash]  emma
-    # @param  [Array] kermits
+    # @param  [Array] imits
     # @param  [Hash]  defaults
     # @return [Array]
-    def dummy_mice_merge_emma_and_kermits( emma, kermits, defaults )
+    def dummy_mice_merge_emma_and_imits( emma, imits, defaults )
       results   = []
       emma_copy = emma.clone
-      
-      # associate KERMITS mice to EMMA strains
-      kermits.each do |mouse|
+
+      # associate iMits mice to EMMA strains
+      imits.each do |mouse|
         strains = emma_copy.values.select { |strain| mouse[:escell_clone] == strain[:common_name] }
         strain  = strains.nil? || strains.empty? ? defaults : strains.first
         results.push(strain.merge(mouse))
         emma_copy.delete(strain[:emma_id])
       end
-      
-      # check for EMMA mice with no corresponding KERMITS mouse
+
+      # check for EMMA mice with no corresponding iMits mouse
       emma_copy.values.each do |strain|
         results.push(defaults.merge(strain))
       end
-      
+
       return results
     end
   end
