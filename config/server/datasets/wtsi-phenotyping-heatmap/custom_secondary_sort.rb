@@ -33,8 +33,8 @@ module MartSearch
         # First, append any supporting data to the basic heatmap return.
         heatmap_raw_data.each do |result|
           # Try to improve the quality of the clone and allele data
-          result, related_kermits_entry = wtsi_phenotyping_heatmap_append_related_kermits_entry( result, result_data )
-          result                        = wtsi_phenotyping_heatmap_append_related_targ_rep_entry( result, result_data, related_kermits_entry )
+          result, related_imits_entry = wtsi_phenotyping_heatmap_append_related_imits_entry( result, result_data )
+          result                      = wtsi_phenotyping_heatmap_append_related_targ_rep_entry( result, result_data, related_imits_entry )
           
           colony_prefix = result[:colony_prefix].to_sym
           
@@ -128,47 +128,47 @@ module MartSearch
     
     private
     
-    # Helper function to look up clone and allele names in the kermits dataset as this is
+    # Helper function to look up clone and allele names in the imits dataset as this is
     # slightly more reliable than the wtsi-heatmap data.
-    def wtsi_phenotyping_heatmap_append_related_kermits_entry( result, result_data )
-      related_kermits_entry = nil
-      colony_prefix         = result[:colony_prefix]
-      kermits_data          = result_data[:'ikmc-kermits']
+    def wtsi_phenotyping_heatmap_append_related_imits_entry( result, result_data )
+      related_imits_entry = nil
+      colony_prefix       = result[:colony_prefix]
+      imits_data          = result_data[:'ikmc-imits']
       
-      if colony_prefix && kermits_data
-        kermits_data.each do |kerm|
-          related_kermits_entry = kerm if kerm[:colony_prefix] == colony_prefix
+      if colony_prefix && imits_data
+        imits_data.each do |kerm|
+          related_imits_entry = kerm if kerm[:colony_prefix] == colony_prefix
         end
       end
       
-      if related_kermits_entry && related_kermits_entry[:allele_name]
-        result[:allele_name] = related_kermits_entry[:allele_name]
-        result[:allele_type] = related_kermits_entry[:allele_type]
+      if related_imits_entry && related_imits_entry[:allele_name]
+        result[:allele_name] = related_imits_entry[:allele_name]
+        result[:allele_type] = related_imits_entry[:allele_type]
       end
       
-      if related_kermits_entry && related_kermits_entry[:escell_clone]
-        result[:escell_clone] = related_kermits_entry[:escell_clone]
+      if related_imits_entry && related_imits_entry[:escell_clone]
+        result[:escell_clone] = related_imits_entry[:escell_clone]
       end
       
-      return result, related_kermits_entry
+      return result, related_imits_entry
     end
     
     # Helper function to look up clone and allele details in the targ_rep dataset as this is 
-    # slightly more reliable than the kermits and wtsi-heatmap datasets.
-    def wtsi_phenotyping_heatmap_append_related_targ_rep_entry( result, result_data, related_kermits_entry )
+    # slightly more reliable than the imits and wtsi-heatmap datasets.
+    def wtsi_phenotyping_heatmap_append_related_targ_rep_entry( result, result_data, related_imits_entry )
       targ_rep_data          = result_data[:'ikmc-idcc_targ_rep']
       marker_symbol          = result_data[:index][:marker_symbol]
       cassette               = nil
       related_targ_rep_clone = nil
       
-      if related_kermits_entry && targ_rep_data
-        related_kermits_clone = related_kermits_entry[:escell_clone]
-        if related_kermits_clone
+      if related_imits_entry && targ_rep_data
+        related_imits_clone = related_imits_entry[:escell_clone]
+        if related_imits_clone
           targ_rep_data.each do |project_name,project|
             next if project.nil? || project.empty?
             [:conditional_clones,:nonconditional_clones].each do |clone_type|
               project[clone_type].each do |clone|
-                if clone[:escell_clone] == related_kermits_clone
+                if clone[:escell_clone] == related_imits_clone
                   cassette               = project[:cassette]
                   related_targ_rep_clone = clone
                 end

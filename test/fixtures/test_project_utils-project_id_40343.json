@@ -15,31 +15,40 @@
     "human_ensembl_start":"152990323",
     "human_ensembl_end":"153010216",
     "mice":
-    [
-      {
-          "status":"Genotype Confirmed",
-          "allele_name":"Abcd1<sup>tm1a(EUCOMM)Wtsi</sup>",
-          "escell_clone":"EPD0103_2_C01",
-          "emma":"1",
-          "escell_strain":"C57BL/6N",
-          "escell_line":"JM8.F6 (p11)",
-          "mi_centre":"WTSI",
-          "distribution_centre":"CNB",
-          "qc_southern_blot":"-",
-          "qc_tv_backbone_assay":"pass",
-          "qc_five_prime_lr_pcr":"na",
-          "qc_loa_qpcr":"na",
-          "qc_homozygous_loa_sr_pcr":"pass",
-          "qc_neo_count_qpcr":"pass",
-          "qc_lacz_sr_pcr":"pass",
-          "qc_five_prime_cass_integrity":"pass",
-          "qc_neo_sr_pcr":"na",
-          "qc_mutant_specific_sr_pcr":"pass",
-          "qc_loxp_confirmation":"pass",
-          "qc_three_prime_lr_pcr":"na",
-          "qc_count":11
-      }
-    ],
+		[
+			{
+				"escell_strain":"C57BL/6N",
+				"microinjection_status":"Genotype confirmed",
+				"marker_symbol":"Abcd1",
+				"allele_symbol_superscript":"tm1a(EUCOMM)Wtsi",
+				"mouse_allele_symbol_superscript":null,
+				"escell_clone":"EPD0103_2_C01",
+				"emma":"1",
+				"production_centre":"WTSI",
+				"distribution_centre":"CNB",
+				"colony_background_strain":null,
+				"test_cross_strain":"C57BL/6J-Tyr<sup>c-Brd</sup>",
+				"is_active":"1",
+				"qc_southern_blot":"na",
+				"qc_tv_backbone_assay":"pass",
+				"qc_five_prime_lr_pcr":"na",
+				"qc_loa_qpcr":"na",
+				"qc_homozygous_loa_sr_pcr":"pass",
+				"qc_neo_count_qpcr":"pass",
+				"qc_lacz_sr_pcr":"pass",
+				"qc_five_prime_cassette_integrity":"pass",
+				"qc_neo_sr_pcr":"na",
+				"qc_mutant_specific_sr_pcr":"pass",
+				"qc_loxp_confirmation":"pass",
+				"qc_three_prime_lr_pcr":"na",
+				"allele_name":"Abcd1<sup>tm1a(EUCOMM)Wtsi</sup>",
+				"allele_type":"Knockout-First - Reporter Tagged Insertion",
+				"genetic_background":"C57BL/6J-Tyr<sup>c-Brd</sup>;C57BL/6N",
+				"qc_count":12,
+				"cassette":"L1L2_gt0",
+				"cassette_type":"Promotorless"
+			}
+		],
     "intermediate_vectors":
     [
         {

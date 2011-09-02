@@ -38,6 +38,9 @@ module MartSearch
         
         # TODO: When MIG gets their collab data in the param level heatmap we can ditch this clause!
         test_groups.delete( :eye_histopathology )
+
+        # TODO: When the ABR data is handled correctly too we can also ditch this...
+        test_groups.delete( :auditory_brainstem_response )
         
       end
       

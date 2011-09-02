@@ -20,9 +20,9 @@
                 dist_flag = false
                 dist_flag = true if mouse[:emma] == "1"
               %>
-              <%= mouse_order_button( @data[:mgi_accession_id], @data[:marker_symbol], @data[:ikmc_project], @data[:project_id], dist_flag, mouse[:mi_centre], mouse[:distribution_centre] ) %>
+              <%= mouse_order_button( @data[:mgi_accession_id], @data[:marker_symbol], @data[:ikmc_project], @data[:project_id], dist_flag, mouse[:production_centre], mouse[:distribution_centre] ) %>
             </td>
-            <td><%= mouse[:status]%></td>
+            <td><%= mouse[:microinjection_status]%></td>
             <td><%= mouse[:allele_name] %></td>
             <td><%= mouse[:allele_type] %> (<%= mouse[:cassette_type] %> Cassette)</td>
             <td><%= mouse[:escell_clone] %></td>
@@ -36,7 +36,7 @@
               <br />
               (&nbsp;<a href="http://www.knockoutmouse.org/kb/entry/90/" target="_blank" class="ext_link">about</a>&nbsp;)
             </td>
-            <td><%= [ mouse[:mi_centre], mouse[:distribution_centre] ].uniq.join('/') %></td>
+            <td><%= [ mouse[:production_centre], mouse[:distribution_centre] ].uniq.join('/') %></td>
           </tr>
           <% if mouse[:qc_count] > 0 %>
             <tr class="details">

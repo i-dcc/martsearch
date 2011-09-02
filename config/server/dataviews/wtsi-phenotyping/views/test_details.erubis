@@ -4,7 +4,11 @@
   <% if @data[:protocol_data].empty? %>
     <div><em>No data reported</em></div>
   <% else %>
+    <% if @data[:protocol_data].size == 1 %>
     <div class="accordion active">
+    <% else %>
+    <div class="accordion">
+    <% end %>
       <% @data[:protocol_data].sort_by{ |k,v| v[:order_by] }.each do |protocol_desc_hash,protocol_data| %>
         <% title = protocol_data[:protocol] %>
         <%= 
