@@ -4,7 +4,7 @@ gem 'bundler',                '>=1.0.0'
 
 # Server
 gem 'sinatra',                '~>1.0',    :require => false
-gem 'sinatra-static-assets',              :require => false
+gem 'sinatra-static-assets',  '~>0.5',    :require => false
 gem 'rack',                   '>=1.0',    :require => false
 gem 'rack-contrib',                       :require => false
 gem 'erubis',                             :require => false
@@ -13,7 +13,7 @@ gem 'json',                               :require => false
 gem 'parallel',                           :require => false
 gem 'yui-compressor',                     :require => false
 gem 'closure-compiler',                   :require => false
-gem 'activesupport',          '>=3.0',    :require => false
+gem 'activesupport',          '~>3.0',    :require => false
 gem 'i18n',                               :require => false
 gem 'memcache-client',        '>=1.8',    :require => false
 gem 'mongo',                              :require => false
