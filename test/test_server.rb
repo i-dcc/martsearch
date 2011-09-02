@@ -119,7 +119,7 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
       )
 
       VCR.use_cassette('test_server_wtsi_phenotyping_report_pages') do
-        colonies_to_test = ['MAHN','MAMH','MAMJ','MAAD']
+        colonies_to_test = ['MAHN','MAMH','MAMJ','MAAD','MAAJ']
 
         colonies_to_test.each do |colony_prefix|
           visit '/'
