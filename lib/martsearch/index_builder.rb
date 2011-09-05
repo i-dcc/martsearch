@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 module MartSearch
-  
+
   # This class is responsible for building and updating of a Solr search 
   # index for use with a MartSearch application.
   #
@@ -10,21 +10,21 @@ module MartSearch
     include MartSearch
     include MartSearch::Utils
     include MartSearch::IndexBuilderUtils
-    
+
     attr_reader :index_config, :builder_config, :document_cache, :log
-    
+
     def initialize()
       ms_config           = MartSearch::Controller.instance().config
       @index_config       = ms_config[:index]
       @builder_config     = ms_config[:index_builder]
       @datasources_config = ms_config[:datasources]
-      
+
       @builder_config[:number_of_docs_per_xml_file] = 1000
-      
+
       @log                 = Logger.new(STDOUT)
       @log.level           = Logger::DEBUG
       @log.datetime_format = "%Y-%m-%d %H:%M:%S "
-      
+
       # Create a document cache, and a helper lookup variable
       @file_based_cache      = false
       @document_cache        = {}
@@ -35,29 +35,29 @@ module MartSearch
       # database queries when indexing ontology terms...
       @ontology_cache = {}
     end
-    
+
     # Function to control the dataset download process.  Determines if 
     # we need to download each dataset (configured using the 'days_between_downlads' 
     # option) - then only downloads the datasets that need downloading.
     def fetch_datasets
       @log.info "Starting dataset downloads..."
-      
+
       pwd = Dir.pwd
       setup_and_move_to_work_directory()
-      
+
       # First see which datasets we need to download (based on the age 
       # of the 'current' dump file).
       Dir.chdir('dataset_dowloads/current')
       datasets_to_download = []
-      
+
       @builder_config[:datasets_to_index].each do |ds|
         ds_conf = @builder_config[:datasets][ds.to_sym]
-        
+
         if File.exists?("#{ds}.marshal")
           file_timestamp   = File.new("#{ds}.marshal").mtime
           now_timestamp    = Time.now()
           file_age_in_days = ( ( ( (now_timestamp - file_timestamp).round / 60 ) / 60 ) / 24 )
-          
+
           if file_age_in_days >= ds_conf[:indexing][:days_between_downlads]
             datasets_to_download.push(ds)
           end
@@ -65,55 +65,58 @@ module MartSearch
           datasets_to_download.push(ds)
         end
       end
-      
+
       open_daily_directory( 'dataset_dowloads', false )
       Parallel.each( datasets_to_download, :in_threads => 10 ) do |ds|
+      # datasets_to_download.each do |ds|
+        # puts " - #{ds}: requesting data"
         @log.info " - #{ds}: requesting data"
         results = fetch_dataset( ds )
+        # puts " - #{ds}: #{results[:data].size} rows of data returned"
         @log.info " - #{ds}: #{results[:data].size} rows of data returned"
       end
-      
+
       @log.info "Dataset downloads completed."
       Dir.chdir(pwd)
     end
-    
+
     # Function to control the processing of the dataset downloads. 
     # Once the processing is complete it will also save the @document_cache to disk.
     def process_datasets
       @log.info "Starting dataset processing..."
-      
+
       pwd = Dir.pwd
       setup_and_move_to_work_directory()
       Dir.chdir('dataset_dowloads/current')
-      
+
       @builder_config[:datasets_to_index].each do |ds|
         @log.info " - #{ds}: processing results"
         process_dataset(ds)
         clean_document_cache()
         @log.info " - #{ds}: processing results complete"
       end
-      
+
       @log.info "Finished dataset processing."
-      
+
       @log.info "Saving @document_cache to disk."
       save_document_cache()
-      
+
       Dir.chdir(pwd)
     end
-    
+
     # Function to build and store the XML files needed to update a Solr 
     # index based on the @document_cache store in this current instance.
     def save_solr_document_xmls
       pwd = Dir.pwd
       open_daily_directory( 'solr_xml' )
-      
+
       batch_size = @builder_config[:number_of_docs_per_xml_file]
       @log.info "Creating Solr XML files (#{batch_size} docs per file)..."
-      
+
       open_stored_document_cache if @document_cache_keys.empty?
       doc_chunks      = @document_cache_keys.keys.chunk( batch_size )
       doc_chunks_size = doc_chunks.size - 1
-      
+
       Parallel.each( (0..doc_chunks_size), :in_threads => 5 ) do |chunk_number|
         @log.info " - writing solr-xml-#{chunk_number+1}.xml"
 
@@ -127,46 +130,46 @@ module MartSearch
         file.print solr_document_xml(docs)
         file.close
       end
-      
+
       Dir.chdir(pwd)
     end
-    
+
     # Function to send all of the XML files to the Solr instance.
     def send_xml_to_solr
       pwd = Dir.pwd
       open_daily_directory( 'solr_xml', false )
-      
+
       client    = build_http_client()
       index_url = "#{@index_config[:builder_url]}/update"
       url       = URI.parse( index_url )
-      
+
       client.start( url.host, url.port ) do |http|
         @log.info "Sending XML files to Solr (#{index_url})"
         Dir.glob("solr-xml-*.xml").each do |file|
           @log.info "  - #{file}"
           data = File.read( file )
           res  = http.post( url.path, data, { 'Content-type' => 'text/xml; charset=utf-8' } )
-          
+
           if res.code.to_i != 200
             raise "Error uploading #{file} to index!\ncode: #{res.code}\nbody: #{res.body}"
           end
         end
-        
+
         @log.info "  - commiting and optimising updates"
         ['<commit/>','<optimize/>'].each do |task|
           res = http.post( url.path, task, { 'Content-type' => 'text/xml; charset=utf-8' } )
-          
+
           if res.code.to_i != 200
             raise "Error sending #{task} instruction to index!\ncode: #{res.code}\nbody: #{res.body}"
           end
         end
       end
-      
+
       Dir.chdir(pwd)
     end
-    
+
     private
-      
+
       # Helper function to dump the current @document_cache to disk.
       def save_document_cache
         pwd = Dir.pwd
@@ -178,20 +181,20 @@ module MartSearch
 
         Dir.chdir(pwd)
       end
-      
+
       # Helper function to read in the @document_cache from disk.
       def open_stored_document_cache
         pwd = Dir.pwd
         open_daily_directory( 'document_cache', false )
-        
+
         @document_cache = Marshal.load( File.new( 'document_cache.marshal', 'r' ) )
         @document_cache.keys.each do |key|
           @document_cache_keys[key] = true
         end
-        
+
         Dir.chdir(pwd)
       end
-      
+
       # Helper function to do the actual work of querying a datasource for 
       # data to index, stores the returned data to two files, a Marshal.dump 
       # (for computer consumption) and a CSV file (for human consumption).
@@ -224,7 +227,7 @@ module MartSearch
 
         return results
       end
-      
+
       # Function used to process the data returned from a dataset and build 
       # up the @document_cache.
       #
@@ -250,7 +253,7 @@ module MartSearch
         results[:data].each do |data_row|
           count = count + 1
           @log.info "   - #{ds}: #{count} / #{results[:data].size} results processed" if count % 1000 == 0
-          
+
           # First, create a hash out of the data_row and get the primary_attr_value
           data_row_obj       = convert_array_to_hash( results[:headers], data_row )
           primary_attr_value = data_row_obj[ map_data[:primary_attribute] ]
@@ -300,7 +303,7 @@ module MartSearch
               if ds_index_conf[:ontology_terms]
                 index_ontology_terms( ds_index_conf[:ontology_terms], doc, data_row_obj, map_data, @ontology_cache )
               end
-              
+
               # Any concatenated ontology term fields...
               if ds_index_conf[:concatenated_ontology_terms]
                 index_concatenated_ontology_terms( ds_index_conf[:concatenated_ontology_terms], doc, data_row_obj, map_data, @ontology_cache )
@@ -313,7 +316,7 @@ module MartSearch
           end
         end
       end
-      
+
       # Get a document from the @document_cache.
       #
       # @param [String] key The unique @document_cache key
@@ -386,6 +389,6 @@ module MartSearch
           set_document( cache_key, document )
         end
       end
-    
+
   end
 end
