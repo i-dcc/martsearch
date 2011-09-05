@@ -20,7 +20,7 @@ class MartSearchDataSetDummyMiceTest < Test::Unit::TestCase
       @ms                = MartSearch::Controller.instance
       @mgi_accession_ids = {
         'MGI:1916976' => 2,
-        'MGI:103147'  => 3,
+        'MGI:103147'  => 2,
         'MGI:105369'  => 1,
         'MGI:107846'  => 2,
         'MGI:1339795' => 1,
@@ -43,7 +43,9 @@ class MartSearchDataSetDummyMiceTest < Test::Unit::TestCase
         # puts "DUMMY MICE"
         # ap @ms.search_data[mgi_accession_id.to_sym][:'dummy-mice']
 
-        assert_equal( expected_count, @ms.search_data[mgi_accession_id.to_sym][:'dummy-mice'].size, "dummy mice for #{mgi_accession_id} has the wrong count..." )
+        assert_false @ms.search_data[mgi_accession_id.to_sym].nil?, "no search_data entry for #{mgi_accession_id}"
+        assert_false @ms.search_data[mgi_accession_id.to_sym][:'dummy-mice'].nil?, "no search_data entry on #{mgi_accession_id} for :dummy-mice"
+        assert_equal expected_count, @ms.search_data[mgi_accession_id.to_sym][:'dummy-mice'].size, "dummy mice for #{mgi_accession_id} has the wrong count..."
       end
     end
   end
