@@ -36,7 +36,8 @@
       "qc_three_prime_lr_pcr"
     ],
     "filters": {
-      "microinjection_status": "Genotype confirmed"
+      "microinjection_status": "Genotype confirmed",
+      "emma": "1"
     }
   }
 }
