@@ -7,8 +7,6 @@ module MartSearch
       sorted_results = {}
 
       results.each do |result|
-        next unless result[:microinjection_status] == 'Genotype confirmed' and result[:emma] == '1'
-
         joined_attribute = @config[:searching][:joined_attribute].to_sym
 
         # Try and set the allele_name
