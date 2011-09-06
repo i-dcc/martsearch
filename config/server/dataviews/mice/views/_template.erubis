@@ -21,10 +21,10 @@
             dist_flag = false
             dist_flag = true if mouse[:emma] == "1"
           %>
-          <% if mouse[:sponsor].blank? and !mouse[:emma_id].blank? %>
+          <% if mouse[:pipeline].blank? and !mouse[:emma_id].blank? %>
             <%= emma_mouse_order_button( mouse[:emma_id] ) %>
           <% else %>
-            <%= mouse_order_button( mouse[:mgi_accession_id], mouse[:marker_symbol], mouse[:sponsor], mouse[:ikmc_project_id], dist_flag, mouse[:mi_centre], mouse[:distribution_centre] ) %>
+            <%= mouse_order_button( mouse[:mgi_accession_id], mouse[:marker_symbol], mouse[:pipeline], mouse[:ikmc_project_id], dist_flag, mouse[:production_centre], mouse[:distribution_centre] ) %>
           <% end %>
         </td>
         <td><%= mouse[:allele_name] %></td>
@@ -36,13 +36,7 @@
         </td>
         <td><a href="<%= emma_link_url( mouse[:emma_id] ) %>" target="blank"><%= mouse[:emma_id] %></td>
         <td><%= mouse[:colony_prefix] %></td>
-        <td>
-          <% if mouse[:escell_clone] %>
-            <%= mouse[:escell_clone] %>
-          <% else %>
-            <%= mouse[:common_name] %>
-          <% end %>
-        </td>
+        <td><%= mouse[:escell_clone] || mouse[:common_name] %></td>
         <td><%= mouse[:genetic_background] || mouse[:international_strain_name] %></td>
         <td>
           <% if mouse[:qc_count] > 0 %>
@@ -53,7 +47,7 @@
           <br />
           (&nbsp;<a href="http://www.knockoutmouse.org/kb/entry/90/" target="_blank" class="ext_link">about</a>&nbsp;)
         </td>
-        <td><%= [ mouse[:mi_centre], mouse[:distribution_centre] ].uniq.join('/') %></td>
+        <td><%= [ mouse[:production_centre], mouse[:distribution_centre] ].uniq.join('/') %></td>
       </tr>
       <% if mouse[:qc_count] > 0 %>
         <tr class="mice_qc_details">

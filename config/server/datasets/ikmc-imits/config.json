@@ -1,5 +1,5 @@
 {
-  "datasource":            "ikmc-kermits",
+  "datasource":            "ikmc-imits",
   "enabled":               true,
   "custom_sort":           true,
   "custom_secondary_sort": true,
@@ -11,17 +11,16 @@
     "joined_attribute":   "marker_symbol",
     "attributes": [
       "marker_symbol",
-      "sponsor",
-      "mi_centre",
+      "pipeline",
+      "production_centre",
       "distribution_centre",
       "escell_clone",
       "colony_prefix",
-      "escell_strain",
       "test_cross_strain",
-      "back_cross_strain",
-      "status",
-      "allele_name",
-      "mouse_allele_name",
+      "colony_background_strain",
+      "microinjection_status",
+      "allele_symbol_superscript",
+      "mouse_allele_symbol_superscript",
       "emma",
       "qc_southern_blot",
       "qc_tv_backbone_assay",
@@ -30,15 +29,15 @@
       "qc_homozygous_loa_sr_pcr",
       "qc_neo_count_qpcr",
       "qc_lacz_sr_pcr",
-      "qc_five_prime_cass_integrity",
+      "qc_five_prime_cassette_integrity",
       "qc_neo_sr_pcr",
       "qc_mutant_specific_sr_pcr",
       "qc_loxp_confirmation",
       "qc_three_prime_lr_pcr"
     ],
     "filters": {
-      "status": "Genotype Confirmed",
-      "emma":   "1"
+      "microinjection_status": "Genotype confirmed",
+      "emma": "1"
     }
   }
 }

@@ -2,12 +2,12 @@
 
 module MartSearch
   module ServerViewHelpers
-    
+
     # View helpers for creating order buttons for IKMC products.
     # 
     # @author Darren Oakley
     module OrderButtons
-      
+
       # Helper function to centralise the logic for producing a button for 
       # ordering a mouse.
       #
@@ -22,11 +22,11 @@ module MartSearch
       def mouse_order_button( mgi_accession_id, marker_symbol, project, project_id, flagged_for_dist, mi_centre='', dist_centre='' )
         order_url        = ikmc_product_order_url( :mouse, project, project_id, mgi_accession_id, marker_symbol )
         express_interest = false
-        
+
         if not flagged_for_dist
           express_interest = true
           centre = dist_centre ? dist_centre : mi_centre
-          
+
           if centre == 'APN'
             order_url = 'http://www.australianphenomics.org.au/contact/'
           elsif project =~ /KOMP/
@@ -40,12 +40,12 @@ module MartSearch
             order_url = "mailto:mouseinterest@sanger.ac.uk?subject=Interest in Mouse for #{marker_symbol}"
           end
         end
-        
+
         button_text = generic_order_button( project, order_url, express_interest )
-        
+
         return button_text
       end
-      
+
       # Helper function to build an order button Non-IKMC EMMA lines.
       # 
       # @param [String] emma_id The EMMA id for this line
@@ -54,7 +54,7 @@ module MartSearch
         url         = emma_link_url( emma_id )
         button_text = generic_order_button( 'Non-IKMC', url )
       end
-      
+
       # Helper function to centralise the logic for producing a button for 
       # ordering an ES cell.
       #
@@ -66,11 +66,11 @@ module MartSearch
       # @return [String] The html markup for a button
       def escell_order_button( mgi_accession_id, marker_symbol, project, project_id, escell_clone=nil )
         order_url   = ikmc_product_order_url( :escell, project, project_id, mgi_accession_id, marker_symbol )
-        order_url   = "#{order_url}&comments1=#{escell_clone}" if project == "TIGM"
+        order_url   = "#{order_url}&comments1=#{escell_clone}" if project == 'TIGM'
         button_text = generic_order_button( project, order_url )
         return button_text
       end
-      
+
       # Helper function to centralise the logic for producing a button for 
       # ordering a vector.
       #
@@ -82,11 +82,12 @@ module MartSearch
       def vector_order_button( mgi_accession_id, marker_symbol, project, project_id )
         order_url   = ikmc_product_order_url( :vector, project, project_id, mgi_accession_id, marker_symbol )
         button_text = generic_order_button( project, order_url )
+        button_text = generic_order_button( project, order_url, true ) if project == 'mirKO'
         return button_text
       end
-      
+
       private
-        
+
         # Helper function to centralise the generation of product ordering links.
         #
         # @param [Symbol] product_type The type of product to get a link for [:vector,:es_cell,:mouse]
@@ -97,7 +98,7 @@ module MartSearch
         # @return [Hash] A hash containing all of the relevant urls for this project
         def ikmc_product_order_url( product_type, project=nil, project_id=nil, mgi_accession_id=nil, marker_symbol=nil )
           mgi_accession_id.sub!('MGI:','') unless mgi_accession_id.nil?
-          
+
           order_url = case project
           when "KOMP"           then "http://www.komp.org/geneinfo.php?project=CSD#{project_id}"
           when "KOMP-CSD"       then "http://www.komp.org/geneinfo.php?project=CSD#{project_id}"
@@ -113,14 +114,19 @@ module MartSearch
               "http://www.eummcr.org/order.php"
             end
           when "mirKO"
-            "mailto:mirKO@sanger.ac.uk?subject=Information on mirKO products for #{marker_symbol}"
+            case product_type
+            when :escell then "http://www.mmrrc.org/catalog/StrainCatalogSearchForm.php?SourceCollection=Sanger%20MirKO&jboEvent=Search&LowerCaseSymbol=#{marker_symbol}"
+            when :vector then "mailto:mirKO@sanger.ac.uk?subject=Information on mirKO vectors for #{marker_symbol}"
+            else
+              ""
+            end
           else
             ""
           end
-          
+
           return order_url
         end
-        
+
         # Simple helper that produces the HTML text for an order button.
         #
         # @param [String] project The IKMC pipeline name ['KOMP/KOMP-CSD','KOMP-Regeneron','NorCOMM','EUCOMM','mirKO']
@@ -129,18 +135,17 @@ module MartSearch
         # @return The HTML markup for the order button
         def generic_order_button( project, order_url, express_interest=false )
           button_text      = '<span class="order unavailable">currently&nbsp;unavailable</span>'
-          express_interest = true if project == 'mirKO'
-          
+
           if express_interest
             button_text = "<a href=\"#{order_url}\" class=\"order express_interest\">express&nbsp;interest</a>"
           elsif !order_url.empty?
             button_text = "<a href=\"#{order_url}\" class=\"order\" target=\"_blank\">order</a>"
           end
-          
+
           return button_text
         end
-        
+
     end
-    
+
   end
 end

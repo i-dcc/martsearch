@@ -9,7 +9,7 @@
   "custom_view_helpers" : false,
   "custom_routes":        false,
   "datasets": {
-    "required": [ "ikmc-kermits", "emma-strains" ],
+    "required": [ "ikmc-imits", "emma-strains" ],
     "optional": []
   }
 }

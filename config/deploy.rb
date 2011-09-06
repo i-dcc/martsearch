@@ -54,37 +54,38 @@ namespace :vlad do
       run "ln -nfs #{shared_path}/config/#{file} #{current_path}/config/#{file}"
     end
   end
-  
+
   desc "Symlinks the WTSI Phenotyping Heatmap"
   remote_task :symlink_wtsi_phenotyping_heatmap, :roles => :app do
     run "ln -nfs /software/team87/brave_new_world/data/generated/pheno_overview.xls #{current_path}/tmp/pheno_overview.xls"
   end
-  
+
   desc "Fixes the permissions on the 'current' deployment"
   remote_task :fix_perms, :roles => :app do
     fix_perms_you     = "find #{deploy_to}/ -user #{`whoami`.chomp}" + ' \! \( -perm -u+rw -a -perm -g+rw \) -exec chmod -v ug=rwX,o=rX {} \;'
     fix_perms_service = "sudo -u #{service_user} find #{releases_path}/ -user #{service_user}" + ' \! \( -perm -u+rw -a -perm -g+rw \) -exec chmod -v ug=rwX,o=rX {} \;'
-    
+
     run fix_perms_you
     run fix_perms_service
   end
-  
+
   task :setup do
     Rake::Task['vlad:setup_shared'].invoke
   end
-  
+
   remote_task :setup_shared, :roles => :app do
     commands = [
       "umask #{umask}",
       "mkdir -p #{shared_path}/config",
       "ln -nfs /software/team87/brave_new_world/conf/ols_database.yml #{shared_path}/config/ols_database.yml"
     ]
-    
+
     run commands.join(' && ')
   end
-  
+
   Rake.clear_tasks('vlad:start_app')
   remote_task :start_app, :roles => :app do
     run "touch #{current_path}/tmp/restart.txt"
   end
 end
+

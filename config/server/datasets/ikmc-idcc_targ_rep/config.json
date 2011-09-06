@@ -31,6 +31,7 @@
       "targeting_vector",
       "ikmc_project_id",
       "escell_clone",
+      "escell_strain",
       "parental_cell_line",
       "allele_symbol_superscript",
       "mutation_subtype",
