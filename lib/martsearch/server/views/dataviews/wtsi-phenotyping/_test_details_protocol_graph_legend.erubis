@@ -1,7 +1,7 @@
 
 
 <div class='wtsi-phenotyping'>
-  <a href='<%= graph_url.sub(/.png/, ".zip") %>'>download data</a>
+  <a href='<%= data_file_url %>'>download data</a>
   <table class='wtsi_pheno_parameter_details'>
     <thead>
       <tr>

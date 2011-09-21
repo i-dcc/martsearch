@@ -17,7 +17,7 @@
     cells = []
     protocol_data[:parameters].each do |parameter,parameter_data|
       parameter_data.keys.each do |key|
-        next if [:graphs,:order_by,:mp_annotation].include?(key)
+        next if [:graphs,:data_files,:order_by,:mp_annotation].include?(key)
         cells.push(key) unless cells.include?(key)
       end
     end
@@ -56,12 +56,14 @@
             <td class="<%= cell_class %> pheno_result"></td>
           <% end %>
           <td class="center">
-            <% parameter_data[:graphs].each do |graph_url| %>
-              <% next if graph_url.blank? %>
+            <% parameter_data[:graphs].each_index do |index| %>
+			  <% graph_url = parameter_data[:graphs][index]%>
+			  <% next if graph_url.blank? %>
+			  <% data_file_url = parameter_data[:data_files][index]%>
               <a
                 href="<%= graph_url %>"
                 rel="prettyPhoto[<%= "#{protocol_data[:protocol].gsub(/[%\s\(\)]/,'_')}" %>]"
-                title="<%= partial( "dataviews/wtsi-phenotyping/test_details_protocol_graph_legend", :locals => { :cells => cells, :protocol => protocol_data[:protocol], :parameter => parameter, :parameter_data => parameter_data, :graph_url => graph_url } ) %>" 
+                title="<%= partial( "dataviews/wtsi-phenotyping/test_details_protocol_graph_legend", :locals => { :cells => cells, :protocol => protocol_data[:protocol], :parameter => parameter, :parameter_data => parameter_data, :data_file_url => data_file_url } ) %>" 
                 class="wtsi_pheno_graph_link"
                 >view graph</a>
             <% end %>
