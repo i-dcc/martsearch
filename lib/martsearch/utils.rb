@@ -12,8 +12,9 @@ module MartSearch
     # @return [Net::HTTP] A Net::HTTP object
     def build_http_client
       http_client = Net::HTTP
-      if ENV['http_proxy'] or ENV['HTTP_PROXY']
-        proxy       = URI.parse( ENV['http_proxy'] ) || URI.parse( ENV['HTTP_PROXY'] )
+      proxy_env   = ENV['http_proxy'] || ENV['HTTP_PROXY']
+      if proxy_env
+        proxy       = URI.parse( proxy_env )
         http_client = Net::HTTP::Proxy( proxy.host, proxy.port )
       end
       return http_client
