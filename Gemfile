@@ -47,3 +47,5 @@ group :development, :test do
   gem 'wirble',                           :require => false
   gem 'test-unit',                        :require => false
 end
+
+gem 'win32-open3-19',                     :platforms => :mingw
