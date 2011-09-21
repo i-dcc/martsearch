@@ -61,7 +61,7 @@
               <a
                 href="<%= graph_url %>"
                 rel="prettyPhoto[<%= "#{protocol_data[:protocol].gsub(/[%\s\(\)]/,'_')}" %>]"
-                title="<%= partial( "dataviews/wtsi-phenotyping/test_details_protocol_graph_legend", :locals => { :cells => cells, :protocol => protocol_data[:protocol], :parameter => parameter, :parameter_data => parameter_data } ) %>" 
+                title="<%= partial( "dataviews/wtsi-phenotyping/test_details_protocol_graph_legend", :locals => { :cells => cells, :protocol => protocol_data[:protocol], :parameter => parameter, :parameter_data => parameter_data, :graph_url => graph_url } ) %>" 
                 class="wtsi_pheno_graph_link"
                 >view graph</a>
             <% end %>
