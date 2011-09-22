@@ -25,7 +25,8 @@
       "param_level_heatmap_protocol",
       "param_level_heatmap_protocol_id",
       "param_level_heatmap_protocol_order_by",
-      "param_level_heatmap_protocol_description"
+      "param_level_heatmap_protocol_description",
+	  "param_level_heatmap_raw_data_url"
     ],
     "required_attributes": [
       "param_level_heatmap_manual_call"

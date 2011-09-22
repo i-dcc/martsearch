@@ -56,6 +56,7 @@
             <td class="<%= cell_class %> pheno_result"></td>
           <% end %>
           <td class="center">
+
             <% parameter_data[:graphs].each_index do |index| %>
 			  <% graph_url = parameter_data[:graphs][index]%>
 			  <% next if graph_url.blank? %>
@@ -66,6 +67,7 @@
                 title="<%= partial( "dataviews/wtsi-phenotyping/test_details_protocol_graph_legend", :locals => { :cells => cells, :protocol => protocol_data[:protocol], :parameter => parameter, :parameter_data => parameter_data, :data_file_url => data_file_url } ) %>" 
                 class="wtsi_pheno_graph_link"
                 >view graph</a>
+
             <% end %>
           </td>
           <td>
