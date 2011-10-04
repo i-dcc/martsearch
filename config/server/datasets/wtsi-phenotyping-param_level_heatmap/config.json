@@ -8,9 +8,9 @@
   "searching": {
     "joined_index_field": "colony_prefix",
     "joined_filter":      "colony_prefix",
-    "joined_attribute":   "param_level_heatmap_colony_prefix",
+    "joined_attribute":   "colony_prefix",
     "attributes": [
-      "param_level_heatmap_colony_prefix",
+      "colony_prefix",
       "param_level_heatmap_gender",
       "param_level_heatmap_genotype",
       "param_level_heatmap_manual_call",
@@ -26,7 +26,8 @@
       "param_level_heatmap_protocol_id",
       "param_level_heatmap_protocol_order_by",
       "param_level_heatmap_protocol_description",
-	  "param_level_heatmap_raw_data_url"
+      "param_level_heatmap_parameter_id",
+      "param_level_heatmap_population_id"
     ],
     "required_attributes": [
       "param_level_heatmap_manual_call"
