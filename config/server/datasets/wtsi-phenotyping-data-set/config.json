@@ -1,0 +1,28 @@
+{
+  "datasource":            "wtsi-phenotyping",
+  "enabled":               true,
+  "custom_sort":           true,
+  "custom_secondary_sort": false,
+  "attribution":           "The Wellcome Trust Sanger Institute (WTSI)",
+  "attribution_link":      "http://www.sanger.ac.uk/",
+  "searching": {
+    "joined_index_field": "colony_prefix",
+    "joined_filter":      "colony_prefix",
+    "joined_attribute":   "published_images_colony_prefix",
+    "attributes": [
+	  "published_graph_data_allele_name",
+	  "published_graph_data_pipeline",
+	  "published_graph_data_membership",
+	  "published_graph_data_mouse",
+	  "published_graph_data_gender",
+	  "published_graph_data_genotype",
+	  "published_graph_data_genetic_background",
+	  "published_graph_data_observation",
+	  "published_graph_data_x_value",
+	  "published_graph_data_y_value",
+	  "colony_prefix",
+	  "published_graph_data_parameter_id",
+	  "published_graph_data_population_id"
+    ]
+  }
+}

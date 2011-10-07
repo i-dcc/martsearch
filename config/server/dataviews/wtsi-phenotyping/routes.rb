@@ -165,5 +165,19 @@ module MartSearch
       end
     end
     
+    get "/phenotyping/raw_data/:population_id/:parameter_id/?" do
+      population_id       = params[:population_id]
+      parameter_id        = params[:parameter_id]
+      @graph_type, @data  = wtsi_phenotyping_fetch_raw_data( population_id, parameter_id )
+      
+      if @data.nil?
+        status 404
+        erubis :not_found
+      else
+        @page_title = "Population id: #{population_id} Parameter id: #{parameter_id}"
+        erubis      :"dataviews/wtsi-phenotyping/raw_data"
+      end
+    end
+    
   end
 end

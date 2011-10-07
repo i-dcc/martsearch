@@ -1,3 +1,4 @@
+require 'ruby-debug'
 
 # Template helper function to map the status descriptions retrived from MIG into 
 # a CSS class that is used to draw the heat map.
@@ -63,4 +64,22 @@ def wtsi_phenotyping_fetch_mp_report_data( colony_prefix, mp_slug )
   else
     return nil
   end
+end
+
+def wtsi_phenotyping_fetch_raw_data( population_id, parameter_id )
+  ms = MartSearch::Controller.instance()
+  heatmap_dataset = ms.datasets[:'wtsi-phenotyping-data-set']
+  raise MartSearch::InvalidConfigError, "MartSearch::Controller.wtsi_phenotyping_progress_counts cannot be called if the 'wtsi-phenotyping-data_set' dataset is inactive" if heatmap_dataset.nil?
+  
+  mart = heatmap_dataset.datasource.ds
+  results        = mart.search(
+    :process_results => true,
+    :attributes      => heatmap_dataset.config[:searching][:attributes],
+    :filters         => {
+      'population_id' => population_id,
+      'parameter_id'  => parameter_id
+    }
+  )
+  
+  return heatmap_dataset.sort_results( results )
 end

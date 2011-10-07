@@ -1,0 +1,6 @@
+<div id="wtsi-phenotyping-report" class="wtsi-phenotyping">
+  <h2>GOT HERE</h2>
+
+  <%= @data %>
+  
+</div>

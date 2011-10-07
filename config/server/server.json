@@ -31,7 +31,8 @@
     "wtsi-phenotyping-hom_viability",
     "wtsi-phenotyping-published_images",
     "wtsi-phenotyping-collaborator_data",
-    "dummy-mice"
+    "dummy-mice",
+	"wtsi-phenotyping-data-set"
   ],
   "dataviews": [
     "gene-details",

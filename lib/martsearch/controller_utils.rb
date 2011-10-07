@@ -145,7 +145,6 @@ module MartSearch
           if ds_conf[:enabled]
             ds_conf[:internal_name] = ds_name
             dataset                 = MartSearch::DataSet.new( ds_conf )
-            
             if ds_conf[:custom_sort]
               require "#{ds_location}/custom_sort.rb"
               dataset.instance_eval {
