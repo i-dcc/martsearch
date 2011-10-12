@@ -1,6 +1,4 @@
 # encoding: utf-8
-require 'ruby-debug'
-
 module MartSearch
   
   # DataSet class for modelling a search for data.
@@ -33,7 +31,6 @@ module MartSearch
     # @param [Array] query An array of values to query the datasource for
     # @return [Hash] A hash, keyed by the 'joined_attribute' where the values are an array of results objects associated with this key
     def search( query )
-      debugger
       if query.nil?
         # Don't perform a search on empty parameters - this is bad!
         return {}
@@ -92,7 +89,6 @@ module MartSearch
       # @param [Array] results The array of hashes/objects returned from {MartSearch::DataSource#search}
       # @return [Hash] A hash, keyed by the 'joined_attribute' where the values are an array of results objects associated with this key
       def sort_results( results )
-        debugger
         sorted_results = {}
         
         results.each do |result|

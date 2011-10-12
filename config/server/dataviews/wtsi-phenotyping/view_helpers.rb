@@ -1,5 +1,3 @@
-require 'ruby-debug'
-
 # Template helper function to map the status descriptions retrived from MIG into 
 # a CSS class that is used to draw the heat map.
 #
