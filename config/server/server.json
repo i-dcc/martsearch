@@ -32,7 +32,8 @@
     "wtsi-phenotyping-published_images",
     "wtsi-phenotyping-collaborator_data",
     "dummy-mice",
-		"wtsi-phenotyping-data-set"
+		"wtsi-phenotyping-data-set",
+    "wtsi-possible_mp_terms"
   ],
   "dataviews": [
     "gene-details",

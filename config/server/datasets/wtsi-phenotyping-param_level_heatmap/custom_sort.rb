@@ -51,11 +51,74 @@ module MartSearch
       return sorted_results
     end
     
+    def wtsi_phenotyping_build_mp_heatmap_config
+      ms = MartSearch::Controller.instance()
+      mp_ontology = @config[:mp_heatmap_config]
+
+      heatmap_config = []
+      parameter_map = {}
+      
+      dataset = ms.datasets[:'wtsi-possible_mp_terms']
+      raise MartSearch::InvalidConfigError, "MartSearch::DataSet.wtsi_phenotyping_param_level_heatmap_mp_heatmap_config cannot be called if the 'wtsi-possible-mp_terms' dataset is inactive" if dataset.nil?
+
+      mart = dataset.datasource.ds
+      
+      results  = mart.search(
+        :process_results => true,
+        :attributes => dataset.config[:searching][:attributes]
+      )
+      
+      results.recursively_symbolize_keys!
+
+      results.each do |row|
+        param_key = row[:mp_term]
+        param_value = [ row[:test_name], row[:protocol], row[:parameter_name] ].join('|')
+        
+        parameter_map[ param_key ] ||= []
+        parameter_map[ param_key ].push( param_value )
+      end
+      
+      mp_ontology.each do |mp_term|
+        mp_term = mp_term.clone
+
+        mp_term[:mgp_parameters] = []
+      
+        mp_term[:child_terms].each do |term|
+          if parameter_map.has_key?(term)
+            parameters = parameter_map[term]
+            mp_term[:mgp_parameters].push( parameters )
+          end
+        end
+        
+        mp_term[:mgp_parameters].flatten!
+        mp_term[:mgp_parameters].uniq!
+        
+        heatmap_config.push(mp_term)
+      end
+      
+      return heatmap_config
+    end
+    
+    def wtsi_phenotyping_param_level_heatmap_mp_heatmap_config
+      ms = MartSearch::Controller.instance()
+      
+      config_data = ms.fetch_from_cache("wtsi-pheno-mp-heatmap-config")
+      if config_data.nil?
+        config_data = wtsi_phenotyping_build_mp_heatmap_config
+        ms.write_to_cache("wtsi-pheno-mp-heatmap-config",config_data)
+      end
+      
+      return config_data    
+    end
+    
     private
     
     def wtsi_phenotyping_param_level_heatmap_sort_mp_heatmap_data( result, mp_groups )
       mp_group_conf = nil
-      @config[:mp_heatmap_config].each do |mp_conf|
+      
+      mp_heatmap_config = wtsi_phenotyping_param_level_heatmap_mp_heatmap_config
+      
+      mp_heatmap_config.each do |mp_conf|
         next unless mp_group_conf.nil?
         
         if result[:mp_id]
@@ -87,7 +150,7 @@ module MartSearch
       end
       
     end
-    
+
     def wtsi_phenotyping_param_level_heatmap_sort_test_group_data( result, test_groups )
       test_key                = result[:test].gsub("[\(\)]","").gsub(" ","_").downcase.to_sym
       parameter               = result[:parameter]
