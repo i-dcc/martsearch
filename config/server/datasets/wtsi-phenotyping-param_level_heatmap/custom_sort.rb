@@ -51,6 +51,20 @@ module MartSearch
       return sorted_results
     end
     
+    private
+    
+    def wtsi_phenotyping_param_level_heatmap_mp_heatmap_config
+      ms = MartSearch::Controller.instance()
+      
+      config_data = ms.fetch_from_cache("wtsi-pheno-mp-heatmap-config")
+      if config_data.nil?
+        config_data = wtsi_phenotyping_build_mp_heatmap_config
+        ms.write_to_cache("wtsi-pheno-mp-heatmap-config",config_data)
+      end
+      
+      return config_data    
+    end
+    
     def wtsi_phenotyping_build_mp_heatmap_config
       ms = MartSearch::Controller.instance()
       mp_ontology = @config[:mp_heatmap_config]
@@ -59,7 +73,7 @@ module MartSearch
       parameter_map = {}
       
       dataset = ms.datasets[:'wtsi-possible_mp_terms']
-      raise MartSearch::InvalidConfigError, "MartSearch::DataSet.wtsi_phenotyping_param_level_heatmap_mp_heatmap_config cannot be called if the 'wtsi-possible-mp_terms' dataset is inactive" if dataset.nil?
+      raise MartSearch::InvalidConfigError, "MartSearch::DataSet.wtsi_phenotyping_build_mp_heatmap_config cannot be called if the 'wtsi-possible-mp_terms' dataset is inactive" if dataset.nil?
 
       mart = dataset.datasource.ds
       
@@ -98,20 +112,6 @@ module MartSearch
       
       return heatmap_config
     end
-    
-    def wtsi_phenotyping_param_level_heatmap_mp_heatmap_config
-      ms = MartSearch::Controller.instance()
-      
-      config_data = ms.fetch_from_cache("wtsi-pheno-mp-heatmap-config")
-      if config_data.nil?
-        config_data = wtsi_phenotyping_build_mp_heatmap_config
-        ms.write_to_cache("wtsi-pheno-mp-heatmap-config",config_data)
-      end
-      
-      return config_data    
-    end
-    
-    private
     
     def wtsi_phenotyping_param_level_heatmap_sort_mp_heatmap_data( result, mp_groups )
       mp_group_conf = nil

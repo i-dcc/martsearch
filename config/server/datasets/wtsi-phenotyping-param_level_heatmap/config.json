@@ -34,7 +34,7 @@
     ],
     "filters": {}
   },
-  "mp_heatmap_config": [
+  "mp_heatmap_config":  [
     {
       "term": "MP:0005375",
       "name": "adipose tissue",
@@ -7065,26 +7065,6 @@
       ]
     },
     {
-      "term": "MP:0003012",
-      "name": "no phenotypic analysis",
-      "slug": "no-phenotypic-analysis",
-      "child_terms": [
-        "MP:0003012"
-      ]
-    },
-    {
-      "term": "MP:0002873",
-      "name": "normal",
-      "slug": "normal",
-      "child_terms": [
-        "MP:0002873",
-        "MP:0003171",
-        "MP:0003176",
-        "MP:0003175",
-        "MP:0002169"
-      ]
-    },
-    {
       "term": "MP:0005395",
       "name": "other",
       "slug": "other",
@@ -9777,5 +9757,5 @@
         "MP:0006212"
       ]
     }
-  ]
+  ] 
 }
