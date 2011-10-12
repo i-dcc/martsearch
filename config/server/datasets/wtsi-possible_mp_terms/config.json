@@ -1,0 +1,35 @@
+{
+  "datasource":            "wtsi-possible_mp_terms",
+  "enabled":               true,
+  "custom_sort":           false,
+  "custom_secondary_sort": false,
+  "attribution":           "The Wellcome Trust Sanger Institute (WTSI)",
+  "attribution_link":      "http://www.sanger.ac.uk/",
+  "searching": {
+    "joined_index_field": "colony_prefix",
+    "joined_filter":      "colony_prefix",
+    "joined_attribute":   "published_images_colony_prefix",
+    "attributes": [
+      "published_images_colony_prefix",
+      "published_images_mouse_id",
+      "published_images_gender",
+      "published_images_genotype",
+      "published_images_age_at_death",
+      "published_images_tissue",
+      "published_images_image_type",
+      "published_images_description",
+      "published_images_annotations",
+      "published_images_comments",
+      "published_images_url"
+    ],
+    "required_attributes": [
+      "published_images_colony_prefix",
+      "published_images_tissue",
+      "published_images_url"
+    ],
+    "filters": {
+      "published_images_image_type": ["Wholemount Expression","Confocal Skin Screen"],
+      "published_images_genotype":   ["Heterozygous","Homozygous","Hemizygous"]
+    }
+  }
+}

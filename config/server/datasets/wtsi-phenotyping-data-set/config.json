@@ -16,13 +16,15 @@
 	  "published_graph_data_mouse",
 	  "published_graph_data_gender",
 	  "published_graph_data_genotype",
+		"published_graph_data_genotype_str",
 	  "published_graph_data_genetic_background",
 	  "published_graph_data_observation",
 	  "published_graph_data_x_value",
 	  "published_graph_data_y_value",
 	  "colony_prefix",
 	  "published_graph_data_parameter_id",
-	  "published_graph_data_population_id"
+	  "published_graph_data_population_id",
+		"published_graph_data_graph_type"
     ]
   }
 }

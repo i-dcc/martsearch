@@ -175,7 +175,7 @@ module MartSearch
         erubis :not_found
       else
         @page_title = "Population id: #{population_id} Parameter id: #{parameter_id}"
-        erubis      :"dataviews/wtsi-phenotyping/raw_data"
+        erubis      "dataviews/wtsi-phenotyping/raw_data_#{@graph_type.downcase}".to_sym
       end
     end
     
