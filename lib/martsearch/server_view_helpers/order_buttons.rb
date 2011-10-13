@@ -97,14 +97,12 @@ module MartSearch
         # @param [String] marker_symbol The marker_symbol for the gene
         # @return [Hash] A hash containing all of the relevant urls for this project
         def ikmc_product_order_url( product_type, project=nil, project_id=nil, mgi_accession_id=nil, marker_symbol=nil )
-          mgi_accession_id.sub!('MGI:','') unless mgi_accession_id.nil?
-
           order_url = case project
           when "KOMP"           then "http://www.komp.org/geneinfo.php?project=CSD#{project_id}"
           when "KOMP-CSD"       then "http://www.komp.org/geneinfo.php?project=CSD#{project_id}"
           when "KOMP-Regeneron" then "http://www.komp.org/geneinfo.php?project=#{project_id}"
           when "NorCOMM"        then "http://www.phenogenomics.ca/services/cmmr/escell_services.html"
-          when "TIGM"           then "http://www.tigm.org/cgi-bin/tigminfo.cgi?survey=IKMC%20Website&mgi1=MGI:#{mgi_accession_id}&gene1=#{marker_symbol}"
+          when "TIGM"           then "http://www.tigm.org/cgi-bin/tigminfo.cgi?survey=IKMC%20Website&mgi1=#{mgi_accession_id}&gene1=#{marker_symbol}"
           when "EUCOMM"
             case product_type
             when :vector  then "http://www.eummcr.org/final_vectors.php?mgi_id=#{mgi_accession_id}"

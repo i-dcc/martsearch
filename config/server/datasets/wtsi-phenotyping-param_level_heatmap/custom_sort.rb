@@ -27,7 +27,11 @@ module MartSearch
         # Setup the data object...
         joined_attribute = result[ @config[:searching][:joined_attribute].to_sym ]
         sorted_results[joined_attribute] ||= {}
-        sorted_results[joined_attribute][joined_attribute.to_sym] ||= { :mp_groups => {}, :test_groups => {} }
+        sorted_results[joined_attribute][joined_attribute.to_sym] ||= {
+          :population_id => result[:population_id].to_i,
+          :mp_groups => {},
+          :test_groups => {}
+        }
         
         mp_groups   = sorted_results[joined_attribute][joined_attribute.to_sym][:mp_groups]
         test_groups = sorted_results[joined_attribute][joined_attribute.to_sym][:test_groups]
@@ -102,6 +106,7 @@ module MartSearch
       per_protocol_data[:significant_parameters] = true if result[:manual_call] == 'Significant'
       
       param_data = per_protocol_data[:parameters][parameter] ||= {
+        :parameter_id  => result[:parameter_id].to_i,
         :order_by      => result[:parameter_order_by].to_i,
         :graphs        => [],
         :mp_annotation => {}
