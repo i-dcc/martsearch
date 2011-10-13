@@ -17,7 +17,7 @@
     cells = []
     protocol_data[:parameters].each do |parameter,parameter_data|
       parameter_data.keys.each do |key|
-        next if [:graphs,:order_by,:mp_annotation].include?(key)
+        next if [:graphs,:order_by,:mp_annotation,:parameter_id].include?(key)
         cells.push(key) unless cells.include?(key)
       end
     end
