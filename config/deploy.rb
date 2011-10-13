@@ -32,6 +32,7 @@ task :deploy => %w[
   vlad:bundle:install
   vlad:symlink_config
   vlad:symlink_wtsi_phenotyping_heatmap
+  vlad:symlink_abr_phenotyping_pages
   vlad:start_app
   vlad:fix_perms
   vlad:cleanup
@@ -44,6 +45,7 @@ task :setup_new_instance => %w[
   vlad:bundle:install
   vlad:symlink_config
   vlad:symlink_wtsi_phenotyping_heatmap
+  vlad:symlink_abr_phenotyping_pages
   vlad:fix_perms
 ]
 
@@ -58,6 +60,12 @@ namespace :vlad do
   desc "Symlinks the WTSI Phenotyping Heatmap"
   remote_task :symlink_wtsi_phenotyping_heatmap, :roles => :app do
     run "ln -nfs /software/team87/brave_new_world/data/generated/pheno_overview.xls #{current_path}/tmp/pheno_overview.xls"
+  end
+  
+  desc "Symlink the ABR Phenotyping Pages"
+  remote_task :symlink_abr_phenotyping_pages, :roles => :app do
+    run "mv #{current_path}/tmp/pheno_abr #{current_path}/tmp/pheno_abr_from_git"
+    run "ln -nfs /software/team87/brave_new_world/data/phenotyping-abr-pages #{current_path}/tmp/pheno_abr"
   end
 
   desc "Fixes the permissions on the 'current' deployment"
