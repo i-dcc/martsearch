@@ -72,14 +72,19 @@ module MartSearch
       heatmap_config = []
       parameter_map = {}
       
-      dataset = ms.datasets[:'wtsi-possible_mp_terms']
-      raise MartSearch::InvalidConfigError, "MartSearch::DataSet.wtsi_phenotyping_build_mp_heatmap_config cannot be called if the 'wtsi-possible-mp_terms' dataset is inactive" if dataset.nil?
+      datasource = ms.datasources[:'wtsi-possible_mp_terms']
+      raise MartSearch::InvalidConfigError, "MartSearch::DataSet.wtsi_phenotyping_build_mp_heatmap_config cannot be called if the 'wtsi-possible_mp_terms' datasource is inactive" if datasource.nil?
 
-      mart = dataset.datasource.ds
+      mart = datasource.ds
       
       results  = mart.search(
         :process_results => true,
-        :attributes => dataset.config[:searching][:attributes]
+        :attributes => [
+          "protocol",
+          "test_name",
+          "parameter_name",
+          "mp_term"
+        ]
       )
       
       results.recursively_symbolize_keys!
