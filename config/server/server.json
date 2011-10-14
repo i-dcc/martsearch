@@ -1,9 +1,11 @@
 {
   "portal_name": "Mouse Resources Portal",
-  "debug":       false,
   "email": {
     "from": "team87@sanger.ac.uk",
     "to":   "team87@sanger.ac.uk"
+  },
+  "log": {
+    "level": "error" /* DEBUG < INFO < WARN < ERROR < FATAL */
   },
   "cache": {
     "type":   "mongo",
