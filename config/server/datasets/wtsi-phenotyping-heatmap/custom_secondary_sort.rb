@@ -42,6 +42,7 @@ module MartSearch
           param_level_heatmap_data = result_data[:'wtsi-phenotyping-param_level_heatmap']
           unless param_level_heatmap_data.nil? or param_level_heatmap_data[colony_prefix].nil?
             graphs = param_level_heatmap_data[colony_prefix][:test_groups]
+            result[:population_id] ||= param_level_heatmap_data[colony_prefix][:population_id].to_i
             
             graphs.keys.each do |test|
               mart_attribute = ds_attribs[test.to_s]
@@ -55,6 +56,7 @@ module MartSearch
             mp_heatmap_data = {
               :marker_symbol => result_data[:index][:marker_symbol],
               :colony_prefix => result[:colony_prefix],
+              :population_id => param_level_heatmap_data[colony_prefix][:population_id].to_i,
               :allele_name   => result[:allele_name],
               :allele_type   => result[:allele_type],
               :escell_clone  => result[:escell_clone],

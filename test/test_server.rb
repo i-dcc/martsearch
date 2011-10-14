@@ -380,7 +380,7 @@ class MartSearchServerRackTest < Test::Unit::TestCase
         end
 
         # Then for when we don't...
-        mgis_with_no_return = ['MGI:1921402']
+        mgis_with_no_return = ['MGI:1915733']
         mgis_with_no_return.each do |mgi|
           @browser.get "/go_ontology?id=go-ontology-#{mgi.gsub(':','')}"
           assert_equal( 404, @browser.last_response.status )

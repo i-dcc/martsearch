@@ -1,9 +1,11 @@
 {
   "portal_name": "International Knockout Mouse Consortium - MartSearch",
-  "debug":       false,
   "email": {
     "to":   "team87@sanger.ac.uk",
     "from": "team87@sanger.ac.uk"
+  },
+  "log": {
+    "level": "error" /* DEBUG < INFO < WARN < ERROR < FATAL */
   },
   "cache": {
     "type":   "mongo",
