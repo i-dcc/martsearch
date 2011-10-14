@@ -54,7 +54,7 @@ module MartSearch
     # @param [Hash] errors A hash containing error records for the dataset searches (if any)
     # @return [Boolean] True/False 
     def display_for_result?( result, errors )
-      MartSearch::Controller.instance().logger.debug("[MartSearch::DataView] '#{self.internal_name}' ::search - running display_for_result?()")
+      # MartSearch::Controller.instance().logger.debug("[MartSearch::DataView] '#{self.internal_name}' ::search - running display_for_result?()")
       check_datasets unless @alredy_checked_datasets_ok
       display = false
       
@@ -73,7 +73,7 @@ module MartSearch
     # @param [Hash] dataset_errors A hash of recorded search errors - keyed by dataset name
     # @return [Hash] A hash of any dataset errors related to this view
     def search_errors( dataset_errors )
-      MartSearch::Controller.instance().logger.debug("[MartSearch::DataView] '#{self.internal_name}' ::search_errors - running search_errors()")
+      # MartSearch::Controller.instance().logger.debug("[MartSearch::DataView] '#{self.internal_name}' ::search_errors - running search_errors()")
       errors = { :required => [], :optional => [] }
       
       [ :required, :optional ].each do |ds_class|
@@ -92,7 +92,7 @@ module MartSearch
     # @param [Hash] result_data The result_data stash of returned data for a given gene/doc
     # @return [Array] An array of arrays containing the [ link_text, link_url ]
     def attribution_links( result_data )
-      MartSearch::Controller.instance().logger.debug("[MartSearch::DataView] '#{self.internal_name}' ::attribution_links - running attribution_links()")
+      # MartSearch::Controller.instance().logger.debug("[MartSearch::DataView] '#{self.internal_name}' ::attribution_links - running attribution_links()")
       martsearch = MartSearch::Controller.instance()
       datasets   = martsearch.datasets
       links      = []
@@ -108,7 +108,7 @@ module MartSearch
         end
       end
       
-      MartSearch::Controller.instance().logger.debug("[MartSearch::DataView] '#{self.internal_name}' ::attribution_links - running attribution_links() - DONE")
+      # MartSearch::Controller.instance().logger.debug("[MartSearch::DataView] '#{self.internal_name}' ::attribution_links - running attribution_links() - DONE")
       return links.uniq
     end
     
@@ -118,7 +118,7 @@ module MartSearch
     # @param [Hash] result_data The result_data stash of returned data for a given gene/doc
     # @return [Array] An array of arrays containing the [ link_text, link_url ]
     def data_origin_links( result_data )
-      MartSearch::Controller.instance().logger.debug("[MartSearch::DataView] '#{self.internal_name}' ::data_origin_links - running data_origin_links()")
+      # MartSearch::Controller.instance().logger.debug("[MartSearch::DataView] '#{self.internal_name}' ::data_origin_links - running data_origin_links()")
       martsearch = MartSearch::Controller.instance()
       datasets   = martsearch.datasets
       links      = []
@@ -136,7 +136,7 @@ module MartSearch
         end
       end
       
-      MartSearch::Controller.instance().logger.debug("[MartSearch::DataView] '#{self.internal_name}' ::data_origin_links - running data_origin_links() - DONE")
+      # MartSearch::Controller.instance().logger.debug("[MartSearch::DataView] '#{self.internal_name}' ::data_origin_links - running data_origin_links() - DONE")
       return links.uniq
     end
     

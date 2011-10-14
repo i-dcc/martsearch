@@ -37,7 +37,7 @@ module MartSearch
     # @return [Boolean] true/false depending on if the solr server is up.
     # @raise [MartSearch::IndexUnavailableError]
     def is_alive?
-      MartSearch::Controller.instance().logger.debug("[MartSearch::Index] ::is_alive? - running is_alive?()")
+      # MartSearch::Controller.instance().logger.debug("[MartSearch::Index] ::is_alive? - running is_alive?()")
       clear_instance_variables
       res = @http_client.get_response( URI.parse("#{@url}/admin/ping?wt=ruby") )
 
@@ -60,7 +60,7 @@ module MartSearch
     # @param [Integer] page The page of results to search for/return
     # @return [Hash] A hash of the documents returned from the Solr index - keyed by the primary field
     def search( query, page=1 )
-      MartSearch::Controller.instance().logger.debug("[MartSearch::Index] ::search - running search( '#{query}', '#{page}' )")
+      # MartSearch::Controller.instance().logger.debug("[MartSearch::Index] ::search - running search( '#{query}', '#{page}' )")
       clear_instance_variables
       
       # Calculate the start page
@@ -101,7 +101,7 @@ module MartSearch
       @current_results_total = data[:response][:numFound]
       @paginated_results     = paginate_results( data[:response][:docs] )
       
-      MartSearch::Controller.instance().logger.debug("[MartSearch::Index] ::search - running search( '#{query}', '#{page}' ) - DONE")
+      # MartSearch::Controller.instance().logger.debug("[MartSearch::Index] ::search - running search( '#{query}', '#{page}' ) - DONE")
       return @current_results
     end
     
@@ -114,7 +114,7 @@ module MartSearch
     # @param [Integer] page The page of results to search for/return
     # @return [Array] A array of the documents returned from the Solr index
     def quick_search( query, page=1 )
-      MartSearch::Controller.instance().logger.debug("[MartSearch::Index] ::quick_search - running quick_search( '#{query}', '#{page}' )")
+      # MartSearch::Controller.instance().logger.debug("[MartSearch::Index] ::quick_search - running quick_search( '#{query}', '#{page}' )")
       # Calculate the start page
       start_doc = 0
       if page > 1
@@ -132,7 +132,7 @@ module MartSearch
       
       data.recursively_symbolize_keys!
       
-      MartSearch::Controller.instance().logger.debug("[MartSearch::Index] ::quick_search - running quick_search( '#{query}', '#{page}' ) - DONE")
+      # MartSearch::Controller.instance().logger.debug("[MartSearch::Index] ::quick_search - running quick_search( '#{query}', '#{page}' ) - DONE")
       return data[:response][:docs]
     end
     
@@ -142,9 +142,9 @@ module MartSearch
     # @param [String] query The query string to pass to Solr
     # @return [Integer] The number of documents that match this query
     def count( query )
-      MartSearch::Controller.instance().logger.debug("[MartSearch::Index] ::count - running count( '#{query}' )")
+      # MartSearch::Controller.instance().logger.debug("[MartSearch::Index] ::count - running count( '#{query}' )")
       data = index_request({ "q" => query, "rows" => 0 })
-      MartSearch::Controller.instance().logger.debug("[MartSearch::Index] ::count - running count( '#{query}' ) - DONE")
+      # MartSearch::Controller.instance().logger.debug("[MartSearch::Index] ::count - running count( '#{query}' ) - DONE")
       return data["response"]["numFound"]
     end
     
@@ -152,7 +152,7 @@ module MartSearch
     #
     # @return [Array] a paginated (using will_paginate) list of the search results (the index primary_field)
     def paginate_results( results )
-      MartSearch::Controller.instance().logger.debug("[MartSearch::Index] ::paginate_results - running paginate_results()")
+      # MartSearch::Controller.instance().logger.debug("[MartSearch::Index] ::paginate_results - running paginate_results()")
       results = WillPaginate::Collection.create( @current_page, @config[:docs_per_page], @current_results_total ) do |pager|
          pager.replace( results )
       end
@@ -164,7 +164,7 @@ module MartSearch
       # Utility function to handle the search/count requsets 
       # to the index.
       def index_request( params={} )
-        MartSearch::Controller.instance().logger.debug("[MartSearch::Index] ::index_request - running index_request( '#{params}' )")
+        # MartSearch::Controller.instance().logger.debug("[MartSearch::Index] ::index_request - running index_request( '#{params}' )")
         res = @http_client.post_form( URI.parse("#{self.url}/select"), params.update({ "wt" => "ruby" }) )
         
         if res.code.to_i != 200
@@ -176,7 +176,7 @@ module MartSearch
       
       # Utility function to clear all instance variables
       def clear_instance_variables
-        MartSearch::Controller.instance().logger.debug("[MartSearch::Index] ::clear_instance_variables - running clear_instance_variables()")
+        # MartSearch::Controller.instance().logger.debug("[MartSearch::Index] ::clear_instance_variables - running clear_instance_variables()")
         @current_results       = {}
         @grouped_terms         = {}
         @current_results_total = 0

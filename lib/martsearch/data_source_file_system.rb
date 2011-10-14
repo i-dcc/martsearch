@@ -40,7 +40,7 @@ module MartSearch
     # @see MartSearch::DataSource#search
     # @raise [MartSearch::DataSourceError] Raised if an error occurs during the seach process
     def search( query, conf )
-      MartSearch::Controller.instance().logger.debug("[MartSearch::FileSystemDataSource] '#{self.name}' ::search - running search( '#{query}', conf )")
+      # MartSearch::Controller.instance().logger.debug("[MartSearch::FileSystemDataSource] '#{self.name}' ::search - running search( '#{query}', conf )")
       unless conf[:file_globs]
         raise MartSearch::DataSourceError, "You have not specifed any 'glob' patterns!"
       end

@@ -31,7 +31,7 @@ module MartSearch
     # 
     # @see MartSearch::DataSource#fetch_all_terms_for_indexing
     def fetch_all_terms_for_indexing( conf )
-      MartSearch::Controller.instance().logger.debug("[MartSearch::BiomartDataSource] '#{self.name}' ::fetch_all_terms_for_indexing - running fetch_all_terms_for_indexing()")
+      # MartSearch::Controller.instance().logger.debug("[MartSearch::BiomartDataSource] '#{self.name}' ::fetch_all_terms_for_indexing - running fetch_all_terms_for_indexing()")
 
       attributes = []
       conf[:attribute_map].each do |map|
@@ -55,7 +55,7 @@ module MartSearch
     # @see MartSearch::DataSource#search
     # @raise [MartSearch::DataSourceError] Raised if an error occurs during the seach process
     def search( query, conf )
-      MartSearch::Controller.instance().logger.debug("[MartSearch::BiomartDataSource] '#{self.name}' ::search - running search( '#{query}', conf )")
+      # MartSearch::Controller.instance().logger.debug("[MartSearch::BiomartDataSource] '#{self.name}' ::search - running search( '#{query}', conf )")
 
       filters = { conf[:joined_filter] => query.join(',') }
       filters.merge!( conf[:filters] ) unless conf[:filters].nil? or conf[:filters].empty?
@@ -79,7 +79,7 @@ module MartSearch
         raise MartSearch::DataSourceError, "Biomart::BiomartError: #{error.message}"
       end
 
-      MartSearch::Controller.instance().logger.debug("[MartSearch::BiomartDataSource] '#{self.name}' ::search - running search( '#{query}', conf ) - DONE")
+      # MartSearch::Controller.instance().logger.debug("[MartSearch::BiomartDataSource] '#{self.name}' ::search - running search( '#{query}', conf ) - DONE")
       return results
     end
     
@@ -88,7 +88,7 @@ module MartSearch
     #
     # @see MartSearch::DataSource#data_origin_url
     def data_origin_url( query, conf )
-      MartSearch::Controller.instance().logger.debug("[MartSearch::BiomartDataSource] '#{self.name}' ::data_origin_url - running data_origin_url( '#{query}', conf )")
+      # MartSearch::Controller.instance().logger.debug("[MartSearch::BiomartDataSource] '#{self.name}' ::data_origin_url - running data_origin_url( '#{query}', conf )")
 
       url = @url + "/martview?VIRTUALSCHEMANAME=default&VISIBLEPANEL=resultspanel"
 
@@ -120,7 +120,7 @@ module MartSearch
 
       url << attrs.join("|")
 
-      MartSearch::Controller.instance().logger.debug("[MartSearch::BiomartDataSource] '#{self.name}' ::data_origin_url - running data_origin_url( '#{query}', conf ) - DONE")
+      # MartSearch::Controller.instance().logger.debug("[MartSearch::BiomartDataSource] '#{self.name}' ::data_origin_url - running data_origin_url( '#{query}', conf ) - DONE")
       return url
     end
     
