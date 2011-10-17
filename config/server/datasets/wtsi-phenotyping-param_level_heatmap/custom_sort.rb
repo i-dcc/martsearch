@@ -174,20 +174,23 @@ module MartSearch
       per_protocol_data[:significant_parameters] = true if result[:manual_call] == 'Significant'
       
       param_data = per_protocol_data[:parameters][parameter] ||= {
-        :parameter_id  => result[:parameter_id].to_i,
-        :order_by      => result[:parameter_order_by].to_i,
-        :graphs        => [],
-		    :data_files	   => [],
-        :mp_annotation => {}
+        :pops_params    => [],
+        :order_by       => result[:parameter_order_by].to_i,
+        :graphs         => [],
+		    :data_files	    => [],
+        :mp_annotation  => {}
       }
       
       graph_url     = result[:graph_url]
 	    data_url		  = result[:raw_data_url]
-      gender_genotype   = :"#{result[:gender]}_#{result[:genotype]}"
+      gender_genotype = :"#{result[:gender]}_#{result[:genotype]}"
       
       param_data[:graphs].push( graph_url ) unless param_data[:graphs].include?( graph_url )
 	    param_data[:data_files].push( data_url ) unless param_data[:data_files].include?( data_url )
       param_data[:mp_annotation].merge!({ result[:mp_id] => result[:mp_term] }) unless result[:mp_id].blank?
+      
+      pop_param = { :population_id => result[:population_id].to_i, :parameter_id => result[:parameter_id].to_i }
+      param_data[:pops_params].push( pop_param ) unless param_data[:pops_params].include?( pop_param )
       
       param_data[gender_genotype] ||= {
         :gender                     => result[:gender],

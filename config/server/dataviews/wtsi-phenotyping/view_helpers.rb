@@ -1,3 +1,6 @@
+require 'ruby-debug'
+require "#{File.expand_path(File.dirname(__FILE__))}/raw_data_sort"
+
 # Template helper function to map the status descriptions retrived from MIG into 
 # a CSS class that is used to draw the heat map.
 #
@@ -64,20 +67,43 @@ def wtsi_phenotyping_fetch_mp_report_data( colony_prefix, mp_slug )
   end
 end
 
+
 def wtsi_phenotyping_fetch_raw_data( population_id, parameter_id )
   ms = MartSearch::Controller.instance()
-  heatmap_dataset = ms.datasets[:'wtsi-phenotyping-data-set']
-  raise MartSearch::InvalidConfigError, "MartSearch::Controller.wtsi_phenotyping_progress_counts cannot be called if the 'wtsi-phenotyping-data_set' dataset is inactive" if heatmap_dataset.nil?
+  mart = ms.datasources[:"wtsi-phenotyping"].ds
   
-  mart = heatmap_dataset.datasource.ds
-  results        = mart.search(
+  results = mart.search(
     :process_results => true,
-    :attributes      => heatmap_dataset.config[:searching][:attributes],
-    :filters         => {
+    :attributes => [
+      "published_graph_data_allele_name",
+      "published_graph_data_pipeline",
+      "published_graph_data_membership",
+      "published_graph_data_mouse_name",
+      "published_graph_data_gender",
+      "published_graph_data_genotype",
+      "published_graph_data_genotype_str",
+      "published_graph_data_genetic_background",
+      "published_graph_data_observation",
+      "published_graph_data_x_value",
+      "published_graph_data_y_value",
+      "colony_prefix",
+      "published_graph_data_parameter_id",
+      "published_graph_data_population_id",
+      "published_graph_data_graph_type"
+    ],
+    :required_attributes => [
+      "colony_prefix",
+      "published_graph_data_parameter_id",
+      "published_graph_data_population_id",
+      "published_graph_data_graph_type"
+    ],
+    :filters => {
       'population_id' => population_id,
       'parameter_id'  => parameter_id
     }
   )
+
+  graph_type, sorted_results = RawDataSort.sort( results )
   
-  return heatmap_dataset.sort_results( results )
+  return graph_type, sorted_results
 end
