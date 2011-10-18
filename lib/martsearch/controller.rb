@@ -34,13 +34,8 @@ module MartSearch
       @dataviews_by_name = @config[:server][:dataviews_by_name]
 
       # Logger
-      if  !@config[:server][:log][:file].blank?
-        log_file = File.new( "#{MARTSEARCH_PATH}/log/#{@config[:server][:log][:file]}", "a+" )
-        @logger = Logger.new(log_file)
-      else
-        @logger = Logger.new($stdout)
-        @logger = Logger.new($stderr)
-      end
+      @logger                 = Logger.new($stdout)
+      @logger                 = Logger.new($stderr)
       @logger.datetime_format = "%Y-%m-%d %H:%M:%S "
       @logger.level           = case @config[:server][:log][:level]
         when 'debug' then Logger::DEBUG
