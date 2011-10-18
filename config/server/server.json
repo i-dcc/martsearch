@@ -5,7 +5,7 @@
     "from": "team87@sanger.ac.uk"
   },
   "log": {
-    "level": "error" /* DEBUG < INFO < WARN < ERROR < FATAL */
+    "level": "debug" /* DEBUG < INFO < WARN < ERROR < FATAL */
   },
   "cache": {
     "type":   "mongo",
