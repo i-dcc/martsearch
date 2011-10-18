@@ -236,19 +236,24 @@ module MartSearch
       get path do
         project_id = params[:id]
         redirect "#{request.script_name}/" if project_id.nil?
-        
+
         @current    = "home"
         @page_title = "IKMC Project: #{project_id}"
+
+        @ms.logger.debug("[MartSearch::Server] /project/#{params[:id]} - running get_project_page_data")
         get_project_page_data( project_id, params )
-        
+        @ms.logger.debug("[MartSearch::Server] /project/#{params[:id]} - running get_project_page_data - DONE")
+
         if @data.nil?
           status 404
           erubis :not_found
         else
           if params[:wt] == 'json'
+            @ms.logger.debug("[MartSearch::Server] /project/#{params[:id]} - rendering JSON")
             content_type 'application/json', :charset => 'utf-8'
             return JSON.generate( @data, :max_nesting => false )
           else
+            @ms.logger.debug("[MartSearch::Server] /project/#{params[:id]} - rendering templates")
             erubis :project_report
           end
         end
@@ -274,8 +279,8 @@ module MartSearch
     end
     
     def get_project_page_data( project_id, params )
+      @ms.logger.debug("[MartSearch::Server] ::get_project_page_data - running get_project_page_data( '#{project_id}', '#{params}' )")
       @data = @ms.fetch_from_cache("project-report-#{project_id}")
-      
       if @data.nil? or params[:fresh] == "true"
         results = get_ikmc_project_page_data( project_id )
         @data   = results[:data]
@@ -285,6 +290,7 @@ module MartSearch
           @ms.write_to_cache( "project-report-#{project_id}", @data )
         end
       end
+      @ms.logger.debug("[MartSearch::Server] ::get_project_page_data - running get_project_page_data( '#{project_id}', '#{params}' ) - DONE")
     end
     
     ##

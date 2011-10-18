@@ -208,7 +208,8 @@ module MartSearch
         cached_data = cached_data.clean_hash if RUBY_VERSION < '1.9'
         cached_data.recursively_symbolize_keys!
       end
-      
+      self.logger.debug("[MartSearch::Controller] ::fetch_from_cache - running fetch_from_cache( '#{key}' ) - DONE")
+
       return cached_data
     end
     
@@ -225,6 +226,7 @@ module MartSearch
       else
         @cache.write( key, JSON.generate( value, :max_nesting => false ), { :expires_in => 36.hours }.merge(options) )
       end
+      self.logger.debug("[MartSearch::Controller] ::write_to_cache - running write_to_cache( '#{key}', Object, '#{options.inspect}' ) - DONE")
     end
     
     private
