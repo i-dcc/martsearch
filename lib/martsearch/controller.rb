@@ -32,10 +32,15 @@ module MartSearch
       @datasets          = @config[:server][:datasets]
       @dataviews         = @config[:server][:dataviews]
       @dataviews_by_name = @config[:server][:dataviews_by_name]
-      
+
       # Logger
-      @logger                 = Logger.new(STDOUT)
-      @logger                 = Logger.new(STDERR)
+      if  !@config[:server][:log][:file].blank?
+        log_file = File.new( "#{MARTSEARCH_PATH}/log/#{@config[:server][:log][:file]}", "a+" )
+        @logger = Logger.new(log_file)
+      else
+        @logger = Logger.new($stdout)
+        @logger = Logger.new($stderr)
+      end
       @logger.datetime_format = "%Y-%m-%d %H:%M:%S "
       @logger.level           = case @config[:server][:log][:level]
         when 'debug' then Logger::DEBUG
@@ -44,7 +49,7 @@ module MartSearch
         when 'error' then Logger::ERROR
         when 'fatal' then Logger::FATAL
       end
-      
+
       # Stores for search result data and errors...
       @errors         = { :index => [], :datasets => {} }
       @search_data    = {}
