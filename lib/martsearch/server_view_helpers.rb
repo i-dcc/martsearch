@@ -27,7 +27,7 @@ module MartSearch
       end
     end
     
-    # Standard partial helper - allows erubis templates to easily call
+    # Standard partial helper - allows erb templates to easily call
     # smaller sub-templates.
     #
     # @param [String] template The location/name of the template to call
@@ -44,10 +44,10 @@ module MartSearch
       
       if collection
         collection.inject([]) do |buffer, member|
-          buffer << erubis( :"#{template}", options.merge( :locals => { template_array[-1].to_sym => member } ) )
+          buffer << erb( :"#{template}", options.merge( :locals => { template_array[-1].to_sym => member } ) )
         end.join("\n")
       else
-        erubis( :"#{template}", options )
+        erb( :"#{template}", options )
       end
     end
     
