@@ -32,10 +32,10 @@ module MartSearch
       @datasets          = @config[:server][:datasets]
       @dataviews         = @config[:server][:dataviews]
       @dataviews_by_name = @config[:server][:dataviews_by_name]
-      
+
       # Logger
-      @logger                 = Logger.new(STDOUT)
-      @logger                 = Logger.new(STDERR)
+      @logger                 = Logger.new($stdout)
+      @logger                 = Logger.new($stderr)
       @logger.datetime_format = "%Y-%m-%d %H:%M:%S "
       @logger.level           = case @config[:server][:log][:level]
         when 'debug' then Logger::DEBUG
@@ -44,7 +44,7 @@ module MartSearch
         when 'error' then Logger::ERROR
         when 'fatal' then Logger::FATAL
       end
-      
+
       # Stores for search result data and errors...
       @errors         = { :index => [], :datasets => {} }
       @search_data    = {}
@@ -208,7 +208,8 @@ module MartSearch
         cached_data = cached_data.clean_hash if RUBY_VERSION < '1.9'
         cached_data.recursively_symbolize_keys!
       end
-      
+      self.logger.debug("[MartSearch::Controller] ::fetch_from_cache - running fetch_from_cache( '#{key}' ) - DONE")
+
       return cached_data
     end
     
@@ -225,6 +226,7 @@ module MartSearch
       else
         @cache.write( key, JSON.generate( value, :max_nesting => false ), { :expires_in => 36.hours }.merge(options) )
       end
+      self.logger.debug("[MartSearch::Controller] ::write_to_cache - running write_to_cache( '#{key}', Object, '#{options.inspect}' ) - DONE")
     end
     
     private

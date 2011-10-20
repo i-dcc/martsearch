@@ -14,7 +14,7 @@ module MartSearch
         return content
       else
         status 404
-        erubis :not_found
+        erb :not_found
       end
     end
     
@@ -36,10 +36,10 @@ module MartSearch
         @page_title = "#{@data[:marker_symbol]} (#{@colony_prefix}): Auditory Brainstem Response (ABR)"
         html_text   = File.read(file)
         
-        erubis html_text
+        erb html_text
       else
         status 404
-        erubis :not_found
+        erb :not_found
       end
     end
     
@@ -55,7 +55,7 @@ module MartSearch
         return content
       else
         status 404
-        erubis :not_found
+        erb :not_found
       end
     end
     
@@ -70,11 +70,11 @@ module MartSearch
       
       if @data.nil?
         status 404
-        erubis :not_found
+        erb :not_found
       else
         @page_title       = "#{@data[:marker_symbol]} (#{@colony_prefix}): Adult LacZ Expression"
         @bg_staining_imgs = @ms.dataviews_by_name[:'wtsi-phenotyping'].config[:wt_lacz_background_staining_adult]
-        erubis :"dataviews/wtsi-phenotyping/adult_expression_details"
+        erb :"dataviews/wtsi-phenotyping/adult_expression_details"
       end
     end
     
@@ -84,10 +84,10 @@ module MartSearch
       
       if @data.nil?
         status 404
-        erubis :not_found
+        erb :not_found
       else
         @page_title       = "#{@data[:marker_symbol]} (#{@colony_prefix}): Embryo LacZ Expression"
-        erubis :"dataviews/wtsi-phenotyping/embryo_expression_details"
+        erb :"dataviews/wtsi-phenotyping/embryo_expression_details"
       end
     end
     
@@ -97,10 +97,10 @@ module MartSearch
       
       if @data.nil?
         status 404
-        erubis :not_found
+        erb :not_found
       else
         @page_title       = "#{@data[:marker_symbol]} (#{@colony_prefix}): Tail Epidermis Wholemount"
-        erubis :"dataviews/wtsi-phenotyping/tail_epidermis_wholemount_details"
+        erb :"dataviews/wtsi-phenotyping/tail_epidermis_wholemount_details"
       end
     end
     
@@ -110,10 +110,10 @@ module MartSearch
       
       if @data.nil?
         status 404
-        erubis :not_found
+        erb :not_found
       else
         @page_title = "#{@data[:marker_symbol]} (#{@colony_prefix}): Viability at Weaning"
-        erubis :"dataviews/wtsi-phenotyping/homviable_details"
+        erb :"dataviews/wtsi-phenotyping/homviable_details"
       end
     end
     
@@ -123,11 +123,11 @@ module MartSearch
       
       if @data.nil?
         status 404
-        erubis :not_found
+        erb :not_found
       else
         @marker_symbol = @data[0][:marker_symbol]
         @page_title    = "#{@marker_symbol} (#{@colony_prefix}): Fertility"
-        erubis :"dataviews/wtsi-phenotyping/fertility_details"
+        erb :"dataviews/wtsi-phenotyping/fertility_details"
       end
     end
     
@@ -141,11 +141,11 @@ module MartSearch
       
       if @data.nil?
         status 404
-        erubis :not_found
+        erb :not_found
       else
         @marker_symbol = @data[:marker_symbol]
         @page_title    = "#{@marker_symbol} (#{@colony_prefix}): #{@data[:mp_id]} - #{@data[:mp_term]}"
-        erubis :"dataviews/wtsi-phenotyping/mp_test_details"
+        erb :"dataviews/wtsi-phenotyping/mp_test_details"
       end
     end
     
@@ -156,12 +156,12 @@ module MartSearch
       
       if @data.nil?
         status 404
-        erubis :not_found
+        erb :not_found
       else
         @marker_symbol = @data[:marker_symbol]
         @test_name     = @data[:test]
         @page_title    = "#{@marker_symbol} (#{@colony_prefix}): #{@test_name}"
-        erubis :"dataviews/wtsi-phenotyping/test_details"
+        erb :"dataviews/wtsi-phenotyping/test_details"
       end
     end
     
