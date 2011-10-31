@@ -66,7 +66,7 @@ module MartSearch
       end
 
       @request = request
-      erubis :not_found
+      erb :not_found
     end
     
     before do
@@ -109,19 +109,19 @@ module MartSearch
     get '/?' do
       @current               = 'home'
       @hide_side_search_form = true
-      erubis :main
+      erb :main
     end
     
     get '/about/?' do
       @current    = 'about'
       @page_title = 'About'
-      erubis :about
+      erb :about
     end
 
     get '/help/?' do
       @current    = 'help'
       @page_title = 'Help'
-      erubis :help
+      erb :help
     end
     
     get '/clear_cache/?' do
@@ -157,7 +157,7 @@ module MartSearch
         else
           @ms.logger.debug("[MartSearch::Server] /search?query=#{params[:query]}&page=#{params[:page]} - rendering templates")
           # Marker.mark("rendering page") do
-            erubis :search
+            erb :search
           # end
         end
       end
@@ -215,7 +215,7 @@ module MartSearch
         return JSON.generate( @data, :max_nesting => false )
       else
         @ms.logger.debug("[MartSearch::Server] /browse?field=#{params[:field]}&query=#{params[:query]}&page=#{params[:page]} - rendering templates")
-        erubis :browse
+        erb :browse
       end
     end
     
@@ -246,7 +246,7 @@ module MartSearch
 
         if @data.nil?
           status 404
-          erubis :not_found
+          erb :not_found
         else
           if params[:wt] == 'json'
             @ms.logger.debug("[MartSearch::Server] /project/#{params[:id]} - rendering JSON")
@@ -254,7 +254,7 @@ module MartSearch
             return JSON.generate( @data, :max_nesting => false )
           else
             @ms.logger.debug("[MartSearch::Server] /project/#{params[:id]} - rendering templates")
-            erubis :project_report
+            erb :project_report
           end
         end
       end
@@ -265,15 +265,15 @@ module MartSearch
       
       if project_id.nil?
         status 404
-        erubis :not_found
+        erb :not_found
       else
         get_project_page_data( project_id, params )
         
         if @data[:pcr_primers].nil?
           status 404
-          erubis :not_found
+          erb :not_found
         else
-          erubis :'project_report/pcr_primers', :layout => :ajax_layout
+          erb :'project_report/pcr_primers', :layout => :ajax_layout
         end
       end
     end

@@ -77,11 +77,10 @@ module MartSearch
     # @return [String] The URL that links to the original datasource
     def data_origin_url( query )
       MartSearch::Controller.instance().logger.debug("[MartSearch::DataSet] '#{self.name}' ::data_origin_url - running data_origin_url( '#{query}' )")
-      if query.nil?
-        return nil
-      else
-        return datasource.data_origin_url( query, @config[:searching] )
-      end
+      url = nil
+      url = datasource.data_origin_url( query, @config[:searching] ) unless query.nil?
+      MartSearch::Controller.instance().logger.debug("[MartSearch::DataSet] '#{self.name}' ::data_origin_url - running data_origin_url( '#{query}' ) - DONE")
+      return url
     end
     
     # Helper function to supply our MartSearch::DataSource instance.
