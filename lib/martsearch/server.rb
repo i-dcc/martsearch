@@ -114,7 +114,7 @@ module MartSearch
       
       if @counts.nil?
         @counts = {
-          :mice               => { :query => 'microinjection_centre_status:"WTSI - Genotype Confirmed"' },
+          :mice               => { :query => 'microinjection_centre_status:"WTSI - Genotype confirmed"' },
           :escells            => { :query => 'ikmc_project_product_status_str:"KOMP-CSD ES Cell Available" OR ikmc_project_product_status_str:"EUCOMM ES Cell Available"' },
           :targ_vectors       => { :query => 'ikmc_project_product_status_str:"KOMP-CSD Vector Available" OR ikmc_project_product_status_str:"EUCOMM Vector Available"' },
           :micer_clones       => { :query => 'dna_library:"MICER"' },
