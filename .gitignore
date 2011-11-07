@@ -1,7 +1,6 @@
 .bundle*
 .DS_Store
 .yardoc*
-config/ols_database.yml
 coverage.info
 coverage/*
 doc*
