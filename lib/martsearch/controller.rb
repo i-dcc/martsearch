@@ -26,12 +26,15 @@ module MartSearch
       }
       
       @cache             = initialize_cache( @config[:server][:cache] )
-      @ontology_cache    = MartSearch::OntologyTermCache.new()
       @index             = MartSearch::Index.new( @config[:index] )
       @datasources       = @config[:datasources]
       @datasets          = @config[:server][:datasets]
       @dataviews         = @config[:server][:dataviews]
       @dataviews_by_name = @config[:server][:dataviews_by_name]
+
+      # OLS
+      @ontology_cache    = MartSearch::OntologyTermCache.new()
+      OLS.setup_cache({ :directory => "#{MARTSEARCH_PATH}/tmp/ols_cache" })
 
       # Logger
       @logger                 = Logger.new($stdout)

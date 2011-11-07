@@ -9,6 +9,7 @@ gem 'rack',                   '>=1.0',    :require => false
 gem 'rack-contrib',                       :require => false
 gem 'erubis',                             :require => false
 gem 'biomart',                '>=0.2.0',  :require => false
+gem 'ols',                    '>=0.2.0',  :require => false
 gem 'json',                               :require => false
 gem 'parallel',                           :require => false
 gem 'yui-compressor',                     :require => false

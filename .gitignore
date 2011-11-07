@@ -17,3 +17,4 @@ simplecov/*
 test/vcr_cassettes*
 tmp/*.json
 tmp/index_builder*
+tmp/ols_cache*

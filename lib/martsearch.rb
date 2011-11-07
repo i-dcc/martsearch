@@ -9,6 +9,7 @@ require 'date'
 require 'digest/md5'
 
 require 'biomart'
+require 'ols'
 require 'sinatra/base'
 require 'rack/mime'
 require 'erubis'
