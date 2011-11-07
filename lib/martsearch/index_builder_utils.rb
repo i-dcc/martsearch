@@ -211,20 +211,12 @@ module MartSearch
     # @param [Hash] doc The Solr document object to inject any indexable data into
     # @param [Hash] data_row_obj Hash representing the row of dataset data to process
     # @param [Hash] map_data The complete processed attribute_map config (return from {#process_attribute_map})
-    # @param [Hash] cache A cache object to store data about already retrieved ontology terms (this is for optimization as generating the OntologyTerm objects is expensive)
-    def index_ontology_terms( ontology_term_conf, doc, data_row_obj, map_data, cache )
+    def index_ontology_terms( ontology_term_conf, doc, data_row_obj, map_data )
       ontology_term_conf.each do |term_conf|
         attribute      = term_conf[:attr]
         value_to_index = extract_value_to_index( attribute, map_data[:attribute_map], { attribute => data_row_obj[attribute] } )
         
-        if value_to_index && !value_to_index.gsub(" ","").empty?
-          cached_data = cache[value_to_index]
-          if cached_data != nil
-            index_ontology_terms_from_cache( doc, term_conf, cached_data )
-          else
-            index_ontology_terms_from_fresh( doc, term_conf, value_to_index, cache )
-          end
-        end
+        index_ontology_terms_from_ols( doc, term_conf, value_to_index ) if value_to_index && !value_to_index.gsub(" ","").empty?
       end
     end
     
@@ -234,22 +226,20 @@ module MartSearch
     # @param [Hash] doc The Solr document object to inject any indexable data into
     # @param [Hash] data_row_obj Hash representing the row of dataset data to process
     # @param [Hash] map_data The complete processed attribute_map config (return from {#process_attribute_map})
-    # @param [Hash] cache A cache object to store data about already retrieved ontology terms (this is for optimization as generating the OntologyTerm objects is expensive)
-    def index_concatenated_ontology_terms( concat_ont_term_conf, doc, data_row_obj, map_data, cache )
+    def index_concatenated_ontology_terms( concat_ont_term_conf, doc, data_row_obj, map_data )
       attribute       = concat_ont_term_conf[:attr]
       split_delimiter = concat_ont_term_conf[:split_on] || ", "
       value_to_index  = extract_value_to_index( attribute, map_data[:attribute_map], { attribute => data_row_obj[attribute] } )
-      
+
       if value_to_index && !value_to_index.gsub(" ","").empty?
         terms_to_test = value_to_index.split(split_delimiter)
         terms_to_test.each do |test_term|
           concat_ont_term_conf[:ontologies].each do |ontology_matcher,ontology_conf|
             regexp  = Regexp.new( ontology_matcher.to_s, Regexp::IGNORECASE )
             matcher = test_term.upcase.match( regexp )
-            
+
             unless matcher.nil?
               matched_term = matcher.to_s
-              cached_data  = cache[matched_term]
               term_conf    = {
                 :attr => attribute,
                 :idx  => {
@@ -258,12 +248,8 @@ module MartSearch
                   :breadcrumb => ontology_conf[:breadcrumb]
                 }
               }
-              
-              if cached_data != nil
-                index_ontology_terms_from_cache( doc, term_conf, cached_data )
-              else
-                index_ontology_terms_from_fresh( doc, term_conf, matched_term, cache )
-              end
+
+              index_ontology_terms_from_ols( doc, term_conf, matched_term )
             end
           end
         end
@@ -296,8 +282,8 @@ module MartSearch
     
     private
     
-      # Helper function for indexing ontology terms we haven't seen before
-      def index_ontology_terms_from_fresh( doc, term_conf, value_to_index, cache )
+      # Helper function for indexing ontology terms
+      def index_ontology_terms_from_ols( doc, term_conf, value_to_index )
         begin
           ontolo_term    = OLS.find_by_id( value_to_index )
           terms_to_index = []
@@ -315,26 +301,14 @@ module MartSearch
           # in the search index...
           names_to_index.shift
 
-          # Store these terms to the cache for future use...
-          data_to_cache         = { :term => terms_to_index, :term_name => names_to_index }
-          cache[value_to_index] = data_to_cache
-
-          # Write the data to the doc...
-          index_ontology_terms_from_cache( doc, term_conf, data_to_cache )
+          # Add these details to the Solr document
+          terms_to_index.each { |term| doc[ term_conf[:idx][:term].to_sym ].push(term) }
+          names_to_index.each { |name| doc[ term_conf[:idx][:term_name].to_sym ].push(name) }
+          doc[ term_conf[:idx][:breadcrumb].to_sym ].push( terms_to_index.join(" | ") )
+          doc[ term_conf[:idx][:breadcrumb].to_sym ].push( names_to_index.join(" | ") )
         rescue OLS::TermNotFoundError => error
           # The ontology term couldn't be found - no worries, just move on...
         end
       end
-    
-      # Helper function for indexing ontology terms we have in the cache
-      def index_ontology_terms_from_cache( doc, term_conf, cached_data )
-        [:term,:term_name].each do |term_or_name|
-          cached_data[term_or_name].each do |target|
-            doc[ term_conf[:idx][term_or_name].to_sym ].push( target )
-          end
-          doc[ term_conf[:idx][:breadcrumb].to_sym ].push( cached_data[term_or_name].join(" | ") )
-        end
-      end
-      
   end
 end
