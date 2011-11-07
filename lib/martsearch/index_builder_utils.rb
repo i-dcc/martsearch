@@ -298,19 +298,17 @@ module MartSearch
     
       # Helper function for indexing ontology terms we haven't seen before
       def index_ontology_terms_from_fresh( doc, term_conf, value_to_index, cache )
-        ontology_cache = MartSearch::Controller.instance().ontology_cache
-        
         begin
-          ontolo_term    = ontology_cache.fetch_just_parents( value_to_index )
+          ontolo_term    = OLS.find_by_id( value_to_index )
           terms_to_index = []
           names_to_index = []
 
-          unless ontolo_term.parentage.nil?
-            terms_to_index = ontolo_term.parentage.map { |term| term.term }
-            names_to_index = ontolo_term.parentage.map { |term| term.term_name }
+          unless ontolo_term.parents.nil?
+            terms_to_index = ontolo_term.all_parent_ids
+            names_to_index = ontolo_term.all_parent_names
           end
           
-          terms_to_index.push( ontolo_term.term )
+          terms_to_index.push( ontolo_term.term_id )
           names_to_index.push( ontolo_term.term_name )
           
           # Remove the "top-level" ontology name - there's no need to have this 
@@ -323,7 +321,7 @@ module MartSearch
 
           # Write the data to the doc...
           index_ontology_terms_from_cache( doc, term_conf, data_to_cache )
-        rescue OntologyTermNotFoundError => error
+        rescue OLS::TermNotFoundError => error
           # The ontology term couldn't be found - no worries, just move on...
         end
       end

@@ -273,13 +273,13 @@ class MartSearchIndexBuilderUtilsTest < Test::Unit::TestCase
     # Perform the search from fresh...
     index_concatenated_ontology_terms( concatenated_ontology_term_conf, doc, data_row_obj, process_attribute_map(attr_map), ontology_cache )
     
-    assert_equal( 6, doc[:ma_id].size )
-    assert_equal( 5, doc[:ma_term].size )
+    assert_equal( 7, doc[:ma_id].size )
+    assert_equal( 6, doc[:ma_term].size )
     assert( doc[:ma_id].include?('MA:0000005') )
     assert( doc[:ma_id].include?('MA:0000001') )
     assert( doc[:ma_term].include?('body cavity or lining') )
-    assert( doc[:ma_term].include?('adult mouse') )
-    assert( doc[:ma_ontology].include?('MA:0000001 | MA:0002405 | MA:0002433 | MA:0000005 | MA:0002447 | MA:0000053') )
+    assert( doc[:ma_term].include?('postnatal mouse') )
+    assert( doc[:ma_ontology].include?('MA:0000001 | MA:0003000 | MA:0002405 | MA:0002433 | MA:0000005 | MA:0002447 | MA:0000053') )
     
     assert_equal( 4, doc[:mp_id].size )
     assert_equal( 3, doc[:mp_term].size )
@@ -294,8 +294,8 @@ class MartSearchIndexBuilderUtilsTest < Test::Unit::TestCase
     
     index_concatenated_ontology_terms( concatenated_ontology_term_conf, doc2, data_row_obj, process_attribute_map(attr_map), ontology_cache )
     
-    assert_equal( 6, doc2[:ma_id].size )
-    assert_equal( 5, doc2[:ma_term].size )
+    assert_equal( 7, doc2[:ma_id].size )
+    assert_equal( 6, doc2[:ma_term].size )
     assert( doc2[:ma_id].include?('MA:0000005') )
     assert( doc2[:ma_id].include?('MA:0000001') )
     
