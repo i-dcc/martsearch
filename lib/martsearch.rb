@@ -17,8 +17,6 @@ require 'sinatra/static_assets'
 require 'hoptoad_notifier'
 require 'json'
 require 'parallel'
-require 'tree'
-require 'sequel'
 require 'yui/compressor'
 require 'closure-compiler'
 require 'active_support/core_ext/hash' unless Hash.respond_to?(:symbolize_keys!) # Rails 3
@@ -81,8 +79,6 @@ require "#{MARTSEARCH_PATH}/lib/martsearch/data_set"
 require "#{MARTSEARCH_PATH}/lib/martsearch/data_view"
 require "#{MARTSEARCH_PATH}/lib/martsearch/controller_utils"
 require "#{MARTSEARCH_PATH}/lib/martsearch/controller"
-require "#{MARTSEARCH_PATH}/lib/martsearch/ontology_term"
-require "#{MARTSEARCH_PATH}/lib/martsearch/ontology_term_cache"
 
 require "#{MARTSEARCH_PATH}/lib/martsearch/index_builder_utils"
 require "#{MARTSEARCH_PATH}/lib/martsearch/index_builder"

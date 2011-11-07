@@ -1,30 +1,30 @@
 # encoding: utf-8
 
 module MartSearch
-  
+
   # Singleton controller class for MartSearch.  This is the central contoller 
   # for the MartSearch framework - it handles the config file parsing, building 
   # up all of the DataSource and Index objects, and managing the search mechanics.
-  # 
+  #
   # @author Darren Oakley
   class Controller
     include Singleton
     include MartSearch::Utils
     include MartSearch::ControllerUtils
-    
-    attr_reader :config, :cache, :logger, :ontology_cache, :index, :errors, :search_data
+
+    attr_reader :config, :cache, :logger, :index, :errors, :search_data
     attr_reader :search_results, :datasources, :datasets, :dataviews, :dataviews_by_name
-    
+
     def initialize()
       config_dir = "#{MARTSEARCH_PATH}/config"
-      
+
       @config = {
         :index         => build_index_conf( config_dir ),
         :datasources   => build_datasources( config_dir ),
         :server        => build_server_conf( "#{config_dir}/server" ),
         :index_builder => build_index_builder_conf( "#{config_dir}/index_builder" )
       }
-      
+
       @cache             = initialize_cache( @config[:server][:cache] )
       @index             = MartSearch::Index.new( @config[:index] )
       @datasources       = @config[:datasources]
@@ -33,7 +33,6 @@ module MartSearch
       @dataviews_by_name = @config[:server][:dataviews_by_name]
 
       # OLS
-      @ontology_cache    = MartSearch::OntologyTermCache.new()
       OLS.setup_cache({ :directory => "#{MARTSEARCH_PATH}/tmp/ols_cache" })
 
       # Logger
@@ -53,7 +52,7 @@ module MartSearch
       @search_data    = {}
       @search_results = []
     end
-    
+
     # Function to perform the searches against the index and marts.
     #
     # Sets up a results stash (@search_data) holding the data in a structure like:
