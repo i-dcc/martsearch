@@ -21,7 +21,7 @@ module MartSearch
         data = cached_dataset_data[:eurexpress][assay_index]
 
         if emap_id == 'EMAP:0'
-          tree      = OLS.find_by_id( 'EMAP:7148' ).focus_graph!
+          tree = OLS.find_by_id( 'EMAP:7148' )
           tree_data = [{
             :data  => "mouse anatomy",
             :state => "open",
@@ -50,7 +50,7 @@ module MartSearch
             ]
           end
         else
-          tree      = OLS.find_by_id( emap_id ).focus_graph!
+          tree = OLS.find_by_id( emap_id )
           tree_data = calc_emap_tree( options, tree.children, data[:annotations], tree.level+1 )
         end
       end
