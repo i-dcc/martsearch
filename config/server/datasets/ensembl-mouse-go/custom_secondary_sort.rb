@@ -25,7 +25,9 @@ module MartSearch
         raw_data.each do |result|
           begin
             tree = OLS.find_by_id(result[:go_id])
+            next if tree.is_root?
             tree.focus_graph!
+            tree.remove_children!
             go_terms[ tree.root.term_name.to_sym ].push(tree)
           rescue OLS::TermNotFoundError => e
             # Not a lot we can do here... move along...
@@ -36,7 +38,6 @@ module MartSearch
         # tree widget.
         go_terms.each do |category,trees|
           merged_tree = trees.reduce(:merge!)
-
           unless merged_tree.nil?
             go_terms[category] = ensembl_mouse_go_prepare_ontology_tree_for_jsonifying( mgi_acc_id, merged_tree )
           end
