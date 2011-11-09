@@ -23,7 +23,6 @@ module MartSearch
         halt
       else
         # append a search link to the :data string
-        ap emap_data
         emap_data.each do |child_data|
           next if child_data[:emap_id] == 'EMAP:0'
           child_data[:data] << " #{link_to( 'search', "/search?query=#{child_data[:emap_id]}", { :class => 're_search' } )}"
