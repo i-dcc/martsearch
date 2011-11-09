@@ -9,6 +9,7 @@ gem 'rack',                   '>=1.0',    :require => false
 gem 'rack-contrib',                       :require => false
 gem 'erubis',                             :require => false
 gem 'biomart',                '>=0.2.0',  :require => false
+gem 'ols',                    '>=0.3.2',  :require => false
 gem 'json',                               :require => false
 gem 'parallel',                           :require => false
 gem 'yui-compressor',                     :require => false
@@ -22,10 +23,8 @@ gem 'bson_ext',                           :require => true
 gem 'will_paginate',          '~>2.3',    :require => false
 gem 'hoptoad_notifier',                   :require => false
 
-# IndexBuilder
-gem 'rubytree',               '~>0.7',    :require => 'tree'
-gem 'sequel',                 '~>3.0',    :require => false
-gem 'mysql2',                             :require => false
+# The following are only needed when running '/config/server/datasets/wtsi-phenotyping-param_level_heatmap/generate_mp_conf.rb'
+# gem 'sequel',                 '~>3.0',    :require => false
 # gem 'ruby-oci8',                          :require => false
 
 # Misc

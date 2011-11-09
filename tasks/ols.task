@@ -1,0 +1,20 @@
+# encoding: utf-8
+
+begin
+  require 'martsearch'
+
+  @ms = MartSearch::Controller.instance()
+
+  namespace :ols do
+    desc 'Rebuilds the OLS gems on-disk cache'
+    task :rebuild_cache do
+      ['GO','EMAP','MP','MA','MPATH'].each do |ontology|
+        puts "Refreshing OLS data for the '#{ontology}' ontology..."
+        OLS.refresh_ontology_in_cache(ontology)
+      end
+    end
+  end
+
+rescue LoadError
+  puts "[ERROR] Unable to load 'ols' tasks - please run 'bundle install'"
+end
