@@ -31,7 +31,7 @@ begin
     task :solr_schema_xml do
       @index_config = @ms.config[:index]
       
-      template_file = File.open( "#{File.dirname(__FILE__)}/../templates/solr_schema.xml.erubis", "r" )
+      template_file = File.open( "#{File.dirname(__FILE__)}/../templates/solr_schema.xml.erb", "r" )
       template      = Erubis::Eruby.new( template_file.read )
       template_file.close()
     

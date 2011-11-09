@@ -4,7 +4,8 @@
     "allow_document_creation": false,
     "days_between_downlads": 0,
     "attribute_map": [
-      { "attr": "colony_prefix", "idx": "colony_prefix", "use_to_map": true },
+      { "attr": "marker_symbol", "idx": "marker_symbol", "use_to_map": true },
+      { "attr": "colony_prefix", "idx": "colony_prefix" },
       { "attr": "adult_lac_z_expression", "idx": "sanger_phenotype", "if_attr_equals": ["CompleteInteresting"], "index_attr_name": true },
       { "attr": "auditory_brainstem_response", "idx": "sanger_phenotype", "if_attr_equals": ["CompleteInteresting"], "index_attr_name": true },
       { "attr": "body_composition_dexa", "idx": "sanger_phenotype", "if_attr_equals": ["CompleteInteresting"], "index_attr_name": true },

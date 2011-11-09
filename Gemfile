@@ -21,7 +21,6 @@ gem 'mongo_store',                        :require => false
 gem 'bson_ext',                           :require => true
 gem 'will_paginate',          '~>2.3',    :require => false
 gem 'hoptoad_notifier',                   :require => false
-gem 'newrelic_rpm',                       :require => false
 
 # IndexBuilder
 gem 'rubytree',               '~>0.7',    :require => 'tree'

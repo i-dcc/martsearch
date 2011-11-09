@@ -4,7 +4,7 @@
     "allow_document_creation": false,
     "days_between_downlads": 0,
     "attribute_map": [
-      { "attr": "param_level_heatmap_colony_prefix", "idx": "colony_prefix", "use_to_map": true },
+      { "attr": "colony_prefix", "idx": "colony_prefix", "use_to_map": true },
       { "attr": "param_level_heatmap_mp_id", "idx": "mp_id" },
       { "attr": "param_level_heatmap_mp_term", "idx": "mp_term" }
     ],

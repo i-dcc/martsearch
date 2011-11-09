@@ -1,9 +1,11 @@
 {
   "portal_name": "MartSearch",
-  "debug":       false,
   "email": {
     "from": "",
     "to":   ""
+  },
+  "log": {
+    "level": "error" /* DEBUG < INFO < WARN < ERROR < FATAL */
   },
   "cache": {
     "type": "file",

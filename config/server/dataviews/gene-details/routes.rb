@@ -11,7 +11,7 @@ module MartSearch
         
         if cached_ontology_data.nil?
           status 404
-          erubis :not_found
+          erb :not_found
           halt
         end
       end
