@@ -82,7 +82,6 @@ module MartSearch
       def vector_order_button( mgi_accession_id, marker_symbol, project, project_id )
         order_url   = ikmc_product_order_url( :vector, project, project_id, mgi_accession_id, marker_symbol )
         button_text = generic_order_button( project, order_url )
-        button_text = generic_order_button( project, order_url, true ) if project == 'mirKO'
         return button_text
       end
 
@@ -111,13 +110,7 @@ module MartSearch
             else
               "http://www.eummcr.org/order.php"
             end
-          when "mirKO"
-            case product_type
-            when :escell then "http://www.mmrrc.org/catalog/StrainCatalogSearchForm.php?SourceCollection=Sanger%20MirKO&jboEvent=Search&LowerCaseSymbol=#{marker_symbol}"
-            when :vector then "mailto:mirKO@sanger.ac.uk?subject=Information on mirKO vectors for #{marker_symbol}"
-            else
-              ""
-            end
+          when "mirKO" then "http://www.mmrrc.org/catalog/StrainCatalogSearchForm.php?SourceCollection=Sanger%20MirKO&jboEvent=Search&LowerCaseSymbol=#{marker_symbol}"
           else
             ""
           end

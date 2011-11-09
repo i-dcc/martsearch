@@ -89,7 +89,7 @@ module MartSearch
     end
     
     def wtsi_phenotyping_param_level_heatmap_sort_test_group_data( result, test_groups )
-      test_key                = result[:test].gsub("[\(\)]","").gsub(" ","_").downcase.to_sym
+      test_key                = result[:test].gsub(/[\(\)]/,"").gsub(/[ -]/,"_").downcase.to_sym
       parameter               = result[:parameter]
       protocol_id_key         = result[:protocol_id].to_sym
       test_groups[test_key] ||= { :test => result[:test], :protocol_data => {} }
