@@ -372,7 +372,7 @@ class MartSearchServerRackTest < Test::Unit::TestCase
         # First test for when we expect a return...
         mgi_acc_ids_to_test = ['MGI:105369','MGI:2444584','MGI:104510']
         mgi_acc_ids_to_test.each do |mgi|
-          @browser.get "/go_ontology?id=go-ontology-#{mgi.gsub(':','')}"
+          @browser.get "/go_ontology?id=go-ontology-#{mgi.gsub(':','')}-root"
           assert( @browser.last_response.ok?, "A request to '/go_ontology?id=go-ontology-#{mgi.gsub(':','')}' failed!" )
           json = JSON.parse( @browser.last_response.body, :max_nesting => false )
           assert( json.is_a?(Array) )
@@ -382,9 +382,37 @@ class MartSearchServerRackTest < Test::Unit::TestCase
         # Then for when we don't...
         mgis_with_no_return = ['MGI:1915733']
         mgis_with_no_return.each do |mgi|
-          @browser.get "/go_ontology?id=go-ontology-#{mgi.gsub(':','')}"
+          @browser.get "/go_ontology?id=go-ontology-#{mgi.gsub(':','')}-root"
           assert_equal( 404, @browser.last_response.status )
         end
+      end
+    end
+
+    should "serve up JSON for EMAP Ontology data (for Eurexpress)" do
+      VCR.use_cassette('test_server_emap_ontology_json') do
+        omit_if(
+          @controller.datasets_by_name[:eurexpress].nil?,
+          "Skipping Eurexpress EMAP JSON tests as the DataSet is not active."
+        )
+
+        @controller.search('Cbx1')
+        assay_id = 'euxassay_012256'
+        emap_ids_to_test = ['root','EMAP:0','EMAP:7148']
+
+        emap_ids_to_test.each do |emap_id|
+          @browser.get "/eurexpress_emap?id=#{assay_id}-#{emap_id}"
+          assert( @browser.last_response.ok?, "A request to '/eurexpress_emap?id=#{assay_id}-#{emap_id}' failed" )
+          json = JSON.parse( @browser.last_response.body, :max_nesting => false )
+          assert json.is_a? Array
+          assert json.first['data'] != nil
+          assert json.first['state'] != nil
+        end
+
+        @browser.get "/eurexpress_emap?id=#{assay_id}-foooo"
+        assert_equal 404, @browser.last_response.status
+
+        @browser.get "/eurexpress_emap?id=weeeeee-root"
+        assert_equal 404, @browser.last_response.status
       end
     end
 

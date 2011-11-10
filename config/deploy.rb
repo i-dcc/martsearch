@@ -30,7 +30,7 @@ desc "Full deployment cycle: update, bundle, symlink, restart, cleanup"
 task :deploy => %w[
   vlad:update
   vlad:bundle:install
-  vlad:symlink_config
+  vlad:symlink_ols_cache
   vlad:symlink_wtsi_phenotyping_heatmap
   vlad:symlink_abr_phenotyping_pages
   vlad:start_app
@@ -50,18 +50,16 @@ task :setup_new_instance => %w[
 ]
 
 namespace :vlad do
-  desc "Symlinks the configuration files"
-  remote_task :symlink_config, :roles => :app do
-    %w[ ols_database.yml ].each do |file|
-      run "ln -nfs #{shared_path}/config/#{file} #{current_path}/config/#{file}"
-    end
+  desc "Symlinks the ols_cache directory into tmp/ols_cache"
+  remote_task :symlink_ols_cache, :roles => :app do
+    run "ln -nfs #{shared_path}/ols_cache #{current_path}/tmp/ols_cache"
   end
 
   desc "Symlinks the WTSI Phenotyping Heatmap"
   remote_task :symlink_wtsi_phenotyping_heatmap, :roles => :app do
     run "ln -nfs /software/team87/brave_new_world/data/generated/pheno_overview.xls #{current_path}/tmp/pheno_overview.xls"
   end
-  
+
   desc "Symlink the ABR Phenotyping Pages"
   remote_task :symlink_abr_phenotyping_pages, :roles => :app do
     run "mv #{current_path}/tmp/pheno_abr #{current_path}/tmp/pheno_abr_from_git"
@@ -82,11 +80,7 @@ namespace :vlad do
   end
 
   remote_task :setup_shared, :roles => :app do
-    commands = [
-      "umask #{umask}",
-      "mkdir -p #{shared_path}/config",
-      "ln -nfs /software/team87/brave_new_world/conf/ols_database.yml #{shared_path}/config/ols_database.yml"
-    ]
+    commands = [ "umask #{umask}" ]
 
     run commands.join(' && ')
   end

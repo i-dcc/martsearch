@@ -76,7 +76,8 @@ module MartSearch
       end
 
       unless project[:targeting_vectors].include?( targ_vec )
-        project[:vector_available] = '1'
+        # MirKO vectors are not being distributed
+        project[:vector_available] = '1' unless project[:pipeline].eql?("mirKO")
         project[:vector_gb_file]   = gb_file_available
         project[:targeting_vectors].push( targ_vec )
 

@@ -1,0 +1,31 @@
+<div id="wtsi-phenotyping-report" class="wtsi-phenotyping">
+	<table border='0' cellpadding='0' cellspacing='0'>
+		<tr>
+			<% @data.keys.each do |membership| %>
+			<td>
+				<table border='0' cellpadding='0' cellspacing='0'>
+					<thead>
+						<tr>
+							<th colspan='3'><%= membership %></th>
+						</tr>
+						<tr>
+							<th>Mouse</th>
+							<th>X Value</th>
+							<th>Y Value</th>
+						<tr>
+					</thead>
+					<tbody>
+					<% @data[membership].each do |row| %>
+						<tr>
+							<td><%= row[:mouse_name] %></td>
+							<td><%= row[:x_value] %></td>
+							<td><%= row[:y_value] %></td>
+						</tr>
+					<% end %>
+					</tbody>
+				</table>
+			</td>
+			<% end %>
+		</tr>
+	</table>
+</div>

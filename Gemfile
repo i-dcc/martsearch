@@ -9,6 +9,7 @@ gem 'rack',                   '>=1.0',    :require => false
 gem 'rack-contrib',                       :require => false
 gem 'erubis',                             :require => false
 gem 'biomart',                '>=0.2.0',  :require => false
+gem 'ols',                    '>=0.3.2',  :require => false
 gem 'json',                               :require => false
 gem 'parallel',                           :require => false
 gem 'yui-compressor',                     :require => false
@@ -21,12 +22,9 @@ gem 'mongo_store',                        :require => false
 gem 'bson_ext',                           :require => true
 gem 'will_paginate',          '~>2.3',    :require => false
 gem 'hoptoad_notifier',                   :require => false
-gem 'newrelic_rpm',                       :require => false
 
-# IndexBuilder
-gem 'rubytree',               '~>0.7',    :require => 'tree'
-gem 'sequel',                 '~>3.0',    :require => false
-gem 'mysql2',                             :require => false
+# The following are only needed when running '/config/server/datasets/wtsi-phenotyping-param_level_heatmap/generate_mp_conf.rb'
+# gem 'sequel',                 '~>3.0',    :require => false
 # gem 'ruby-oci8',                          :require => false
 
 # Misc
@@ -46,4 +44,7 @@ group :development, :test do
   gem 'simplecov-rcov',                   :require => false,  :platforms => :ruby_19
   gem 'wirble',                           :require => false
   gem 'test-unit',                        :require => false
+  #gem 'ruby-debug19',					            :require => false,  :platforms => :ruby_19
 end
+
+gem 'win32-open3-19',                     :platforms => :mingw

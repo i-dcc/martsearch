@@ -19,7 +19,7 @@ class MartSearchDataSetDummyMiceTest < Test::Unit::TestCase
       VCR.insert_cassette('test_dummy_mice')
       @ms                = MartSearch::Controller.instance
       @mgi_accession_ids = {
-        'MGI:1916976' => 2,
+        'MGI:1916976' => 1,
         'MGI:103147'  => 2,
         'MGI:105369'  => 1,
         'MGI:107846'  => 2,
