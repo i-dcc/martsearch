@@ -6,6 +6,7 @@ set :revision,          'origin/wtsi_portal'
 
 set :domain,            'htgt.internal.sanger.ac.uk'
 set :service_user,      'team87'
+set :service_group,     'team87'
 set :bnw_env,           '/software/bin/perl -I/software/team87/brave_new_world/lib/perl5 -I/software/team87/brave_new_world/lib/perl5/x86_64-linux-thread-multi /software/team87/brave_new_world/bin/htgt-env.pl --live' 
 set :bundle_cmd,        "#{bnw_env} bundle"
 set :web_command,       "#{bnw_env} sudo -u #{service_user} /software/team87/brave_new_world/services/apache2-ruby19"
@@ -70,9 +71,11 @@ namespace :vlad do
   remote_task :fix_perms, :roles => :app do
     fix_perms_you     = "find #{deploy_to}/ -user #{`whoami`.chomp}" + ' \! \( -perm -u+rw -a -perm -g+rw \) -exec chmod -v ug=rwX,o=rX {} \;'
     fix_perms_service = "sudo -u #{service_user} find #{releases_path}/ -user #{service_user}" + ' \! \( -perm -u+rw -a -perm -g+rw \) -exec chmod -v ug=rwX,o=rX {} \;'
+    chgrp             = "chgrp -R #{service_group} #{current_path}"
 
     run fix_perms_you
     run fix_perms_service
+    run chgrp
   end
 
   task :setup do
