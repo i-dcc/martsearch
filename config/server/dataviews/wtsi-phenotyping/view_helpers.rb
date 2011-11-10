@@ -1,4 +1,3 @@
-require 'ruby-debug'
 require "#{File.expand_path(File.dirname(__FILE__))}/raw_data_sort"
 
 # Template helper function to map the status descriptions retrived from MIG into 
@@ -66,7 +65,6 @@ def wtsi_phenotyping_fetch_mp_report_data( colony_prefix, mp_slug )
     return nil
   end
 end
-
 
 def wtsi_phenotyping_fetch_raw_data( population_id, parameter_id )
   ms = MartSearch::Controller.instance()
