@@ -14,8 +14,18 @@ module MartSearch
       @config = conf
     end
     
+    # Helper function to return the 'joined_index_field' for this DataSet instance
+    #
+    # @return [String] The 'joined_index_field' for this DataSet instance
     def joined_index_field
       @config[:searching][:joined_index_field]
+    end
+    
+    # Helper function to return the 'internal_name' for this DataSet instance
+    #
+    # @return [String] The 'internal_name' for this DataSet instance
+    def name
+      @config[:internal_name]
     end
     
     # Function used to drive a MartSearch::DataSource object to perform 
@@ -31,12 +41,15 @@ module MartSearch
     # @param [Array] query An array of values to query the datasource for
     # @return [Hash] A hash, keyed by the 'joined_attribute' where the values are an array of results objects associated with this key
     def search( query )
+      MartSearch::Controller.instance().logger.debug("[MartSearch::DataSet] '#{self.name}' ::search - running search( '#{query}' )")
       if query.nil?
         # Don't perform a search on empty parameters - this is bad!
         return {}
       else
         results        = datasource.search( query, @config[:searching] )
         sorted_results = sort_results( results )
+        
+        MartSearch::Controller.instance().logger.debug("[MartSearch::DataSet] '#{self.name}' ::search - running search( '#{query}' ) - DONE")
         return sorted_results
       end
     end
@@ -52,6 +65,7 @@ module MartSearch
     # @param [Hash] search_data The current @search_data stash in MartSearch::Controller
     # @return [Hash] The modified copy of @search_data
     def secondary_sort( search_data )
+      MartSearch::Controller.instance().logger.debug("[MartSearch::DataSet] '#{self.name}' ::secondary_sort - running secondary_sort()")
       search_data
     end
     
@@ -61,11 +75,11 @@ module MartSearch
     # @param [Array] query An array of values to query the datasource for
     # @return [String] The URL that links to the original datasource
     def data_origin_url( query )
-      if query.nil?
-        return nil
-      else
-        return datasource.data_origin_url( query, @config[:searching] )
-      end
+      MartSearch::Controller.instance().logger.debug("[MartSearch::DataSet] '#{self.name}' ::data_origin_url - running data_origin_url( '#{query}' )")
+      url = nil
+      url = datasource.data_origin_url( query, @config[:searching] ) unless query.nil?
+      MartSearch::Controller.instance().logger.debug("[MartSearch::DataSet] '#{self.name}' ::data_origin_url - running data_origin_url( '#{query}' ) - DONE")
+      return url
     end
     
     # Helper function to supply our MartSearch::DataSource instance.
@@ -89,6 +103,7 @@ module MartSearch
       # @param [Array] results The array of hashes/objects returned from {MartSearch::DataSource#search}
       # @return [Hash] A hash, keyed by the 'joined_attribute' where the values are an array of results objects associated with this key
       def sort_results( results )
+        MartSearch::Controller.instance().logger.debug("[MartSearch::DataSet] '#{self.name}' ::sort_results - running DEFAULT sort_results()")
         sorted_results = {}
         
         results.each do |result|

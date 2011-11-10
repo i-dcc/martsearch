@@ -121,7 +121,7 @@ begin
         # Dump data to XML following WTSI search index requirements
         puts " - Writing data to disk"
         
-        template_file = File.new( "#{File.dirname(__FILE__)}/../templates/wtsi_search_engine.xml.erubis", 'r' )
+        template_file = File.new( "#{File.dirname(__FILE__)}/../templates/wtsi_search_engine.xml.erb", 'r' )
         template = Erubis::Eruby.new( template_file.read )
         template_file.close()
       

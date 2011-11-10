@@ -18,6 +18,13 @@ module MartSearch
       @url  = @conf[:url]
     end
     
+    # Helper function to return the 'internal_name' for this DataSource instance
+    #
+    # @return [String] The 'internal_name' for this DataSource instance
+    def name
+      @conf[:internal_name]
+    end
+    
     # Abstract method - simple heartbeat function to check that the datasource is online.
     #
     # @abstract

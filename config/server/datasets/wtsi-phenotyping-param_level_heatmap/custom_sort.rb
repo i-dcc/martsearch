@@ -67,8 +67,9 @@ module MartSearch
     
     def wtsi_phenotyping_build_mp_heatmap_config
       ms = MartSearch::Controller.instance()
-      mp_ontology = @config[:mp_heatmap_config]
-
+      
+      mp_ontology = wtsi_phenotyping_mp_groups
+   
       heatmap_config = []
       parameter_map = {}
       
@@ -96,10 +97,10 @@ module MartSearch
         parameter_map[ param_key ] ||= []
         parameter_map[ param_key ].push( param_value )
       end
-      
+            
       mp_ontology.each do |mp_term|
         mp_term = mp_term.clone
-
+        
         mp_term[:mgp_parameters] = []
       
         mp_term[:child_terms].each do |term|
@@ -116,6 +117,31 @@ module MartSearch
       end
       
       return heatmap_config
+    end
+    
+    def wtsi_phenotyping_mp_groups
+      config      = []
+      mp_ontology = OLS.find_by_id('MP:0000001')
+
+      ignored_terms = [ 
+        "normal phenotype",
+        "no phenotypic analysis"
+      ]
+
+      mp_ontology.children.sort{ |a,b| a.term_name <=> b.term_name }.each do |child|
+        unless ignored_terms.include?(child.term_name)
+          conf_data = {
+            :term                => child.term_id,
+            :name                => child.term_name.gsub(' phenotype',''),
+            :slug                => child.term_name.gsub(' phenotype','').gsub(/[\/\s\-]/,'-').downcase,
+            :child_terms         => [ child.term_id, child.all_child_ids ].flatten.uniq
+          }
+        
+          config.push(conf_data)
+        end
+      end
+      
+      return config
     end
     
     def wtsi_phenotyping_param_level_heatmap_sort_mp_heatmap_data( result, mp_groups )
@@ -154,10 +180,12 @@ module MartSearch
         end
       end
       
+     
+      
     end
 
     def wtsi_phenotyping_param_level_heatmap_sort_test_group_data( result, test_groups )
-      test_key                = result[:test].gsub("[\(\)]","").gsub(" ","_").downcase.to_sym
+      test_key                = result[:test].gsub(/[\(\)]/,"").gsub(/[ -]/,"_").downcase.to_sym
       parameter               = result[:parameter]
       protocol_id_key         = result[:protocol_id].to_sym
       test_groups[test_key] ||= { :test => result[:test], :protocol_data => {} }

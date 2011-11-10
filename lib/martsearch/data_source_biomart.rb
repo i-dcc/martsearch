@@ -31,6 +31,8 @@ module MartSearch
     # 
     # @see MartSearch::DataSource#fetch_all_terms_for_indexing
     def fetch_all_terms_for_indexing( conf )
+      MartSearch::Controller.instance().logger.debug("[MartSearch::BiomartDataSource] '#{self.name}' ::fetch_all_terms_for_indexing - running fetch_all_terms_for_indexing()")
+
       attributes = []
       conf[:attribute_map].each do |map|
         attributes.push(map[:attr])
@@ -53,6 +55,8 @@ module MartSearch
     # @see MartSearch::DataSource#search
     # @raise [MartSearch::DataSourceError] Raised if an error occurs during the seach process
     def search( query, conf )
+      MartSearch::Controller.instance().logger.debug("[MartSearch::BiomartDataSource] '#{self.name}' ::search - running search( '#{query}', conf )")
+
       filters = { conf[:joined_filter] => query.join(',') }
       filters.merge!( conf[:filters] ) unless conf[:filters].nil? or conf[:filters].empty?
       filters.stringify_keys!
@@ -74,7 +78,8 @@ module MartSearch
       rescue Biomart::BiomartError => error
         raise MartSearch::DataSourceError, "Biomart::BiomartError: #{error.message}"
       end
-      
+
+      MartSearch::Controller.instance().logger.debug("[MartSearch::BiomartDataSource] '#{self.name}' ::search - running search( '#{query}', conf ) - DONE")
       return results
     end
     
@@ -83,6 +88,8 @@ module MartSearch
     #
     # @see MartSearch::DataSource#data_origin_url
     def data_origin_url( query, conf )
+      MartSearch::Controller.instance().logger.debug("[MartSearch::BiomartDataSource] '#{self.name}' ::data_origin_url - running data_origin_url( '#{query}', conf )")
+
       url = @url + "/martview?VIRTUALSCHEMANAME=default&VISIBLEPANEL=resultspanel"
 
       # Filters...
@@ -105,21 +112,15 @@ module MartSearch
 
       # Attributes...
       attrs = []
-      url << "&ATTRIBUTES="
 
+      url << "&ATTRIBUTES="
       conf[:attributes].each do |attribute|
         attrs.push("#{@conf[:dataset]}.default.attributes.#{attribute}")
       end
 
-      while ( url.length + attrs.join("|").length ) > 2048
-        # This loop ensures that the URL we form is not more than 2048 characters 
-        # long - the maximum length that IE can deal with.  We do the shortening by 
-        # dropping attributes from the selection, it's a pain, but at least it'll be 
-        # easy for the user to add the attribute back in MartView.
-        attrs.pop
-      end
       url << attrs.join("|")
 
+      MartSearch::Controller.instance().logger.debug("[MartSearch::BiomartDataSource] '#{self.name}' ::data_origin_url - running data_origin_url( '#{query}', conf ) - DONE")
       return url
     end
     

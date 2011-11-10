@@ -1,44 +1,58 @@
 # encoding: utf-8
 
 module MartSearch
-  
+
   # Singleton controller class for MartSearch.  This is the central contoller 
   # for the MartSearch framework - it handles the config file parsing, building 
   # up all of the DataSource and Index objects, and managing the search mechanics.
-  # 
+  #
   # @author Darren Oakley
   class Controller
     include Singleton
     include MartSearch::Utils
     include MartSearch::ControllerUtils
-    
-    attr_reader :config, :cache, :ontology_cache, :index, :errors, :search_data
+
+    attr_reader :config, :cache, :logger, :index, :errors, :search_data
     attr_reader :search_results, :datasources, :datasets, :dataviews, :dataviews_by_name
-    
+
     def initialize()
       config_dir = "#{MARTSEARCH_PATH}/config"
-      
+
       @config = {
         :index         => build_index_conf( config_dir ),
         :datasources   => build_datasources( config_dir ),
         :server        => build_server_conf( "#{config_dir}/server" ),
         :index_builder => build_index_builder_conf( "#{config_dir}/index_builder" )
       }
-      
+
       @cache             = initialize_cache( @config[:server][:cache] )
-      @ontology_cache    = MartSearch::OntologyTermCache.new()
       @index             = MartSearch::Index.new( @config[:index] )
       @datasources       = @config[:datasources]
       @datasets          = @config[:server][:datasets]
       @dataviews         = @config[:server][:dataviews]
       @dataviews_by_name = @config[:server][:dataviews_by_name]
-      
+
+      # OLS
+      OLS.setup_cache({ :directory => "#{MARTSEARCH_PATH}/tmp/ols_cache" })
+
+      # Logger
+      @logger                 = Logger.new($stdout)
+      @logger                 = Logger.new($stderr)
+      @logger.datetime_format = "%Y-%m-%d %H:%M:%S "
+      @logger.level           = case @config[:server][:log][:level]
+        when 'debug' then Logger::DEBUG
+        when 'info'  then Logger::INFO
+        when 'warn'  then Logger::WARN
+        when 'error' then Logger::ERROR
+        when 'fatal' then Logger::FATAL
+      end
+
       # Stores for search result data and errors...
       @errors         = { :index => [], :datasets => {} }
       @search_data    = {}
       @search_results = []
     end
-    
+
     # Function to perform the searches against the index and marts.
     #
     # Sets up a results stash (@search_data) holding the data in a structure like:
@@ -58,6 +72,7 @@ module MartSearch
     # @param [Boolean] save_index_data Try to save the index return to the cache
     # @return [Array] A list of the search results (primary index fields)
     def search( query, page=1, use_cache=true, save_index_data=true )
+      self.logger.debug("[MartSearch::Controller] ::search - running search( '#{query}', #{page}, #{use_cache}, #{save_index_data} )")
       page = 1 if page == 0
       clear_instance_variables
       
@@ -113,6 +128,7 @@ module MartSearch
     # @param [Boolean] use_cache Use cached data if available
     # @return [Hash] A hash of all of the browsable content counts
     def browse_counts( use_cache=true )
+      self.logger.debug("[MartSearch::Controller] ::browse_counts - running browse_counts( '#{use_cache}' )")
       counts = fetch_from_cache( "browse_counts" )
       if counts.nil? || use_cache == false
         all_ok = true
@@ -145,6 +161,7 @@ module MartSearch
     # @param [Boolean] use_cache Use cached data if available
     # @return [Hash] A hash of the status counts that the MGP wants
     def wtsi_phenotyping_progress_counts( use_cache=true )
+      self.logger.debug("[MartSearch::Controller] ::wtsi_phenotyping_progress_counts - running wtsi_phenotyping_progress_counts( '#{use_cache}' )")
       heatmap_dataset = self.datasets[:'wtsi-phenotyping-heatmap']
       raise MartSearch::InvalidConfigError, "MartSearch::Controller.wtsi_phenotyping_progress_counts cannot be called if the 'wtsi-phenotyping-heatmap' dataset is inactive" if heatmap_dataset.nil?
       
@@ -181,6 +198,7 @@ module MartSearch
     # @param [String] key The cache identifer to look up
     # @return [Object/nil] The deserialized object from the cache, or nil if none found
     def fetch_from_cache( key )
+      self.logger.debug("[MartSearch::Controller] ::fetch_from_cache - running fetch_from_cache( '#{key}' )")
       cached_data = @cache.fetch( key )
       
       unless cached_data.nil?
@@ -192,7 +210,8 @@ module MartSearch
         cached_data = cached_data.clean_hash if RUBY_VERSION < '1.9'
         cached_data.recursively_symbolize_keys!
       end
-      
+      self.logger.debug("[MartSearch::Controller] ::fetch_from_cache - running fetch_from_cache( '#{key}' ) - DONE")
+
       return cached_data
     end
     
@@ -202,12 +221,14 @@ module MartSearch
     # @param [Object] value The cache 'value' to store
     # @param [Hash] options An options hash (see #{ActiveSupport::Cache} for more info)
     def write_to_cache( key, value, options={} )
+      self.logger.debug("[MartSearch::Controller] ::write_to_cache - running write_to_cache( '#{key}', Object, '#{options.inspect}' )")
       @cache.delete( key )
       if @cache.is_a?(MartSearch::MongoCache)
         @cache.write( key, { 'json' => JSON.generate( value, :max_nesting => false ) }, { :expires_in => 36.hours }.merge(options) )
       else
         @cache.write( key, JSON.generate( value, :max_nesting => false ), { :expires_in => 36.hours }.merge(options) )
       end
+      self.logger.debug("[MartSearch::Controller] ::write_to_cache - running write_to_cache( '#{key}', Object, '#{options.inspect}' ) - DONE")
     end
     
     private
@@ -222,6 +243,7 @@ module MartSearch
       # @param [Array] allowed_values The attribute values to look for to consider a result 'complete'
       # @return [Integer] The count of unique genes that have data on all the tests queried
       def complete_mgp_alleles_count( mart, attributes, allowed_values )
+        self.logger.debug("[MartSearch::Controller] ::complete_mgp_alleles_count - running complete_mgp_alleles_count()")
         complete_genes = []
         results        = mart.search(
           :process_results => true,
@@ -247,13 +269,16 @@ module MartSearch
       # @param [Integer] page The page of results to retrieve
       # @return [Boolean] true/false reporting if the search went without error (actual results are stored in @search_data)
       def search_from_fresh_index( query, page )
+        self.logger.debug("[MartSearch::Controller] ::search_from_fresh_index - running search_from_fresh_index( '#{query}', '#{page}' )")
         begin
           if @index.is_alive?
             @search_data    = @index.search( query, page )
             @search_results = @index.paginated_results
+            self.logger.debug("[MartSearch::Controller] ::search_from_fresh_index - running search_from_fresh_index( '#{query}', '#{page}' ) - DONE")
             return true
           end
         rescue MartSearch::IndexUnavailableError => error
+          self.logger.error("[MartSearch::Controller] ::search_from_fresh_index - MartSearch::IndexUnavailableError thrown")
           @errors[:index].push({
             :text  => 'The search index is currently unavailable, please check back again soon.',
             :error => error,
@@ -261,6 +286,7 @@ module MartSearch
           })
           return false
         rescue MartSearch::IndexSearchError => error
+          self.logger.error("[MartSearch::Controller] ::search_from_fresh_index - MartSearch::IndexSearchError thrown")
           @errors[:index].push({
             :text  => 'The search term you used has caused an error on the search engine, please try another search term without any special characters in it.',
             :error => error,
@@ -275,6 +301,7 @@ module MartSearch
       #
       # @param [String] cached_data The marshaled object to load
       def search_from_cached_index( cached_data )
+        self.logger.debug("[MartSearch::Controller] ::search_from_cached_index - running search_from_cached_index()")
         @search_data                 = cached_data[:search_data]
         @index.current_page          = cached_data[:current_page]
         @index.current_results_total = cached_data[:current_results_total]
@@ -286,6 +313,7 @@ module MartSearch
       # @param [Array] search_keys The keys/docs in @search_data to prepare dataset searches for
       # @return [Hash] A hash keyed by the document fields containing all the terms found for the given field
       def prepare_dataset_search_terms( search_keys )
+        self.logger.debug("[MartSearch::Controller] ::prepare_dataset_search_terms - running prepare_dataset_search_terms()")
         grouped_terms = {}
         
         search_keys.each do |key|
@@ -316,6 +344,7 @@ module MartSearch
       # @param [Hash] grouped_search_terms A hash of terms (grouped by index field) that can be used to drive the dataset searches
       # @return [Boolean] true/false reporting if the searches went without error (actual results are stored in @search_data)
       def search_from_fresh_datasets( terms_to_query, grouped_search_terms )
+        self.logger.debug("[MartSearch::Controller] ::search_from_fresh_datasets - running search_from_fresh_datasets()")
         success = true
         
         Parallel.each( @datasets.keys, :in_threads => 10 ) do |ds_name|
@@ -325,6 +354,7 @@ module MartSearch
             results      = dataset.search( search_terms )
             add_dataset_results_to_search_data( dataset.joined_index_field.to_sym, ds_name.to_sym, results )
           rescue MartSearch::DataSourceError => error
+            self.logger.error("[MartSearch::Controller] ::search_from_fresh_datasets - MartSearch::DataSourceError thrown")
             @errors[:datasets][ds_name] = {
               :text  => "The '#{ds_name}' dataset has returned an error for this query.",
               :error => error,
@@ -332,6 +362,7 @@ module MartSearch
             }
             success = false
           rescue Timeout::Error => error
+            self.logger.error("[MartSearch::Controller] ::search_from_fresh_datasets - Timeout::Error thrown")
             @errors[:datasets][ds_name] = {
               :text  => "The '#{ds_name}' dataset did not respond quickly enough for this query.",
               :error => error,
@@ -339,6 +370,7 @@ module MartSearch
             }
             success = false
           rescue Errno::ETIMEDOUT => error
+            self.logger.error("[MartSearch::Controller] ::search_from_fresh_datasets - Errno::ETIMEDOUT thrown")
             @errors[:datasets][ds_name] = {
               :text  => "The '#{ds_name}' dataset did not respond quickly enough for this query.",
               :error => error,
@@ -358,6 +390,7 @@ module MartSearch
           end
         end
         
+        self.logger.debug("[MartSearch::Controller] ::search_from_fresh_datasets - running search_from_fresh_datasets() - DONE")
         return success
       end
       
@@ -367,6 +400,7 @@ module MartSearch
       # @param [Symbol] dataset_name The name of the dataset we're working with
       # @param [Hash] results The results that will be merged into @search_data
       def add_dataset_results_to_search_data( index_field, dataset_name, results )
+        self.logger.debug("[MartSearch::Controller] ::add_dataset_results_to_search_data - running add_dataset_results_to_search_data( '#{index_field}', '#{dataset_name}', Hash )")
         # First, see if the primary key of the index is the same 
         # as the primary key of our results data, if yes, use 
         # this association as it's easy and bloody fast!
@@ -424,6 +458,7 @@ module MartSearch
       
       # Utility function to clear all instance variables
       def clear_instance_variables
+        self.logger.debug("[MartSearch::Controller] ::clear_instance_variables - running clear_instance_variables()")
         @errors         = { :index => [], :datasets => {} }
         @search_data    = {}
         @search_results = []
