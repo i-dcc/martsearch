@@ -153,6 +153,7 @@ DEPENDENCIES
   vlad-git
   webmock
   will_paginate (~> 2.3)
+  win32-open3-19
   wirble
   yard
   yui-compressor

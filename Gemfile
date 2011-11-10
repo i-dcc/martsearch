@@ -44,7 +44,7 @@ group :development, :test do
   gem 'simplecov-rcov',                   :require => false,  :platforms => :ruby_19
   gem 'wirble',                           :require => false
   gem 'test-unit',                        :require => false
-  gem 'ruby-debug19',					  :require => false,  :platforms => :ruby_19
+  #gem 'ruby-debug19',					            :require => false,  :platforms => :ruby_19
 end
 
 gem 'win32-open3-19',                     :platforms => :mingw
