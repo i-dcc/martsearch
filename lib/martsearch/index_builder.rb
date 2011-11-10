@@ -30,10 +30,6 @@ module MartSearch
       @document_cache        = {}
       @document_cache_keys   = {}
       @document_cache_lookup = {}
-
-      # Create an ontology cache, this will help prevent needless
-      # database queries when indexing ontology terms...
-      @ontology_cache = {}
     end
 
     # Function to control the dataset download process.  Determines if 
@@ -301,12 +297,12 @@ module MartSearch
 
               # Any ontology terms to index?
               if ds_index_conf[:ontology_terms]
-                index_ontology_terms( ds_index_conf[:ontology_terms], doc, data_row_obj, map_data, @ontology_cache )
+                index_ontology_terms( ds_index_conf[:ontology_terms], doc, data_row_obj, map_data )
               end
 
               # Any concatenated ontology term fields...
               if ds_index_conf[:concatenated_ontology_terms]
-                index_concatenated_ontology_terms( ds_index_conf[:concatenated_ontology_terms], doc, data_row_obj, map_data, @ontology_cache )
+                index_concatenated_ontology_terms( ds_index_conf[:concatenated_ontology_terms], doc, data_row_obj, map_data )
               end
 
               # Finally - save the document to the cache

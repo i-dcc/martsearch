@@ -10,7 +10,7 @@ jQuery(".eurexpress_assay_ontology").each( function() {
     },
     json_data: {
       ajax: {
-        url: martsearch_url + "/eurexpress_browse",
+        url: martsearch_url + "/eurexpress_emap",
         data: function (n) {
           return { id : n.attr ? n.attr("id") : id_arg };
         }
