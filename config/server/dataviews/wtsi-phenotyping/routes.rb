@@ -174,9 +174,13 @@ module MartSearch
         status 404
         erubis :not_found
       else
-        template_name = "raw_data_".concat(@graph_type.downcase.to_s.gsub(/\s+/,"_"))
         @page_title   = "Population id: #{population_id} Parameter id: #{parameter_id}"
-        erubis        "dataviews/wtsi-phenotyping/#{template_name}".to_sym
+        case @graph_type
+        when :Bar
+          erubis  :"dataviews/wtsi-phenotyping/raw_data_bar"
+        else
+          erubis  :"dataviews/wtsi-phenotyping/raw_data"
+        end
       end
     end
     

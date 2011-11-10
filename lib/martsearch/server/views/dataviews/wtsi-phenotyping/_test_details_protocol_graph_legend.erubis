@@ -1,8 +1,8 @@
 
 
 <div class='wtsi-phenotyping'>
-  <a href='<%= data_file_url %>'>download data</a>
-  <a href='/phenotyping/#{population_id}/#{parameter_id}/?'>view data</a>
+  <a class='' href='<%= data_file_url %>'>download data</a>&nbsp;
+  <a href='/phenotyping/raw_data/<%= parameter_data[:population_parameter][:population_id] %>/<%= parameter_data[:population_parameter][:parameter_id] %>/?'>view data</a>
   <table class='wtsi_pheno_parameter_details'>
     <thead>
       <tr>
