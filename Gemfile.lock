@@ -53,7 +53,7 @@ GEM
     multi_json (1.0.3)
     nokogiri (1.5.0)
     nori (1.0.2)
-    ols (0.3.2)
+    ols (0.3.3)
       savon
     open4 (1.2.0)
     parallel (0.5.9)
@@ -137,7 +137,7 @@ DEPENDENCIES
   memcache-client (>= 1.8)
   mongo
   mongo_store
-  ols (>= 0.3.2)
+  ols (>= 0.3.3)
   parallel
   rack (>= 1.0)
   rack-contrib

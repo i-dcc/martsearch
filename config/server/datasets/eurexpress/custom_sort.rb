@@ -31,7 +31,7 @@ module MartSearch
       # Now build up the ontology graphs for the annotations
       sorted_results.each do |joined_attribute,result_data|
         result_data.each do |assay_id,data_for_assay|
-          emap_graphs = []
+          emap_terms = []
           emap_ids    = data_for_assay[:annotations].keys
 
           data_for_assay[:annotation_count] = emap_ids.size
@@ -39,23 +39,23 @@ module MartSearch
           # Generate the initial graphs
           emap_ids.each do |emap_id|
             begin
-              graph = OLS.find_by_id(emap_id)
-              graph.remove_children!
-              graph.focus_graph! unless graph.is_root?
-              emap_graphs.push( graph )
+              term = OLS.find_by_id(emap_id)
+              term.remove_children!
+              term.focus_graph! unless term.is_root?
+              emap_terms.push( term )
             rescue OLS::TermNotFoundError => e
               # Not a lot we can do here... move along...
             end
           end
 
-          # Merge the graphs
-          merged_graph = emap_graphs.reduce(:merge!)
+          # Merge the terms
+          merged_term = emap_terms.reduce(:merge!)
 
           # Create the JSON structures for jsTree
-          merged_graph_json = eurexpress_prepare_ontology_for_jstree( data_for_assay[:assay_id], data_for_assay[:annotations], merged_graph )
+          merged_term_json = eurexpress_prepare_ontology_for_jstree( data_for_assay[:assay_id], data_for_assay[:annotations], merged_term )
 
           # Save it to cache
-          ms.write_to_cache( "eurexpress_emap_graph:#{data_for_assay[:assay_id]}", merged_graph_json )
+          ms.write_to_cache( "eurexpress_emap_graph:#{data_for_assay[:assay_id]}", merged_term_json )
         end
       end
 
@@ -75,8 +75,8 @@ module MartSearch
 
     private
 
-    def eurexpress_prepare_ontology_for_jstree( assay_id, annotations, merged_graph )
-      root_node = merged_graph.root
+    def eurexpress_prepare_ontology_for_jstree( assay_id, annotations, merged_term )
+      root_node = merged_term.root
 
       json = { :root => [ eurexpress_emap_term_json( assay_id, annotations, root_node ) ] }
 
