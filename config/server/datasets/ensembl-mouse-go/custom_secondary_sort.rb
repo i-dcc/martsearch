@@ -24,11 +24,11 @@ module MartSearch
         # into correct GO baskets.
         raw_data.each do |result|
           begin
-            tree = OLS.find_by_id(result[:go_id])
-            next if tree.is_root?
-            tree.remove_children!
-            tree.focus_graph!
-            go_terms[ tree.root.term_name.to_sym ].push(tree)
+            term = OLS.find_by_id(result[:go_id])
+            next if term.is_root?
+            term.remove_children!
+            term.focus_graph!
+            go_terms[ term.root.term_name.to_sym ].push(term)
           rescue OLS::TermNotFoundError => e
             # Not a lot we can do here... move along...
           end
