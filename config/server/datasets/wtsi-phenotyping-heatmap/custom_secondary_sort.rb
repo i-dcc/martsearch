@@ -21,6 +21,8 @@ module MartSearch
         test_display_names[attrib.to_sym] = ds_attribs[attrib] ? ds_attribs[attrib].display_name : attrib.to_s
       end
       
+      mp_group_config = wtsi_phenotyping_param_level_heatmap_mp_heatmap_config
+      
       # Now process the heatmap
       search_data.each do |key,result_data|
         heatmap_raw_data = result_data[:'wtsi-phenotyping-heatmap']
@@ -29,6 +31,7 @@ module MartSearch
         next if heatmap_raw_data.nil?
         
         result_data[:'wtsi-phenotyping-heatmap-test_display_names'] = test_display_names
+        result_data[:'wtsi-phenotyping-mp_group_config'] = mp_group_config
         
         # First, append any supporting data to the basic heatmap return.
         heatmap_raw_data.each do |result|

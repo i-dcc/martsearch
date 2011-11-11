@@ -53,9 +53,103 @@ module MartSearch
     
     private
     
+    def wtsi_phenotyping_param_level_heatmap_mp_heatmap_config
+      ms = MartSearch::Controller.instance()
+      
+      config_data = ms.fetch_from_cache("wtsi-pheno-mp-heatmap-config")
+      if config_data.nil?
+        config_data = wtsi_phenotyping_build_mp_heatmap_config
+        ms.write_to_cache("wtsi-pheno-mp-heatmap-config",config_data)
+      end
+      
+      return config_data    
+    end
+    
+    def wtsi_phenotyping_build_mp_heatmap_config
+      ms = MartSearch::Controller.instance()
+      
+      mp_ontology = wtsi_phenotyping_mp_groups
+   
+      heatmap_config = []
+      parameter_map = {}
+      
+      datasource = ms.datasources[:'wtsi-possible_mp_terms']
+      raise MartSearch::InvalidConfigError, "MartSearch::DataSet.wtsi_phenotyping_build_mp_heatmap_config cannot be called if the 'wtsi-possible_mp_terms' datasource is inactive" if datasource.nil?
+
+      mart = datasource.ds
+      
+      results  = mart.search(
+        :process_results => true,
+        :attributes => [
+          "protocol",
+          "test_name",
+          "parameter_name",
+          "mp_term"
+        ]
+      )
+      
+      results.recursively_symbolize_keys!
+
+      results.each do |row|
+        param_key = row[:mp_term]
+        param_value = [ row[:test_name], row[:protocol], row[:parameter_name] ].join('|')
+        
+        parameter_map[ param_key ] ||= []
+        parameter_map[ param_key ].push( param_value )
+      end
+            
+      mp_ontology.each do |mp_term|
+        mp_term = mp_term.clone
+        
+        mp_term[:mgp_parameters] = []
+      
+        mp_term[:child_terms].each do |term|
+          if parameter_map.has_key?(term)
+            parameters = parameter_map[term]
+            mp_term[:mgp_parameters].push( parameters )
+          end
+        end
+        
+        mp_term[:mgp_parameters].flatten!
+        mp_term[:mgp_parameters].uniq!
+        
+        heatmap_config.push(mp_term)
+      end
+      
+      return heatmap_config
+    end
+    
+    def wtsi_phenotyping_mp_groups
+      config      = []
+      mp_ontology = OLS.find_by_id('MP:0000001')
+
+      ignored_terms = [ 
+        "normal phenotype",
+        "no phenotypic analysis"
+      ]
+
+      mp_ontology.children.sort{ |a,b| a.term_name <=> b.term_name }.each do |child|
+        unless ignored_terms.include?(child.term_name)
+          conf_data = {
+            :term                => child.term_id,
+            :name                => child.term_name.gsub(' phenotype',''),
+            :slug                => child.term_name.gsub(' phenotype','').gsub(/[\/\s\-]/,'-').downcase,
+            :child_terms         => [ child.term_id, child.all_child_ids ].flatten.uniq
+          }
+        
+          config.push(conf_data)
+        end
+      end
+      
+      return config
+    end
+    
     def wtsi_phenotyping_param_level_heatmap_sort_mp_heatmap_data( result, mp_groups )
       mp_group_conf = nil
-      @config[:mp_heatmap_config].each do |mp_conf|
+      
+      mp_heatmap_config = wtsi_phenotyping_param_level_heatmap_mp_heatmap_config
+      
+      mp_heatmap_config.each do |mp_conf|
         next unless mp_group_conf.nil?
         
         if result[:mp_id]
@@ -86,8 +180,10 @@ module MartSearch
         end
       end
       
+     
+      
     end
-    
+
     def wtsi_phenotyping_param_level_heatmap_sort_test_group_data( result, test_groups )
       test_key                = result[:test].gsub(/[\(\)]/,"").gsub(/[ -]/,"_").downcase.to_sym
       parameter               = result[:parameter]
@@ -106,16 +202,19 @@ module MartSearch
       per_protocol_data[:significant_parameters] = true if result[:manual_call] == 'Significant'
       
       param_data = per_protocol_data[:parameters][parameter] ||= {
-        :parameter_id  => result[:parameter_id].to_i,
-        :order_by      => result[:parameter_order_by].to_i,
-        :graphs        => [],
-        :mp_annotation => {}
+        :population_parameter => { :population_id => result[:population_id].to_i, :parameter_id => result[:parameter_id].to_i },
+        :order_by             => result[:parameter_order_by].to_i,
+        :graphs               => [],
+		    :data_files	          => [],
+        :mp_annotation        => {}
       }
       
-      graph_url         = result[:graph_url]
-      gender_genotype   = :"#{result[:gender]}_#{result[:genotype]}"
+      graph_url     = result[:graph_url]
+	    data_url		  = result[:raw_data_url]
+      gender_genotype = :"#{result[:gender]}_#{result[:genotype]}"
       
       param_data[:graphs].push( graph_url ) unless param_data[:graphs].include?( graph_url )
+	    param_data[:data_files].push( data_url ) unless param_data[:data_files].include?( data_url )
       param_data[:mp_annotation].merge!({ result[:mp_id] => result[:mp_term] }) unless result[:mp_id].blank?
       
       param_data[gender_genotype] ||= {

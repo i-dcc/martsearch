@@ -3,7 +3,7 @@
   <div>
     <%
       mp_based_pheno_data = result_data[:'wtsi-phenotyping-mp_heatmap']
-      mp_groups           = @ms.datasets[:'wtsi-phenotyping-param_level_heatmap'].config()[:mp_heatmap_config]
+      mp_groups           = result_data[:'wtsi-phenotyping-mp_group_config']
     %>
     
     <% if mp_based_pheno_data.nil? %>
