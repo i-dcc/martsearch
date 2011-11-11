@@ -458,7 +458,7 @@ module MartSearch
               end
             end
           end
-          self.logger.debug("[MartSearch::Controller] ::add_dataset_results_to_search_data - matching up search data by lookup hash (merging in data)")
+          self.logger.debug("[MartSearch::Controller] ::add_dataset_results_to_search_data - matching up search data by lookup hash (merging in data) - DONE")
 
           self.logger.debug("[MartSearch::Controller] ::add_dataset_results_to_search_data - matching up search data by lookup hash - DONE")
         end
