@@ -191,6 +191,21 @@ a.feed {
 	color: #000;
 }
 
+a.graph {
+	background: url(../images/silk/chart_curve.png) no-repeat left center;
+	padding: 4px 2px 4px 20px;
+}
+
+a.raw_data {
+	background: url(../images/silk/database_table.png) no-repeat left center;
+	padding: 4px 2px 4px 20px;
+}
+
+a.data_download {
+	background: url(../images/silk/package.png) no-repeat left center;
+	padding: 4px 2px 4px 20px;
+}
+
 /* Ordering Buttons */
 
 .button, .order {
