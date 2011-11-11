@@ -40,8 +40,8 @@ module MartSearch
           emap_ids.each do |emap_id|
             begin
               graph = OLS.find_by_id(emap_id)
-              graph.focus_graph! unless graph.is_root?
               graph.remove_children!
+              graph.focus_graph! unless graph.is_root?
               emap_graphs.push( graph )
             rescue OLS::TermNotFoundError => e
               # Not a lot we can do here... move along...

@@ -26,8 +26,8 @@ module MartSearch
           begin
             tree = OLS.find_by_id(result[:go_id])
             next if tree.is_root?
-            tree.focus_graph!
             tree.remove_children!
+            tree.focus_graph!
             go_terms[ tree.root.term_name.to_sym ].push(tree)
           rescue OLS::TermNotFoundError => e
             # Not a lot we can do here... move along...
