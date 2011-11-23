@@ -37,7 +37,10 @@ module MartSearch
         # Now merge the trees and prepare for conversion to json (for the jstree)
         # tree widget.
         go_terms.each do |category,trees|
-          merged_tree = trees.reduce(:merge!)
+          go_terms[category] = trees.reduce(:merge!)
+        end
+
+        go_terms.each do |category,merged_tree|
           unless merged_tree.nil?
             go_terms[category] = ensembl_mouse_go_prepare_ontology_tree_for_jsonifying( mgi_acc_id, merged_tree )
           end
