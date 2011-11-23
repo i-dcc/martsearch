@@ -33,7 +33,15 @@ module MartSearch
       @dataviews_by_name = @config[:server][:dataviews_by_name]
 
       # OLS
-      OLS.setup_cache({ :directory => "#{MARTSEARCH_PATH}/tmp/ols_cache" })
+      OLS.setup_cache(
+        {
+          :host => 'web-mei-t87p.internal.sanger.ac.uk',
+          :port => 3334,
+          :database => 'htgt_ols_cache',
+          :user => 'htgt',
+          :password => 'htgt'
+        }
+      )
 
       # Logger
       @logger                 = Logger.new($stdout)
@@ -337,7 +345,7 @@ module MartSearch
         return grouped_terms
       end
       
-      # Utility function that performs the dataset searches and 
+      # Utility function that performs the dataset searches and
       # post-search sorting routines
       #
       # @params [Array] terms_to_query An array of @search_data keys that we should be feeding data into here...
@@ -351,8 +359,15 @@ module MartSearch
           begin
             dataset      = @datasets[ds_name]
             search_terms = grouped_search_terms[ dataset.joined_index_field.to_sym ]
+
+            self.logger.debug("[MartSearch::Controller] ::search_from_fresh_datasets - running dataset search for #{ds_name}")
             results      = dataset.search( search_terms )
+            self.logger.debug("[MartSearch::Controller] ::search_from_fresh_datasets - running dataset search for #{ds_name} - DONE")
+
+            self.logger.debug("[MartSearch::Controller] ::search_from_fresh_datasets - running add_dataset_results_to_search_data for #{ds_name}")
             add_dataset_results_to_search_data( dataset.joined_index_field.to_sym, ds_name.to_sym, results )
+            self.logger.debug("[MartSearch::Controller] ::search_from_fresh_datasets - running add_dataset_results_to_search_data for #{ds_name} - DONE")
+
           rescue MartSearch::DataSourceError => error
             self.logger.error("[MartSearch::Controller] ::search_from_fresh_datasets - MartSearch::DataSourceError thrown")
             @errors[:datasets][ds_name] = {
@@ -384,9 +399,11 @@ module MartSearch
         # haven't pulled them from the cache.
         @datasets.each do |dataset_name,dataset|
           if dataset.config[:custom_secondary_sort]
+            self.logger.debug("[MartSearch::Controller] ::search_from_fresh_datasets - running dataset secondary sort for #{dataset_name}")
             search_data_copy = @search_data.clone
             search_data_copy.keys.each { |key| search_data_copy.delete(key) unless terms_to_query.include?(key) }
             @search_data.merge( dataset.secondary_sort( search_data_copy ) )
+            self.logger.debug("[MartSearch::Controller] ::search_from_fresh_datasets - running dataset secondary sort for #{dataset_name} - DONE")
           end
         end
         
@@ -458,7 +475,7 @@ module MartSearch
               end
             end
           end
-          self.logger.debug("[MartSearch::Controller] ::add_dataset_results_to_search_data - matching up search data by lookup hash (merging in data)")
+          self.logger.debug("[MartSearch::Controller] ::add_dataset_results_to_search_data - matching up search data by lookup hash (merging in data) - DONE")
 
           self.logger.debug("[MartSearch::Controller] ::add_dataset_results_to_search_data - matching up search data by lookup hash - DONE")
         end

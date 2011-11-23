@@ -382,7 +382,7 @@ class MartSearchServerRackTest < Test::Unit::TestCase
         # Then for when we don't...
         mgis_with_no_return = ['MGI:1915733']
         mgis_with_no_return.each do |mgi|
-          @browser.get "/go_ontology?id=go-ontology-#{mgi.gsub(':','')}-root"
+          @browser.get "/go_ontology?id=go_ontology-#{mgi.gsub(':','')}-root"
           assert_equal( 404, @browser.last_response.status )
         end
       end
@@ -391,7 +391,7 @@ class MartSearchServerRackTest < Test::Unit::TestCase
     should "serve up JSON for EMAP Ontology data (for Eurexpress)" do
       VCR.use_cassette('test_server_emap_ontology_json') do
         omit_if(
-          @controller.datasets_by_name[:eurexpress].nil?,
+          @controller.datasets[:eurexpress].nil?,
           "Skipping Eurexpress EMAP JSON tests as the DataSet is not active."
         )
 
