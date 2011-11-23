@@ -1,3 +1,11 @@
+GIT
+  remote: git://github.com/dazoakley/ols.git
+  revision: 1c7e22c36f74e188001dfe3e2c6fb7304f35a069
+  branch: db_cache_sanger
+  specs:
+    ols (0.4.0)
+      savon
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -51,10 +59,9 @@ GEM
       activesupport (>= 2.2)
       mongo (>= 1.0)
     multi_json (1.0.3)
+    mysql2 (0.3.10)
     nokogiri (1.5.0)
     nori (1.0.2)
-    ols (0.3.3)
-      savon
     open4 (1.2.0)
     parallel (0.5.9)
     rack (1.3.5)
@@ -82,6 +89,7 @@ GEM
       ffi (>= 1.0.7)
       json_pure
       rubyzip
+    sequel (3.29.0)
     shoulda (2.11.3)
     simplecov (0.5.4)
       multi_json (~> 1.0.3)
@@ -137,11 +145,13 @@ DEPENDENCIES
   memcache-client (>= 1.8)
   mongo
   mongo_store
-  ols (>= 0.3.3)
+  mysql2
+  ols!
   parallel
   rack (>= 1.0)
   rack-contrib
   rack-test (>= 0.5)
+  sequel
   shoulda (>= 2.11)
   simplecov
   simplecov-rcov

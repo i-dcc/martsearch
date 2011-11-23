@@ -37,7 +37,10 @@ module MartSearch
         # Now merge the trees and prepare for conversion to json (for the jstree)
         # tree widget.
         go_terms.each do |category,trees|
-          merged_tree = trees.reduce(:merge!)
+          go_terms[category] = trees.reduce(:merge!)
+        end
+
+        go_terms.each do |category,merged_tree|
           unless merged_tree.nil?
             go_terms[category] = ensembl_mouse_go_prepare_ontology_tree_for_jsonifying( mgi_acc_id, merged_tree )
           end
@@ -48,15 +51,18 @@ module MartSearch
         go_data_root = []
 
         [:molecular_function,:biological_process,:cellular_component].each do |category|
-          next if go_terms[category].empty?
+          next if go_terms[category].nil?
           go_data_root.push( go_terms[category][:root] )
           go_terms[category].delete(:root)
           go_data.merge!(go_terms[category])
         end
 
-        go_data['root'] = go_data_root
-
-        ms.write_to_cache( "go-ontology:#{mgi_acc_id}", go_data )
+        if go_data_root.empty?
+          result_data[:'ensembl-mouse-go'] = nil
+        else
+          go_data['root'] = go_data_root
+          ms.write_to_cache( "go-ontology:#{mgi_acc_id}", go_data )
+        end
       end
 
       return search_data

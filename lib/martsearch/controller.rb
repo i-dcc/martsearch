@@ -33,7 +33,15 @@ module MartSearch
       @dataviews_by_name = @config[:server][:dataviews_by_name]
 
       # OLS
-      OLS.setup_cache({ :directory => "#{MARTSEARCH_PATH}/tmp/ols_cache" })
+      OLS.setup_cache(
+        {
+          :host => 'web-mei-t87p.internal.sanger.ac.uk',
+          :port => 3334,
+          :database => 'htgt_ols_cache',
+          :user => 'htgt',
+          :password => 'htgt'
+        }
+      )
 
       # Logger
       @logger                 = Logger.new($stdout)
@@ -337,7 +345,7 @@ module MartSearch
         return grouped_terms
       end
       
-      # Utility function that performs the dataset searches and 
+      # Utility function that performs the dataset searches and
       # post-search sorting routines
       #
       # @params [Array] terms_to_query An array of @search_data keys that we should be feeding data into here...
@@ -351,8 +359,15 @@ module MartSearch
           begin
             dataset      = @datasets[ds_name]
             search_terms = grouped_search_terms[ dataset.joined_index_field.to_sym ]
+
+            self.logger.debug("[MartSearch::Controller] ::search_from_fresh_datasets - running dataset search for #{ds_name}")
             results      = dataset.search( search_terms )
+            self.logger.debug("[MartSearch::Controller] ::search_from_fresh_datasets - running dataset search for #{ds_name} - DONE")
+
+            self.logger.debug("[MartSearch::Controller] ::search_from_fresh_datasets - running add_dataset_results_to_search_data for #{ds_name}")
             add_dataset_results_to_search_data( dataset.joined_index_field.to_sym, ds_name.to_sym, results )
+            self.logger.debug("[MartSearch::Controller] ::search_from_fresh_datasets - running add_dataset_results_to_search_data for #{ds_name} - DONE")
+
           rescue MartSearch::DataSourceError => error
             self.logger.error("[MartSearch::Controller] ::search_from_fresh_datasets - MartSearch::DataSourceError thrown")
             @errors[:datasets][ds_name] = {
@@ -384,9 +399,11 @@ module MartSearch
         # haven't pulled them from the cache.
         @datasets.each do |dataset_name,dataset|
           if dataset.config[:custom_secondary_sort]
+            self.logger.debug("[MartSearch::Controller] ::search_from_fresh_datasets - running dataset secondary sort for #{dataset_name}")
             search_data_copy = @search_data.clone
             search_data_copy.keys.each { |key| search_data_copy.delete(key) unless terms_to_query.include?(key) }
             @search_data.merge( dataset.secondary_sort( search_data_copy ) )
+            self.logger.debug("[MartSearch::Controller] ::search_from_fresh_datasets - running dataset secondary sort for #{dataset_name} - DONE")
           end
         end
         
@@ -401,20 +418,24 @@ module MartSearch
       # @param [Hash] results The results that will be merged into @search_data
       def add_dataset_results_to_search_data( index_field, dataset_name, results )
         self.logger.debug("[MartSearch::Controller] ::add_dataset_results_to_search_data - running add_dataset_results_to_search_data( '#{index_field}', '#{dataset_name}', Hash )")
-        # First, see if the primary key of the index is the same 
-        # as the primary key of our results data, if yes, use 
+        # First, see if the primary key of the index is the same
+        # as the primary key of our results data, if yes, use
         # this association as it's easy and bloody fast!
         if @index.primary_field == index_field
+          self.logger.debug("[MartSearch::Controller] ::add_dataset_results_to_search_data - matching up search data by primary index field")
           results.symbolize_keys!
           @search_data.each do |primary_key,data_value|
             data_value[dataset_name] = results[primary_key]
           end
+          self.logger.debug("[MartSearch::Controller] ::add_dataset_results_to_search_data - matching up search data by primary index field - DONE")
         else
-          
+          self.logger.debug("[MartSearch::Controller] ::add_dataset_results_to_search_data - matching up search data by lookup hash")
+
           # Create a lookup hash of the 'index_field' values so that 
           # we can easily associate our results back to a primary_key...
           lookup = {}
-          
+
+          self.logger.debug("[MartSearch::Controller] ::add_dataset_results_to_search_data - matching up search data by lookup hash (creating lookup hash)")
           @search_data.each do |primary_key,data_value|
             joined_index_field_data = data_value[:index][index_field]
 
@@ -426,14 +447,16 @@ module MartSearch
               lookup[joined_index_field_data] = primary_key
             end
           end
-          
+          self.logger.debug("[MartSearch::Controller] ::add_dataset_results_to_search_data - matching up search data by lookup hash (creating lookup hash) - DONE")
+
+          self.logger.debug("[MartSearch::Controller] ::add_dataset_results_to_search_data - matching up search data by lookup hash (merging in data)")
           results.each do |result_key,result_data|
             stash_to_append_to = @search_data[ lookup[result_key] ]
 
             if stash_to_append_to
               if @datasets[dataset_name].config[:custom_sort]
                 current_stash = stash_to_append_to[dataset_name]
-                
+
                 if current_stash.nil?
                   current_stash = result_data
                 elsif current_stash.is_a?(Array)
@@ -441,7 +464,7 @@ module MartSearch
                 elsif current_stash.is_a?(Hash)
                   current_stash.merge!(result_data)
                 end
-                
+
                 stash_to_append_to[dataset_name] = current_stash
               else
                 stash_to_append_to[dataset_name] = [] unless stash_to_append_to[dataset_name.to_sym]
@@ -452,10 +475,12 @@ module MartSearch
               end
             end
           end
-          
+          self.logger.debug("[MartSearch::Controller] ::add_dataset_results_to_search_data - matching up search data by lookup hash (merging in data) - DONE")
+
+          self.logger.debug("[MartSearch::Controller] ::add_dataset_results_to_search_data - matching up search data by lookup hash - DONE")
         end
       end
-      
+
       # Utility function to clear all instance variables
       def clear_instance_variables
         self.logger.debug("[MartSearch::Controller] ::clear_instance_variables - running clear_instance_variables()")
