@@ -1,7 +1,7 @@
 GIT
   remote: git://github.com/dazoakley/ols.git
   revision: 1c7e22c36f74e188001dfe3e2c6fb7304f35a069
-  branch: db_cache
+  branch: db_cache_sanger
   specs:
     ols (0.4.0)
       savon

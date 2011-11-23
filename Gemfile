@@ -2,7 +2,7 @@ source :rubygems
 
 gem 'bundler',                '>=1.0.0'
 
-gem 'ols', :git => 'git://github.com/dazoakley/ols.git', :branch => 'db_cache'
+gem 'ols', :git => 'git://github.com/dazoakley/ols.git', :branch => 'db_cache_sanger'
 gem 'sequel'
 gem 'mysql2'
 
