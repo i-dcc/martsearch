@@ -30,6 +30,10 @@ module MartSearch
       @document_cache        = {}
       @document_cache_keys   = {}
       @document_cache_lookup = {}
+
+      # Setup in an memory ontology cache - this will reduce the amount
+      # of repetetive graph traversal and computation we need to do
+      @ontology_cache = {}
     end
 
     # Function to control the dataset download process.  Determines if 
@@ -297,12 +301,12 @@ module MartSearch
 
               # Any ontology terms to index?
               if ds_index_conf[:ontology_terms]
-                index_ontology_terms( ds_index_conf[:ontology_terms], doc, data_row_obj, map_data )
+                index_ontology_terms( ds_index_conf[:ontology_terms], doc, data_row_obj, map_data, @ontology_cache )
               end
 
               # Any concatenated ontology term fields...
               if ds_index_conf[:concatenated_ontology_terms]
-                index_concatenated_ontology_terms( ds_index_conf[:concatenated_ontology_terms], doc, data_row_obj, map_data )
+                index_concatenated_ontology_terms( ds_index_conf[:concatenated_ontology_terms], doc, data_row_obj, map_data, @ontology_cache )
               end
 
               # Finally - save the document to the cache
