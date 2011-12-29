@@ -370,19 +370,19 @@ class MartSearchServerRackTest < Test::Unit::TestCase
     should "serve up JSON for Gene Ontology data" do
       VCR.use_cassette('test_server_go_ontology_json') do
         # First test for when we expect a return...
-        mgi_acc_ids_to_test = ['MGI:105369','MGI:2444584','MGI:104510']
+        mgi_acc_ids_to_test = ['MGI105369','MGI2444584','MGI104510']
         mgi_acc_ids_to_test.each do |mgi|
-          @browser.get "/go_ontology?id=go-ontology-#{mgi.gsub(':','')}-root"
-          assert( @browser.last_response.ok?, "A request to '/go_ontology?id=go-ontology-#{mgi.gsub(':','')}' failed!" )
+          @browser.get "/go_ontology?id=#{mgi}-root"
+          assert( @browser.last_response.ok?, "A request to '/go_ontology?id=#{mgi}-root' failed!" )
           json = JSON.parse( @browser.last_response.body, :max_nesting => false )
           assert( json.is_a?(Array) )
           assert( json.first['data'] != nil )
         end
 
         # Then for when we don't...
-        mgis_with_no_return = ['MGI:1915733']
+        mgis_with_no_return = ['MGI1915733']
         mgis_with_no_return.each do |mgi|
-          @browser.get "/go_ontology?id=go_ontology-#{mgi.gsub(':','')}-root"
+          @browser.get "/go_ontology?id=#{mgi}-root"
           assert_equal( 404, @browser.last_response.status )
         end
       end
@@ -397,7 +397,7 @@ class MartSearchServerRackTest < Test::Unit::TestCase
 
         @controller.search('Cbx1')
         assay_id = 'euxassay_012256'
-        emap_ids_to_test = ['root','EMAP:0','EMAP:7148']
+        emap_ids_to_test = ['root','EMAP0','EMAP7148']
 
         emap_ids_to_test.each do |emap_id|
           @browser.get "/eurexpress_emap?id=#{assay_id}-#{emap_id}"
