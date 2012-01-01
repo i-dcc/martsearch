@@ -195,6 +195,7 @@ class MartSearchIndexBuilderUtilsTest < Test::Unit::TestCase
   end
   
   def test_index_ontology_terms
+    ontology_cache = {}
     doc = new_document()
     attr_map = [
       { :attr => 'mgi_accession_id', :idx => 'mgi_accession_id_key', :use_to_map => true },
@@ -212,7 +213,7 @@ class MartSearchIndexBuilderUtilsTest < Test::Unit::TestCase
     }
     
     # Perform the search from fresh...
-    index_ontology_terms( ontology_term_conf, doc, data_row_obj, process_attribute_map(attr_map) )
+    index_ontology_terms( ontology_term_conf, doc, data_row_obj, process_attribute_map(attr_map), ontology_cache )
     
     assert_equal( 5, doc[:mp_id].size ) # we expect 5 terms to be indexed from this id...
     assert_equal( 4, doc[:mp_term].size )
@@ -221,7 +222,20 @@ class MartSearchIndexBuilderUtilsTest < Test::Unit::TestCase
     assert( doc[:mp_term].include?('TS18,nose') )
     assert( doc[:mp_term].include?('TS18,embryo') )
     assert( doc[:mp_ontology].include?('EMAP:0 | EMAP:2636 | EMAP:2822 | EMAP:2987 | EMAP:3018') )
-    
+
+    # Perform the search from cache...
+    doc2 = new_document()
+
+    index_ontology_terms( ontology_term_conf, doc2, data_row_obj, process_attribute_map(attr_map), ontology_cache )
+
+    assert_equal( 5, doc2[:mp_id].size )
+    assert_equal( 4, doc2[:mp_term].size )
+    assert( doc2[:mp_id].include?('EMAP:3018') )
+    assert( doc2[:mp_id].include?('EMAP:0') )
+    assert( doc2[:mp_term].include?('TS18,nose') )
+    assert( doc2[:mp_term].include?('TS18,embryo') )
+    assert( doc2[:mp_ontology].include?('EMAP:0 | EMAP:2636 | EMAP:2822 | EMAP:2987 | EMAP:3018') )
+
     # Make sure a bad ontology term doesn't blow stuff up...
     doc3 = new_document()
     data_row_obj2 = {
@@ -229,7 +243,7 @@ class MartSearchIndexBuilderUtilsTest < Test::Unit::TestCase
       'mp_term'          => 'FLIBBLE:5',
     }
     
-    index_ontology_terms( ontology_term_conf, doc3, data_row_obj2, process_attribute_map(attr_map) )
+    index_ontology_terms( ontology_term_conf, doc3, data_row_obj2, process_attribute_map(attr_map), ontology_cache )
     
     assert( doc3[:mp_id].empty? )
     assert( doc3[:mp_term].empty? )
@@ -237,6 +251,7 @@ class MartSearchIndexBuilderUtilsTest < Test::Unit::TestCase
   end
   
   def test_concatenated_ontology_terms
+    ontology_cache = {}
     doc = new_document()
     attr_map = [
       { :attr => 'colony_prefix', :idx => 'colony_prefix', :use_to_map => true },
@@ -256,7 +271,7 @@ class MartSearchIndexBuilderUtilsTest < Test::Unit::TestCase
     }
     
     # Perform the search from fresh...
-    index_concatenated_ontology_terms( concatenated_ontology_term_conf, doc, data_row_obj, process_attribute_map(attr_map) )
+    index_concatenated_ontology_terms( concatenated_ontology_term_conf, doc, data_row_obj, process_attribute_map(attr_map), ontology_cache )
     
     assert_equal( 7, doc[:ma_id].size )
     assert_equal( 6, doc[:ma_term].size )
@@ -273,7 +288,22 @@ class MartSearchIndexBuilderUtilsTest < Test::Unit::TestCase
     assert( doc[:mp_term].include?('abnormal defecation') )
     assert( doc[:mp_term].include?('digestive/alimentary phenotype') )
     assert( doc[:mp_ontology].include?('MP:0000001 | MP:0005381 | MP:0001663 | MP:0003866') )
-    
+
+    # Perform the search from cache...
+    doc2 = new_document()
+
+    index_concatenated_ontology_terms( concatenated_ontology_term_conf, doc2, data_row_obj, process_attribute_map(attr_map), ontology_cache )
+
+    assert_equal( 7, doc2[:ma_id].size )
+    assert_equal( 6, doc2[:ma_term].size )
+    assert( doc2[:ma_id].include?('MA:0000005') )
+    assert( doc2[:ma_id].include?('MA:0000001') )
+
+    assert_equal( 4, doc2[:mp_id].size )
+    assert_equal( 3, doc2[:mp_term].size )
+    assert( doc2[:mp_id].include?('MP:0001663') )
+    assert( doc2[:mp_id].include?('MP:0000001') )
+
     # Make sure a bad ontology term doesn't blow stuff up...
     doc3 = new_document()
     data_row_obj2 = {
@@ -281,7 +311,7 @@ class MartSearchIndexBuilderUtilsTest < Test::Unit::TestCase
       'annotations'   => 'FLIBBLE:5',
     }
     
-    index_concatenated_ontology_terms( concatenated_ontology_term_conf, doc3, data_row_obj2, process_attribute_map(attr_map) )
+    index_concatenated_ontology_terms( concatenated_ontology_term_conf, doc3, data_row_obj2, process_attribute_map(attr_map), ontology_cache )
     
     assert( doc3[:ma_id].empty? )
     assert( doc3[:ma_term].empty? )

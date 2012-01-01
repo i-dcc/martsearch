@@ -120,8 +120,8 @@ module MartSearch
           errors.push( mutagenesis_predictions[:error] ) unless mutagenesis_predictions[:error].empty?
         end
 
-        if ['KOMP-CSD','EUCOMM'].include?(data[:ikmc_project])
-          pcr_primers                    = get_pcr_primers( project_id )
+        if ['KOMP-CSD','EUCOMM','mirKO'].include?(data[:ikmc_project])
+          pcr_primers                    = get_pcr_primers( project_id, data )
           data[:pcr_primers]             = pcr_primers[:data]
           errors.push( pcr_primers[:error] ) unless pcr_primers[:error].empty?
         end
@@ -761,13 +761,22 @@ module MartSearch
       #
       # @param  [String] project_id The IKMC project ID
       # @return [Hash] The pcr primer hash from HTGT
-      def get_pcr_primers( project_id )
+      def get_pcr_primers( project_id, data )
         MartSearch::Controller.instance().logger.debug("[MartSearch::ProjectUtils] ::get_pcr_primers - running get_pcr_primers( '#{project_id}' )")
 
         result  = { :data => {}, :error => {} }
         message = "There was a problem retrieving pcr primers for this project.  As a result this data will not be available on the page.  Please try refreshing your browser or come back in 10 minutes to obtain this data."
         begin
-          uri         = URI.parse( "http://www.sanger.ac.uk/htgt/tools/genotypingprimers/#{project_id}" )
+          if data[:ikmc_project] == 'mirKO'
+            design_id = data[:targeting_vectors][0][:design_id]
+            if design_id.nil?
+              raise Exception.new("Could not find design_id for project")
+            end
+            MartSearch::Controller.instance().logger.debug("[MartSearch::ProjectUtils] :: get_pcr_primer mirKO sponsor, design = #{design_id} ")
+            uri = URI.parse( "http://www.sanger.ac.uk/htgt/tools/genotypingprimers/mirko_primers/#{design_id}" )
+          else
+            uri = URI.parse( "http://www.sanger.ac.uk/htgt/tools/genotypingprimers/#{project_id}" )
+          end
           http_client = build_http_client()
           response    = nil
 
