@@ -933,7 +933,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
           :cassette													=> "L1L2_gt2",
           :cassette_type										=> "Promotorless",
           :colony_background_strain					=> "C57BL/6NTac/Den",
-          :distribution_centre							=> "WTSI",
+          :distribution_centre							=> "Harwell",
           :emma															=> "1",
           :escell_clone											=> "EPD0027_2_B01",
           :escell_strain										=> "C57BL/6N",
