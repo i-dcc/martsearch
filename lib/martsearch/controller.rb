@@ -2,8 +2,8 @@
 
 module MartSearch
 
-  # Singleton controller class for MartSearch.  This is the central contoller 
-  # for the MartSearch framework - it handles the config file parsing, building 
+  # Singleton controller class for MartSearch.  This is the central contoller
+  # for the MartSearch framework - it handles the config file parsing, building
   # up all of the DataSource and Index objects, and managing the search mechanics.
   #
   # @author Darren Oakley
@@ -11,6 +11,9 @@ module MartSearch
     include Singleton
     include MartSearch::Utils
     include MartSearch::ControllerUtils
+
+    USE_CACHE = true
+    warn "#### NOT USING CACHE!!!" if ! USE_CACHE
 
     attr_reader :config, :cache, :logger, :index, :errors, :search_data
     attr_reader :search_results, :datasources, :datasets, :dataviews, :dataviews_by_name
@@ -71,7 +74,7 @@ module MartSearch
     #       "internal_name" => []/{}, # array/hash of sorted biomart data
     #     }
     #   }
-    # 
+    #
     # But returns an ordered list of the results/index docs (@search_results)
     #
     # @param [String] query The query string to pass to the search index
@@ -83,7 +86,7 @@ module MartSearch
       self.logger.debug("[MartSearch::Controller] ::search - running search( '#{query}', #{page}, #{use_cache}, #{save_index_data} )")
       page = 1 if page == 0
       clear_instance_variables
-      
+
       cached_index_data = fetch_from_cache( "index:#{query}-page#{page}" )
       if cached_index_data != nil and use_cache
         search_from_cached_index( cached_index_data )
@@ -99,20 +102,20 @@ module MartSearch
           write_to_cache( "index:#{query}-page#{page}", obj_to_cache )
         end
       end
-      
+
       unless @search_data.empty?
         fresh_ds_queries_to_do = []
-        
+
         @search_data.each do |data_key,data|
           cached_dataset_data = fetch_from_cache( "datasets:#{data_key}" )
-          
+
           if cached_dataset_data != nil and use_cache
             @search_data[data_key] = cached_dataset_data.merge(data)
           else
             fresh_ds_queries_to_do.push(data_key)
           end
         end
-        
+
         unless fresh_ds_queries_to_do.empty?
           grouped_search_terms = prepare_dataset_search_terms( fresh_ds_queries_to_do )
           if search_from_fresh_datasets( fresh_ds_queries_to_do, grouped_search_terms )
@@ -125,12 +128,12 @@ module MartSearch
           end
         end
       end
-      
+
       # Return paged_results
       return @search_results
     end
-    
-    # Function to load in the browsable content config and then query the index 
+
+    # Function to load in the browsable content config and then query the index
     # for each term and get a count of items returned...
     #
     # @param [Boolean] use_cache Use cached data if available
@@ -153,33 +156,33 @@ module MartSearch
             end
           end
         end
-        
+
         write_to_cache( "browse_counts", counts ) if all_ok
       end
-      
+
       return counts
     end
-    
+
     # Function to calculate the progress of the WTSI Mouse Genetics Project (MGP).
     # This should return counts for three categories:
     #   - Number of genes with lines with Standard Phenotyping (MGP pipeline) done
     #   - Number of genes with lines with Infection Challenge (Citrobacter & Salmonella) done
     #   - Number of genes with lines with Expression (embryo and adult) done
-    # 
+    #
     # @param [Boolean] use_cache Use cached data if available
     # @return [Hash] A hash of the status counts that the MGP wants
     def wtsi_phenotyping_progress_counts( use_cache=true )
       self.logger.debug("[MartSearch::Controller] ::wtsi_phenotyping_progress_counts - running wtsi_phenotyping_progress_counts( '#{use_cache}' )")
       heatmap_dataset = self.datasets[:'wtsi-phenotyping-heatmap']
       raise MartSearch::InvalidConfigError, "MartSearch::Controller.wtsi_phenotyping_progress_counts cannot be called if the 'wtsi-phenotyping-heatmap' dataset is inactive" if heatmap_dataset.nil?
-      
+
       counts = fetch_from_cache( "wtsi_phenotyping_progress_counts" )
       if counts.nil? || use_cache == false
         heatmap_test_groups_conf = heatmap_dataset.config[:test_groups]
         heatmap_mart             = heatmap_dataset.datasource.ds
         counts                   = {}
         all_ok                   = true
-        
+
         begin
           counts = {
             :standard_phenotyping => complete_mgp_alleles_count( heatmap_mart, ['haematology_cbc'], ['CompleteInteresting','CompleteNotInteresting'] ),
@@ -194,21 +197,22 @@ module MartSearch
             :expression           => counts[:expression]            ? counts[:expression]           : '-',
           }
         end
-        
+
         write_to_cache( "wtsi_phenotyping_progress_counts", counts, { :expires_in => 12.hours } ) if all_ok
       end
-      
+
       return counts
     end
-    
+
     # Cache interaction helper - fetch data from the cache for a given key.
-    # 
+    #
     # @param [String] key The cache identifer to look up
     # @return [Object/nil] The deserialized object from the cache, or nil if none found
     def fetch_from_cache( key )
+      return nil if ! USE_CACHE
       self.logger.debug("[MartSearch::Controller] ::fetch_from_cache - running fetch_from_cache( '#{key}' )")
       cached_data = @cache.fetch( key )
-      
+
       unless cached_data.nil?
         if @cache.is_a?(MartSearch::MongoCache)
           cached_data = JSON.parse( cached_data['json'], :max_nesting => false )
@@ -222,13 +226,14 @@ module MartSearch
 
       return cached_data
     end
-    
+
     # Cache interaction helper - use this to store data in the cache.
-    # 
+    #
     # @param [String] key The cache identifer to store 'value' under
     # @param [Object] value The cache 'value' to store
     # @param [Hash] options An options hash (see #{ActiveSupport::Cache} for more info)
     def write_to_cache( key, value, options={} )
+      return if ! USE_CACHE
       self.logger.debug("[MartSearch::Controller] ::write_to_cache - running write_to_cache( '#{key}', Object, '#{options.inspect}' )")
       @cache.delete( key )
       if @cache.is_a?(MartSearch::MongoCache)
@@ -238,14 +243,14 @@ module MartSearch
       end
       self.logger.debug("[MartSearch::Controller] ::write_to_cache - running write_to_cache( '#{key}', Object, '#{options.inspect}' ) - DONE")
     end
-    
+
     private
-      
-      # Helper function for #wtsi_phenotyping_progress_counts. This function queries the 
-      # MGP mart for a defined set of tests/attributes and computes the number of completed 
-      # alleles (by complete, we mean that any of the tests listed have a status defined in the 
+
+      # Helper function for #wtsi_phenotyping_progress_counts. This function queries the
+      # MGP mart for a defined set of tests/attributes and computes the number of completed
+      # alleles (by complete, we mean that any of the tests listed have a status defined in the
       # allowed_values argument passed in).
-      # 
+      #
       # @param [Biomart::Dataset] mart A Biomart::Dataset object for the MGP mart
       # @param [Array] attributes The list of tests/attributes to check for completeness
       # @param [Array] allowed_values The attribute values to look for to consider a result 'complete'
@@ -258,7 +263,7 @@ module MartSearch
           :attributes      => attributes.unshift('allele_name'),
           :filters         => {}
         )
-        
+
         results.each do |result|
           pass_count = 0
           result.each do |key,value|
@@ -267,10 +272,10 @@ module MartSearch
           end
           complete_genes.push( result['allele_name'] ) if pass_count == ( attributes.size - 1 )
         end
-        
+
         return complete_genes.uniq.size
       end
-      
+
       # Utility function that drives the index searches.
       #
       # @param [String] query The search term to hit the index with
@@ -303,8 +308,8 @@ module MartSearch
           return false
         end
       end
-      
-      # Utility function to load index data into the instance variables from a 
+
+      # Utility function to load index data into the instance variables from a
       # cached object.
       #
       # @param [String] cached_data The marshaled object to load
@@ -315,7 +320,7 @@ module MartSearch
         @index.current_results_total = cached_data[:current_results_total]
         @search_results              = @index.paginate_results(cached_data[:search_results])
       end
-      
+
       # Utility function to prepare the search terms used to drive the dataset searches.
       #
       # @param [Array] search_keys The keys/docs in @search_data to prepare dataset searches for
@@ -323,13 +328,13 @@ module MartSearch
       def prepare_dataset_search_terms( search_keys )
         self.logger.debug("[MartSearch::Controller] ::prepare_dataset_search_terms - running prepare_dataset_search_terms()")
         grouped_terms = {}
-        
+
         search_keys.each do |key|
           doc = @search_data[key][:index]
           doc.each do |field,value|
             grouped_terms_for_field = grouped_terms[field]
             grouped_terms_for_field = [] if grouped_terms_for_field.nil?
-            
+
             if value.is_a?(Array)
               value.each do |val|
                 grouped_terms_for_field.push( val )
@@ -337,14 +342,14 @@ module MartSearch
             else
               grouped_terms_for_field.push( value )
             end
-            
+
             grouped_terms[field] = grouped_terms_for_field
           end
         end
-        
+
         return grouped_terms
       end
-      
+
       # Utility function that performs the dataset searches and
       # post-search sorting routines
       #
@@ -354,7 +359,7 @@ module MartSearch
       def search_from_fresh_datasets( terms_to_query, grouped_search_terms )
         self.logger.debug("[MartSearch::Controller] ::search_from_fresh_datasets - running search_from_fresh_datasets()")
         success = true
-        
+
         Parallel.each( @datasets.keys, :in_threads => 10 ) do |ds_name|
           begin
             dataset      = @datasets[ds_name]
@@ -370,6 +375,7 @@ module MartSearch
 
           rescue MartSearch::DataSourceError => error
             self.logger.error("[MartSearch::Controller] ::search_from_fresh_datasets - MartSearch::DataSourceError thrown")
+            warn "#{ds_name}: '#{error}'"
             @errors[:datasets][ds_name] = {
               :text  => "The '#{ds_name}' dataset has returned an error for this query.",
               :error => error,
@@ -394,8 +400,8 @@ module MartSearch
             success = false
           end
         end
-        
-        # Run the dataset secondary sorts in serial, BUT only run them on the results we 
+
+        # Run the dataset secondary sorts in serial, BUT only run them on the results we
         # haven't pulled them from the cache.
         @datasets.each do |dataset_name,dataset|
           if dataset.config[:custom_secondary_sort]
@@ -406,11 +412,11 @@ module MartSearch
             self.logger.debug("[MartSearch::Controller] ::search_from_fresh_datasets - running dataset secondary sort for #{dataset_name} - DONE")
           end
         end
-        
+
         self.logger.debug("[MartSearch::Controller] ::search_from_fresh_datasets - running search_from_fresh_datasets() - DONE")
         return success
       end
-      
+
       # Utility function to merge dataset results into the @search_data hash.
       #
       # @param [Symbol] index_field The index field link the results data with (as it's the primary key of the 'results' hash)
@@ -431,7 +437,7 @@ module MartSearch
         else
           self.logger.debug("[MartSearch::Controller] ::add_dataset_results_to_search_data - matching up search data by lookup hash")
 
-          # Create a lookup hash of the 'index_field' values so that 
+          # Create a lookup hash of the 'index_field' values so that
           # we can easily associate our results back to a primary_key...
           lookup = {}
 
@@ -489,5 +495,5 @@ module MartSearch
         @search_results = []
       end
   end
-  
+
 end

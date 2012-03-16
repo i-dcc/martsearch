@@ -1,3 +1,8 @@
+<%
+  @debug = true
+  @classname = @debug ? 'debug-title' : 'title'
+%>
+
 <table width="100%">
   <caption>Production Centre</caption>
   <tr>
@@ -41,6 +46,43 @@
     <th>3' SR-PCR</th>
     <td><%= clone[:distribution_qc_three_prime_sr_pcr] %></td>
   </tr>
+
+  <% if @debug %>
+  <tr>
+    <th class='<%= @classname %>'>Keys</th>
+    <td><%= clone.keys.inspect %></td>
+    <th class='<%= @classname %>'>File</th>
+    <td>escell_clone_qc.erb</td>
+    <th class='<%= @classname %>'>Called From</th>
+    <td><%= from.inspect %></td>
+  </tr>
+  <% end %>
+
+  <tr>
+    <th class='<%= @classname %>'>LOA</th>
+    <td><%= clone[:distribution_qc_loa] %></td>
+    <th class='<%= @classname %>'>LOXP</th>
+    <td><%= clone[:distribution_qc_loxp] %></td>
+    <th class='<%= @classname %>'>LACZ</th>
+    <td><%= clone[:distribution_qc_lacz] %></td>
+  </tr>
+  <tr>
+    <th class='<%= @classname %>'>Chromosome 1</th>
+    <td><%= clone[:distribution_qc_chr1] %></td>
+    <th class='<%= @classname %>'>Chromosome 8a</th>
+    <td><%= clone[:distribution_qc_chr8a] %></td>
+    <th class='<%= @classname %>'>Chromosome 8b</th>
+    <td><%= clone[:distribution_qc_chr8b] %></td>
+  </tr>
+  <tr>
+    <th class='<%= @classname %>'>Chromosome 11a</th>
+    <td><%= clone[:distribution_qc_chr11a] %></td>
+    <th class='<%= @classname %>'>Chromosome 11b</th>
+    <td><%= clone[:distribution_qc_chr11b] %></td>
+    <th class='<%= @classname %>'>Chromosome Y</th>
+    <td><%= clone[:distribution_qc_chry] %></td>
+  </tr>
+
 </table>
 
 <table width="100%">

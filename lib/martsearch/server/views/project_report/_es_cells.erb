@@ -17,7 +17,7 @@
       img_txt = 'Mutations of type &quot;Without Conditional Potential&quot; are correctly targeted clones that have lost the 3&apos; LoxP site. These mutations cannot be converted into conditional alleles.'
     end
   end
-  
+
   order_cell_txt = escell_order_button( @data[:mgi_accession_id], @data[:marker_symbol], @data[:ikmc_project], @data[:project_id] )
 -%>
 
@@ -25,19 +25,19 @@
   <h4 class="dataset_title toggle-open">ES Cell Clones <%= title.titlecase %></h4>
   <div class="dataset_content">
     <%- cells = @data[:es_cells][cond_vs_noncond][:cells] -%>
-    
+
     <% if !@data[:es_cells][cond_vs_noncond][:allele_img].nil? && show_allele_and_vector_images %>
       <img src="<%= @data[:es_cells][cond_vs_noncond][:allele_img] %>" width="930px" />
       <div class="clear"></div>
-      
+
       <% if cond_vs_noncond != 'conditional' and img_txt != '' %>
         <p><strong>Note:</strong> <%= img_txt %></p>
       <% end %>
     <% end %>
-    
+
     <div class="clear"></div>
     <%= partial( "project_report/ensembl_htgt_links", { :locals => { :escell => cells.first[:name] } }) %>
-    
+
     <table>
       <thead>
         <th class="hide_on_print"></th>
@@ -88,7 +88,14 @@
           <% if cell[:qc_count] > 0 %>
             <tr class="details">
               <td colspan="10">
-                <%= partial('dataviews/ikmc-vectors-and-es-cells/escell_clone_qc', :locals => { :clone => cell }) %>
+
+              <!-- http://localhost:3000/project/35505
+              ES Cell Clones With Conditional Potential
+              QC Data
+              view
+              -->
+
+                <%= partial('dataviews/ikmc-vectors-and-es-cells/escell_clone_qc', :locals => { :clone => cell, :from => '_es_cells.erb' }) %>
               </td>
             </tr>
           <% end %>

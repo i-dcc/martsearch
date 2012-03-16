@@ -11,6 +11,10 @@ module MartSearch
         imits = result_data[:'ikmc-imits'] || []
         emma    = result_data[:'emma-strains'] || {}
 
+        #puts '##################################### imits start'
+        #puts imits.inspect
+        #puts '##################################### imits end'
+
         # Empty the dummy mice and set default values for the columns we want
         result_data[:'dummy-mice'] = []
         columns_to_merge           = {
@@ -56,7 +60,9 @@ module MartSearch
           :ikmc_project_id                  => nil,
           :cassette_type                    => nil,
           :mgi_accession_id                 => nil,
-          :genetic_background               => nil
+          :genetic_background               => nil,
+          :genotyping_comment               => nil,
+          :is_active                        => nil
         }
 
         if imits.empty? and emma.empty?
@@ -75,10 +81,48 @@ module MartSearch
         else
           result_data[:'dummy-mice'] = dummy_mice_merge_emma_and_imits( emma, imits, columns_to_merge )
         end
+
+       #result_data = dummy_mice_merge_targ_rep(result_data)
+
       end
 
       return search_data
     end
+
+    ## Merge the targ rep data
+    ##
+    ## @param  [Hash]  result_data
+    ## @return [Hash]
+    #def dummy_mice_merge_targ_rep(result_data)
+    #
+    #  columns = [ :distribution_qc_loa, :distribution_qc_loxp, :distribution_qc_lacz, :distribution_qc_chr1,
+    #    :distribution_qc_chr8a, :distribution_qc_chr8b, :distribution_qc_chr11a, :distribution_qc_chr11b, :distribution_qc_chry ]
+    #
+    #  result_data[:'dummy-mice'].each do |dummy|
+    #    columns.each { |column| dummy[column] = '-' }
+    #  end
+    #
+    #  return result_data if ! result_data || ! result_data[:'ikmc-idcc_targ_rep']
+    #
+    #  result_data[:'ikmc-idcc_targ_rep'].each do |targ_rep|
+    #
+    #    next if ! targ_rep || ! targ_rep[:conditional_clones]
+    #
+    #    # see ikmc-imits/custom_secondary_sort.rb for similar
+    #
+    #    [:conditional_clones, :nonconditional_clones].each do |clone_type|
+    #      targ_rep[clone_type].each do |clone|
+    #        result_data[:'dummy-mice'].each do |dummy|
+    #          if clone[:escell_clone] == dummy[:escell_clone]
+    #            columns.each { |column| dummy[column] = clone[column] }
+    #          end
+    #        end
+    #      end
+    #    end
+    #
+    #  end
+    #  return result_data
+    #end
 
     # Merge the EMMA and iMits data
     #

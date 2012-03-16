@@ -67,7 +67,16 @@
       <% if clone[:qc_count] > 0 %>
         <tr class="ikmc-idcc_targ_rep_escell_qc_details">
           <td colspan="7">
-            <%= partial( 'dataviews/ikmc-vectors-and-es-cells/escell_clone_qc', :locals => { :clone => clone } ) %>
+
+          <!-- http://localhost:3000/search?query=cbx1
+            IKMC Vectors and ES Cells
+            view data
+            view all available ES cell clones
+            QC/Screening Data
+            view data
+          -->
+
+            <%= partial( 'dataviews/ikmc-vectors-and-es-cells/escell_clone_qc', :locals => { :clone => clone, :from => '_escell_clone_details.erb' } ) %>
           </td>
         </tr>
       <% end %>
