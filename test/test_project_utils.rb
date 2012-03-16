@@ -124,12 +124,12 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :distribution_qc_chr1                  => "fail",
               :distribution_qc_chr11a                => "fail",
               :distribution_qc_chr11b                => "fail",
-              :distribution_qc_chr8a=>"fail",
-              :distribution_qc_chr8b=>"fail",
-              :distribution_qc_chry=>"fail",
-              :distribution_qc_lacz=>"fail",
-              :distribution_qc_loa=>"fail",
-              :distribution_qc_loxp=>"fail"
+              :distribution_qc_chr8a                 => "fail",
+              :distribution_qc_chr8b                 => "fail",
+              :distribution_qc_chry                  => "fail",
+              :distribution_qc_lacz                  => "fail",
+              :distribution_qc_loa                   => "fail",
+              :distribution_qc_loxp                  => "fail"
             },
             {
               :name                                  => "EPD0027_2_A02",
@@ -1193,9 +1193,6 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
           observed_cells[symbol][:cells].sort! { |x,y| x[:name] <=> y[:name] }
         end
       end
-
-      #expected_cells[:conditional][:cells][0].keys.sort!
-      #observed_cells[:conditional][:cells][0].keys.sort!
 
       assert_equal expected_cells[:conditional][:cells].size, observed_cells[:conditional][:cells].size
       assert_equal expected_cells[:"targeted non-conditional"][:cells].size, observed_cells[:"targeted non-conditional"][:cells].size
