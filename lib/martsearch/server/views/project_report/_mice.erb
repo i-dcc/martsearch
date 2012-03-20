@@ -41,14 +41,6 @@
           <% if mouse[:qc_count] > 0 %>
             <tr class="details">
               <td colspan="9">
-
-              <!--
-              http://localhost:3000/project/35505
-              Mice
-	      QC Data
-              view
-              -->
-
                 <%= partial('dataviews/mice/qc_data', :locals => { :result => mouse, :from => '_mice.rb' }) %>
               </td>
             </tr>

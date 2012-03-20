@@ -88,13 +88,6 @@
           <% if cell[:qc_count] > 0 %>
             <tr class="details">
               <td colspan="10">
-
-              <!-- http://localhost:3000/project/35505
-              ES Cell Clones With Conditional Potential
-              QC Data
-              view
-              -->
-
                 <%= partial('dataviews/ikmc-vectors-and-es-cells/escell_clone_qc', :locals => { :clone => cell, :from => '_es_cells.erb' }) %>
               </td>
             </tr>

@@ -1300,9 +1300,8 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
         expected_data[:es_cells][status][:cells][0].keys.each do |key|
           expected_data[:es_cells][status][:cells].each_index do |index|
             #puts "cells: testing [:es_cells][:#{status}][:cells][#{index}][:#{key}] - exp: '#{expected_data[:es_cells][status][:cells][index][key]}' vs obs: '#{observed_data[:es_cells][status][:cells][index][key]}'"
-            puts "cells: testing [:es_cells][:#{status}][:cells][#{index}][:#{key}] - exp: '#{expected_data[:es_cells][status][:cells][index][key]}' vs obs: '#{observed_data[:es_cells][status][:cells][index][key]}'" if expected_data[:es_cells][status][:cells][index][key] != observed_data[:es_cells][status][:cells][index][key]
-            #assert_equal( expected_data[:es_cells][status][:cells][index][key], observed_data[:es_cells][status][:cells][index][key], "Cell data has changed... We're now getting: \n\n #{observed_data[:es_cells].to_json}" )
-            assert_equal( expected_data[:es_cells][status][:cells][index][key], observed_data[:es_cells][status][:cells][index][key], "Cell data has changed... We're now getting: \n\n #{observed_data[:es_cells].inspect}" )
+            #puts "cells: testing [:es_cells][:#{status}][:cells][#{index}][:#{key}] - exp: '#{expected_data[:es_cells][status][:cells][index][key]}' vs obs: '#{observed_data[:es_cells][status][:cells][index][key]}'" if expected_data[:es_cells][status][:cells][index][key] != observed_data[:es_cells][status][:cells][index][key]
+            assert_equal( expected_data[:es_cells][status][:cells][index][key], observed_data[:es_cells][status][:cells][index][key], "Cell data has changed... We're now getting: \n\n #{observed_data[:es_cells].to_json}" )
           end
         end
       end

@@ -52,14 +52,6 @@
       <% if mouse[:qc_count] > 0 %>
         <tr class="mice_qc_details">
           <td colspan="9">
-
-            <!--
-            http://localhost:3000/search?query=cbx1
-            Mice
-            QC/Screening Data
-            view
-            -->
-
             <%= partial('dataviews/mice/qc_data', :locals => { :result => mouse, :from => '_template.rb' }) %>
           </td>
         </tr>
