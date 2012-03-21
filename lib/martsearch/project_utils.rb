@@ -350,7 +350,7 @@ module MartSearch
           'qc_neo_sr_pcr',
           'qc_mutant_specific_sr_pcr',
           'qc_loxp_confirmation',
-          'qc_three_prime_lr_pcr'
+          'genotyping_comment'
         ]
 
         imits_mart  = datasources[:'ikmc-imits'].ds
