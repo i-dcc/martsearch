@@ -41,7 +41,7 @@
           <% if mouse[:qc_count] > 0 %>
             <tr class="details">
               <td colspan="9">
-                <%= partial('dataviews/mice/qc_data', :locals => { :result => mouse, :from => '_mice.rb' }) %>
+                <%= partial('dataviews/mice/qc_data', :locals => { :result => mouse }) %>
               </td>
             </tr>
           <% end %>

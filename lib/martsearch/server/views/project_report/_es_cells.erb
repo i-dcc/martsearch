@@ -88,7 +88,7 @@
           <% if cell[:qc_count] > 0 %>
             <tr class="details">
               <td colspan="10">
-                <%= partial('dataviews/ikmc-vectors-and-es-cells/escell_clone_qc', :locals => { :clone => cell, :from => '_es_cells.erb' }) %>
+                <%= partial('dataviews/ikmc-vectors-and-es-cells/escell_clone_qc', :locals => { :clone => cell }) %>
               </td>
             </tr>
           <% end %>
