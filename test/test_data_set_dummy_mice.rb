@@ -11,7 +11,7 @@ require 'test_helper'
 # Cbx1          | imits and emma data             | MGI:105369  | 1                               |
 # MBBS          | 1 emma strain and 2 imits mice  | MGI:107846  | 2                               |
 # MBBZ          | 1 emma strain and 1 imits mouse | MGI:1339795 | 1                               |
-# MAVE          | no match b/w emma and imits     | MGI:1336167 | 3                               |
+# MAVE          | no match b/w emma and imits     | MGI:1336167 | 4                               |
 
 class MartSearchDataSetDummyMiceTest < Test::Unit::TestCase
   context 'The "dummy-mice" DataSet' do
@@ -24,7 +24,7 @@ class MartSearchDataSetDummyMiceTest < Test::Unit::TestCase
         'MGI:105369'  => 1,
         'MGI:107846'  => 2,
         'MGI:1339795' => 1,
-        'MGI:1336167' => 3
+        'MGI:1336167' => 4
       }
     end
 
