@@ -56,7 +56,9 @@ module MartSearch
           :ikmc_project_id                  => nil,
           :cassette_type                    => nil,
           :mgi_accession_id                 => nil,
-          :genetic_background               => nil
+          :genetic_background               => nil,
+          :genotyping_comment               => nil,
+          :is_active                        => nil
         }
 
         if imits.empty? and emma.empty?
@@ -75,6 +77,7 @@ module MartSearch
         else
           result_data[:'dummy-mice'] = dummy_mice_merge_emma_and_imits( emma, imits, columns_to_merge )
         end
+
       end
 
       return search_data

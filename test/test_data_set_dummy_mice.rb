@@ -11,7 +11,7 @@ require 'test_helper'
 # Cbx1          | imits and emma data             | MGI:105369  | 1                               |
 # MBBS          | 1 emma strain and 2 imits mice  | MGI:107846  | 2                               |
 # MBBZ          | 1 emma strain and 1 imits mouse | MGI:1339795 | 1                               |
-# MAVE          | no match b/w emma and imits     | MGI:1336167 | 2                               |
+# MAVE          | no match b/w emma and imits     | MGI:1336167 | 3                               |
 
 class MartSearchDataSetDummyMiceTest < Test::Unit::TestCase
   context 'The "dummy-mice" DataSet' do
@@ -24,7 +24,7 @@ class MartSearchDataSetDummyMiceTest < Test::Unit::TestCase
         'MGI:105369'  => 1,
         'MGI:107846'  => 2,
         'MGI:1339795' => 1,
-        'MGI:1336167' => 2
+        'MGI:1336167' => 3
       }
     end
 
@@ -36,12 +36,12 @@ class MartSearchDataSetDummyMiceTest < Test::Unit::TestCase
       @mgi_accession_ids.each do |mgi_accession_id, expected_count|
         assert_nothing_raised { @ms.search(mgi_accession_id, 1, false) }
 
-        # puts "IKMC KERMITS"
-        # ap @ms.search_data[mgi_accession_id.to_sym][:'ikmc-imits']
-        # puts "EMMA STRAINS"
-        # ap @ms.search_data[mgi_accession_id.to_sym][:'emma-strains']
-        # puts "DUMMY MICE"
-        # ap @ms.search_data[mgi_accession_id.to_sym][:'dummy-mice']
+         # puts "IKMC KERMITS"
+         # ap @ms.search_data[mgi_accession_id.to_sym][:'ikmc-imits']
+         # puts "EMMA STRAINS"
+         # ap @ms.search_data[mgi_accession_id.to_sym][:'emma-strains']
+         # puts "DUMMY MICE"
+         # ap @ms.search_data[mgi_accession_id.to_sym][:'dummy-mice']
 
         assert_false @ms.search_data[mgi_accession_id.to_sym].nil?, "no search_data entry for #{mgi_accession_id}"
         assert_false @ms.search_data[mgi_accession_id.to_sym][:'dummy-mice'].nil?, "no search_data entry on #{mgi_accession_id} for :dummy-mice"

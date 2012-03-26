@@ -112,6 +112,18 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
       end
     end
 
+    should "render (new!) IKMC project pages that were returning 404" do
+      VCR.use_cassette('test_server_project_page') do
+        project_ids_to_test = ['118263', '118265', '118267', '118269', '118272']
+
+        project_ids_to_test.each do |project_id|
+          visit "/project/#{project_id}"
+          assert_equal( "/project/#{project_id}", current_path )
+          assert( page.has_content?("(ID: #{project_id})") )
+        end
+      end
+    end
+
     should "render WTSI Phenotyping (test based) report pages" do
       omit_if(
         @controller.dataviews_by_name[:'wtsi-phenotyping'].nil?,

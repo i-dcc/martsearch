@@ -1,4 +1,4 @@
-#! /usr/bin/env ruby -w
+#! /usr/bin/env ruby
 # encoding: utf-8
 
 require 'optparse'
@@ -14,7 +14,7 @@ OptionParser.new do |opts|
   opts.on("-b", "--binding [HOST]", String, "Binds MartSearch to the specified ip. (Default is 0.0.0.0)") do |address|
     options[:bind] = address
   end
-  
+
   opts.on("-p", "--port [PORT]", Integer, "Runs MartSearch on the specified port. (Default is 3000)") do |port|
     options[:port] = port
   end
