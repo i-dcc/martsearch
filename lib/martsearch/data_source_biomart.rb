@@ -1,34 +1,34 @@
 # encoding: utf-8
 
 module MartSearch
-  
+
   # Custom DataSource class for interacting with BioMart based datasources.
   #
   # @author Darren Oakley
   class BiomartDataSource < DataSource
     # The Biomart::Dataset object for the BiomartDataSource
     attr_reader :ds
-    
+
     # @param [Hash] conf configuration hash
     def initialize( conf )
       super
       @ds = Biomart::Dataset.new( @url, { :name => @conf[:dataset] } )
     end
-    
+
     def ds_attributes
       @ds_attributes = @ds.attributes if @ds_attributes.nil?
       return @ds_attributes
     end
-    
+
     # Simple heartbeat function to check that the datasource is online.
     #
     # @see MartSearch::DataSource#is_alive?
     def is_alive?
       @ds.alive?
     end
-    
+
     # Function to query a biomart datasource and return all of the data ready for indexing.
-    # 
+    #
     # @see MartSearch::DataSource#fetch_all_terms_for_indexing
     def fetch_all_terms_for_indexing( conf )
       MartSearch::Controller.instance().logger.debug("[MartSearch::BiomartDataSource] '#{self.name}' ::fetch_all_terms_for_indexing - running fetch_all_terms_for_indexing()")
@@ -37,19 +37,19 @@ module MartSearch
       conf[:attribute_map].each do |map|
         attributes.push(map[:attr])
       end
-      
+
       filters = conf[:filters]
       filters.stringify_keys! unless filters.nil?
-      
+
       biomart_search_params = {
         :filters    => filters,
         :attributes => attributes.uniq,
-        :timeout    => 240
+        :timeout    => 2400
       }
-      
+
       @ds.search(biomart_search_params)
     end
-    
+
     # Function to search a biomart datasource given an appropriate configuration.
     #
     # @see MartSearch::DataSource#search
@@ -60,18 +60,18 @@ module MartSearch
       filters = { conf[:joined_filter] => query.join(',') }
       filters.merge!( conf[:filters] ) unless conf[:filters].nil? or conf[:filters].empty?
       filters.stringify_keys!
-      
+
       search_options = {
         :filters         => filters,
         :attributes      => conf[:attributes],
         :process_results => true,
-        :timeout         => 20
+        :timeout         => 200
       }
-      
+
       if conf[:required_attributes]
         search_options[:required_attributes] = conf[:required_attributes]
       end
-      
+
       begin
         results = @ds.search(search_options)
         results.recursively_symbolize_keys!
@@ -82,8 +82,8 @@ module MartSearch
       MartSearch::Controller.instance().logger.debug("[MartSearch::BiomartDataSource] '#{self.name}' ::search - running search( '#{query}', conf ) - DONE")
       return results
     end
-    
-    # Function to provide a link URL to the original datasource given a 
+
+    # Function to provide a link URL to the original datasource given a
     # dataset query.
     #
     # @see MartSearch::DataSource#data_origin_url
@@ -123,7 +123,7 @@ module MartSearch
       MartSearch::Controller.instance().logger.debug("[MartSearch::BiomartDataSource] '#{self.name}' ::data_origin_url - running data_origin_url( '#{query}', conf ) - DONE")
       return url
     end
-    
+
   end
-  
+
 end

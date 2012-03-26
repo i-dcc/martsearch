@@ -40,11 +40,11 @@
 				"qc_neo_sr_pcr":"na",
 				"qc_mutant_specific_sr_pcr":"pass",
 				"qc_loxp_confirmation":"pass",
-				"qc_three_prime_lr_pcr":"na",
+				"qc_three_prime_lr_pcr":null,
 				"allele_name":"Abcd1<sup>tm1a(EUCOMM)Wtsi</sup>",
 				"allele_type":"Knockout-First - Reporter Tagged Insertion",
 				"genetic_background":"C57BL/6J-Tyr<sup>c-Brd</sup>;C57BL/6N",
-				"qc_count":12,
+				"qc_count":11,
 				"cassette":"L1L2_gt0",
 				"cassette_type":"Promotorless"
 			}

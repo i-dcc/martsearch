@@ -8,21 +8,26 @@ HoptoadNotifier.configure do |config|
 end
 
 module MartSearch
-  
+
   # MartSearch::Server - Sinatra based web interface for MartSearch
   #
   # @author Darren Oakley
   class Server < Sinatra::Base
+
+    # hack/monkey-patch whatever
+    # stop with your 'Sinatra::Base#options is deprecated and will be removed, use #settings instead.'
+    def options; settings; end
+
     include MartSearch::ServerUtils
     include MartSearch::ProjectUtils
     register Sinatra::StaticAssets
     use HoptoadNotifier::Rack
-    
+
     set :root, Proc.new { File.join( File.dirname(__FILE__), 'server' ) }
     enable :logging, :raise_errors, :dump_errors, :xhtml
-    
-    # We're going to use the version number as a cache breaker for the CSS 
-    # and javascript code. Update with each release of your portal (especially 
+
+    # We're going to use the version number as a cache breaker for the CSS
+    # and javascript code. Update with each release of your portal (especially
     # if you change the CSS or JS)!!!
     VERSION = '0.1.18'
     DEFAULT_CSS_FILES = [
@@ -50,15 +55,15 @@ module MartSearch
       'modernizr-1.6.min.js',
       'martsearch-base.js'
     ]
-    
+
     def initialize
       @ms          = MartSearch::Controller.instance()
       @config      = @ms.config[:server]
       @portal_name = @config[:portal_name]
-      
+
       super
     end
-    
+
     not_found do
       @martsearch_error = false
       if request.env["HTTP_REFERER"] and request.env["HTTP_REFERER"].match(request.env["HTTP_HOST"])
@@ -68,7 +73,7 @@ module MartSearch
       @request = request
       erb :not_found
     end
-    
+
     before do
       content_type 'text/html', :charset => 'utf-8'
 
@@ -92,20 +97,20 @@ module MartSearch
       @hide_side_search_form = false
       @errors                = {}
     end
-    
+
     helpers do
       include Rack::Utils
       include WillPaginate::ViewHelpers
       include MartSearch::DataSetUtils
       include MartSearch::ServerViewHelpers
-      
+
       alias_method :h, :escape_html
     end
-    
+
     ##
     ## Basic Routes
     ##
-    
+
     get '/?' do
       @current               = 'home'
       @hide_side_search_form = true
@@ -131,7 +136,7 @@ module MartSearch
       
       erb :main
     end
-    
+
     get '/about/?' do
       @current    = 'about'
       @page_title = 'About'
@@ -143,16 +148,16 @@ module MartSearch
       @page_title = 'Help'
       erb :help
     end
-    
+
     get '/clear_cache/?' do
       @ms.cache.clear
       redirect "#{request.script_name}/"
     end
-    
+
     ##
     ## Searching
     ##
-    
+
     get '/search/?' do
       if params.empty?
         redirect "#{request.script_name}/"
@@ -182,7 +187,7 @@ module MartSearch
         end
       end
     end
-    
+
     ['/search/:query/?', '/search/:query/:page/?'].each do |path|
       get path do
         url = "#{request.script_name}/search?query=#{params[:query]}"
@@ -191,11 +196,11 @@ module MartSearch
         redirect url
       end
     end
-    
+
     ##
     ## Browsing
     ##
-    
+
     get '/browse/?' do
       @current       = 'browse'
       @page_title    = 'Browse'
@@ -203,7 +208,7 @@ module MartSearch
       @data          = nil
       @params        = params
       @browse_counts = @ms.browse_counts
-      
+
       if params[:field] and params[:query]
         if !@config[:browsable_content].has_key?(params[:field].to_sym)
           status 404
@@ -215,7 +220,7 @@ module MartSearch
           browser_field_conf = @config[:browsable_content][params[:field].to_sym]
           browser            = browser_field_conf[:options][params[:query].to_sym]
           use_cache          = params[:fresh] == "true" ? false : true
-          
+
           @page_title    = "Browsing Data by #{browser_field_conf[:display_name]}: '#{browser[:text]}'"
           @results_title = @page_title
           @solr_query    = browser[:query]
@@ -228,7 +233,7 @@ module MartSearch
           @do_not_show_search_explaination = false
         end
       end
-      
+
       if params[:wt] == 'json'
         @ms.logger.debug("[MartSearch::Server] /browse?field=#{params[:field]}&query=#{params[:query]}&page=#{params[:page]} - rendering JSON")
         content_type 'application/json', :charset => 'utf-8'
@@ -238,7 +243,7 @@ module MartSearch
         erb :browse
       end
     end
-    
+
     ['/browse/:field/:query/?', '/browse/:field/:query/:page?'].each do |path|
       get path do
         url = "#{request.script_name}/browse?field=#{params[:field]}&query=#{params[:query]}"
@@ -247,11 +252,11 @@ module MartSearch
         redirect url
       end
     end
-    
+
     ##
     ## IKMC Project Reports
     ##
-    
+
     ['/project/:id','/project/?'].each do |path|
       get path do
         project_id = params[:id]
@@ -279,16 +284,16 @@ module MartSearch
         end
       end
     end
-    
+
     get '/project/:id/pcr_primers/?' do
       project_id = params[:id]
-      
+
       if project_id.nil?
         status 404
         erb :not_found
       else
         get_project_page_data( project_id, params )
-        
+
         if @data[:pcr_primers].nil?
           status 404
           erb :not_found
@@ -297,7 +302,7 @@ module MartSearch
         end
       end
     end
-    
+
     def get_project_page_data( project_id, params )
       @ms.logger.debug("[MartSearch::Server] ::get_project_page_data - running get_project_page_data( '#{project_id}', '#{params}' )")
       @data = @ms.fetch_from_cache("project-report-#{project_id}")
@@ -305,18 +310,18 @@ module MartSearch
         results = get_ikmc_project_page_data( project_id )
         @data   = results[:data]
         @errors = { :project_page_errors => results[:errors] }
-        
+
         unless @data.nil?
           @ms.write_to_cache( "project-report-#{project_id}", @data )
         end
       end
       @ms.logger.debug("[MartSearch::Server] ::get_project_page_data - running get_project_page_data( '#{project_id}', '#{params}' ) - DONE")
     end
-    
+
     ##
-    ## Dynamic CSS/Javascript 
+    ## Dynamic CSS/Javascript
     ##
-    
+
     get '/css/martsearch-*.css' do
       content_type 'text/css', :charset => 'utf-8'
       @compressed_css = compressed_css( VERSION ) if @compressed_css.nil?
@@ -328,13 +333,13 @@ module MartSearch
       @compressed_head_js = compressed_head_js( VERSION ) if @compressed_head_js.nil?
       return @compressed_head_js
     end
-    
+
     get '/js/martsearch-base-*.js' do
       content_type 'text/javascript', :charset => 'utf-8'
       @compressed_base_js = compressed_base_js( VERSION ) if @compressed_base_js.nil?
       return @compressed_base_js
     end
-    
+
     get '/dataview-css/:dataview_name' do
       content_type 'text/css', :charset => 'utf-8'
       dataview_name = params[:dataview_name].sub('.css','')
@@ -346,23 +351,23 @@ module MartSearch
       dataview_name = params[:dataview_name].sub('.js','')
       @ms.dataviews_by_name[ dataview_name.to_sym ].javascript_head
     end
-    
+
     get '/dataview-base-js/:dataview_name' do
       content_type 'text/javascript', :charset => 'utf-8'
       dataview_name = params[:dataview_name].sub('.js','')
       @ms.dataviews_by_name[ dataview_name.to_sym ].javascript_base
     end
-    
+
     ##
     ## Load in any custom (per dataset) routes
     ##
-    
+
     MartSearch::Controller.instance().dataviews.each do |dv|
       if dv.use_custom_routes?
         load "#{MARTSEARCH_PATH}/config/server/dataviews/#{dv.internal_name}/routes.rb"
       end
     end
-    
+
   end
-  
+
 end

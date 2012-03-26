@@ -130,7 +130,17 @@ module MartSearch
         :user_qc_mutant_specific_sr_pcr,
         :user_qc_loxp_confirmation,
         :user_qc_three_prime_lr_pcr,
-        :user_qc_comment
+        :user_qc_comment,
+
+        :distribution_qc_loa,
+        :distribution_qc_loxp,
+        :distribution_qc_lacz,
+        :distribution_qc_chr1,
+        :distribution_qc_chr8a,
+        :distribution_qc_chr8b,
+        :distribution_qc_chr11a,
+        :distribution_qc_chr11b,
+        :distribution_qc_chry
       ]
 
       qc_metrics.each do |metric|

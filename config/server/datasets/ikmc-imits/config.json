@@ -33,7 +33,9 @@
       "qc_neo_sr_pcr",
       "qc_mutant_specific_sr_pcr",
       "qc_loxp_confirmation",
-      "qc_three_prime_lr_pcr"
+      "qc_three_prime_lr_pcr",
+      "genotyping_comment",
+      "is_active"
     ],
     "filters": {
       "microinjection_status": "Genotype confirmed",

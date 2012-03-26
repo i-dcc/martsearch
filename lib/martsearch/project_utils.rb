@@ -2,7 +2,7 @@
 
 module MartSearch
 
-  # Utility module to house all of the data gathering logic for the IKMC 
+  # Utility module to house all of the data gathering logic for the IKMC
   # project page views.
   #
   # @author Sebastien Briois
@@ -79,7 +79,7 @@ module MartSearch
         end
 
         ##
-        ## Ammend the es cells data to say which cells have been made into a mouse, then sort the cells as 
+        ## Ammend the es cells data to say which cells have been made into a mouse, then sort the cells as
         ## we do in the current code (by mice, followed by qc count).
         ##
 
@@ -182,7 +182,7 @@ module MartSearch
         return results
       end
 
-      # Helper function to setup links to the floxed/deleted exons and all the config 
+      # Helper function to setup links to the floxed/deleted exons and all the config
       # needed for these activities in the templates.
       #
       # @param [Hash] data The current project page data hash
@@ -276,6 +276,19 @@ module MartSearch
 
         unless results[:data].empty? or results[:data].nil?
           results[:data][0].symbolize_keys!
+        else
+
+          # assume if it doesn't contain a digit, it's rubbish
+          if project_id && /\d/.match(project_id.to_s)
+            # default to empty to ensure 404 is suppressed
+            results = {
+              :data=> [ { "marker_symbol"=>"", "mgi_accession_id"=>"", "ensembl_gene_id"=>"", "vega_gene_id"=>"", "ikmc_project"=>"",
+                  "status"=>"", "mouse_available"=>"", "escell_available"=>"", "vector_available"=>""
+                } ],
+              :error=>{}
+            }
+          end
+
         end
 
         MartSearch::Controller.instance().logger.debug("[MartSearch::ProjectUtils] ::get_top_level_project_info - running get_top_level_project_info( datasources, '#{project_id}' ) - DONE")
@@ -350,7 +363,7 @@ module MartSearch
           'qc_neo_sr_pcr',
           'qc_mutant_specific_sr_pcr',
           'qc_loxp_confirmation',
-          'qc_three_prime_lr_pcr'
+          'genotyping_comment'
         ]
 
         imits_mart  = datasources[:'ikmc-imits'].ds
@@ -360,7 +373,18 @@ module MartSearch
           targ_rep_mart.search(
             :process_results => true,
             :filters => { 'escell_clone' => escell_clones },
-            :attributes => ['escell_strain'],
+            :attributes => [
+              'escell_strain',
+              "distribution_qc_loa",
+              "distribution_qc_loxp",
+              "distribution_qc_lacz",
+              "distribution_qc_chr1",
+              "distribution_qc_chr8a",
+              "distribution_qc_chr8b",
+              "distribution_qc_chr11a",
+              "distribution_qc_chr11b",
+              "distribution_qc_chry"
+            ],
             :federate => [
               {
                 :dataset => imits_mart,
@@ -441,7 +465,7 @@ module MartSearch
             end
           end
 
-          # Hide all non 'Genotype Confirmed' mice - until an undisclosed point in the future when we're 
+          # Hide all non 'Genotype Confirmed' mice - until an undisclosed point in the future when we're
           # told to show them again...
           # results[:data] = { :mice => [ mouse_results[:genotype_confirmed], mouse_results[:mi_in_progress] ].flatten }
           results[:data] = { :mice => mouse_results[:genotype_confirmed] }
@@ -485,7 +509,17 @@ module MartSearch
           'user_qc_neo_sr_pcr',
           'user_qc_mutant_specific_sr_pcr',
           'user_qc_loxp_confirmation',
-          'user_qc_three_prime_lr_pcr'
+          'user_qc_three_prime_lr_pcr',
+
+          "distribution_qc_loa",
+          "distribution_qc_loxp",
+          "distribution_qc_lacz",
+          "distribution_qc_chr1",
+          "distribution_qc_chr8a",
+          "distribution_qc_chr8b",
+          "distribution_qc_chr11a",
+          "distribution_qc_chr11b",
+          "distribution_qc_chry"
         ]
         targ_rep_mart = datasources[:'ikmc-idcc_targ_rep'].ds
         error_string  = "This data source provides information on Targeting Vectors and ES Cells. As a result this data will not be available on the page."
@@ -620,7 +654,7 @@ module MartSearch
         return results
       end
 
-      # Helper function to determine how to draw the progress bar at the top of the 
+      # Helper function to determine how to draw the progress bar at the top of the
       # report page.
       #
       # @param [String] status The current projects status
@@ -723,7 +757,7 @@ module MartSearch
         return result
       end
 
-      # Small helper function to calculate some top-level statistics for 
+      # Small helper function to calculate some top-level statistics for
       # the mutagenesis prediction tool.
       #
       # @param [Hash] transcripts The output from the HTGT mutagenesis prediction tool
