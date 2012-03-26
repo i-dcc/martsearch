@@ -276,6 +276,19 @@ module MartSearch
 
         unless results[:data].empty? or results[:data].nil?
           results[:data][0].symbolize_keys!
+        else
+
+          # assume if it doesn't contain a digit, it's rubbish
+          if project_id && /\d/.match(project_id.to_s)
+            # default to empty to ensure 404 is suppressed
+            results = {
+              :data=> [ { "marker_symbol"=>"", "mgi_accession_id"=>"", "ensembl_gene_id"=>"", "vega_gene_id"=>"", "ikmc_project"=>"",
+                  "status"=>"", "mouse_available"=>"", "escell_available"=>"", "vector_available"=>""
+                } ],
+              :error=>{}
+            }
+          end
+
         end
 
         MartSearch::Controller.instance().logger.debug("[MartSearch::ProjectUtils] ::get_top_level_project_info - running get_top_level_project_info( datasources, '#{project_id}' ) - DONE")
