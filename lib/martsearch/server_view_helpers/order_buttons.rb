@@ -4,11 +4,11 @@ module MartSearch
   module ServerViewHelpers
 
     # View helpers for creating order buttons for IKMC products.
-    # 
+    #
     # @author Darren Oakley
     module OrderButtons
 
-      # Helper function to centralise the logic for producing a button for 
+      # Helper function to centralise the logic for producing a button for
       # ordering a mouse.
       #
       # @param [String] mgi_accession_id The MGI accession ID for the gene
@@ -47,7 +47,7 @@ module MartSearch
       end
 
       # Helper function to build an order button Non-IKMC EMMA lines.
-      # 
+      #
       # @param [String] emma_id The EMMA id for this line
       # @return [String] The html markup for a button
       def emma_mouse_order_button( emma_id )
@@ -55,7 +55,7 @@ module MartSearch
         button_text = generic_order_button( 'Non-IKMC', url )
       end
 
-      # Helper function to centralise the logic for producing a button for 
+      # Helper function to centralise the logic for producing a button for
       # ordering an ES cell.
       #
       # @param [String] mgi_accession_id The MGI accession ID for the gene
@@ -67,11 +67,11 @@ module MartSearch
       def escell_order_button( mgi_accession_id, marker_symbol, project, project_id, escell_clone=nil )
         order_url   = ikmc_product_order_url( :escell, project, project_id, mgi_accession_id, marker_symbol )
         order_url   = "#{order_url}&comments1=#{escell_clone}" if project == 'TIGM'
-        button_text = generic_order_button( project, order_url )
+        button_text = generic_order_button( project, order_url, false, 'order from MMRRC' )
         return button_text
       end
 
-      # Helper function to centralise the logic for producing a button for 
+      # Helper function to centralise the logic for producing a button for
       # ordering a vector.
       #
       # @param [String] mgi_accession_id The MGI accession ID for the gene
@@ -83,6 +83,12 @@ module MartSearch
         order_url   = ikmc_product_order_url( :vector, project, project_id, mgi_accession_id, marker_symbol )
         button_text = generic_order_button( project, order_url )
         return button_text
+      end
+
+      def mirko_order_button( project='unknown' )
+        return '' if project != 'mirKO'
+        order_url = 'http://www.eummcr.org/order.php'
+        return "<a href=\"#{order_url}\" class=\"order\" target=\"_blank\">order from EUMMCR</a>"
       end
 
       private
@@ -122,15 +128,15 @@ module MartSearch
         #
         # @param [String] project The IKMC pipeline name ['KOMP/KOMP-CSD','KOMP-Regeneron','NorCOMM','EUCOMM','mirKO']
         # @param [String] order_url The URL for the button to link to
-        # @param [Boolean] express_interest 
+        # @param [Boolean] express_interest
         # @return The HTML markup for the order button
-        def generic_order_button( project, order_url, express_interest=false )
+        def generic_order_button( project, order_url, express_interest=false, text='order' )
           button_text      = '<span class="order unavailable">currently&nbsp;unavailable</span>'
 
           if express_interest
             button_text = "<a href=\"#{order_url}\" class=\"order express_interest\">express&nbsp;interest</a>"
           elsif !order_url.empty?
-            button_text = "<a href=\"#{order_url}\" class=\"order\" target=\"_blank\">order</a>"
+            button_text = "<a href=\"#{order_url}\" class=\"order\" target=\"_blank\">#{text}</a>"
           end
 
           return button_text

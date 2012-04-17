@@ -12,14 +12,14 @@
       <th></th>
     </tr>
   </thead>
-  
+
   <!-- Progress bar row -->
   <tbody>
     <tr>
       <!-- Pipeline name with link to IKMC project details -->
       <td class="start_<%= progress[:vectors] %>">
         <strong><%= project[:pipeline] %></strong><br />
-        
+
         <% if project[:pipeline] === "KOMP-Regeneron" and project[:ikmc_project_id] %>
           <!-- Regeneron with product available -->
           <% velocigene_id = project[:ikmc_project_id].gsub("VG","") %>
@@ -31,7 +31,7 @@
           <!-- Don't print anything if no ikmc_project_id -->
         <% end %>
       </td>
-      
+
       <!-- Vectors -->
       <td class="<%= progress[:vectors] %> <%= progress[:vectors] %>_<%= progress[:cells] %>">
         <% if project[:vector_available] == '1' %>
@@ -46,8 +46,9 @@
         <% elsif project[:no_products_available] and project[:status] %>
           <span><%= project[:status] %></span>
         <% end %>
+        <%= mirko_order_button(project[:pipeline]) %>
       </td>
-      
+
       <!-- Cells -->
       <td class="end_<%= progress[:cells] %> <%= progress[:cells] %>">
         <% if project[:escell_available] == '1' %>
@@ -59,9 +60,10 @@
               project[:ikmc_project_id]
             )
           %>
+          <%= mirko_order_button(project[:pipeline]) %>
         <% end %>
       </td>
-      
+
       <!-- Details -->
       <td>
         <% if project[:no_products_available] %>
