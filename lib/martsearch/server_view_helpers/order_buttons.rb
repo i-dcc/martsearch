@@ -88,7 +88,6 @@ module MartSearch
       def mirko_order_button( project='unknown' )
         return '' if project != 'mirKO'
         order_url = 'http://www.eummcr.org/order.php'
-#        return "<br/><a href=\"#{order_url}\" class=\"order\" target=\"_blank\">order from EUMMCR</a>"
         return "<br/><a href=\"#{order_url}\" class=\"order2\" target=\"_blank\">order from EUMMCR</a>"
       end
 
