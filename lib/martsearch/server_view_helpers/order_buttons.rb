@@ -88,7 +88,8 @@ module MartSearch
       def mirko_order_button( project='unknown' )
         return '' if project != 'mirKO'
         order_url = 'http://www.eummcr.org/order.php'
-        return "<a href=\"#{order_url}\" class=\"order\" target=\"_blank\">order from EUMMCR</a>"
+#        return "<br/><a href=\"#{order_url}\" class=\"order\" target=\"_blank\">order from EUMMCR</a>"
+        return "<br/><a href=\"#{order_url}\" class=\"order2\" target=\"_blank\">order from EUMMCR</a>"
       end
 
       private
@@ -134,9 +135,9 @@ module MartSearch
           button_text      = '<span class="order unavailable">currently&nbsp;unavailable</span>'
 
           if express_interest
-            button_text = "<a href=\"#{order_url}\" class=\"order express_interest\">express&nbsp;interest</a>"
+            button_text = "<a href=\"#{order_url}\" class=\"order2 express_interest\">express&nbsp;interest</a>"
           elsif !order_url.empty?
-            button_text = "<a href=\"#{order_url}\" class=\"order\" target=\"_blank\">#{text}</a>"
+            button_text = "<a href=\"#{order_url}\" class=\"order2\" target=\"_blank\">#{text}</a>"
           end
 
           return button_text

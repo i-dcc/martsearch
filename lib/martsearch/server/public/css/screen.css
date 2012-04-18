@@ -202,7 +202,7 @@ a.data_download {
 
 /* Ordering Buttons */
 
-.button, .order {
+.button, .order, .order2 {
 	border: 1px solid #999;
 	border-radius: 2px;
 	-webkit-border-radius: 2px;
@@ -1066,3 +1066,22 @@ table.ikmc-pipeline-progress-bar td.end_warn {
 	color: #fff;
 }
 
+.order2x {
+	border: 1px solid #999;
+	border-radius: 2px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	-o-border-radius: 2px;
+	padding: 4px 4px 4px 20px;
+	background: #f4f4f4 url(../images/silk/cart.png) no-repeat 2px center;
+	display:inline-block;
+	/*margin:20px !important;*/
+	/*margin:25px 50px;*/
+	/*margin: 4px 4px 4px 20px;*/
+	/*width:100px !important;*/
+	/*height:30px !important;*/
+}
+
+.order2 {
+	display:inline-block;
+}
