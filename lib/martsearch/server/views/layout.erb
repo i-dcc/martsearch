@@ -7,15 +7,15 @@
     <% else %>
       <title><%= @portal_name %></title>
     <% end %>
-    
+
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    
+
     <% if ENV['RACK_ENV'] == "production" or ENV['RACK_ENV'] == "staging" %>
       <%= stylesheet_link_tag "/css/martsearch-#{MartSearch::Server::VERSION}.css", :media => 'all', :charset => 'utf-8' %>
       <%= stylesheet_link_tag '/css/print.css', :media => 'print', :charset => 'utf-8' %>
       <%= javascript_script_tag "/js/martsearch-head-#{MartSearch::Server::VERSION}.js", :charset => 'utf-8' %>
     <% else %>
-      
+
       <% MartSearch::Server::DEFAULT_CSS_FILES.each do |css_file| %>
         <%= stylesheet_link_tag "/css/#{css_file}", :media => 'all', :charset => 'utf-8' %>
       <% end %>
@@ -25,7 +25,7 @@
           <%= stylesheet_link_tag "/dataview-css/#{view.internal_name}.css", :media => 'all', :charset => 'utf-8' %>
         <% end %>
       <% end %>
-      
+
       <% MartSearch::Server::DEFAULT_HEAD_JS_FILES.each do |js_file| %>
         <%= javascript_script_tag "/js/#{js_file}", :charset => 'utf-8' %>
       <% end %>
@@ -35,16 +35,16 @@
         <% end %>
       <% end %>
     <% end %>
-    
+
     <script type="text/javascript" charset="utf-8">
       // Set the url of the software (for js that needs to know)...
       var martsearch_url = '<%= @request.script_name %>';
-      
+
       // Google Analytics
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-317752-8']);
       _gaq.push(['_trackPageview']);
-      
+
       (function() {
         var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
@@ -58,7 +58,7 @@
         <span id="fontresize"></span>
         <%= link_to "<h1>#{@portal_name}</h1>", '/' %>
       </div>
-      
+
       <div id="navigation">
         <% unless @hide_side_search_form %>
           <span id="search">
@@ -76,26 +76,26 @@
         </ul>
         <br style="clear: both;" />
       </div>
-      
+
       <noscript>
         <div id="noscript_warning" class="messages serious_errors">
-          <strong>WARNING:</strong> It appears that you do not have javascript 
+          <strong>WARNING:</strong> It appears that you do not have javascript
           enabled in your browser.  This portal will still function correctly
-          without javascript enabled, but the experience will not be as good 
+          without javascript enabled, but the experience will not be as good
           as it could be.  For a more complete experience, please
-          <a href="http://www.google.com/search?q=enable+javascript">enable 
+          <a href="http://www.google.com/search?q=enable+javascript">enable
           javascript</a> in your browser and refresh the page.
         </div>
       </noscript>
-      
+
       <div id="browser_warnings" class="messages serious_errors" style="display:none;"></div>
-      
-      
+
+
       <!--
       <div id="user_messages" class="messages">
       </div>
       -->
-      
+
       <% if @errors[:index] and !@errors[:index].empty? %>
         <!-- search engine errors -->
         <div class="messages serious_errors">
@@ -114,37 +114,38 @@
           <% end %>
         </div>
       <% end %>
-      
+
       <div id="content">
         <%= yield %>
       </div>
-      
+
       <div id="footer">
         <p style="float:left;">
-          <a href="http://www.sanger.ac.uk/datasharing/">Data Sharing</a> | 
+          <a href="http://www.sanger.ac.uk/datasharing/">Data Sharing</a> |
           <a href="http://www.sanger.ac.uk/legal/">Legal</a>
         </p>
         <p>
-          Powered by 
-          <a href="http://github.com/i-dcc/martsearch">MartSearch</a>, 
-          developed by the <a href="http://www.sanger.ac.uk/">Wellcome 
+          Powered by
+          <a href="http://github.com/i-dcc/martsearch">MartSearch</a>,
+          developed by the <a href="http://www.sanger.ac.uk/">Wellcome
           Trust Sanger Institute</a>
           <br />
-          Wellcome Trust Genome Campus, Hinxton, Cambridge, CB10 1SA, UK  
+          Wellcome Trust Genome Campus, Hinxton, Cambridge, CB10 1SA, UK
           Tel:+44 (0)1223 834244
           <br />
           Registered charity number 210183
         </p>
+        <p><%= MartSearch::Server::VERSION %></p>
       </div>
     </div>
-    
+
     <% if @config[:debug] %>
       <div id="debug-config">
         <h3>MartSearch::Server Config (Debug Info)</h3>
         <pre><%= @config.to_yaml %></pre>
       </div>
     <% end %>
-    
+
     <% if ENV['RACK_ENV'] == "production" or ENV['RACK_ENV'] == "staging" %>
       <%= javascript_script_tag "/js/martsearch-base-#{MartSearch::Server::VERSION}.js", :charset => 'utf-8' %>
     <% else %>
