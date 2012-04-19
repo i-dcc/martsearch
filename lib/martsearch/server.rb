@@ -29,7 +29,7 @@ module MartSearch
     # We're going to use the version number as a cache breaker for the CSS
     # and javascript code. Update with each release of your portal (especially
     # if you change the CSS or JS)!!!
-    VERSION = '0.1.18'
+    VERSION = '0.1.20'
     DEFAULT_CSS_FILES = [
       'reset.css',
       'jquery.prettyPhoto.css',
