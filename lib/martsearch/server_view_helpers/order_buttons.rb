@@ -67,7 +67,7 @@ module MartSearch
       def escell_order_button( mgi_accession_id, marker_symbol, project, project_id, escell_clone=nil )
         order_url   = ikmc_product_order_url( :escell, project, project_id, mgi_accession_id, marker_symbol )
         order_url   = "#{order_url}&comments1=#{escell_clone}" if project == 'TIGM'
-        button_text = generic_order_button( project, order_url, false, 'order from MMRRC' )
+        button_text = generic_order_button( project, order_url )
         return button_text
       end
 
@@ -83,12 +83,6 @@ module MartSearch
         order_url   = ikmc_product_order_url( :vector, project, project_id, mgi_accession_id, marker_symbol )
         button_text = generic_order_button( project, order_url )
         return button_text
-      end
-
-      def mirko_order_button( project='unknown' )
-        return '' if project != 'mirKO'
-        order_url = 'http://www.eummcr.org/order.php'
-        return "<br/><a href=\"#{order_url}\" class=\"order2\" target=\"_blank\">order from EUMMCR</a>"
       end
 
       private
@@ -130,8 +124,10 @@ module MartSearch
         # @param [String] order_url The URL for the button to link to
         # @param [Boolean] express_interest
         # @return The HTML markup for the order button
-        def generic_order_button( project, order_url, express_interest=false, text='order' )
+        def generic_order_button( project, order_url, express_interest=false )
           button_text      = '<span class="order unavailable">currently&nbsp;unavailable</span>'
+
+          text = project == 'mirKO' ? 'order from MMRRC' : 'order'
 
           if express_interest
             button_text = "<a href=\"#{order_url}\" class=\"order2 express_interest\">express&nbsp;interest</a>"
@@ -139,7 +135,21 @@ module MartSearch
             button_text = "<a href=\"#{order_url}\" class=\"order2\" target=\"_blank\">#{text}</a>"
           end
 
+          # blag to add the new order button
+          # we just add new text to the original button if we're a mirKO project
+          # we just add the new button if we're a mirKO project
+
+          button_text += mirko_order_button(project)
+
           return button_text
+        end
+
+        # Helper function to centralise the logic for producing a button for mirKO
+
+        def mirko_order_button( project='unknown' )
+          return '' if project != 'mirKO'
+          order_url = 'http://www.eummcr.org/order.php'
+          return "<br/><a href=\"#{order_url}\" class=\"order2\" target=\"_blank\">order from EUMMCR</a>"
         end
 
     end
