@@ -4,11 +4,11 @@ module MartSearch
   module ServerViewHelpers
 
     # View helpers for creating order buttons for IKMC products.
-    # 
+    #
     # @author Darren Oakley
     module OrderButtons
 
-      # Helper function to centralise the logic for producing a button for 
+      # Helper function to centralise the logic for producing a button for
       # ordering a mouse.
       #
       # @param [String] mgi_accession_id The MGI accession ID for the gene
@@ -47,7 +47,7 @@ module MartSearch
       end
 
       # Helper function to build an order button Non-IKMC EMMA lines.
-      # 
+      #
       # @param [String] emma_id The EMMA id for this line
       # @return [String] The html markup for a button
       def emma_mouse_order_button( emma_id )
@@ -55,7 +55,7 @@ module MartSearch
         button_text = generic_order_button( 'Non-IKMC', url )
       end
 
-      # Helper function to centralise the logic for producing a button for 
+      # Helper function to centralise the logic for producing a button for
       # ordering an ES cell.
       #
       # @param [String] mgi_accession_id The MGI accession ID for the gene
@@ -71,7 +71,7 @@ module MartSearch
         return button_text
       end
 
-      # Helper function to centralise the logic for producing a button for 
+      # Helper function to centralise the logic for producing a button for
       # ordering a vector.
       #
       # @param [String] mgi_accession_id The MGI accession ID for the gene
@@ -122,18 +122,34 @@ module MartSearch
         #
         # @param [String] project The IKMC pipeline name ['KOMP/KOMP-CSD','KOMP-Regeneron','NorCOMM','EUCOMM','mirKO']
         # @param [String] order_url The URL for the button to link to
-        # @param [Boolean] express_interest 
+        # @param [Boolean] express_interest
         # @return The HTML markup for the order button
         def generic_order_button( project, order_url, express_interest=false )
           button_text      = '<span class="order unavailable">currently&nbsp;unavailable</span>'
 
+          text = project == 'mirKO' ? 'order from MMRRC' : 'order'
+
           if express_interest
-            button_text = "<a href=\"#{order_url}\" class=\"order express_interest\">express&nbsp;interest</a>"
+            button_text = "<a href=\"#{order_url}\" class=\"order2 express_interest\">express&nbsp;interest</a>"
           elsif !order_url.empty?
-            button_text = "<a href=\"#{order_url}\" class=\"order\" target=\"_blank\">order</a>"
+            button_text = "<a href=\"#{order_url}\" class=\"order2\" target=\"_blank\">#{text}</a>"
           end
 
+          # blag to add the new order button
+          # we just add new text to the original button if we're a mirKO project
+          # we just add the new button if we're a mirKO project
+
+          button_text += mirko_order_button(project)
+
           return button_text
+        end
+
+        # Helper function to centralise the logic for producing a button for mirKO
+
+        def mirko_order_button( project='unknown' )
+          return '' if project != 'mirKO'
+          order_url = 'http://www.eummcr.org/order.php'
+          return "<br/><a href=\"#{order_url}\" class=\"order2\" target=\"_blank\">order from EUMMCR</a>"
         end
 
     end

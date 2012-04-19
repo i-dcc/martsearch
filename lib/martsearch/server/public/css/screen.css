@@ -208,7 +208,7 @@ a.data_download {
 
 /* Ordering Buttons */
 
-.button, .order {
+.button, .order, .order2 {
 	border: 1px solid #999;
 	border-radius: 2px;
 	-webkit-border-radius: 2px;
@@ -216,6 +216,10 @@ a.data_download {
 	-o-border-radius: 2px;
 	padding: 4px 4px 4px 20px;
 	background: #f4f4f4 url(../images/silk/cart.png) no-repeat 2px center;
+}
+
+.order2 {
+	display:inline-block;
 }
 
 a.button:hover, a.order:hover {
@@ -1139,4 +1143,3 @@ div#googlemeter_crop {
 	background-color: #376598;
 	color: #fff;
 }
-
