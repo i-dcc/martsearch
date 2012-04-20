@@ -4,10 +4,10 @@
     <% if !@data[:vector_image].nil? && show_allele_and_vector_images %>
       <img src="<%= @data[:vector_image] %>" width="930px" />
     <% end %>
-    
+
     <div class="clear"></div>
     <%= partial( "project_report/ensembl_htgt_links", { :locals => { :escell => nil } } ) %>
-    
+
     <table>
       <thead>
         <th class="hide_on_print"></th>
