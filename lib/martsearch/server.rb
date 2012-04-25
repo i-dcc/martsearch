@@ -14,6 +14,14 @@ module MartSearch
   # @author Darren Oakley
   class Server < Sinatra::Base
 
+    set :biomart_search_params_timeout, 2400
+    set :biomart_search_options_timeout, 200
+
+    configure(:production) {
+      set :biomart_search_params_timeout, 240
+      set :biomart_search_options_timeout, 20
+    }
+
     # hack/monkey-patch whatever
     # stop with your 'Sinatra::Base#options is deprecated and will be removed, use #settings instead.'
     def options; settings; end
