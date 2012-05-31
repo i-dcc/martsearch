@@ -351,7 +351,7 @@ module MartSearch
 
     get '/impc_display/:gene' do
       #'Display page: ' + params[:page].to_s
-      @default = "data here soon for gene '" + params[:gene].to_s     #+ "': " + Time.now.to_s
+      @default = "data here soon for gene " + params[:gene].to_s
       erb :impc_panel, :layout => false
     end
 
