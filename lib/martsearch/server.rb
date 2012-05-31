@@ -37,7 +37,7 @@ module MartSearch
     # We're going to use the version number as a cache breaker for the CSS
     # and javascript code. Update with each release of your portal (especially
     # if you change the CSS or JS)!!!
-    VERSION = '0.1.21'
+    VERSION = '0.1.22'
     DEFAULT_CSS_FILES = [
       'reset.css',
       'jquery.prettyPhoto.css',
@@ -170,7 +170,7 @@ module MartSearch
         else
           @ms.logger.debug("[MartSearch::Server] /search?query=#{params[:query]}&page=#{params[:page]} - rendering templates")
           # Marker.mark("rendering page") do
-            erb :search
+            erb :search #, :layout => :impc_layout
           # end
         end
       end
@@ -344,6 +344,50 @@ module MartSearch
       content_type 'text/javascript', :charset => 'utf-8'
       dataview_name = params[:dataview_name].sub('.js','')
       @ms.dataviews_by_name[ dataview_name.to_sym ].javascript_base
+    end
+
+    # just send dummy page based on impc_panel.erb
+    # suppress layout
+
+    get '/impc_display/:gene' do
+      #'Display page: ' + params[:page].to_s
+      @default = "data here soon for gene '" + params[:gene].to_s     #+ "': " + Time.now.to_s
+      erb :impc_panel, :layout => false
+    end
+
+    # just minimal page based on impc_search.erb
+    # fill in only one panel with gene details
+    # use own layout to get styling/js
+    # all related views have impc_*.erb
+
+    get '/impc_search/?' do
+      if params.empty?
+        redirect "#{request.script_name}/"
+      else
+        @current    = 'home'
+        @page_title = "Search Results for '#{params[:query]}'"
+
+        @ms.logger.debug("[MartSearch::Server] /search?query=#{params[:query]}&page=#{params[:page]} - running search")
+        # Marker.mark("running search") do
+          use_cache   = params[:fresh] == "true" ? false : true
+          @results    = @ms.search( params[:query], params[:page].to_i, use_cache )
+        # end
+        @ms.logger.debug("[MartSearch::Server] /search?query=#{params[:query]}&page=#{params[:page]} - running search - DONE")
+
+        @data       = @ms.search_data
+        @errors     = @ms.errors
+
+        if params[:wt] == 'json'
+          @ms.logger.debug("[MartSearch::Server] /search?query=#{params[:query]}&page=#{params[:page]} - rendering JSON")
+          content_type 'application/json', :charset => 'utf-8'
+          return JSON.generate( @data, :max_nesting => false )
+        else
+          @ms.logger.debug("[MartSearch::Server] /search?query=#{params[:query]}&page=#{params[:page]} - rendering templates")
+          # Marker.mark("rendering page") do
+            erb :impc_search, :layout => :impc_layout
+          # end
+        end
+      end
     end
 
     ##
