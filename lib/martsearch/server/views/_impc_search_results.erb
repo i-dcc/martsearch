@@ -84,7 +84,13 @@
 
     <div class="doc_content">
       <% @ms.dataviews.each do |view| %>
-        <% next if view.name != "Gene Details" %>
+        <%=
+        #view.internal_name.inspect
+        %>
+        <%
+          next if view.name != "Mice" && view.name != "IKMC Vectors and ES Cells"
+          #view.internal_name = "#{view.internal_name}_impc"
+        %>
         <% if view.display_for_result?( result_data, @errors[:datasets] ) %>
           <%
             dataset_errors = view.search_errors( @errors[:datasets] )
@@ -117,6 +123,9 @@
             <% if dataset_errors[:required].empty? %>
               <div class="attribution">
                 <div class="dataset_original_data">
+
+                  <% if @display_original_data_link %>
+
                   <a href="#" class="single_parent_toggler_toggle">view original data</a>
                   <div class="dataset_original_data_links single_parent_toggler_content" style="display:none;">
                     <ul>
@@ -126,6 +135,9 @@
                       <% end %>
                     </ul>
                   </div>
+
+                <% end %>
+
                 </div>
                 <%
                   attribution_links = []

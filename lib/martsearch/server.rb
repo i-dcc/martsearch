@@ -69,6 +69,16 @@ module MartSearch
       @config      = @ms.config[:server]
       @portal_name = @config[:portal_name]
 
+      @display_mouse_qc = true
+      @display_escell_clones = true
+      @display_targeting_vectors = true
+      @display_targeting_ikmc_vectors_and_es_cells_links = true
+      @display_ikmc_vectors_and_es_cells_progress_bar = true
+      @display_escell_clone_qc = true
+      @display_qc_screening_data = true
+      @display_view_details = true
+      @display_original_data_link = true
+
       super
     end
 
@@ -273,6 +283,34 @@ module MartSearch
       end
     end
 
+    ['/project_impc/:id','/project_impc/?'].each do |path|
+      get path do
+        project_id = params[:id]
+        redirect "#{request.script_name}/" if project_id.nil?
+
+        @current    = "home"
+        @page_title = "IKMC Project: #{project_id}"
+
+        @ms.logger.debug("[MartSearch::Server] /project/#{params[:id]} - running get_project_page_data")
+        get_project_page_data_impc( project_id, params )
+        @ms.logger.debug("[MartSearch::Server] /project/#{params[:id]} - running get_project_page_data - DONE")
+
+        if @data.nil?
+          status 404
+          erb :not_found
+        else
+          if params[:wt] == 'json'
+            @ms.logger.debug("[MartSearch::Server] /project/#{params[:id]} - rendering JSON")
+            content_type 'application/json', :charset => 'utf-8'
+            return JSON.generate( @data, :max_nesting => false )
+          else
+            @ms.logger.debug("[MartSearch::Server] /project/#{params[:id]} - rendering templates")
+            erb :project_report_impc
+          end
+        end
+      end
+    end
+
     get '/project/:id/pcr_primers/?' do
       project_id = params[:id]
 
@@ -292,6 +330,21 @@ module MartSearch
     end
 
     def get_project_page_data( project_id, params )
+      @ms.logger.debug("[MartSearch::Server] ::get_project_page_data - running get_project_page_data( '#{project_id}', '#{params}' )")
+      @data = @ms.fetch_from_cache("project-report-#{project_id}")
+      if @data.nil? or params[:fresh] == "true"
+        results = get_ikmc_project_page_data( project_id )
+        @data   = results[:data]
+        @errors = { :project_page_errors => results[:errors] }
+
+        unless @data.nil?
+          @ms.write_to_cache( "project-report-#{project_id}", @data )
+        end
+      end
+      @ms.logger.debug("[MartSearch::Server] ::get_project_page_data - running get_project_page_data( '#{project_id}', '#{params}' ) - DONE")
+    end
+
+    def get_project_page_data_impc( project_id, params )
       @ms.logger.debug("[MartSearch::Server] ::get_project_page_data - running get_project_page_data( '#{project_id}', '#{params}' )")
       @data = @ms.fetch_from_cache("project-report-#{project_id}")
       if @data.nil? or params[:fresh] == "true"
@@ -355,12 +408,20 @@ module MartSearch
       erb :impc_panel, :layout => false
     end
 
-    # just minimal page based on impc_search.erb
-    # fill in only one panel with gene details
-    # use own layout to get styling/js
-    # all related views have impc_*.erb
-
     get '/impc_search/?' do
+
+      @display_mouse_qc = false
+      @display_escell_clones = true
+      @display_targeting_vectors = false
+      @display_targeting_ikmc_vectors_and_es_cells_links = false
+      @display_escell_clone_qc = false
+      @display_qc_screening_data = false
+      @display_view_details = false
+      @display_original_data_link = false
+
+      puts "#### impc_search (server)"
+      puts "#### params: " + params.inspect
+
       if params.empty?
         redirect "#{request.script_name}/"
       else
@@ -369,8 +430,8 @@ module MartSearch
 
         @ms.logger.debug("[MartSearch::Server] /search?query=#{params[:query]}&page=#{params[:page]} - running search")
         # Marker.mark("running search") do
-          use_cache   = params[:fresh] == "true" ? false : true
-          @results    = @ms.search( params[:query], params[:page].to_i, use_cache )
+          use_cache   = false
+          @results    = @ms.search_impc( params[:query], params[:page].to_i, use_cache )
         # end
         @ms.logger.debug("[MartSearch::Server] /search?query=#{params[:query]}&page=#{params[:page]} - running search - DONE")
 
@@ -385,6 +446,8 @@ module MartSearch
           @ms.logger.debug("[MartSearch::Server] /search?query=#{params[:query]}&page=#{params[:page]} - rendering templates")
           # Marker.mark("rendering page") do
             erb :impc_search, :layout => :impc_layout
+#            erb :impc_search
+#            erb :search #, :layout => :impc_layout
           # end
         end
       end

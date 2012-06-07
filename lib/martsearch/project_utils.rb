@@ -152,6 +152,140 @@ module MartSearch
       return { :data => data, :errors => errors }
     end
 
+    def get_ikmc_project_page_data( project_id )
+      MartSearch::Controller.instance().logger.debug("[MartSearch::ProjectUtils] ::get_ikmc_project_page_data - running get_ikmc_project_page_data( '#{project_id}' )")
+      datasources = MartSearch::Controller.instance().datasources
+      index       = MartSearch::Controller.instance().index
+      data        = { :project_id => project_id.to_s }
+      errors      = []
+
+      top_level_data = get_top_level_project_info( datasources, project_id )
+
+      if top_level_data[:data].nil? or top_level_data[:data].empty?
+        return { :data => nil }
+      else
+        data.merge!( top_level_data[:data][0] )
+        errors.push( top_level_data[:error] ) unless top_level_data[:error].empty?
+
+        ##
+        ## Look for human orthalog's
+        ##
+
+        if data[:ensembl_gene_id]
+          human_orthalogs = get_human_orthalog( datasources, data[:ensembl_gene_id] )
+          data.merge!( human_orthalogs[:data] ) unless human_orthalogs[:data].empty?
+          errors.push( human_orthalogs[:error] ) unless human_orthalogs[:error].empty?
+        end
+
+        ##
+        ## Now search the targ_rep for vectors and es cells
+        ##
+
+        vectors_and_cells = get_vectors_and_cells( datasources, project_id )
+        data.merge!( vectors_and_cells[:data] )
+        errors.push( vectors_and_cells[:error] ) unless vectors_and_cells[:error].empty?
+
+        # Calculate the intended allele type
+        allele_design_type = nil
+        if !data[:es_cells][:conditional].nil? && !data[:es_cells][:conditional][:cells].empty?
+          allele_design_type = data[:es_cells][:conditional][:cells].first[:allele_type]
+        elsif !data[:targeting_vectors].nil? && !data[:targeting_vectors].empty?
+          allele_design_type = data[:targeting_vectors].first[:design_type]
+        elsif !data[:intermediate_vectors].nil? && !data[:intermediate_vectors].empty?
+          allele_design_type = data[:intermediate_vectors].first[:design_type]
+        end
+        data[:allele_design_type] = allele_design_type
+
+        ##
+        ## Search Kermits for mice
+        ##
+
+        es_cell_names = []
+        [ :"targeted non-conditional", :conditional ].each do |symbol|
+          es_cell_names.push( data[:es_cells][symbol][:cells] ) unless data[:es_cells][symbol].nil?
+        end
+
+        es_cell_names.flatten!.map! { |es_cell| es_cell[:name] }
+        unless es_cell_names.empty?
+          mice = get_mice( datasources, es_cell_names )
+          data.merge!( mice[:data] ) unless mice[:data].empty?
+          errors.push( mice[:error] ) unless mice[:error].empty?
+        end
+
+        ##
+        ## Ammend the es cells data to say which cells have been made into a mouse, then sort the cells as
+        ## we do in the current code (by mice, followed by qc count).
+        ##
+
+        mouse_data = nil
+        mouse_data = data[:mice] if data[:mice]
+
+        unless mouse_data.nil?
+          mouse_data.each do |mouse|
+            [ :"targeted non-conditional", :conditional ].each do |symbol|
+              unless data[:es_cells][symbol].nil?
+                # update the mouse status
+                data[:es_cells][symbol][:cells].each do |es_cell|
+                  if mouse[:escell_clone] == es_cell[:name]
+                    es_cell.merge!({ "mouse?".to_sym => "yes" })
+                    mouse.merge!({ :cassette => es_cell[:cassette], :cassette_type => es_cell[:cassette_type] })
+                  end
+                end
+
+                # then sort (by mice > qc_count > name)
+                data[:es_cells][symbol][:cells].sort! do |a, b|
+                  res = b[:"mouse?"] <=> a[:"mouse?"]
+                  res = b[:qc_count] <=> a[:qc_count] if res == 0
+                  res = a[:name]     <=> b[:name]     if res == 0
+                  res
+                end
+              end
+            end
+          end
+        end
+
+        ##
+        ## Add the mutagenesis predictions and PCR primers
+        ##
+
+        unless ['KOMP-Regeneron','mirKO'].include?(data[:ikmc_project])
+          mutagenesis_predictions        = get_mutagenesis_predictions( project_id )
+          data[:mutagenesis_predictions] = mutagenesis_predictions[:data]
+          errors.push( mutagenesis_predictions[:error] ) unless mutagenesis_predictions[:error].empty?
+        end
+
+        if ['KOMP-CSD','EUCOMM','mirKO'].include?(data[:ikmc_project])
+          pcr_primers                    = get_pcr_primers( project_id, data )
+          data[:pcr_primers]             = pcr_primers[:data]
+          errors.push( pcr_primers[:error] ) unless pcr_primers[:error].empty?
+        end
+
+        ##
+        ## Add the conf for the floxed exon display
+        ##
+
+        data.merge!( floxed_exon_display_conf( data ) )
+
+        ##
+        ## Add the coordinate information
+        ##
+
+        search_engine_data = search_engine_data( index, project_id )
+        data.merge!( search_engine_data[:data] )  unless search_engine_data[:data].empty?
+        errors.push( search_engine_data[:error] ) unless search_engine_data[:error].empty?
+
+        ##
+        ## Finally, categorize the stage of the pipeline that we are in
+        ##
+
+        data.merge!( get_pipeline_stage( data[:status]) ) if data[:status]
+      end
+
+      MartSearch::Controller.instance().logger.debug("[MartSearch::ProjectUtils] ::get_ikmc_project_page_data - running get_ikmc_project_page_data( '#{project_id}' ) - DONE")
+
+      return { :data => data, :errors => errors }
+    end
+
     private
 
       # Helper function to perform quick searches against the Solr index

@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+require 'pp'
+
 module MartSearch
 
   # Singleton controller class for MartSearch.  This is the central contoller
@@ -12,13 +14,12 @@ module MartSearch
     include MartSearch::Utils
     include MartSearch::ControllerUtils
 
-    USE_CACHE = true
-    warn "#### NOT USING CACHE!!!" if ! USE_CACHE
-
     attr_reader :config, :cache, :logger, :index, :errors, :search_data
     attr_reader :search_results, :datasources, :datasets, :dataviews, :dataviews_by_name
 
     def initialize()
+      @use_cache = true
+
       config_dir = "#{MARTSEARCH_PATH}/config"
 
       @config = {
@@ -62,6 +63,152 @@ module MartSearch
       @errors         = { :index => [], :datasets => {} }
       @search_data    = {}
       @search_results = []
+    end
+
+    # Function to perform the searches against the index and marts.
+    #
+    # Sets up a results stash (@search_data) holding the data in a structure like:
+    #   {
+    #     IndexDocUniqueKey => {
+    #       "index"         => {}, # index results for this doc
+    #       "internal_name" => []/{}, # array/hash of sorted biomart data
+    #       "internal_name" => []/{}, # array/hash of sorted biomart data
+    #     }
+    #   }
+    #
+    # But returns an ordered list of the results/index docs (@search_results)
+    #
+    # @param [String] query The query string to pass to the search index
+    # @param [Integer] page The page of results to search for/return
+    # @param [Boolean] use_cache Use cached data if available
+    # @param [Boolean] save_index_data Try to save the index return to the cache
+    # @return [Array] A list of the search results (primary index fields)
+
+    def search_impc( query, page=1, use_cache=true, save_index_data=true )
+      @use_cache = false
+      fresh_ds_queries_to_do = []
+
+      page = 1 if page == 0
+      clear_instance_variables
+
+      if query =~ /MGI:/i
+#        @search_data[query] = {}
+#        @search_data[query][:index] = query.to_sym
+        search_from_fresh_index( query, page )
+        fresh_ds_queries_to_do.push(query.to_sym)
+      else
+        search_from_fresh_index( query, page )
+        #return nil
+      end
+
+      #puts "#### @search_data: "
+      #pp @search_data
+
+     # unless @search_data.empty?
+        #@search_data.each do |data_key,data|
+        #  puts "#### data_key: " + data_key.inspect
+        #  fresh_ds_queries_to_do.push(data_key)
+        #end
+
+        #fresh_ds_queries_to_do.push(:"MGI:1920453")
+
+        puts "#### fresh_ds_queries_to_do: "
+        pp fresh_ds_queries_to_do
+
+        unless fresh_ds_queries_to_do.empty?
+          grouped_search_terms = prepare_dataset_search_terms( fresh_ds_queries_to_do )
+          search_from_fresh_datasets_impc( fresh_ds_queries_to_do, grouped_search_terms )
+        end
+    #  end
+
+      puts "#### @search_results: "
+      pp @search_results
+
+      # Return paged_results
+      return @search_results
+    end
+
+    def search_impc_old( query, page=1, use_cache=true, save_index_data=true )
+
+      @use_cache = false
+
+      puts "#### search_impc..."
+      puts "#### query: " + query.inspect
+
+      self.logger.debug("[MartSearch::Controller] ::search - running search( '#{query}', #{page}, #{use_cache}, #{save_index_data} )")
+      page = 1 if page == 0
+      clear_instance_variables
+
+      if false && query =~ /MGI:/i
+
+      #  #:index=>{:mgi_accession_id_key=>\"MGI:1923551\", :mgi_accession_id=>\"MGI:1923551\", :MGI=>\"MGI:1923551\", :mgi=>\"MGI:1923551\"
+      #
+      #  @search_data[query] = {}
+      #  @search_data[query][:index] = {}
+      #  @search_data[query][:index][:mgi_accession_id_key] = query
+      #  @search_data[query][:index][:mgi_accession_id] = query
+      #  @search_data[query][:index][:MGI] = query
+      #  @search_data[query][:index][:mgi] = query
+
+      else
+
+        cached_index_data = fetch_from_cache( "index:#{query}-page#{page}" )
+        if cached_index_data != nil and use_cache
+          search_from_cached_index( cached_index_data )
+        else
+          if search_from_fresh_index( query, page ) and save_index_data
+            #obj_to_cache    = {
+            #  :search_data           => @search_data,
+            #  :search_results        => @search_results,
+            #  :current_page          => @index.current_page,
+            #  :current_results_total => @index.current_results_total,
+            #  :cache_timestamp       => DateTime.now.to_s
+            #}
+#            write_to_cache( "index:#{query}-page#{page}", obj_to_cache )
+          end
+        end
+
+      end
+
+      puts "#### @search_data: "
+      pp @search_data
+
+      unless @search_data.empty?
+        fresh_ds_queries_to_do = []
+
+        @search_data.each do |data_key,data|
+
+          puts "#### data_key: " + data_key.inspect
+
+          cached_dataset_data = fetch_from_cache( "datasets:#{data_key}" )
+
+          if cached_dataset_data != nil and use_cache
+            @search_data[data_key] = cached_dataset_data.merge(data)
+          else
+            fresh_ds_queries_to_do.push(data_key)
+          end
+        end
+
+        #fresh_ds_queries_to_do.push(:"MGI:1920453")
+
+        puts "#### fresh_ds_queries_to_do: "
+        pp fresh_ds_queries_to_do
+
+        unless fresh_ds_queries_to_do.empty?
+          grouped_search_terms = prepare_dataset_search_terms( fresh_ds_queries_to_do )
+          if search_from_fresh_datasets_impc( fresh_ds_queries_to_do, grouped_search_terms )
+            #fresh_ds_queries_to_do.each do |data_key|
+            #  unless @search_data[data_key].nil?
+            #    @search_data[data_key][:cache_timestamp] = DateTime.now.to_s
+            #    write_to_cache( "datasets:#{data_key}", @search_data[data_key] )
+            #  end
+            #end
+          end
+        end
+      end
+
+      # Return paged_results
+      return @search_results
     end
 
     # Function to perform the searches against the index and marts.
@@ -209,7 +356,8 @@ module MartSearch
     # @param [String] key The cache identifer to look up
     # @return [Object/nil] The deserialized object from the cache, or nil if none found
     def fetch_from_cache( key )
-      return nil if ! USE_CACHE
+      warn "#### NOT USING CACHE (fetch_from_cache)!" if ! @use_cache
+      return nil if ! @use_cache
       self.logger.debug("[MartSearch::Controller] ::fetch_from_cache - running fetch_from_cache( '#{key}' )")
       cached_data = @cache.fetch( key )
 
@@ -233,7 +381,8 @@ module MartSearch
     # @param [Object] value The cache 'value' to store
     # @param [Hash] options An options hash (see #{ActiveSupport::Cache} for more info)
     def write_to_cache( key, value, options={} )
-      return if ! USE_CACHE
+      warn "#### NOT USING CACHE (write_to_cache)!" if ! @use_cache
+      return if ! @use_cache
       self.logger.debug("[MartSearch::Controller] ::write_to_cache - running write_to_cache( '#{key}', Object, '#{options.inspect}' )")
       @cache.delete( key )
       if @cache.is_a?(MartSearch::MongoCache)
@@ -347,6 +496,9 @@ module MartSearch
           end
         end
 
+        puts "#### prepare_dataset_search_terms: "
+        pp grouped_terms
+
         return grouped_terms
       end
 
@@ -404,6 +556,198 @@ module MartSearch
         # Run the dataset secondary sorts in serial, BUT only run them on the results we
         # haven't pulled them from the cache.
         @datasets.each do |dataset_name,dataset|
+          if dataset.config[:custom_secondary_sort]
+            self.logger.debug("[MartSearch::Controller] ::search_from_fresh_datasets - running dataset secondary sort for #{dataset_name}")
+            search_data_copy = @search_data.clone
+            search_data_copy.keys.each { |key| search_data_copy.delete(key) unless terms_to_query.include?(key) }
+            @search_data.merge( dataset.secondary_sort( search_data_copy ) )
+            self.logger.debug("[MartSearch::Controller] ::search_from_fresh_datasets - running dataset secondary sort for #{dataset_name} - DONE")
+          end
+        end
+
+        self.logger.debug("[MartSearch::Controller] ::search_from_fresh_datasets - running search_from_fresh_datasets() - DONE")
+        return success
+      end
+
+      def search_from_fresh_datasets_impc( terms_to_query, grouped_search_terms )
+        self.logger.debug("[MartSearch::Controller] ::search_from_fresh_datasets - running search_from_fresh_datasets()")
+        success = true
+
+        ds_includes = [
+          "ikmc-idcc_targ_rep",
+          "ikmc-imits",
+        ]
+
+        @datasets.keys.each do |ds_name|
+
+          target = ds_name.to_s.gsub(/[\"\:]/, "")
+          next if ! ds_includes.include? target
+
+          puts "#### search_from_fresh_datasets_impc: ds_name: #{ds_name.inspect}/#{target}"
+
+          begin
+            dataset      = @datasets[ds_name]
+
+            search_terms = grouped_search_terms[ dataset.joined_index_field.to_sym ]
+
+            puts "search_from_fresh_datasets_impc: search_terms: "
+            pp search_terms
+
+            self.logger.debug("[MartSearch::Controller] ::search_from_fresh_datasets - running dataset search for #{ds_name}")
+            results      = dataset.search( search_terms )
+
+            puts "search_from_fresh_datasets_impc: results: "
+            pp results
+
+
+
+            self.logger.debug("[MartSearch::Controller] ::search_from_fresh_datasets - running dataset search for #{ds_name} - DONE")
+
+            self.logger.debug("[MartSearch::Controller] ::search_from_fresh_datasets - running add_dataset_results_to_search_data for #{ds_name}")
+            add_dataset_results_to_search_data( dataset.joined_index_field.to_sym, ds_name.to_sym, results )
+            self.logger.debug("[MartSearch::Controller] ::search_from_fresh_datasets - running add_dataset_results_to_search_data for #{ds_name} - DONE")
+
+          rescue MartSearch::DataSourceError => error
+            self.logger.error("[MartSearch::Controller] ::search_from_fresh_datasets - MartSearch::DataSourceError thrown")
+            warn "#{ds_name}: '#{error}'"
+            @errors[:datasets][ds_name] = {
+              :text  => "The '#{ds_name}' dataset has returned an error for this query.",
+              :error => error,
+              :type  => 'MartSearch::DataSourceError'
+            }
+            success = false
+          rescue Timeout::Error => error
+            self.logger.error("[MartSearch::Controller] ::search_from_fresh_datasets - Timeout::Error thrown")
+            @errors[:datasets][ds_name] = {
+              :text  => "The '#{ds_name}' dataset did not respond quickly enough for this query.",
+              :error => error,
+              :type  => 'Timeout::Error'
+            }
+            success = false
+          rescue Errno::ETIMEDOUT => error
+            self.logger.error("[MartSearch::Controller] ::search_from_fresh_datasets - Errno::ETIMEDOUT thrown")
+            @errors[:datasets][ds_name] = {
+              :text  => "The '#{ds_name}' dataset did not respond quickly enough for this query.",
+              :error => error,
+              :type  => 'Errno::ETIMEDOUT'
+            }
+            success = false
+          end
+        end
+
+        # Run the dataset secondary sorts in serial, BUT only run them on the results we
+        # haven't pulled them from the cache.
+        @datasets.each do |dataset_name,dataset|
+          if dataset.config[:custom_secondary_sort]
+            self.logger.debug("[MartSearch::Controller] ::search_from_fresh_datasets - running dataset secondary sort for #{dataset_name}")
+            search_data_copy = @search_data.clone
+            search_data_copy.keys.each { |key| search_data_copy.delete(key) unless terms_to_query.include?(key) }
+            @search_data.merge( dataset.secondary_sort( search_data_copy ) )
+            self.logger.debug("[MartSearch::Controller] ::search_from_fresh_datasets - running dataset secondary sort for #{dataset_name} - DONE")
+          end
+        end
+
+        self.logger.debug("[MartSearch::Controller] ::search_from_fresh_datasets - running search_from_fresh_datasets() - DONE")
+        return success
+      end
+
+      def search_from_fresh_datasets_impc_old( terms_to_query, grouped_search_terms )
+        self.logger.debug("[MartSearch::Controller] ::search_from_fresh_datasets - running search_from_fresh_datasets()")
+        success = true
+
+        ds_includes = [
+        "ikmc-idcc_targ_rep",
+        "ikmc-imits",
+        ]
+
+        #ds_excludes = [
+        #"emma-strains",
+        #"ensembl-mouse-homologs",
+        #"ensembl-mouse-go",
+        #"eurexpress",
+        #"europhenome",
+        #"ikmc-dcc-knockout_attempts",
+        #"ikmc-dcc-other_mutants",
+        ##"ikmc-idcc_targ_rep",
+        ##"ikmc-imits",
+        #"ikmc-omim",
+        #"ikmc-unitrap",
+        #"mgi-markers",
+        #"wtsi-bacs",
+        #"wtsi-phenotyping-abr",
+        #"wtsi-phenotyping-adult_expression",
+        #"wtsi-phenotyping-fertility",
+        #"wtsi-phenotyping-heatmap",
+        #"wtsi-phenotyping-param_level_heatmap",
+        #"wtsi-phenotyping-hom_viability",
+        #"wtsi-phenotyping-published_images",
+        #"wtsi-phenotyping-collaborator_data",
+        #"dummy-mice"
+        #]
+        #
+        #puts "#### search_from_fresh_datasets_impc: ds: #{ds_excludes.inspect}"
+
+        #Parallel.each( @datasets.keys, :in_threads => 10 ) do |ds_name|
+        @datasets.keys.each do |ds_name|
+
+          #target = '' #ds_name.gsub(/[":]/, "")
+          target = ds_name.to_s.gsub(/[\"\:]/, "")
+          #next if ds_excludes.include? target
+          next if ! ds_includes.include? target
+
+          puts "#### search_from_fresh_datasets_impc: ds_name: #{ds_name.inspect}/#{target}"
+          #STDOUT.flush
+
+          begin
+            dataset      = @datasets[ds_name]
+            search_terms = grouped_search_terms[ dataset.joined_index_field.to_sym ]
+
+            self.logger.debug("[MartSearch::Controller] ::search_from_fresh_datasets - running dataset search for #{ds_name}")
+            results      = dataset.search( search_terms )
+            self.logger.debug("[MartSearch::Controller] ::search_from_fresh_datasets - running dataset search for #{ds_name} - DONE")
+
+            self.logger.debug("[MartSearch::Controller] ::search_from_fresh_datasets - running add_dataset_results_to_search_data for #{ds_name}")
+            add_dataset_results_to_search_data( dataset.joined_index_field.to_sym, ds_name.to_sym, results )
+            self.logger.debug("[MartSearch::Controller] ::search_from_fresh_datasets - running add_dataset_results_to_search_data for #{ds_name} - DONE")
+
+          rescue MartSearch::DataSourceError => error
+            self.logger.error("[MartSearch::Controller] ::search_from_fresh_datasets - MartSearch::DataSourceError thrown")
+            warn "#{ds_name}: '#{error}'"
+            @errors[:datasets][ds_name] = {
+              :text  => "The '#{ds_name}' dataset has returned an error for this query.",
+              :error => error,
+              :type  => 'MartSearch::DataSourceError'
+            }
+            success = false
+          rescue Timeout::Error => error
+            self.logger.error("[MartSearch::Controller] ::search_from_fresh_datasets - Timeout::Error thrown")
+            @errors[:datasets][ds_name] = {
+              :text  => "The '#{ds_name}' dataset did not respond quickly enough for this query.",
+              :error => error,
+              :type  => 'Timeout::Error'
+            }
+            success = false
+          rescue Errno::ETIMEDOUT => error
+            self.logger.error("[MartSearch::Controller] ::search_from_fresh_datasets - Errno::ETIMEDOUT thrown")
+            @errors[:datasets][ds_name] = {
+              :text  => "The '#{ds_name}' dataset did not respond quickly enough for this query.",
+              :error => error,
+              :type  => 'Errno::ETIMEDOUT'
+            }
+            success = false
+          end
+        end
+
+        # Run the dataset secondary sorts in serial, BUT only run them on the results we
+        # haven't pulled them from the cache.
+        @datasets.each do |dataset_name,dataset|
+
+
+
+          #target = dataset_name.to_s.gsub(/[\"\:]/, "")
+          #next if ds.include? target
+
+
           if dataset.config[:custom_secondary_sort]
             self.logger.debug("[MartSearch::Controller] ::search_from_fresh_datasets - running dataset secondary sort for #{dataset_name}")
             search_data_copy = @search_data.clone
@@ -494,6 +838,7 @@ module MartSearch
         @search_data    = {}
         @search_results = []
       end
+
   end
 
 end

@@ -75,9 +75,14 @@
             <%= project_links.join(', ') %>
           <% end %>
         <% else %>
+
+          <% if @display_view_details %>
           <a class="ikmc-idcc_targ_rep_allele_progress_details_toggle">
             view&nbsp;details
           </a>
+          <% end %>
+
+
         <% end %>
       </td>
     </tr>

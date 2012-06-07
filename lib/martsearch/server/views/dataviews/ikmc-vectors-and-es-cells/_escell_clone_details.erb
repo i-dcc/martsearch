@@ -14,7 +14,9 @@
       <th>ES Cell Line</th>
       <th>Allele</th>
       <th>Allele Type</th>
+      <% if @display_qc_screening_data %>
       <th>QC/Screening Data</th>
+      <% end %>
     </tr>
   </thead>
   <tbody>
@@ -54,6 +56,9 @@
         <td>
           <%= clone[:allele_type] %> (<%= cassette_type %> Cassette)
         </td>
+
+
+        <% if @display_qc_screening_data %>
         <td>
           <% if clone[:qc_count] > 0 %>
             <a class="ikmc-idcc_targ_rep_escell_qc_details_toggle">view&nbsp;data</a>
@@ -63,11 +68,14 @@
           &nbsp;&nbsp;
           (&nbsp;<a href="http://www.knockoutmouse.org/kb/entry/78/" target="_blank" class="ext_link">about</a>&nbsp;)
         </td>
+        <% end %>
+
+
       </tr>
       <% if clone[:qc_count] > 0 %>
         <tr class="ikmc-idcc_targ_rep_escell_qc_details">
           <td colspan="7">
-            <%= partial( 'dataviews/ikmc-vectors-and-es-cells/escell_clone_qc', :locals => { :clone => clone } ) %>
+            <%= partial( 'dataviews/ikmc-vectors-and-es-cells/escell_clone_qc', :locals => { :clone => clone } ) if @display_escell_clone_qc %>
           </td>
         </tr>
       <% end %>

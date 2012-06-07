@@ -1,0 +1,71 @@
+<% unless @errors[:project_page_errors].nil? or @errors[:project_page_errors].empty? %>
+  <div class="messages serious_errors">
+    <h5>Sorry, an error occurred whilst querying the data sources ...</h5>
+    <% @errors[:project_page_errors].each do |error| %>
+      <div id="serious_error_wrapper">
+        <%= error[:text] %>&nbsp;&nbsp;
+        <a href="#" class="single_parent_toggler_toggle">more&nbsp;information</a>
+        <div class="single_parent_toggler_content error_more_information">
+          <strong><%= error[:type] %></strong><br />
+          <pre>
+            <%= error[:error] %>
+          </pre>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<h3>IKMC Project Report - <%= @data[:ikmc_project] %> (ID: <%= @data[:project_id] %>)</h3>
+
+<h5>
+  <a href="http://www.knockoutmouse.org/genedetails/<%= @data[:mgi_accession_id] %>"><%= @data[:marker_symbol] %></a>
+  <a href="http://www.informatics.jax.org/searches/accession_report.cgi?id=<%= @data[:mgi_accession_id] %>"><%= @data[:mgi_accession_id] %></a>
+  <a href="http://www.ensembl.org/Mus_musculus/contigview?gene=<%= @data[:ensembl_gene_id] %>&bottom=%7Cmanaged_das_KO_vectors%3Aon"><%= @data[:ensembl_gene_id] %></a>
+  <a href="http://www.ensembl.org/Mus_musculus/contigview?gene=<%= @data[:vega_gene_id] %>&bottom=%7Cmanaged_das_KO_vectors%3Aon"><%= @data[:vega_gene_id] %></a>
+</h5>
+
+<p class="display_on_print" style="display:none;">
+  Program: <%= @data[:ikmc_project] %><br />
+  Pipeline Progress: <%= @data[:status] %>
+</p>
+
+<div id="search_results">
+  <div class="result">
+    <!-- Pipeline progress bar -->
+    <%= partial("project_report/progress_bar") %>
+  </div>
+</div>
+
+<script type="text/javascript" charset="utf-8">
+  // QC results toggles
+  jQuery(".details_toggle").live("click", function () {
+    jQuery(this).parent().parent().next(".details").toggle();
+    jQuery(this).toggleClass("toggle-open");
+    jQuery(this).toggleClass("toggle-close");
+  });
+
+  jQuery(".details").hide();
+  jQuery(".details_toggle").removeClass("toggle-open");
+  jQuery(".details_toggle").addClass("toggle-close");
+
+  // Products toggles
+  jQuery("a.products_toggle").live("click", function () {
+    var rows    = jQuery(this).parent().find("tbody.products").children().not(".details").slice(1);
+    var qc_rows = jQuery(this).parent().find("tbody.products .details");
+
+    if ( rows.first().is(":visible") ) { qc_rows.hide(); rows.hide(); }
+    else                               { rows.show(); }
+
+    jQuery(this).toggleClass("toggle-up");
+    jQuery(this).toggleClass("toggle-close");
+  });
+
+  jQuery("tbody.products").each( function () {
+    var rows = jQuery(this).children().not(".details");
+    rows.slice(1, rows.size()).hide();
+  });
+
+  jQuery(".products_toggle").addClass("toggle-close");
+  jQuery(".products_toggle").removeClass("toggle-up");
+</script>

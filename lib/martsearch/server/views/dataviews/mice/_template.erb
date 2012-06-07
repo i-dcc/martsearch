@@ -9,7 +9,11 @@
         <th>Colony Prefix</th>
         <th>ES Cell/Common Name</th>
         <th><%= result_data[:'dummy-mice'].select { |mouse| mouse[:genetic_background] }.size > 0 ? 'Genetic Background' : '(International) Strain Designation' %></th>
+
+        <% if @display_qc_screening_data %>
         <th>QC/Screening Data</th>
+        <% end %>
+
         <th>MI/Distribution Centre</th>
       </tr>
     </thead>
@@ -38,6 +42,9 @@
         <td><%= mouse[:colony_prefix] %></td>
         <td><%= mouse[:escell_clone] || mouse[:common_name] %></td>
         <td><%= mouse[:genetic_background] || mouse[:international_strain_name] %></td>
+
+
+        <% if @display_qc_screening_data %>
         <td>
           <% if mouse[:qc_count] > 0 %>
             <a class="mice_qc_details_toggle">view&nbsp;data</a>
@@ -47,9 +54,13 @@
           <br />
           (&nbsp;<a href="http://www.knockoutmouse.org/kb/entry/90/" target="_blank" class="ext_link">about</a>&nbsp;)
         </td>
+        <% end %>
+
+
+
         <td><%= [ mouse[:production_centre], mouse[:distribution_centre] ].uniq.join('/') %></td>
       </tr>
-      <% if mouse[:qc_count] > 0 %>
+      <% if mouse[:qc_count] > 0 && @display_mouse_qc %>
         <tr class="mice_qc_details">
           <td colspan="9">
             <%= partial('dataviews/mice/qc_data', :locals => { :result => mouse }) %>

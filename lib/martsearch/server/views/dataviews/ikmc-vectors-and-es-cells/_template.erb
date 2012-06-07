@@ -5,15 +5,15 @@
       <%=
         partial(
           'dataviews/ikmc-vectors-and-es-cells/progress_bar',
-          :locals => { 
+          :locals => {
             :project      => project,
             :result_data  => result_data
           }
-        )
+        ) if @display_ikmc_vectors_and_es_cells_progress_bar
       %>
-    
+
       <%- if project[:targeting_vectors] or project[:conditional_clones] or project[:nonconditional_clones] -%>
-      
+
         <div class="ikmc-idcc_targ_rep_allele_progress_details_content">
           <!-- Links -->
           <%
@@ -34,7 +34,7 @@
                 :start_pos       => result_data[:index][:coord_start],
                 :end_pos         => result_data[:index][:coord_end]
               }
-            )
+            ) if @display_targeting_ikmc_vectors_and_es_cells_links
           %>
 
           <!-- ES Cells -->
@@ -53,7 +53,7 @@
                 :nonconditional_allele_gb => project[:nonconditional_allele_gb_file],
                 :vector_gb                => project[:vector_gb_file]
               }
-            )
+            ) if @display_escell_clones
           %>
           <div class="clear"></div>
 
@@ -71,7 +71,7 @@
                   :targeting_vectors => project[:targeting_vectors],
                   :vector_gb         => project[:vector_gb_file]
                 }
-              )
+              ) if @display_targeting_vectors
             %>
           <% end %>
         </div>
