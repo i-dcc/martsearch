@@ -66,7 +66,9 @@
       </tr>
     </tbody>
   </table>
-  
+
+  <% if @display_conditional_and_non_conditional_clones %>
+
   <!-- Conditional and Non-Conditional clones -->
   <div>
     <div><a class="ikmc-idcc_targ_rep_allele_progress_clones_toggle">view all available ES cell clones</a></div>
@@ -85,7 +87,7 @@
       <% else %>
         <p><em>No clones available.</em></p>
       <% end %>
-      
+
       <!-- Non-Conditional Clones -->
       <h5 style="margin-bottom:5px;">ES Cell Clones Without Conditional Potential</h5>
       <% unless nonconditional_clones.empty? %>
@@ -98,9 +100,12 @@
       <% else %>
         <p><em>No clones available.</em></p>
       <% end %>
-      
+
     </div>
   </div>
+
+  <% end %>
+
 <% else %>
   <p>&nbsp;&nbsp;&nbsp;<em>No clones available.</em></p>
 <% end %>

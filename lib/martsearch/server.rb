@@ -78,6 +78,7 @@ module MartSearch
       @display_qc_screening_data = true
       @display_view_details = true
       @display_original_data_link = true
+      @display_conditional_and_non_conditional_clones = true
 
       super
     end
@@ -418,6 +419,7 @@ module MartSearch
       @display_qc_screening_data = false
       @display_view_details = false
       @display_original_data_link = false
+      @display_conditional_and_non_conditional_clones = false
 
       puts "#### impc_search (server)"
       puts "#### params: " + params.inspect
