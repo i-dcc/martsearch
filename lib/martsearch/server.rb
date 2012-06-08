@@ -409,6 +409,12 @@ module MartSearch
       erb :impc_panel, :layout => false
     end
 
+    get '/impc_search2/?' do
+#      'impc_search2!!'
+      @default = "data here soon for gene " + params[:query].to_s
+      erb :impc_panel2, :layout => false
+    end
+
     get '/impc_search/?' do
 
       @display_mouse_qc = false

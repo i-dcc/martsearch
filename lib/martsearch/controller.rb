@@ -478,7 +478,11 @@ module MartSearch
         self.logger.debug("[MartSearch::Controller] ::prepare_dataset_search_terms - running prepare_dataset_search_terms()")
         grouped_terms = {}
 
+        puts "#### prepare_dataset_search_terms: search_keys: "
+        pp search_keys
+
         search_keys.each do |key|
+          next if ! defined? @search_data[key][:index]
           doc = @search_data[key][:index]
           doc.each do |field,value|
             grouped_terms_for_field = grouped_terms[field]
