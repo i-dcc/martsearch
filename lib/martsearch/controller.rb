@@ -37,15 +37,15 @@ module MartSearch
       @dataviews_by_name = @config[:server][:dataviews_by_name]
 
       # OLS
-      OLS.setup_cache(
-        {
-          :host => 'web-mei-t87p.internal.sanger.ac.uk',
-          :port => 3334,
-          :database => 'htgt_ols_cache',
-          :user => 'htgt',
-          :password => 'htgt'
-        }
-      )
+      #OLS.setup_cache(
+      #  {
+      #    :host => 'web-mei-t87p.internal.sanger.ac.uk',
+      #    :port => 3334,
+      #    :database => 'htgt_ols_cache',
+      #    :user => 'htgt',
+      #    :password => 'htgt'
+      #  }
+      #)
 
       # Logger
       @logger                 = Logger.new($stdout)
@@ -84,6 +84,62 @@ module MartSearch
     # @param [Boolean] save_index_data Try to save the index return to the cache
     # @return [Array] A list of the search results (primary index fields)
 
+    def search_impc2 (mgi_accession_id)
+        targ_rep_mart = datasources[:'ikmc-idcc_targ_rep'].ds
+        error_string  = "This data source provides information on Targeting Vectors and ES Cells. As a result this data will not be available on the page."
+        results       = handle_biomart_errors( "ikmc-ikmc-targ_rep", error_string ) do
+          targ_rep_mart.search({
+            :process_results => true,
+            :filters         => { 'mgi_accession_id' => mgi_accession_id},
+            :attributes      => [
+              'mutation_subtype',
+              'parental_cell_line',
+              'allele_symbol_superscript',
+              'allele_id',
+              'parental_cell_line',
+            ].flatten
+          })
+        end
+        pp results[:data]
+        displayed_alleles=[]
+        results[:data].each do |result|
+          puts "parental_cell_line?"
+          pp result
+          next unless !(result["parental_cell_line"].nil?)
+          puts "pushing data onto stack"
+          pp result
+          displayed_alleles << result
+        end
+        return displayed_alleles
+    end
+    
+    def handle_biomart_errors( data_source, error_string )
+      MartSearch::Controller.instance().logger.debug("[MartSearch::ProjectUtils] ::handle_biomart_errors - running handle_biomart_errors( '#{data_source}', '#{error_string}' )")
+
+      results      = { :data => {}, :error => {} }
+      error_prefix = "There was a problem querying the '#{data_source}' biomart."
+      error_suffix = "Try refreshing your browser or come back in 10 minutes."
+      begin
+        results[:data] = yield
+      rescue Biomart::BiomartError => error
+        results[:error] = {
+          :text  => error_prefix + " " + error_string + " " + error_suffix,
+          :error => error.to_s,
+          :type  => error.class
+        }
+      rescue Timeout::Error => error
+        results[:error] = {
+          :text  => error_prefix + " " + error_string + " " + error_suffix,
+          :error => error.to_s,
+          :type  => error.class
+        }
+      end
+
+      MartSearch::Controller.instance().logger.debug("[MartSearch::ProjectUtils] ::handle_biomart_errors - running handle_biomart_errors( '#{data_source}', '#{error_string}' ) - DONE")
+
+      return results
+    end
+    
     def search_impc( query, page=1, use_cache=true, save_index_data=true )
       @use_cache = false
       fresh_ds_queries_to_do = []

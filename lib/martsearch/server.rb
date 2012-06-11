@@ -411,7 +411,9 @@ module MartSearch
 
     get '/impc_search2/?' do
 #      'impc_search2!!'
-      @default = "data here soon for gene " + params[:query].to_s
+      mgi_accession_id = params[:mgi_accession_id]
+      @alleles = @ms.search_impc2(mgi_accession_id)
+      pp @alleles
       erb :impc_panel2, :layout => false
     end
 
