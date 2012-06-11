@@ -87,6 +87,7 @@ module MartSearch
     def search_impc2 (mgi_accession_id)
         targ_rep_mart = datasources[:'ikmc-idcc_targ_rep'].ds
         error_string  = "This data source provides information on Targeting Vectors and ES Cells. As a result this data will not be available on the page."
+        puts "searching for gene with mgi #{mgi_accession_id}"
         results       = handle_biomart_errors( "ikmc-ikmc-targ_rep", error_string ) do
           targ_rep_mart.search({
             :process_results => true,
@@ -102,13 +103,15 @@ module MartSearch
         end
         pp results[:data]
         displayed_alleles=[]
+        count = 0
         results[:data].each do |result|
-          puts "parental_cell_line?"
-          pp result
+          pp "RESULT: result"
           next unless !(result["parental_cell_line"].nil?)
-          puts "pushing data onto stack"
-          pp result
           displayed_alleles << result
+          if(count > 3)
+            break
+          end
+          count = count + 1
         end
         return displayed_alleles
     end
