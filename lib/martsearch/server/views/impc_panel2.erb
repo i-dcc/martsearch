@@ -4,6 +4,7 @@
 <thead>
     <tr>
         <td>Product</td>
+        <td>Pipeline</td>
         <td>Allele Type</td>
         <td>Allele Strain</td>
         <td>Allele</td>
@@ -15,12 +16,13 @@
 <tbody>
 <% @alleles.each do |allele| %>
 <tr>
-<td>a</td>
-<td>b</td>
-<td>c</td>
-<td>d</td>
-<td>e</td>
-<td>f</td>
+    <td><%= allele[:product] %></td>
+    <td>b</td>
+    <td>c</td>
+    <td>d</td>
+    <td>e</td>
+    <td>e</td>
+    <td>ORDER</td>
 </tr>
 <% end %>
 </tbody>

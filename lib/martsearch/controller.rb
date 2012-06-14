@@ -98,22 +98,46 @@ module MartSearch
               'allele_symbol_superscript',
               'allele_id',
               'parental_cell_line',
+              'es_cell_pipeline'
             ].flatten
           })
         end
-        pp results[:data]
-        displayed_alleles=[]
+        @displayed_alleles=[]
+        tm1a = nil
+        tm1e = nil
+        tm1 = nil
         count = 0
+        puts "SIZE OF RESULTS #{results[:data].size}"
         results[:data].each do |result|
-          pp "RESULT: result"
           next unless !(result["parental_cell_line"].nil?)
-          displayed_alleles << result
-          if(count > 3)
-            break
+          result[:product] = 'ES Cell'
+          puts "mutation #{result[:mutation_subtype]} tm1a: #{tm1a}"
+          if (result[:mutation_subtype] == 'conditional_ready' && tm1a.nil?)
+            result[:product] = 'ES Cell'
+            tm1a = result
           end
-          count = count + 1
+          if (result[:mutation_subtype] == 'targeted_non_conditional' && tm1e.nil?)
+            tm1e = result
+          end
+          if (result[:mutation_subtype] == 'deletion' && tm1.nil?)
+            tm1 = result
+          end
         end
-        return displayed_alleles
+        
+        # Display the conditional in preference to the targeted non-conditional
+        if(!tm1a.nil?)
+          @displayed_alleles << tm1a
+        elsif(!tm1e.nil?)
+          @displayed_alleles << tm1e
+        end
+        
+        # Display the deletion if we have it
+        if(!tm1.nil?)
+          @displayed_alleles << tm1
+        end
+        
+        
+        return @displayed_alleles
     end
     
     def handle_biomart_errors( data_source, error_string )
