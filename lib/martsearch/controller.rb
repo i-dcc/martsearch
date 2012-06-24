@@ -64,80 +64,142 @@ module MartSearch
       @search_data    = {}
       @search_results = []
     end
+    
+    def get_targrep_mart_results(mgi_accession_id)
+      targ_rep_mart = datasources[:'ikmc-idcc_targ_rep'].ds
+      error_string  = "Information on Targeting Vectors and ES Cells is missing"
+      results       = handle_biomart_errors( "ikmc-ikmc-targ_rep", error_string ) do
+        targ_rep_mart.search({
+          :process_results => true,
+          :filters         => { 'mgi_accession_id' => mgi_accession_id},
+          :attributes      => [
+            'mutation_subtype',
+            'parental_cell_line',
+            'allele_symbol_superscript',
+            'allele_id',
+            'parental_cell_line',
+            'escell_pipeline'
+          ].flatten
+        })
+      end
+      return results
+    end
+    
+    def add_targ_rep_data(mgi_accession_id, displayed_alleles)
+      
+      results = get_targrep_mart_results(mgi_accession_id)
+      
+      tm1a = nil
+      tm1e = nil
+      tm1 = nil
+      results[:data].each do |result|
+        next unless !(result["parental_cell_line"].nil?)
+        result["product"] = 'ES Cell'
+        if (result["mutation_subtype"] == 'conditional_ready' && tm1a.nil?)
+          tm1a = result
+        end
+        if (result["mutation_subtype"] == 'targeted_non_conditional' && tm1e.nil?)
+          tm1e = result
+        end
+        if (result["mutation_subtype"] == 'deletion' && tm1.nil?)
+          tm1 = result
+        end
+      end
+      
+      # Display the conditional in preference to the targeted non-conditional
+      if(!tm1a.nil?)
+        displayed_alleles["tm1a"] = tm1a
+      elsif(!tm1e.nil?)
+        displayed_alleles["tm1e"] = tm1e
+      end
+      
+      # Display the deletion if we have it
+      if(!tm1.nil?)
+        displayed_alleles["tm1"] = tm1
+      end
+    end
 
-    # Function to perform the searches against the index and marts.
-    #
-    # Sets up a results stash (@search_data) holding the data in a structure like:
-    #   {
-    #     IndexDocUniqueKey => {
-    #       "index"         => {}, # index results for this doc
-    #       "internal_name" => []/{}, # array/hash of sorted biomart data
-    #       "internal_name" => []/{}, # array/hash of sorted biomart data
-    #     }
-    #   }
-    #
-    # But returns an ordered list of the results/index docs (@search_results)
-    #
-    # @param [String] query The query string to pass to the search index
-    # @param [Integer] page The page of results to search for/return
-    # @param [Boolean] use_cache Use cached data if available
-    # @param [Boolean] save_index_data Try to save the index return to the cache
-    # @return [Array] A list of the search results (primary index fields)
-
+    def get_imits_mart_results(mgi_accession_id)
+      imits_mart = datasources[:'ikmc-imits'].ds
+      error_string  = "Information on Mice is missing"
+      results       = handle_biomart_errors( "ikmc-imits", error_string ) do
+      imits_mart.search({
+          :process_results => true,
+          :filters         => {
+            'mgi_accession_id' => mgi_accession_id,
+          },
+          :attributes      => [
+            'consortium',
+            'distribution_centre',
+            'colony_background_strain',
+            'production_centre',
+            'microinjection_status',
+            'allele_symbol_superscript',
+            'mouse_allele_symbol_superscript',
+            'phenotype_allele_type',
+            'phenotype_status',
+            'phenotype_is_active'
+          ].flatten
+        })
+      end
+    end
+    
+    def add_imits_data( mgi_accession_id, displayed_alleles)
+      tm1a = nil
+      tm1e = nil
+      tm1 = nil
+      results = get_imits_mart_results( mgi_accession_id )
+            
+      #Work out if the starting allele is conditional (tm1a/e) or a deletion (tm1)
+      # - if it's conditional, work out if the mouse is also conditional (blank mouse allele)
+      # or if the mouse is targeted non-conditional (tm1e)
+      # - this has to be really carefully revised when Cre knockins start appearing
+      results[:data].each do |result|
+        next unless result["microinjection_status"] == 'Genotype confirmed'
+        product = "Mouse"
+        pipeline = result["consortium"]
+        starting_allele = result["allele_symbol_superscript"]
+        final_allele = result["mouse_allele_symbol_superscript"]
+        if(/tm\d\w/.match(starting_allele))
+          #If there's no override to the input allele, then use it
+          if(final_allele.nil?)
+            final_allele = 'conditional_ready'
+            final_allele_id = displayed_alleles["tm1a"]["allele_id"]
+          elsif(/tm\de/.match(final_allele))
+            final_allele = 'targeted_non_conditional'
+            final_allele_id = "not yet"
+          end
+        elsif(/tm\d/.match(starting_allele))
+            final_allele = 'deletion'
+            final_allele_id = displayed_alleles["tm1"]["allele_id"]
+        end
+        allele_type = final_allele
+        allele_strain = result["colony_background_strain"]
+        new_row = {
+          "product" => product,
+          "escell_pipeline" => pipeline,
+          "mutation_subtype" => final_allele,
+          "parental_cell_line" => allele_strain,
+          "allele_id" => final_allele_id
+        }
+        displayed_alleles["mouse_1"] = new_row
+      end
+    end
+  
     def search_impc2 (mgi_accession_id)
-        targ_rep_mart = datasources[:'ikmc-idcc_targ_rep'].ds
-        error_string  = "This data source provides information on Targeting Vectors and ES Cells. As a result this data will not be available on the page."
-        puts "searching for gene with mgi #{mgi_accession_id}"
-        results       = handle_biomart_errors( "ikmc-ikmc-targ_rep", error_string ) do
-          targ_rep_mart.search({
-            :process_results => true,
-            :filters         => { 'mgi_accession_id' => mgi_accession_id},
-            :attributes      => [
-              'mutation_subtype',
-              'parental_cell_line',
-              'allele_symbol_superscript',
-              'allele_id',
-              'parental_cell_line',
-              'es_cell_pipeline'
-            ].flatten
-          })
-        end
-        @displayed_alleles=[]
-        tm1a = nil
-        tm1e = nil
-        tm1 = nil
-        count = 0
-        puts "SIZE OF RESULTS #{results[:data].size}"
-        results[:data].each do |result|
-          next unless !(result["parental_cell_line"].nil?)
-          result[:product] = 'ES Cell'
-          puts "mutation #{result[:mutation_subtype]} tm1a: #{tm1a}"
-          if (result[:mutation_subtype] == 'conditional_ready' && tm1a.nil?)
-            result[:product] = 'ES Cell'
-            tm1a = result
-          end
-          if (result[:mutation_subtype] == 'targeted_non_conditional' && tm1e.nil?)
-            tm1e = result
-          end
-          if (result[:mutation_subtype] == 'deletion' && tm1.nil?)
-            tm1 = result
-          end
-        end
-        
-        # Display the conditional in preference to the targeted non-conditional
-        if(!tm1a.nil?)
-          @displayed_alleles << tm1a
-        elsif(!tm1e.nil?)
-          @displayed_alleles << tm1e
-        end
-        
-        # Display the deletion if we have it
-        if(!tm1.nil?)
-          @displayed_alleles << tm1
-        end
-        
-        
-        return @displayed_alleles
+      @displayed_alleles = {}
+
+      # add the tm1a or tm1e allele AND the tm1 allele if they exist
+      add_targ_rep_data( mgi_accession_id, @displayed_alleles)
+      
+      # add the corresponding mouse alleles if they exist
+      add_imits_data( mgi_accession_id, @displayed_alleles)
+      
+      @displayed_alleles["order"] = ["tm1a","tm1","tm1e","mouse_1","mouse_2"]
+      puts "<<<<<"
+      pp @displayed_alleles
+      puts "<<<<<"
+      return @displayed_alleles
     end
     
     def handle_biomart_errors( data_source, error_string )
@@ -167,133 +229,6 @@ module MartSearch
       return results
     end
     
-    def search_impc( query, page=1, use_cache=true, save_index_data=true )
-      @use_cache = false
-      fresh_ds_queries_to_do = []
-
-      page = 1 if page == 0
-      clear_instance_variables
-
-      if query =~ /MGI:/i
-#        @search_data[query] = {}
-#        @search_data[query][:index] = query.to_sym
-        search_from_fresh_index( query, page )
-        fresh_ds_queries_to_do.push(query.to_sym)
-      else
-        search_from_fresh_index( query, page )
-        #return nil
-      end
-
-      #puts "#### @search_data: "
-      #pp @search_data
-
-     # unless @search_data.empty?
-        #@search_data.each do |data_key,data|
-        #  puts "#### data_key: " + data_key.inspect
-        #  fresh_ds_queries_to_do.push(data_key)
-        #end
-
-        #fresh_ds_queries_to_do.push(:"MGI:1920453")
-
-        puts "#### fresh_ds_queries_to_do: "
-        pp fresh_ds_queries_to_do
-
-        unless fresh_ds_queries_to_do.empty?
-          grouped_search_terms = prepare_dataset_search_terms( fresh_ds_queries_to_do )
-          search_from_fresh_datasets_impc( fresh_ds_queries_to_do, grouped_search_terms )
-        end
-    #  end
-
-      puts "#### @search_results: "
-      pp @search_results
-
-      # Return paged_results
-      return @search_results
-    end
-
-    def search_impc_old( query, page=1, use_cache=true, save_index_data=true )
-
-      @use_cache = false
-
-      puts "#### search_impc..."
-      puts "#### query: " + query.inspect
-
-      self.logger.debug("[MartSearch::Controller] ::search - running search( '#{query}', #{page}, #{use_cache}, #{save_index_data} )")
-      page = 1 if page == 0
-      clear_instance_variables
-
-      if false && query =~ /MGI:/i
-
-      #  #:index=>{:mgi_accession_id_key=>\"MGI:1923551\", :mgi_accession_id=>\"MGI:1923551\", :MGI=>\"MGI:1923551\", :mgi=>\"MGI:1923551\"
-      #
-      #  @search_data[query] = {}
-      #  @search_data[query][:index] = {}
-      #  @search_data[query][:index][:mgi_accession_id_key] = query
-      #  @search_data[query][:index][:mgi_accession_id] = query
-      #  @search_data[query][:index][:MGI] = query
-      #  @search_data[query][:index][:mgi] = query
-
-      else
-
-        cached_index_data = fetch_from_cache( "index:#{query}-page#{page}" )
-        if cached_index_data != nil and use_cache
-          search_from_cached_index( cached_index_data )
-        else
-          if search_from_fresh_index( query, page ) and save_index_data
-            #obj_to_cache    = {
-            #  :search_data           => @search_data,
-            #  :search_results        => @search_results,
-            #  :current_page          => @index.current_page,
-            #  :current_results_total => @index.current_results_total,
-            #  :cache_timestamp       => DateTime.now.to_s
-            #}
-#            write_to_cache( "index:#{query}-page#{page}", obj_to_cache )
-          end
-        end
-
-      end
-
-      puts "#### @search_data: "
-      pp @search_data
-
-      unless @search_data.empty?
-        fresh_ds_queries_to_do = []
-
-        @search_data.each do |data_key,data|
-
-          puts "#### data_key: " + data_key.inspect
-
-          cached_dataset_data = fetch_from_cache( "datasets:#{data_key}" )
-
-          if cached_dataset_data != nil and use_cache
-            @search_data[data_key] = cached_dataset_data.merge(data)
-          else
-            fresh_ds_queries_to_do.push(data_key)
-          end
-        end
-
-        #fresh_ds_queries_to_do.push(:"MGI:1920453")
-
-        puts "#### fresh_ds_queries_to_do: "
-        pp fresh_ds_queries_to_do
-
-        unless fresh_ds_queries_to_do.empty?
-          grouped_search_terms = prepare_dataset_search_terms( fresh_ds_queries_to_do )
-          if search_from_fresh_datasets_impc( fresh_ds_queries_to_do, grouped_search_terms )
-            #fresh_ds_queries_to_do.each do |data_key|
-            #  unless @search_data[data_key].nil?
-            #    @search_data[data_key][:cache_timestamp] = DateTime.now.to_s
-            #    write_to_cache( "datasets:#{data_key}", @search_data[data_key] )
-            #  end
-            #end
-          end
-        end
-      end
-
-      # Return paged_results
-      return @search_results
-    end
-
     # Function to perform the searches against the index and marts.
     #
     # Sets up a results stash (@search_data) holding the data in a structure like:

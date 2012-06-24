@@ -413,7 +413,6 @@ module MartSearch
 #      'impc_search2!!'
       mgi_accession_id = params[:mgi_accession_id]
       @alleles = @ms.search_impc2(mgi_accession_id)
-      pp @alleles
       erb :impc_panel2, :layout => false
     end
 
