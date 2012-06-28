@@ -2,19 +2,19 @@
 
 module MartSearch
   module DataSetUtils
-    
+
     def emma_strains_sort_results( results )
       sorted_results = {}
-      
+
       results.each do |result|
         joined_attribute = result[ @config[:searching][:joined_attribute].to_sym ]
         emma_id          = result[:emma_id]
-        
+
         sorted_results[joined_attribute]          ||= {}
         sorted_results[joined_attribute][emma_id] ||= { :references => {}, :availability => [] }
-        
+
         emma_record = sorted_results[joined_attribute][emma_id]
-        
+
         # Add singular info first...
         singles = [
           :emma_id,
@@ -28,26 +28,26 @@ module MartSearch
           :phenotype_description,
           :owner
         ]
-        
+
         singles.each do |attribute|
           emma_record[attribute] = result[attribute]
         end
-        
+
         emma_record[:emma]          = true
         emma_record[:marker_symbol] = result[:gene_symbol]
         emma_record[:allele_name]   = fix_superscript_text_in_attribute(result[:alls_form])
-        
+
         # References...
         pubmed_id = result[:pubmed_id]
         emma_record[:references][pubmed_id] = { :pubmed_id => pubmed_id, :reference => result[:reference] } unless pubmed_id.nil?
-        
+
         # Availability...
         availability = result[:availability]
         emma_record[:availability].push(availability) unless availability.nil?
       end
-      
+
       return sorted_results
     end
-    
+
   end
 end
