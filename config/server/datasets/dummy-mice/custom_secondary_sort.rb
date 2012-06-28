@@ -101,16 +101,7 @@ module MartSearch
         strain  = strains.nil? || strains.empty? ? defaults : strains.first
         results.push(strain.merge(mouse))
 
-        #emma_copy.delete(strain[:emma_id])
-
         used_strain_list.push strain[:common_name]
-
-        #puts '###########################################################################'
-        #puts "mouse:"
-        #pp mouse
-        #puts "strain:"
-        #pp strain
-        #puts '###########################################################################'
       end
 
       # check for EMMA mice with no corresponding iMits mouse
