@@ -12,7 +12,7 @@ module MartSearch
     include MartSearch::Utils
     include MartSearch::ControllerUtils
 
-    USE_CACHE = false
+    USE_CACHE = true
     warn "#### NOT USING CACHE!!!" if ! USE_CACHE
 
     attr_reader :config, :cache, :logger, :index, :errors, :search_data
