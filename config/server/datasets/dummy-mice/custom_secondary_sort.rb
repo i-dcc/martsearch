@@ -93,16 +93,20 @@ module MartSearch
       results   = []
       emma_copy = emma.clone
 
+      used_strain_list = []
+
       # associate iMits mice to EMMA strains
       imits.each do |mouse|
         strains = emma_copy.values.select { |strain| mouse[:escell_clone] == strain[:common_name] }
         strain  = strains.nil? || strains.empty? ? defaults : strains.first
         results.push(strain.merge(mouse))
-        emma_copy.delete(strain[:emma_id])
+
+        used_strain_list.push strain[:common_name]
       end
 
       # check for EMMA mice with no corresponding iMits mouse
       emma_copy.values.each do |strain|
+        next if used_strain_list.include? strain[:common_name]
         results.push(defaults.merge(strain))
       end
 
