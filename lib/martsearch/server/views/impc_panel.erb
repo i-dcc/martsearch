@@ -1,0 +1,46 @@
+<table border="1">
+<thead>
+    <tr>
+        <td>Product</td>
+        <td>Allele Type</td>
+        <td>Allele Strain</td>
+        <td>Allele Map</td>
+        <td>Allele Sequence</td>
+        <td>Order</td>
+    </tr>
+</thead>
+<tbody>
+<%
+@alleles["order"].each do |tag|
+    allele = @alleles[tag]
+    if(!allele.nil?)
+%>
+<tr>
+    <td><%= allele["product"] %></td>
+    <td><%= allele["mutation_subtype"] %></td>
+    <td><%= allele["parental_cell_line"] %></td>
+    <td>
+        <% if(allele["allele_id"]=="not yet") %>
+            Not available yet
+        <% else %>
+            <a href="http://www.knockoutmouse.org/targ_rep/alleles/<%= allele["allele_id"] %>/allele-image" target="_blank">
+                <img ismap="true" height="50" width="200"
+                src="http://www.knockoutmouse.org/targ_rep/alleles/<%= allele["allele_id"] %>/allele-image">
+            </a>
+        <% end %>
+    </td>
+    <td>
+        <% if(allele["allele_id"]=="not yet") %>
+            Not available yet
+        <% else %>
+            <a href="http://www.knockoutmouse.org/targ_rep/alleles/<%= allele["allele_id"] %>/escell-clone-genbank-file">Genbank file</a>
+        <% end %>
+    </td>
+    <td><a href="<%= allele["order_url"]%>" target="_blank"><%= allele["order_visual"] %></a></td>
+</tr>
+<%
+    end
+end
+%>
+</tbody>
+</table>
