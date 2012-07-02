@@ -36,15 +36,15 @@ module MartSearch
       @dataviews_by_name = @config[:server][:dataviews_by_name]
 
       # OLS
-      #OLS.setup_cache(
-      #  {
-      #    :host => 'web-mei-t87p.internal.sanger.ac.uk',
-      #    :port => 3334,
-      #    :database => 'htgt_ols_cache',
-      #    :user => 'htgt',
-      #    :password => 'htgt'
-      #  }
-      #)
+      OLS.setup_cache(
+        {
+          :host => 'web-mei-t87p.internal.sanger.ac.uk',
+          :port => 3334,
+          :database => 'htgt_ols_cache',
+          :user => 'htgt',
+          :password => 'htgt'
+        }
+      )
 
       # Logger
       @logger                 = Logger.new($stdout)
