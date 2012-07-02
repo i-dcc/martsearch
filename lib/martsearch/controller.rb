@@ -78,7 +78,8 @@ module MartSearch
             'allele_symbol_superscript',
             'allele_id',
             'parental_cell_line',
-            'escell_pipeline'
+            'escell_pipeline',
+            'escell_ikmc_project_id'
           ].flatten
         })
       end
@@ -93,8 +94,30 @@ module MartSearch
       tm1e = nil
       tm1 = nil
       results[:data].each do |result|
+        puts "ES RESULT #{result}"
         next unless !(result["parental_cell_line"].nil?)
+        pipeline = result["escell_pipeline"]
+        project_id = result["escell_ikmc_project_id"]
+        if((pipeline == "EUCOMM") || (pipeline == "EUCOMMTools") || (pipeline == "EUCOMMToolsCre"))
+          order_url = "http://www.eummcr.org/order.php"
+          order_visual = "EUMMCR"
+        elsif ((pipeline == "KOMP-CSD") || (pipeline == "KOMP-Regeneron"))
+          if(project_id =~ /VG/)
+            order_url = "http://www.komp.org/geneinfo.php?project=#{project_id}"
+          else
+            order_url = "http://www.komp.org/geneinfo.php?project=CSD#{project_id}"
+          end
+          order_visual = "KOMP"
+        elsif ((pipeline == "MirKO") || (pipeline == "Sanger MGP"))
+          order_url = "mailto:mouseinterest@sanger.ac.uk?Subject=Mutant ES Cell line for #{result["marker_symbol"]}"
+          order_visual = "WTSI"
+        elsif (pipeline == "NorCOMM")
+          order_url = "http://www.phenogenomics.ca/services/cmmr/escell_services.html"
+          order_visual = "NorCOMM"
+        end  
         result["product"] = 'ES Cell'
+        result["order_url"] = order_url
+        result["order_visual"] = order_visual
         if (result["mutation_subtype"] == 'conditional_ready' && tm1a.nil?)
           tm1a = result
         end
@@ -129,16 +152,21 @@ module MartSearch
             'mgi_accession_id' => mgi_accession_id,
           },
           :attributes      => [
+            'marker_symbol',
             'consortium',
             'distribution_centre',
             'colony_background_strain',
             'production_centre',
+            'distribution_centre',
+            'emma',
             'microinjection_status',
             'allele_symbol_superscript',
             'mouse_allele_symbol_superscript',
             'phenotype_allele_type',
             'phenotype_status',
-            'phenotype_is_active'
+            'phenotype_is_active',
+            'distribution_centre',
+            'report_ikmc_project_id'
           ].flatten
         })
       end
@@ -153,36 +181,76 @@ module MartSearch
       #Work out if the starting allele is conditional (tm1a/e) or a deletion (tm1)
       # - if it's conditional, work out if the mouse is also conditional (blank mouse allele)
       # or if the mouse is targeted non-conditional (tm1e)
-      # - this has to be really carefully revised when Cre knockins start appearing
       results[:data].each do |result|
-        next unless result["microinjection_status"] == 'Genotype confirmed'
+        #puts "MOUSE RESULT #{result}"
+        next unless ((result["microinjection_status"] == 'Genotype confirmed') or (result["phenotype_status"] == "Cre Excision Complete"))
         product = "Mouse"
         pipeline = result["consortium"]
-        starting_allele = result["allele_symbol_superscript"]
-        final_allele = result["mouse_allele_symbol_superscript"]
-        if(/tm\d\w/.match(starting_allele))
-          #If there's no override to the input allele, then use it
-          if(final_allele.nil?)
-            final_allele = 'conditional_ready'
-            final_allele_id = displayed_alleles["tm1a"]["allele_id"]
-          elsif(/tm\de/.match(final_allele))
-            final_allele = 'targeted_non_conditional'
-            final_allele_id = "not yet"
+        
+        if(result["microinjection_status"] == 'Genotype confirmed')
+          starting_allele = result["allele_symbol_superscript"]
+          final_allele = result["mouse_allele_symbol_superscript"]
+          if(/tm\d\w/.match(starting_allele))
+            #If there's no override to the input allele, then use it
+            if(final_allele.nil?)
+              final_allele = 'conditional_ready'
+              final_allele_id = displayed_alleles["tm1a"]["allele_id"]
+            elsif(/tm\de/.match(final_allele))
+              final_allele = 'targeted_non_conditional'
+              final_allele_id = "not yet"
+            end
+          elsif(/tm\d/.match(starting_allele))
+              final_allele = 'deletion'
+              final_allele_id = displayed_alleles["tm1"]["allele_id"]
           end
-        elsif(/tm\d/.match(starting_allele))
-            final_allele = 'deletion'
-            final_allele_id = displayed_alleles["tm1"]["allele_id"]
+          allele_type = final_allele
+          allele_strain = result["colony_background_strain"]
+          order_url = nil
+          order_visual = nil
+          if(result["distribution_centre"]=="UCD")
+            project_id = result["report_ikmc_project_id"]
+            if(project_id =~ /VG/)
+              order_url = "http://www.komp.org/geneinfo.php?project=#{project_id}"
+            else
+              order_url = "http://www.komp.org/geneinfo.php?project=CSD#{project_id}"
+            end
+            order_visual = "KOMP"
+          elsif(result["emma"] == "1")
+            order_url = "http://www.emmanet.org/mutant_types.php?keyword=#{result["marker_symbol"]}"
+            order_visual = "EMMA"
+          elsif(result["distribution_centre"] == "WTSI")
+            order_url = "mailto:mouseinterest@sanger.ac.uk?Subject=Mutant mouse for #{result["marker_symbol"]}"
+            order_visual = "WTSI"
+          end
+          
+          new_row = {
+            "product" => product,
+            "escell_pipeline" => pipeline,
+            "mutation_subtype" => final_allele,
+            "parental_cell_line" => allele_strain,
+            "allele_id" => final_allele_id,
+            "order_url" => order_url,
+            "order_visual" => order_visual
+          }
+          displayed_alleles["mouse_1"] = new_row
         end
-        allele_type = final_allele
-        allele_strain = result["colony_background_strain"]
-        new_row = {
-          "product" => product,
-          "escell_pipeline" => pipeline,
-          "mutation_subtype" => final_allele,
-          "parental_cell_line" => allele_strain,
-          "allele_id" => final_allele_id
-        }
-        displayed_alleles["mouse_1"] = new_row
+        
+        
+        if(result["phenotype_status"] == "Cre Excision Complete")
+          phenotype_allele_type = result["phenotype_allele_type"]
+          if(phenotype_allele_type)
+            final_allele = 'Cre Excised'
+            final_allele_id = 'not yet'
+            new_row = {
+              "product" => product,
+              "escell_pipeline" => pipeline,
+              "mutation_subtype" => final_allele,
+              "parental_cell_line" => allele_strain,
+              "allele_id" => final_allele_id
+            }
+            displayed_alleles["mouse_2"] = new_row
+          end
+        end
       end
     end
   
