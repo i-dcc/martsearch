@@ -64,6 +64,236 @@ module MartSearch
       @search_results = []
     end
 
+    
+    def get_targrep_mart_results(mgi_accession_id)
+      targ_rep_mart = datasources[:'ikmc-idcc_targ_rep'].ds
+      error_string  = "Information on Targeting Vectors and ES Cells is missing"
+      results       = handle_biomart_errors( "ikmc-ikmc-targ_rep", error_string ) do
+        targ_rep_mart.search({
+          :process_results => true,
+          :filters         => { 'mgi_accession_id' => mgi_accession_id},
+          :attributes      => [
+            'mutation_subtype',
+            'parental_cell_line',
+            'allele_symbol_superscript',
+            'allele_id',
+            'parental_cell_line',
+            'escell_pipeline',
+            'escell_ikmc_project_id'
+          ].flatten
+        })
+      end
+      return results
+    end
+    
+    def add_targ_rep_data(mgi_accession_id, displayed_alleles)
+      
+      results = get_targrep_mart_results(mgi_accession_id)
+      
+      tm1a = nil
+      tm1e = nil
+      tm1 = nil
+      puts results
+      results.each do |result|
+        puts "ES RESULT #{result}"
+        next unless !(result["parental_cell_line"].nil?)
+        pipeline = result["escell_pipeline"]
+        project_id = result["escell_ikmc_project_id"]
+        if((pipeline == "EUCOMM") || (pipeline == "EUCOMMTools") || (pipeline == "EUCOMMToolsCre"))
+          order_url = "http://www.eummcr.org/order.php"
+          order_visual = "EUMMCR"
+        elsif ((pipeline == "KOMP-CSD") || (pipeline == "KOMP-Regeneron"))
+          if(project_id =~ /VG/)
+            order_url = "http://www.komp.org/geneinfo.php?project=#{project_id}"
+          else
+            order_url = "http://www.komp.org/geneinfo.php?project=CSD#{project_id}"
+          end
+          order_visual = "KOMP"
+        elsif ((pipeline == "MirKO") || (pipeline == "Sanger MGP"))
+          order_url = "mailto:mouseinterest@sanger.ac.uk?Subject=Mutant ES Cell line for #{result["marker_symbol"]}"
+          order_visual = "WTSI"
+        elsif (pipeline == "NorCOMM")
+          order_url = "http://www.phenogenomics.ca/services/cmmr/escell_services.html"
+          order_visual = "NorCOMM"
+        end  
+        result["product"] = 'ES Cell'
+        result["order_url"] = order_url
+        result["order_visual"] = order_visual
+        if (result["mutation_subtype"] == 'conditional_ready' && tm1a.nil?)
+          tm1a = result
+        end
+        if (result["mutation_subtype"] == 'targeted_non_conditional' && tm1e.nil?)
+          tm1e = result
+        end
+        if (result["mutation_subtype"] == 'deletion' && tm1.nil?)
+          tm1 = result
+        end
+      end
+      
+      # Display the conditional in preference to the targeted non-conditional
+      if(!tm1a.nil?)
+        displayed_alleles["tm1a"] = tm1a
+      elsif(!tm1e.nil?)
+        displayed_alleles["tm1e"] = tm1e
+      end
+      
+      # Display the deletion if we have it
+      if(!tm1.nil?)
+        displayed_alleles["tm1"] = tm1
+      end
+    end
+
+    def get_imits_mart_results(mgi_accession_id)
+      imits_mart = datasources[:'ikmc-imits'].ds
+      error_string  = "Information on Mice is missing"
+      results       = handle_biomart_errors( "ikmc-imits", error_string ) do
+      imits_mart.search({
+          :process_results => true,
+          :filters         => {
+            'mgi_accession_id' => mgi_accession_id,
+          },
+          :attributes      => [
+            'marker_symbol',
+            'consortium',
+            'distribution_centre',
+            'colony_background_strain',
+            'production_centre',
+            'distribution_centre',
+            'emma',
+            'microinjection_status',
+            'allele_symbol_superscript',
+            'mouse_allele_symbol_superscript',
+            'phenotype_allele_type',
+            'phenotype_status',
+            'phenotype_is_active',
+            'distribution_centre',
+            'report_ikmc_project_id'
+          ].flatten
+        })
+      end
+    end
+    
+    def add_imits_data( mgi_accession_id, displayed_alleles)
+      tm1a = nil
+      tm1e = nil
+      tm1 = nil
+      results = get_imits_mart_results( mgi_accession_id )
+            
+      #Work out if the starting allele is conditional (tm1a/e) or a deletion (tm1)
+      # - if it's conditional, work out if the mouse is also conditional (blank mouse allele)
+      # or if the mouse is targeted non-conditional (tm1e)
+      results.each do |result|
+        #puts "MOUSE RESULT #{result}"
+        next unless ((result["microinjection_status"] == 'Genotype confirmed') or (result["phenotype_status"] == "Cre Excision Complete"))
+        product = "Mouse"
+        pipeline = result["consortium"]
+        
+        if(result["microinjection_status"] == 'Genotype confirmed')
+          starting_allele = result["allele_symbol_superscript"]
+          final_allele = result["mouse_allele_symbol_superscript"]
+          if(/tm\d\w/.match(starting_allele))
+            #If there's no override to the input allele, then use it
+            if(final_allele.nil?)
+              final_allele = 'conditional_ready'
+              final_allele_id = displayed_alleles["tm1a"]["allele_id"]
+            elsif(/tm\de/.match(final_allele))
+              final_allele = 'targeted_non_conditional'
+              final_allele_id = "not yet"
+            end
+          elsif(/tm\d/.match(starting_allele))
+              final_allele = 'deletion'
+              final_allele_id = displayed_alleles["tm1"]["allele_id"]
+          end
+          allele_type = final_allele
+          allele_strain = result["colony_background_strain"]
+          order_url = nil
+          order_visual = nil
+          if(result["distribution_centre"]=="UCD")
+            project_id = result["report_ikmc_project_id"]
+            if(project_id =~ /VG/)
+              order_url = "http://www.komp.org/geneinfo.php?project=#{project_id}"
+            else
+              order_url = "http://www.komp.org/geneinfo.php?project=CSD#{project_id}"
+            end
+            order_visual = "KOMP"
+          elsif(result["emma"] == "1")
+            order_url = "http://www.emmanet.org/mutant_types.php?keyword=#{result["marker_symbol"]}"
+            order_visual = "EMMA"
+          elsif(result["distribution_centre"] == "WTSI")
+            order_url = "mailto:mouseinterest@sanger.ac.uk?Subject=Mutant mouse for #{result["marker_symbol"]}"
+            order_visual = "WTSI"
+          end
+          
+          new_row = {
+            "product" => product,
+            "escell_pipeline" => pipeline,
+            "mutation_subtype" => final_allele,
+            "parental_cell_line" => allele_strain,
+            "allele_id" => final_allele_id,
+            "order_url" => order_url,
+            "order_visual" => order_visual
+          }
+          displayed_alleles["mouse_1"] = new_row
+        end
+        
+        
+        if(result["phenotype_status"] == "Cre Excision Complete")
+          phenotype_allele_type = result["phenotype_allele_type"]
+          if(phenotype_allele_type)
+            final_allele = 'Cre Excised'
+            final_allele_id = 'not yet'
+            new_row = {
+              "product" => product,
+              "escell_pipeline" => pipeline,
+              "mutation_subtype" => final_allele,
+              "parental_cell_line" => allele_strain,
+              "allele_id" => final_allele_id
+            }
+            displayed_alleles["mouse_2"] = new_row
+          end
+        end
+      end
+    end
+    
+    def handle_biomart_errors( data_source, error_string )
+      MartSearch::Controller.instance().logger.debug("[MartSearch::ProjectUtils] ::handle_biomart_errors - running handle_biomart_errors( '#{data_source}', '#{error_string}' )")
+
+      results      = { :data => {}, :error => {} }
+      error_prefix = "There was a problem querying the '#{data_source}' biomart."
+      error_suffix = "Try refreshing your browser or come back in 10 minutes."
+      begin
+        results[:data] = yield
+      rescue Biomart::BiomartError => error
+        results[:error] = {
+          :text  => error_prefix + " " + error_string + " " + error_suffix,
+          :error => error.to_s,
+          :type  => error.class
+        }
+      rescue Timeout::Error => error
+        results[:error] = {
+          :text  => error_prefix + " " + error_string + " " + error_suffix,
+          :error => error.to_s,
+          :type  => error.class
+        }
+      end
+    end
+  
+    def search_impc (mgi_accession_id)
+      @displayed_alleles = {}
+
+      # add the tm1a or tm1e allele AND the tm1 allele if they exist
+      add_targ_rep_data( mgi_accession_id, @displayed_alleles)
+      
+      # add the corresponding mouse alleles if they exist
+      add_imits_data( mgi_accession_id, @displayed_alleles)
+      
+      @displayed_alleles["order"] = ["tm1a","tm1","tm1e","mouse_1","mouse_2"]
+      puts "<<<<<"
+      puts @displayed_alleles
+      puts "<<<<<"
+      return @displayed_alleles
+    end
+    
     # Function to perform the searches against the index and marts.
     #
     # Sets up a results stash (@search_data) holding the data in a structure like:
