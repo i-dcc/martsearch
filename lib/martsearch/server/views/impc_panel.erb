@@ -3,7 +3,8 @@
     <tr>
         <td>Product</td>
         <td>Allele Type</td>
-        <td>Allele Strain</td>
+        <td>Strain of Origin</td>
+        <td>MGI Allele Name</td>
         <td>Allele Map</td>
         <td>Allele Sequence</td>
         <td>Order</td>
@@ -18,7 +19,18 @@
 <tr>
     <td><%= allele["product"] %></td>
     <td><%= allele["mutation_subtype"] %></td>
-    <td><%= allele["parental_cell_line"] %></td>
+    <td><%= allele["escell_strain"] %></td>
+    <td>
+        <% if (!allele["mgi_allele_id"].nil?) %>
+        <a href="http://www.informatics.jax.org/searchtool/Search.do?query=<%= allele["mgi_allele_id"] %>">
+            <%= allele["marker_symbol"] %> <sup><%= allele["allele_symbol_superscript"] %></sup>
+        </a>
+        <% else %>
+            <a href="http://www.informatics.jax.org/searchtool/Search.do?query=<%= allele["marker_symbol"] %> <%= allele["allele_symbol_superscript"] %>">
+              <%= allele["marker_symbol"] %> <sup><%= allele["allele_symbol_superscript"] %></sup>
+            </a>
+        <% end %>
+    </td>
     <td>
         <% if(allele["allele_id"]=="not yet") %>
             Not available yet
