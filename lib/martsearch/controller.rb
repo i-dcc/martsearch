@@ -76,8 +76,10 @@ module MartSearch
             'mutation_subtype',
             'parental_cell_line',
             'allele_symbol_superscript',
+            'mgi_allele_id',
             'allele_id',
             'parental_cell_line',
+            'escell_strain',
             'escell_pipeline',
             'escell_ikmc_project_id'
           ].flatten
@@ -86,46 +88,53 @@ module MartSearch
       return results
     end
     
-    def add_targ_rep_data(mgi_accession_id, displayed_alleles)
-      
+    def add_order_details(result)
+      pipeline = result["escell_pipeline"]
+      project_id = result["escell_ikmc_project_id"]
+      if((pipeline == "EUCOMM") || (pipeline == "EUCOMMTools") || (pipeline == "EUCOMMToolsCre"))
+        order_url = "http://www.eummcr.org/order.php"
+        order_visual = "EUMMCR"
+      elsif ((pipeline == "KOMP-CSD") || (pipeline == "KOMP-Regeneron"))
+        if(project_id =~ /VG/)
+          order_url = "http://www.komp.org/geneinfo.php?project=#{project_id}"
+        else
+          order_url = "http://www.komp.org/geneinfo.php?project=CSD#{project_id}"
+        end
+        order_visual = "KOMP"
+      elsif ((pipeline == "MirKO") || (pipeline == "Sanger MGP"))
+        order_url = "mailto:mouseinterest@sanger.ac.uk?Subject=Mutant ES Cell line for #{result["marker_symbol"]}"
+        order_visual = "WTSI"
+      elsif (pipeline == "NorCOMM")
+        order_url = "http://www.phenogenomics.ca/services/cmmr/escell_services.html"
+        order_visual = "NorCOMM"
+      end  
+      result["order_url"] = order_url
+      result["order_visual"] = order_visual
+    end
+    
+    def add_targ_rep_data(mgi_accession_id, marker_symbol, displayed_alleles)
       results = get_targrep_mart_results(mgi_accession_id)
       
       tm1a = nil
       tm1e = nil
       tm1 = nil
-      puts results
       results.each do |result|
-        puts "ES RESULT #{result}"
         next unless !(result["parental_cell_line"].nil?)
-        pipeline = result["escell_pipeline"]
-        project_id = result["escell_ikmc_project_id"]
-        if((pipeline == "EUCOMM") || (pipeline == "EUCOMMTools") || (pipeline == "EUCOMMToolsCre"))
-          order_url = "http://www.eummcr.org/order.php"
-          order_visual = "EUMMCR"
-        elsif ((pipeline == "KOMP-CSD") || (pipeline == "KOMP-Regeneron"))
-          if(project_id =~ /VG/)
-            order_url = "http://www.komp.org/geneinfo.php?project=#{project_id}"
-          else
-            order_url = "http://www.komp.org/geneinfo.php?project=CSD#{project_id}"
-          end
-          order_visual = "KOMP"
-        elsif ((pipeline == "MirKO") || (pipeline == "Sanger MGP"))
-          order_url = "mailto:mouseinterest@sanger.ac.uk?Subject=Mutant ES Cell line for #{result["marker_symbol"]}"
-          order_visual = "WTSI"
-        elsif (pipeline == "NorCOMM")
-          order_url = "http://www.phenogenomics.ca/services/cmmr/escell_services.html"
-          order_visual = "NorCOMM"
-        end  
         result["product"] = 'ES Cell'
-        result["order_url"] = order_url
-        result["order_visual"] = order_visual
+        result["marker_symbol"] = marker_symbol
+        
+        add_order_details(result)
+        
         if (result["mutation_subtype"] == 'conditional_ready' && tm1a.nil?)
+          result["mutation_subtype"] = 'Conditional Ready'
           tm1a = result
         end
         if (result["mutation_subtype"] == 'targeted_non_conditional' && tm1e.nil?)
+          result["mutation_subtype"] = 'Targeted NonConditional'
           tm1e = result
         end
         if (result["mutation_subtype"] == 'deletion' && tm1.nil?)
+          result["mutation_subtype"] = 'Deletion'
           tm1 = result
         end
       end
@@ -173,6 +182,53 @@ module MartSearch
       end
     end
     
+    def add_order_fields (new_row, result)
+      order_url = nil
+      order_visual = nil
+      if(result["distribution_centre"]=="UCD")
+        project_id = result["report_ikmc_project_id"]
+        if(project_id =~ /VG/)
+          order_url = "http://www.komp.org/geneinfo.php?project=#{project_id}"
+        else
+          order_url = "http://www.komp.org/geneinfo.php?project=CSD#{project_id}"
+        end
+        order_visual = "KOMP"
+      elsif(result["emma"] == "1")
+        order_url = "http://www.emmanet.org/mutant_types.php?keyword=#{result["marker_symbol"]}"
+        order_visual = "EMMA"
+      elsif(result["distribution_centre"] == "WTSI")
+        order_url = "mailto:mouseinterest@sanger.ac.uk?Subject=Mutant mouse for #{result["marker_symbol"]}"
+        order_visual = "WTSI"
+      end
+      new_row["order_url"] = order_url
+      new_row["order_visual"] = order_visual
+    end
+    
+    def add_mouse_allele( result, displayed_alleles, new_row)
+      starting_allele = result["allele_symbol_superscript"]
+      final_allele = result["mouse_allele_symbol_superscript"]
+      if(/tm\d\w/.match(starting_allele))
+        #If there's no override to the input allele, then use it
+        if(final_allele.nil?)
+          final_allele = 'Conditional Ready'
+          final_allele_id = displayed_alleles["tm1a"]["allele_id"]
+        elsif(/tm\de/.match(final_allele))
+          final_allele = 'Targeted Non-Conditional'
+          final_allele_id = "not yet"
+        end
+      elsif(/tm\d/.match(starting_allele))
+          final_allele = 'Deletion'
+          final_allele_id = displayed_alleles["tm1"]["allele_id"]
+      end
+      
+      allele_type = final_allele
+      allele_strain = result["colony_background_strain"]
+      
+      new_row["mutation_subtype"] = final_allele
+      new_row["escell_strain"] = allele_strain
+      new_row["allele_id"] = final_allele_id
+    end
+    
     def add_imits_data( mgi_accession_id, displayed_alleles)
       tm1a = nil
       tm1e = nil
@@ -183,59 +239,24 @@ module MartSearch
       # - if it's conditional, work out if the mouse is also conditional (blank mouse allele)
       # or if the mouse is targeted non-conditional (tm1e)
       results.each do |result|
-        #puts "MOUSE RESULT #{result}"
+        #only interested in GC or Cre-excised mice
         next unless ((result["microinjection_status"] == 'Genotype confirmed') or (result["phenotype_status"] == "Cre Excision Complete"))
+        new_row = {}
+        
         product = "Mouse"
         pipeline = result["consortium"]
         
         if(result["microinjection_status"] == 'Genotype confirmed')
-          starting_allele = result["allele_symbol_superscript"]
-          final_allele = result["mouse_allele_symbol_superscript"]
-          if(/tm\d\w/.match(starting_allele))
-            #If there's no override to the input allele, then use it
-            if(final_allele.nil?)
-              final_allele = 'conditional_ready'
-              final_allele_id = displayed_alleles["tm1a"]["allele_id"]
-            elsif(/tm\de/.match(final_allele))
-              final_allele = 'targeted_non_conditional'
-              final_allele_id = "not yet"
-            end
-          elsif(/tm\d/.match(starting_allele))
-              final_allele = 'deletion'
-              final_allele_id = displayed_alleles["tm1"]["allele_id"]
-          end
-          allele_type = final_allele
-          allele_strain = result["colony_background_strain"]
-          order_url = nil
-          order_visual = nil
-          if(result["distribution_centre"]=="UCD")
-            project_id = result["report_ikmc_project_id"]
-            if(project_id =~ /VG/)
-              order_url = "http://www.komp.org/geneinfo.php?project=#{project_id}"
-            else
-              order_url = "http://www.komp.org/geneinfo.php?project=CSD#{project_id}"
-            end
-            order_visual = "KOMP"
-          elsif(result["emma"] == "1")
-            order_url = "http://www.emmanet.org/mutant_types.php?keyword=#{result["marker_symbol"]}"
-            order_visual = "EMMA"
-          elsif(result["distribution_centre"] == "WTSI")
-            order_url = "mailto:mouseinterest@sanger.ac.uk?Subject=Mutant mouse for #{result["marker_symbol"]}"
-            order_visual = "WTSI"
-          end
+          # original ES Cell allele is stored in imits redundantly
+          new_row["product"] = product
+          new_row["escell_pipeline"] = pipeline
           
-          new_row = {
-            "product" => product,
-            "escell_pipeline" => pipeline,
-            "mutation_subtype" => final_allele,
-            "parental_cell_line" => allele_strain,
-            "allele_id" => final_allele_id,
-            "order_url" => order_url,
-            "order_visual" => order_visual
-          }
+          add_mouse_allele( result, displayed_alleles, new_row)
+          
+          add_order_fields(new_row, result)
+          
           displayed_alleles["mouse_1"] = new_row
         end
-        
         
         if(result["phenotype_status"] == "Cre Excision Complete")
           phenotype_allele_type = result["phenotype_allele_type"]
@@ -280,9 +301,16 @@ module MartSearch
   
     def search_impc (mgi_accession_id)
       @displayed_alleles = {}
+      
+      index_return = @index.search( mgi_accession_id, 1)
+      gene_doc = index_return[mgi_accession_id.to_sym]
+      marker_symbol = nil
+      if(!gene_doc.nil?)
+        marker_symbol = "#{gene_doc[:index][:marker_symbol]}"
+      end
 
       # add the tm1a or tm1e allele AND the tm1 allele if they exist
-      add_targ_rep_data( mgi_accession_id, @displayed_alleles)
+      add_targ_rep_data( mgi_accession_id, marker_symbol, @displayed_alleles)
       
       # add the corresponding mouse alleles if they exist
       add_imits_data( mgi_accession_id, @displayed_alleles)
