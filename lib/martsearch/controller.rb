@@ -257,9 +257,10 @@ module MartSearch
           
           displayed_alleles["mouse_1"] = new_row
         end
-        
+         
         if(result["phenotype_status"] == "Cre Excision Complete")
           phenotype_allele_type = result["phenotype_allele_type"]
+          allele_strain = displayed_alleles["mouse_1"]["escell_strain"]
           if(phenotype_allele_type)
             final_allele = 'Cre Excised'
             final_allele_id = 'not yet'
@@ -267,7 +268,7 @@ module MartSearch
               "product" => product,
               "escell_pipeline" => pipeline,
               "mutation_subtype" => final_allele,
-              "parental_cell_line" => allele_strain,
+              "escell_strain" => allele_strain,
               "allele_id" => final_allele_id
             }
             displayed_alleles["mouse_2"] = new_row
@@ -316,9 +317,6 @@ module MartSearch
       add_imits_data( mgi_accession_id, @displayed_alleles)
       
       @displayed_alleles["order"] = ["tm1a","tm1","tm1e","mouse_1","mouse_2"]
-      puts "<<<<<"
-      puts @displayed_alleles
-      puts "<<<<<"
       return @displayed_alleles
     end
     

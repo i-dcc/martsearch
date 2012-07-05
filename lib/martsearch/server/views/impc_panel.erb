@@ -1,7 +1,14 @@
+<style type="text/css">
+.gene-data {background:#FFFFFF;}
+</style>
+
+
+<% if(@alleles.length > 1) %>
+
 <table border="1">
 <thead>
     <tr>
-        <td>Product</td>
+        <td class="gene-data">Product</td>
         <td>Allele Type</td>
         <td>Strain of Origin</td>
         <td>MGI Allele Name</td>
@@ -56,3 +63,7 @@ end
 %>
 </tbody>
 </table>
+
+<% else %>
+<h4> No IKMC Targeted Mutations For This Gene </h4>
+<% end   %>
