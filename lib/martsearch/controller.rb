@@ -207,18 +207,30 @@ module MartSearch
     def add_mouse_allele( result, displayed_alleles, new_row)
       starting_allele = result["allele_symbol_superscript"]
       final_allele = result["mouse_allele_symbol_superscript"]
+      starting_allele = result["allele_symbol_superscript"]
+      final_allele_symbol_superscript = nil
+      final_allele = nil
+      #puts "adding mouse allele"
       if(/tm\d\w/.match(starting_allele))
         #If there's no override to the input allele, then use it
+        #puts "starting allele #{starting_allele}"
         if(final_allele.nil?)
+          #puts "final allele is nil"
           final_allele = 'Conditional Ready'
           final_allele_id = displayed_alleles["tm1a"]["allele_id"]
+          final_mgi_allele_id = displayed_alleles["tm1a"]["mgi_allele_id"]
+          final_allele_symbol_superscript = displayed_alleles["tm1a"]["allele_symbol_superscript"]
         elsif(/tm\de/.match(final_allele))
           final_allele = 'Targeted Non-Conditional'
-          final_allele_id = "not yet"
+          final_allele_id = displayed_alleles["tm1e"]["allele_id"]
+          final_mgi_allele_id = displayed_alleles["tm1e"]["mgi_allele_id"]
+          final_allele_symbol_superscript = displayed_alleles["tm1e"]["allele_symbol_superscript"]
         end
       elsif(/tm\d/.match(starting_allele))
           final_allele = 'Deletion'
           final_allele_id = displayed_alleles["tm1"]["allele_id"]
+          final_mgi_allele_id = displayed_alleles["tm1"]["mgi_allele_id"]
+          final_allele_symbol_superscript = displayed_alleles["tm1"]["allele_symbol_superscript"]
       end
       
       allele_type = final_allele
@@ -227,6 +239,9 @@ module MartSearch
       new_row["mutation_subtype"] = final_allele
       new_row["escell_strain"] = allele_strain
       new_row["allele_id"] = final_allele_id
+      new_row["mgi_allele_id"] = final_mgi_allele_id
+      #puts "new row"
+      #puts new_row
     end
     
     def add_imits_data( mgi_accession_id, displayed_alleles)
@@ -252,6 +267,9 @@ module MartSearch
           new_row["escell_pipeline"] = pipeline
           
           add_mouse_allele( result, displayed_alleles, new_row)
+          
+          #puts "after add_mouse_allele"
+          #puts new_row
           
           add_order_fields(new_row, result)
           
