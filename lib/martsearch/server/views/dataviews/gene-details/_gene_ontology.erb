@@ -2,11 +2,11 @@
   <% mgi_acc_id = result_data[:'mgi-markers'][:mgi_accession_id].gsub(':','') %>
   <h6>Gene Ontology</h6>
   <p>
-    This ontology tree only contains the parts of the gene ontology 
+    This ontology tree only contains the parts of the gene ontology
     that are relevant to this gene.
   </p>
-  <a href="#" class="go_ontology_tree_open ontology_tree_open">open tree</a> | 
+  <a href="#" class="go_ontology_tree_open ontology_tree_open">open tree</a> |
   <a href="#" class="go_ontology_tree_close ontology_tree_close">close tree</a>
   <div class="clear"></div>
-  <div id="<%= "#{mgi_acc_id}-root" %>" class="go_ontology_tree"></div>
+  <div id="<%= "#{mgi_acc_id}-root" %>" query="<%= "#{params[:query]}" %>" class="go_ontology_tree"></div>
 <% end %>
