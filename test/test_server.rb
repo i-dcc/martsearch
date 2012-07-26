@@ -400,6 +400,11 @@ class MartSearchServerRackTest < Test::Unit::TestCase
       end
     end
 
+    #should "not fall-over when id missing from Gene Ontology request" do
+    #  @browser.get "/go_ontology"
+    #  assert_equal( 404, @browser.last_response.status )
+    #end
+
     should "serve up JSON for EMAP Ontology data (for Eurexpress)" do
       VCR.use_cassette('test_server_emap_ontology_json') do
         omit_if(
