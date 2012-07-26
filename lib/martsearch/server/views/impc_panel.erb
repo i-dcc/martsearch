@@ -1,0 +1,96 @@
+<style type="text/css">
+.gene-data {background:#FFFFFF;}
+
+.datagrid table { border-collapse: collapse; text-align: left; width: 100%; }
+
+.datagrid {font: normal 12px/150% Arial, Helvetica, sans-serif; background: #fff; overflow: hidden; border: 1px solid #8C8C8C; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; }
+
+.datagrid table td, .datagrid table th { padding: 3px 10px; }
+
+.datagrid table thead th {background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #8C8C8C), color-stop(1, #7D7D7D) );background:-moz-linear-gradient( center top, #8C8C8C 5%, #7D7D7D 100% );filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#8C8C8C', endColorstr='#7D7D7D');background-color:#8C8C8C; color:#FFFFFF; font-size: 15px; font-weight: bold; border-left: 1px solid #A3A3A3; }
+
+.datagrid table thead th:first-child { border: none; }
+
+.datagrid table tfoot td {background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #8C8C8C), color-stop(1, #7D7D7D) );background:-moz-linear-gradient( center top, #8C8C8C 5%, #7D7D7D 100% );filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#8C8C8C', endColorstr='#7D7D7D');background-color:#8C8C8C; color:#FFFFFF; font-size: 15px; font-weight: bold; border-left: 1px solid #A3A3A3; }
+
+.datagrid table tfoot td:first-child { border: none; }
+
+.datagrid table tbody td { color: #7D7D7D; border-left: 1px solid #DBDBDB;font-size: 12px;font-weight: normal; }.datagrid table tbody .alt td { background: #EBEBEB; color: #7D7D7D; }
+
+.datagrid table tbody td:first-child { border: none; }
+
+</style>
+
+
+<% if(@alleles.length > 1) %>
+
+<div class="datagrid">
+<table>
+<thead>
+    <tr>
+        <th>Product</td>
+        <th>Allele Type</td>
+        <th>Strain of Origin</td>
+        <th>MGI Allele Name</td>
+        <th>Allele Map</td>
+        <th>Allele Sequence</td>
+        <th>Order</td>
+    </tr>
+</thead>
+<tbody>
+<%
+alt=true
+@alleles["order"].each do |tag|
+    allele = @alleles[tag]
+    if(!allele.nil?)
+    alt=!alt
+%>
+<% if alt %>
+  <tr class='alt'>
+<% else %>
+  <tr>
+<% end %>
+    <td><%= allele["product"] %></td>
+    <td><%= allele["mutation_subtype"] %></td>
+    <td><%= allele["escell_strain"] %></td>
+    <td>
+        <% if (!allele["mgi_allele_id"].nil?) %>
+        <a href="http://www.informatics.jax.org/searchtool/Search.do?query=<%= allele["mgi_allele_id"] %>">
+            <%= allele["marker_symbol"] %> <sup><%= allele["allele_symbol_superscript"] %></sup>
+        </a>
+        <% else %>
+            <a href="http://www.informatics.jax.org/searchtool/Search.do?query=<%= allele["marker_symbol"] %> <%= allele["allele_symbol_superscript"] %>">
+              <%= allele["marker_symbol"] %> <sup><%= allele["allele_symbol_superscript"] %></sup>
+            </a>
+        <% end %>
+    </td>
+    <td>
+        <% if(allele["allele_id"]=="not yet") %>
+            Not available yet
+        <% else %>
+            <a href="http://www.knockoutmouse.org/targ_rep/alleles/<%= allele["allele_id"] %>/allele-image" target="_blank">
+                <img ismap="true" height="50" width="200"
+                src="http://www.knockoutmouse.org/targ_rep/alleles/<%= allele["allele_id"] %>/allele-image">
+            </a>
+        <% end %>
+    </td>
+    <td>
+        <% if(allele["allele_id"]=="not yet") %>
+            Not available yet
+        <% else %>
+            <a href="http://www.knockoutmouse.org/targ_rep/alleles/<%= allele["allele_id"] %>/escell-clone-genbank-file">Genbank file</a>
+        <% end %>
+    </td>
+    <td><a href="<%= allele["order_url"]%>" target="_blank"><%= allele["order_visual"] %></a></td>
+</tr>
+<%
+    end
+end
+%>
+</tbody>
+</table>
+</div>
+
+<% else %>
+<h4> No IKMC Targeted Mutations For This Gene </h4>
+<% end   %>

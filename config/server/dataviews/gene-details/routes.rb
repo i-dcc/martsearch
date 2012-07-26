@@ -2,6 +2,12 @@ module MartSearch
   class Server
 
     get "/go_ontology/?" do
+      #if params[:id].nil? || ! params[:id].include?('-')
+      #  status 404
+      #  erb :not_found
+      #  halt
+      #end
+
       id_params = params[:id].split('-')
 
       mgi_acc_id = id_params[0].gsub('MGI','MGI:')
