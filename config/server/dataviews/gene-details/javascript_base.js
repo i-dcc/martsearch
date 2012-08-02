@@ -13,7 +13,7 @@ jQuery(".go_ontology_tree").each( function() {
       ajax: {
         url:  martsearch_url + "/go_ontology",
         data: function (n) {
-          var rv = { id : n.attr ? n.attr("id") : id_arg, query : query_arg }
+          var rv = { id : n.attr ? n.attr("id") : id_arg, lastquery : query_arg }
           return rv;
         }
       }
