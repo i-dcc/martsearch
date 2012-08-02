@@ -3,7 +3,6 @@
 
 jQuery(".go_ontology_tree").each( function() {
   var id_arg = jQuery(this).attr('id');
-  var query_arg = jQuery(this).attr('query');
 
   jQuery("#"+id_arg).jstree({
     core: {
@@ -13,8 +12,7 @@ jQuery(".go_ontology_tree").each( function() {
       ajax: {
         url:  martsearch_url + "/go_ontology",
         data: function (n) {
-          var rv = { id : n.attr ? n.attr("id") : id_arg, lastquery : query_arg }
-          return rv;
+          return { id : n.attr ? n.attr("id") : id_arg };
         }
       }
     },
