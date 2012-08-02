@@ -2,11 +2,11 @@ module MartSearch
   class Server
 
     get "/go_ontology/?" do
-      #if params[:id].nil? || ! params[:id].include?('-')
-      #  status 404
-      #  erb :not_found
-      #  halt
-      #end
+      if params[:id].nil? || ! params[:id].include?('-')
+        status 404
+        erb :not_found
+        halt
+      end
 
       id_params = params[:id].split('-')
 
