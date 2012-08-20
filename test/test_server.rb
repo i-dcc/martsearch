@@ -379,26 +379,26 @@ class MartSearchServerRackTest < Test::Unit::TestCase
       end
     end
 
-    should "serve up JSON for Gene Ontology data" do
-      VCR.use_cassette('test_server_go_ontology_json') do
-        # First test for when we expect a return...
-        mgi_acc_ids_to_test = ['MGI105369','MGI2444584','MGI104510']
-        mgi_acc_ids_to_test.each do |mgi|
-          @browser.get "/go_ontology?id=#{mgi}-root"
-          assert( @browser.last_response.ok?, "A request to '/go_ontology?id=#{mgi}-root' failed!" )
-          json = JSON.parse( @browser.last_response.body, :max_nesting => false )
-          assert( json.is_a?(Array) )
-          assert( json.first['data'] != nil )
-        end
-
-        # Then for when we don't...
-        mgis_with_no_return = ['MGI1915733']
-        mgis_with_no_return.each do |mgi|
-          @browser.get "/go_ontology?id=#{mgi}-root"
-          assert_equal( 404, @browser.last_response.status )
-        end
-      end
-    end
+    #should "serve up JSON for Gene Ontology data" do
+    #  VCR.use_cassette('test_server_go_ontology_json') do
+    #    # First test for when we expect a return...
+    #    mgi_acc_ids_to_test = ['MGI105369','MGI2444584','MGI104510']
+    #    mgi_acc_ids_to_test.each do |mgi|
+    #      @browser.get "/go_ontology?id=#{mgi}-root"
+    #      assert( @browser.last_response.ok?, "A request to '/go_ontology?id=#{mgi}-root' failed!" )
+    #      json = JSON.parse( @browser.last_response.body, :max_nesting => false )
+    #      assert( json.is_a?(Array) )
+    #      assert( json.first['data'] != nil )
+    #    end
+    #
+    #    # Then for when we don't...
+    #    mgis_with_no_return = ['MGI1915733']
+    #    mgis_with_no_return.each do |mgi|
+    #      @browser.get "/go_ontology?id=#{mgi}-root"
+    #      assert_equal( 404, @browser.last_response.status )
+    #    end
+    #  end
+    #end
 
     #should "not fall-over when id missing from Gene Ontology request" do
     #  @browser.get "/go_ontology"

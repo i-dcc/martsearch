@@ -1,7 +1,7 @@
 
 <% if result_data[:'mgi-markers'][:start] and result_data[:'mgi-markers'][:end] %>
   <span style="float: right;">
-    <%= 
+    <%=
       mgi_gbrowse_img(
         350,
         result_data[:'mgi-markers'][:chromosome],
@@ -40,11 +40,11 @@
   <tr>
     <%
       location_text = "Chr#{result_data[:'mgi-markers'][:chromosome]}"
-      
+
       if result_data[:'mgi-markers'][:start] and result_data[:'mgi-markers'][:end]
         location_text = location_text + ":#{result_data[:'mgi-markers'][:start]}-#{result_data[:'mgi-markers'][:end]}"
       end
-      
+
       if result_data[:'mgi-markers'][:strand]
         location_text = location_text + "(#{result_data[:'mgi-markers'][:strand]})"
       end
@@ -75,7 +75,7 @@
         %>
         <th width="15%">Ensembl Gene ID:</th>
         <td width="18%"><%= ensembl_links.join(", ") %></td>
-        
+
         <%
           vega_ids = result_data[:'mgi-markers'][:vega_gene_ids]
           vega_links = []
@@ -118,10 +118,6 @@
         <td></td>
       </tr>
     </table>
-    
-    <div class="go_ontology_wrapper">
-      <%= partial( 'dataviews/gene-details/gene_ontology', :locals => { :result_data => result_data } ) %>
-    </div>
     
     <div class="interpro_orthalog_wrapper">
       <%= partial( 'dataviews/gene-details/interpro',      :locals => { :result_data => result_data } ) %>
