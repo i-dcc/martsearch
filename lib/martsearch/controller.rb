@@ -257,7 +257,6 @@ module MartSearch
       # or if the mouse is targeted non-conditional (tm1e)
       results.each do |result|
         #only interested in GC or Cre-excised mice
-        next if ( ! result || ! result["microinjection_status"] || ! result["phenotype_status"] )
         next unless ((result["microinjection_status"] == 'Genotype confirmed') or (result["phenotype_status"] == "Cre Excision Complete"))
         new_row = {}
 
