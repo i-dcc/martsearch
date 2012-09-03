@@ -37,7 +37,7 @@ module MartSearch
     # We're going to use the version number as a cache breaker for the CSS
     # and javascript code. Update with each release of your portal (especially
     # if you change the CSS or JS)!!!
-    VERSION = '0.1.25'
+    VERSION = '0.1.26'
     DEFAULT_CSS_FILES = [
       'reset.css',
       'jquery.prettyPhoto.css',
@@ -351,7 +351,7 @@ module MartSearch
       @alleles = @ms.search_impc(mgi_accession_id)
       erb :impc_panel, :layout => false
     end
-    
+
     ##
     ## Load in any custom (per dataset) routes
     ##
