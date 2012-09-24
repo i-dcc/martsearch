@@ -689,6 +689,7 @@ module MartSearch
           "Mice - Germline transmission"                            => { :stage => "mice",    :stage_type => "normal" },
           "Mice - Genotype confirmed"                               => { :stage => "mice",    :stage_type => "normal" },
           "Redesign Requested"                                      => { :stage => "designs", :stage_type => "normal" },
+          "Mice - Phenotype Data Available"                         => { :stage => "mice",    :stage_type => "normal" },
 
           # KOMP-Regeneron
           "Regeneron Selected"                                      => { :stage => "pre",     :stage_type => "normal" },

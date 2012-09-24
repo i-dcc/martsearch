@@ -32,7 +32,7 @@ class MartSearchIndexBuilderTest < Test::Unit::TestCase
     should 'correctly process the results from a DataSource return' do
       VCR.use_cassette( 'test_index_builder_process_dataset' ) do
         @index_builder.builder_config[:datasets][:'ikmc-dcc-gene_details'][:indexing][:filters] = {
-          :status => ['Mice - Genotype confirmed','Mice - Germline transmission']
+          :status => ['Mice - Genotype confirmed','Mice - Germline transmission', 'Mice - Phenotype Data Available']
         }
 
         setup_and_move_to_work_directory()
