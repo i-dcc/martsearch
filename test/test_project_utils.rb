@@ -20,7 +20,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
         :ensembl_gene_id  => "ENSMUSG00000018666",
         :vega_gene_id     => "OTTMUSG00000001636",
         :ikmc_project     => "EUCOMM",
-        :status           => "Mice - Genotype confirmed",
+        :status           => "Mice - Phenotype Data Available",
         :mouse_available  => "1",
         :escell_available => "1",
         :vector_available => "1"
