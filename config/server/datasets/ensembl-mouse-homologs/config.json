@@ -1,6 +1,6 @@
 {
   "datasource":            "ensembl-mouse",
-  "enabled":               true,
+  "enabled":               false,
   "custom_sort":           true,
   "custom_secondary_sort": false,
   "attribution":           "Ensembl",

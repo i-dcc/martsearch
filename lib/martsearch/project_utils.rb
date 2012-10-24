@@ -37,11 +37,11 @@ module MartSearch
         ## Look for human orthalog's
         ##
 
-        if data[:ensembl_gene_id]
-          human_orthalogs = get_human_orthalog( datasources, data[:ensembl_gene_id] )
-          data.merge!( human_orthalogs[:data] ) unless human_orthalogs[:data].empty?
-          errors.push( human_orthalogs[:error] ) unless human_orthalogs[:error].empty?
-        end
+        #if data[:ensembl_gene_id]
+        #  human_orthalogs = get_human_orthalog( datasources, data[:ensembl_gene_id] )
+        #  data.merge!( human_orthalogs[:data] ) unless human_orthalogs[:data].empty?
+        #  errors.push( human_orthalogs[:error] ) unless human_orthalogs[:error].empty?
+        #end
 
         ##
         ## Now search the targ_rep for vectors and es cells
