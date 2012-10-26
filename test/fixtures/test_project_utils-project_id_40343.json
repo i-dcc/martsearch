@@ -10,10 +10,6 @@
     "mouse_available":"1",
     "escell_available":"1",
     "vector_available":"1",
-    "human_ensembl_gene":"ENSG00000101986",
-    "human_ensembl_chromosome":"X",
-    "human_ensembl_start":"152990323",
-    "human_ensembl_end":"153010216",
     "mice":
 		[
 			{

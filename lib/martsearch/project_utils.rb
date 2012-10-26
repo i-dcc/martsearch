@@ -71,9 +71,17 @@ module MartSearch
           es_cell_names.push( data[:es_cells][symbol][:cells] ) unless data[:es_cells][symbol].nil?
         end
 
+
+        #puts "#### es_cell_names:"
+        #puts es_cell_names.inspect
+
         es_cell_names.flatten!.map! { |es_cell| es_cell[:name] }
         unless es_cell_names.empty?
           mice = get_mice( datasources, es_cell_names )
+
+          puts "#### mice:"
+          puts mice.inspect
+
           data.merge!( mice[:data] ) unless mice[:data].empty?
           errors.push( mice[:error] ) unless mice[:error].empty?
         end
@@ -531,6 +539,8 @@ module MartSearch
               'allele_id',
               'design_id',
               'mutation_subtype',
+              'mutation_type',
+              'mutation_method',
               'cassette',
               'cassette_type',
               'backbone',
@@ -570,12 +580,12 @@ module MartSearch
           ## Intermediate Vectors
           ##
 
-          unless result['mutation_subtype'] == 'targeted_non_conditional'
+          unless result['mutation_type'] == 'Targeted Non Conditional'
             unless result['intermediate_vector'].nil?
               data['intermediate_vectors'].push(
                 'name'              => result['intermediate_vector'],
                 'design_id'         => result['design_id'],
-                'design_type'       => allele_type( nil, result['mutation_subtype'] )
+                'design_type'       => allele_type( nil, result['mutation_type'] )
               )
             end
           end
@@ -584,12 +594,12 @@ module MartSearch
           ## Targeting Vectors
           ##
 
-          unless result['mutation_subtype'] == 'targeted_non_conditional'
+          unless result['mutation_type'] == 'Targeted Non Conditional'
             unless result['targeting_vector'].nil?
               data['targeting_vectors'].push(
                 'name'          => result['targeting_vector'],
                 'design_id'     => result['design_id'],
-                'design_type'   => allele_type( nil, result['mutation_subtype'] ),
+                'design_type'   => allele_type( nil, result['mutation_type'] ),
                 'cassette'      => result['cassette'],
                 'cassette_type' => result['cassette_type'],
                 'backbone'      => result['backbone']
@@ -604,7 +614,7 @@ module MartSearch
           next if result['escell_clone'].nil?
 
           push_to = 'targeted non-conditional'
-          push_to = 'conditional' if result['mutation_subtype'] == 'conditional_ready'
+          push_to = 'conditional' if result['mutation_type'] == 'Conditional Ready'
 
           # Prepare the QC data
           qc_data = { 'qc_count' => 0 }
@@ -627,7 +637,7 @@ module MartSearch
             {
               'name'                      => result['escell_clone'],
               'allele_symbol_superscript' => result['allele_symbol_superscript'],
-              'allele_type'               => allele_type( result['allele_symbol_superscript'], result['mutation_subtype'] ),
+              'allele_type'               => allele_type( result['allele_symbol_superscript'], result['mutation_type'] ),
               'parental_cell_line'        => result['parental_cell_line'],
               'targeting_vector'          => result['targeting_vector'],
               'cassette'                  => result['cassette'],

@@ -12,8 +12,8 @@ module MartSearch
     include MartSearch::Utils
     include MartSearch::ControllerUtils
 
-    USE_CACHE = true
-    USE_OLS = true
+    USE_CACHE = false
+    USE_OLS = false
     warn "#### NOT USING CACHE!!!" if ! USE_CACHE
     warn "#### NOT USING OLS!!!" if ! USE_OLS
 
@@ -75,6 +75,8 @@ module MartSearch
           :process_results => true,
           :filters         => { 'mgi_accession_id' => mgi_accession_id},
           :attributes      => [
+            'mutation_type',
+            'mutation_method',
             'mutation_subtype',
             'parental_cell_line',
             'allele_symbol_superscript',
@@ -127,16 +129,16 @@ module MartSearch
 
         add_order_details(result)
 
-        if (result["mutation_subtype"] == 'conditional_ready' && tm1a.nil?)
-          result["mutation_subtype"] = 'Conditional Ready'
+        if (result["mutation_type"] == 'Conditional Ready' && tm1a.nil?)
+          result["mutation_type"] = 'Conditional Ready'
           tm1a = result
         end
-        if (result["mutation_subtype"] == 'targeted_non_conditional' && tm1e.nil?)
-          result["mutation_subtype"] = 'Targeted NonConditional'
+        if (result["mutation_type"] == 'Targeted Non Conditional' && tm1e.nil?)
+          result["mutation_type"] = 'Targeted Non Conditional'
           tm1e = result
         end
-        if (result["mutation_subtype"] == 'deletion' && tm1.nil?)
-          result["mutation_subtype"] = 'Deletion'
+        if (result["mutation_type"] == 'Deletion' && tm1.nil?)
+          result["mutation_type"] = 'Deletion'
           tm1 = result
         end
       end
@@ -238,7 +240,7 @@ module MartSearch
       allele_type = final_allele
       allele_strain = result["colony_background_strain"]
 
-      new_row["mutation_subtype"] = final_allele
+      new_row["mutation_type"] = final_allele
       new_row["escell_strain"] = allele_strain
       new_row["allele_id"] = final_allele_id
       new_row["mgi_allele_id"] = final_mgi_allele_id
@@ -287,7 +289,7 @@ module MartSearch
             new_row = {
               "product" => product,
               "escell_pipeline" => pipeline,
-              "mutation_subtype" => final_allele,
+              "mutation_type" => final_allele,
               "escell_strain" => allele_strain,
               "allele_id" => final_allele_id
             }

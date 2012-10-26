@@ -159,7 +159,7 @@ module MartSearch
       end
 
       # Push cells into to the right basket ('conditional' or 'nonconditional')
-      if ['targeted_non_conditional', 'deletion'].include?( result[:mutation_subtype] )
+      if ['Targeted Non Conditional', 'Deletion'].include?( result[:mutation_type] )
         clone_type = :nonconditional_clones
         project[:nonconditional_allele_id]      = result[:allele_id]
         project[:nonconditional_allele_gb_file] = gbfile_available

@@ -1,14 +1,14 @@
 # encoding: utf-8
 
 module MartSearch
-  
+
   # Utility module for the DataSet class.
   #
   # @author Darren Oakley
   module DataSetUtils
-    
+
     # Utility function to clean up superscript text in attributes
-    # will convert text between <> tags to <sup></sup>, but leave other 
+    # will convert text between <> tags to <sup></sup>, but leave other
     # HTML formatted text alone.
     #
     # @param [String] attribute The attribute text to be cleaned
@@ -23,7 +23,7 @@ module MartSearch
 
       return attribute;
     end
-    
+
     # Helper function to retrieve the allele type
     #
     # @param  [String] allele_symbol The allele symbol superscript
@@ -40,11 +40,11 @@ module MartSearch
        else
          case design_type
          when nil          then ""
-         when /deletion/i  then "Deletion"
+         when /Deletion/i  then "Deletion"
          else                   "Knockout-First - Reporter Tagged Insertion"
          end
        end
     end
-    
+
   end
 end

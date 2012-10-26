@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+require 'test_helper'
+
 class TestMartSearchStringExtensions < Test::Unit::TestCase
   context "A String" do
     setup do

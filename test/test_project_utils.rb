@@ -28,10 +28,10 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
       assert_equal( expected, get_top_level_project_info( @datasources, @project_id )[:data][0] )
     end
 
-    should "have the correct human orthalog" do
-      human_orth_data = get_human_orthalog( @datasources, "ENSMUSG00000018666" )[:data]
-      assert_equal( "ENSG00000108468", human_orth_data[:human_ensembl_gene] )
-    end
+    #should "have the correct human orthalog" do
+    #  human_orth_data = get_human_orthalog( @datasources, "ENSMUSG00000018666" )[:data]
+    #  assert_equal( "ENSG00000108468", human_orth_data[:human_ensembl_gene] )
+    #end
 
     should "have the expected results" do
       expected_int_vectors = [
@@ -1275,7 +1275,6 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
           :mouse_available,
           :escell_available,
           :vector_available,
-          :human_ensembl_gene,
           :intermediate_vectors,
           :targeting_vectors,
           :vector_image,
