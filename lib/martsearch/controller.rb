@@ -12,8 +12,8 @@ module MartSearch
     include MartSearch::Utils
     include MartSearch::ControllerUtils
 
-    USE_CACHE = false
-    USE_OLS = false
+    USE_CACHE = true
+    USE_OLS = true
     warn "#### NOT USING CACHE!!!" if ! USE_CACHE
     warn "#### NOT USING OLS!!!" if ! USE_OLS
 
