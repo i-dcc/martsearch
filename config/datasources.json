@@ -6,7 +6,7 @@
   "eurexpress":             { "type": "Biomart", "url": "http://biomart.eurexpress.org/biomart", "dataset": "template" },
   "europhenome":            { "type": "Biomart", "url": "http://www.europhenome.org/biomart", "dataset": "europhenome" },
   "ikmc-dcc":               { "type": "Biomart", "url": "http://www.knockoutmouse.org/biomart", "dataset": "dcc" },
-  "ikmc-idcc_targ_rep":     { "type": "Biomart", "url": "http://htgt.internal.sanger.ac.uk:9012/biomart", "dataset": "idcc_targ_rep" },
+  "ikmc-idcc_targ_rep":     { "type": "Biomart", "url": "http://www.knockoutmouse.org/biomart", "dataset": "idcc_targ_rep" },
   "ikmc-imits":             { "type": "Biomart", "url": "http://www.knockoutmouse.org/biomart", "dataset": "imits" },
   "ikmc-omim":              { "type": "Biomart", "url": "http://www.knockoutmouse.org/biomart", "dataset": "omim" },
   "ikmc-unitrap":           { "type": "Biomart", "url": "http://biomart.helmholtz-muenchen.de/biomart", "dataset": "unitrap" },
