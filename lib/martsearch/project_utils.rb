@@ -71,17 +71,9 @@ module MartSearch
           es_cell_names.push( data[:es_cells][symbol][:cells] ) unless data[:es_cells][symbol].nil?
         end
 
-
-        #puts "#### es_cell_names:"
-        #puts es_cell_names.inspect
-
         es_cell_names.flatten!.map! { |es_cell| es_cell[:name] }
         unless es_cell_names.empty?
           mice = get_mice( datasources, es_cell_names )
-
-          puts "#### mice:"
-          puts mice.inspect
-
           data.merge!( mice[:data] ) unless mice[:data].empty?
           errors.push( mice[:error] ) unless mice[:error].empty?
         end

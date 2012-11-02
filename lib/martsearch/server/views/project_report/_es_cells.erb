@@ -12,6 +12,9 @@
         title   = 'without conditional potential (deletions)'
         img_txt = 'Mutations of type &quot;Deletion&quot; are correctly targeted clones that have had the target exon removed. These mutations cannot be converted into conditional alleles.'
       end
+    elsif @data[:es_cells][cond_vs_noncond][:cells].first[:allele_type] == 'Cre Knock In'
+      title   = '(Cre Knock Ins)'
+      img_txt = ''
     else
       title   = 'without conditional potential'
       img_txt = 'Mutations of type &quot;Without Conditional Potential&quot; are correctly targeted clones that have lost the 3&apos; LoxP site. These mutations cannot be converted into conditional alleles.'
