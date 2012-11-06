@@ -4,7 +4,7 @@ module MartSearch
   module DataSetUtils
 
     def ikmc_idcc_targ_rep_secondary_sort( search_data )
-      
+
       status_order = {
         "On Hold"                                                 => 1,
         "Transferred to NorCOMM"                                  => 2,
@@ -41,7 +41,7 @@ module MartSearch
         "ES Cell Clone Microinjected"                             => 33,
         "Germline Transmission Achieved"                          => 34
       }
-      
+
       #
       # Sort projects on products availability (mice -> cells -> vectors -> nothing)
       #
@@ -51,26 +51,26 @@ module MartSearch
         # (mouse availability is retrieved from 'ikmc-dcc-knockout_attempts')
         #
         projects_with = { :mice => [], :clones => [], :vectors => [], :nothing => [] }
-        
+
         unless result_data[:'ikmc-idcc_targ_rep'].nil?
           result_data[:'ikmc-idcc_targ_rep'].each do |pipeline, pipeline_projects|
             next if pipeline_projects.nil?
-            
+
             pipeline_projects_with = { :mice => [], :clones => [], :vectors => [] }
-            
+
             pipeline_projects.each do |project_key, project|
-              
+
               # Get mice availability
               if result_data[:'ikmc-dcc-knockout_attempts']
                 ikmc_projects   = result_data[:'ikmc-dcc-knockout_attempts'][pipeline]
                 ikmc_project_id = project[:ikmc_project_id]
-          
+
                 if ikmc_projects and ikmc_projects[ikmc_project_id]
                   project[:mouse_available] = ikmc_projects[ikmc_project_id][:mouse_available]
                   project[:ensembl_gene_id] = ikmc_projects[:ensembl_gene_id]
                 end
               end
-              
+
               # Sort the projects into the correct baskets...
               if project[:mouse_available] == '1'
                 pipeline_projects_with[:mice].push( project )
@@ -80,7 +80,7 @@ module MartSearch
                 pipeline_projects_with[:vectors].push( project )
               end
             end
-            
+
             # Now stamp the most advanced projects with the 'display' flag
             display_stamped = false
             ordered_groups  = [ :mice, :clones, :vectors ]
@@ -94,30 +94,30 @@ module MartSearch
                 display_stamped = true
               end
             end
-            
+
             ordered_groups.each do |group|
               pipeline_projects_with[group].each do |project|
                 projects_with[group].push(project)
               end
             end
-            
+
           end
         end
-        
+
         #
         # Append projects that don't have any distributable products (from 'ikmc-dcc-knockout_attempts')
         #
         unless result_data[:'ikmc-dcc-knockout_attempts'].nil?
           result_data[:'ikmc-dcc-knockout_attempts'].each do |pipeline,pipeline_details|
             next if pipeline == 'TIGM' # Skip if TIGM pipeline (ie. Targeted Trap)
-            
+
             # Skip this pipeline if it's already reported in the targeting repository (ie. has distributable products)
             next if result_data[:'ikmc-idcc_targ_rep'] and result_data[:'ikmc-idcc_targ_rep'].include? pipeline
-            
+
             # Retrieve projects_ids of this pipeline that don't have any product available
             projects_ids      = []
             projects_statuses = []
-            
+
             pipeline_details.values.each do |project|
               if project.is_a? Hash and project.values_at(:vector_available,:escell_available,:mouse_available) == ['0','0','0']
                 projects_ids.push( project[:ikmc_project_id] )
@@ -125,7 +125,7 @@ module MartSearch
               end
             end
             next if projects_ids.empty? or projects_statuses.empty?
-            
+
             projects_with[:nothing].push({
               :no_products_available => true,
               :display               => true,
@@ -136,20 +136,20 @@ module MartSearch
             })
           end
         end
-        
+
         result_data[:'ikmc-idcc_targ_rep'] = (
             projects_with[:mice]    \
           + projects_with[:clones]  \
           + projects_with[:vectors] \
           + projects_with[:nothing]
         )
-        
+
         if result_data[:'ikmc-idcc_targ_rep'].empty?
           result_data[:'ikmc-idcc_targ_rep'] = nil
         end
       end
-      
+
     end
-    
+
   end
 end
