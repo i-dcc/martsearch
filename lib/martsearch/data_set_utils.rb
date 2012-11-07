@@ -30,7 +30,8 @@ module MartSearch
     # @param  [String] design_type   The design type
     # @return [String]
     def allele_type( allele_symbol, design_type=nil )
-       case allele_symbol
+
+       type = case allele_symbol
        when /tm\d+a/ then "Knockout-First - Reporter Tagged Insertion"
        when /tm\d+b/ then "Knockout-First, Post-Cre - Reporter Tagged Deletion"
        when /tm\d+c/ then "Knockout-First, Post-Flp - Conditional"
@@ -39,16 +40,20 @@ module MartSearch
        else
 
          if /tm\d+\(/ =~ allele_symbol && ! design_type
-           return "Deletion"
-         end
+           "Deletion"
+         else
 
-         case design_type
-         when nil          then ""
-         when /Cre Knock In/i  then "Cre Knock In"
-         when /Deletion/i  then "Deletion"
-         else                   "Knockout-First - Reporter Tagged Insertion"
+          case design_type
+          when nil          then ""
+          when /Cre Knock In/i  then "Cre Knock In"
+          when /Deletion/i  then "Deletion"
+          else                   "Knockout-First - Reporter Tagged Insertion"
+          end
+
          end
        end
+
+      return type
     end
 
   end

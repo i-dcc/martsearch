@@ -101,7 +101,7 @@ module MartSearch
       }
 
       # Allele type
-      es_cell[:allele_type] = allele_type(es_cell[:allele_symbol_superscript], project[:design_type])
+      es_cell[:allele_type] = allele_type(es_cell[:allele_symbol_superscript], result[:mutation_type])
 
       # Sort and store the QC metrics for the clones
       qc_metrics = [
@@ -140,7 +140,11 @@ module MartSearch
         :distribution_qc_chr8b,
         :distribution_qc_chr11a,
         :distribution_qc_chr11b,
-        :distribution_qc_chry
+        :distribution_qc_chry,
+
+        :mutation_type,
+        :mutation_subtype,
+        :mutation_method
       ]
 
       qc_metrics.each do |metric|
