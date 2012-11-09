@@ -1,5 +1,7 @@
 <h4>Targeting Vectors</h4>
 
+<% this_design_type = design_type ? "(#{design_type})" : "" %>
+
 <% if targeting_vectors.length > 0 %>
   <table>
     <tr>
@@ -13,8 +15,8 @@
     <% targeting_vectors.each do |targ_vec| %>
       <tr>
         <td>
-          <a href="http://www.sanger.ac.uk/htgt/design/designedit/refresh_design?design_id=<%= design_id %>"><%= design_id %></a> 
-          (<%= design_type %>)
+          <a href="http://www.sanger.ac.uk/htgt/design/designedit/refresh_design?design_id=<%= design_id %>"><%= design_id %></a>
+          <%= this_design_type %>
         </td>
         <td>
           <% if targ_vec[:targeting_vector] and ( pipeline === 'EUCOMM' or pipeline === 'KOMP-CSD' ) %>

@@ -38,8 +38,7 @@
       "is_active"
     ],
     "filters": {
-      "microinjection_status": "Genotype confirmed",
-      "emma": "1"
+      "microinjection_status": "Genotype confirmed"
     }
   }
 }

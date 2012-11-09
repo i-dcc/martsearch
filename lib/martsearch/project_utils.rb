@@ -37,11 +37,11 @@ module MartSearch
         ## Look for human orthalog's
         ##
 
-        if data[:ensembl_gene_id]
-          human_orthalogs = get_human_orthalog( datasources, data[:ensembl_gene_id] )
-          data.merge!( human_orthalogs[:data] ) unless human_orthalogs[:data].empty?
-          errors.push( human_orthalogs[:error] ) unless human_orthalogs[:error].empty?
-        end
+        #if data[:ensembl_gene_id]
+        #  human_orthalogs = get_human_orthalog( datasources, data[:ensembl_gene_id] )
+        #  data.merge!( human_orthalogs[:data] ) unless human_orthalogs[:data].empty?
+        #  errors.push( human_orthalogs[:error] ) unless human_orthalogs[:error].empty?
+        #end
 
         ##
         ## Now search the targ_rep for vectors and es cells
@@ -374,16 +374,17 @@ module MartSearch
             :process_results => true,
             :filters => { 'escell_clone' => escell_clones },
             :attributes => [
-              'escell_strain',
-              "distribution_qc_loa",
-              "distribution_qc_loxp",
-              "distribution_qc_lacz",
-              "distribution_qc_chr1",
-              "distribution_qc_chr8a",
-              "distribution_qc_chr8b",
-              "distribution_qc_chr11a",
-              "distribution_qc_chr11b",
-              "distribution_qc_chry"
+              'escell_strain'
+              #,
+              #"distribution_qc_loa",
+              #"distribution_qc_loxp",
+              #"distribution_qc_lacz",
+              #"distribution_qc_chr1",
+              #"distribution_qc_chr8a",
+              #"distribution_qc_chr8b",
+              #"distribution_qc_chr11a",
+              #"distribution_qc_chr11b",
+              #"distribution_qc_chry"
             ],
             :federate => [
               {
@@ -531,6 +532,8 @@ module MartSearch
               'allele_id',
               'design_id',
               'mutation_subtype',
+              'mutation_type',
+              'mutation_method',
               'cassette',
               'cassette_type',
               'backbone',
@@ -570,12 +573,12 @@ module MartSearch
           ## Intermediate Vectors
           ##
 
-          unless result['mutation_subtype'] == 'targeted_non_conditional'
+          unless result['mutation_type'] == 'Targeted Non Conditional'
             unless result['intermediate_vector'].nil?
               data['intermediate_vectors'].push(
                 'name'              => result['intermediate_vector'],
                 'design_id'         => result['design_id'],
-                'design_type'       => allele_type( nil, result['mutation_subtype'] )
+                'design_type'       => allele_type( nil, result['mutation_type'] )
               )
             end
           end
@@ -584,12 +587,12 @@ module MartSearch
           ## Targeting Vectors
           ##
 
-          unless result['mutation_subtype'] == 'targeted_non_conditional'
+          unless result['mutation_type'] == 'Targeted Non Conditional'
             unless result['targeting_vector'].nil?
               data['targeting_vectors'].push(
                 'name'          => result['targeting_vector'],
                 'design_id'     => result['design_id'],
-                'design_type'   => allele_type( nil, result['mutation_subtype'] ),
+                'design_type'   => allele_type( nil, result['mutation_type'] ),
                 'cassette'      => result['cassette'],
                 'cassette_type' => result['cassette_type'],
                 'backbone'      => result['backbone']
@@ -604,7 +607,7 @@ module MartSearch
           next if result['escell_clone'].nil?
 
           push_to = 'targeted non-conditional'
-          push_to = 'conditional' if result['mutation_subtype'] == 'conditional_ready'
+          push_to = 'conditional' if result['mutation_type'] == 'Conditional Ready'
 
           # Prepare the QC data
           qc_data = { 'qc_count' => 0 }
@@ -627,7 +630,7 @@ module MartSearch
             {
               'name'                      => result['escell_clone'],
               'allele_symbol_superscript' => result['allele_symbol_superscript'],
-              'allele_type'               => allele_type( result['allele_symbol_superscript'], result['mutation_subtype'] ),
+              'allele_type'               => allele_type( result['allele_symbol_superscript'], result['mutation_type'] ),
               'parental_cell_line'        => result['parental_cell_line'],
               'targeting_vector'          => result['targeting_vector'],
               'cassette'                  => result['cassette'],

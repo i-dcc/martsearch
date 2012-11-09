@@ -14,7 +14,6 @@
     ],
     "optional": [
       "ikmc-omim",
-      "ensembl-mouse-homologs",
       "ensembl-mouse-go"
     ]
   }

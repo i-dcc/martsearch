@@ -1,6 +1,6 @@
 {
   "datasource":            "ensembl-mouse",
-  "enabled":               true,
+  "enabled":               false,
   "custom_sort":           true,
   "custom_secondary_sort": false,
   "attribution":           "Ensembl",
@@ -10,10 +10,7 @@
     "joined_filter":      "ensembl_gene_id",
     "joined_attribute":   "ensembl_gene_id",
     "attributes": [
-      "ensembl_gene_id",
-      "human_ensembl_gene",
-      "zebrafish_ensembl_gene",
-      "rat_ensembl_gene"
+      "ensembl_gene_id"
     ],
     "filters": {}
   }

@@ -1,14 +1,14 @@
 # encoding: utf-8
 
 module MartSearch
-  
+
   # Utility module for the DataSet class.
   #
   # @author Darren Oakley
   module DataSetUtils
-    
+
     # Utility function to clean up superscript text in attributes
-    # will convert text between <> tags to <sup></sup>, but leave other 
+    # will convert text between <> tags to <sup></sup>, but leave other
     # HTML formatted text alone.
     #
     # @param [String] attribute The attribute text to be cleaned
@@ -23,28 +23,38 @@ module MartSearch
 
       return attribute;
     end
-    
+
     # Helper function to retrieve the allele type
     #
     # @param  [String] allele_symbol The allele symbol superscript
     # @param  [String] design_type   The design type
     # @return [String]
     def allele_type( allele_symbol, design_type=nil )
-       case allele_symbol
+
+       type = case allele_symbol
        when /tm\d+a/ then "Knockout-First - Reporter Tagged Insertion"
        when /tm\d+b/ then "Knockout-First, Post-Cre - Reporter Tagged Deletion"
        when /tm\d+c/ then "Knockout-First, Post-Flp - Conditional"
        when /tm\d+d/ then "Knockout-First, Post-Flp and Cre - Deletion, No Reporter"
        when /tm\d+e/ then "Targeted Non-Conditional"
-       when /tm\d+\(/ then "Deletion"
        else
-         case design_type
-         when nil          then ""
-         when /deletion/i  then "Deletion"
-         else                   "Knockout-First - Reporter Tagged Insertion"
+
+         if /tm\d+\(/ =~ allele_symbol && ! design_type
+           "Deletion"
+         else
+
+          case design_type
+          when nil          then ""
+          when /Cre Knock In/i  then "Cre Knock In"
+          when /Deletion/i  then "Deletion"
+          else                   "Knockout-First - Reporter Tagged Insertion"
+          end
+
          end
        end
+
+      return type
     end
-    
+
   end
 end
