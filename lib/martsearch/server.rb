@@ -124,7 +124,7 @@ module MartSearch
       @hide_side_search_form = true
       @phenotyping_counts    = @ms.wtsi_phenotyping_progress_counts()
       @counts                = @ms.fetch_from_cache("wtsi_front_page_counts")
-      
+
       if @counts.nil?
         @counts = {
           :mice               => { :query => 'microinjection_centre_status:"WTSI - Genotype confirmed"' },
@@ -134,14 +134,14 @@ module MartSearch
           :c57_bacs           => { :query => 'dna_library:"C57Bl/6J"' },
           :one_two_nine_bacs  => { :query => 'dna_library:"129S7"' }
         }
-        
+
         @counts.each do |param,details|
           details[:count] = @ms.index.count( details[:query] )
         end
-        
+
         @ms.write_to_cache( "wtsi_front_page_counts", @counts, { :expires_in => 12.hours } )
       end
-      
+
       erb :main
     end
 
@@ -364,12 +364,6 @@ module MartSearch
       content_type 'text/javascript', :charset => 'utf-8'
       dataview_name = params[:dataview_name].sub('.js','')
       @ms.dataviews_by_name[ dataview_name.to_sym ].javascript_base
-    end
-
-    get '/impc_search/?' do
-      mgi_accession_id = params[:mgi_accession_id]
-      @alleles = @ms.search_impc(mgi_accession_id)
-      erb :impc_panel, :layout => false
     end
 
     ##

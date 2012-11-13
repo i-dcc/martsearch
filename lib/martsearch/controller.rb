@@ -322,26 +322,6 @@ module MartSearch
       end
     end
 
-    def search_impc (mgi_accession_id)
-      @displayed_alleles = {}
-
-      index_return = @index.search( mgi_accession_id, 1)
-      gene_doc = index_return[mgi_accession_id.to_sym]
-      marker_symbol = nil
-      if(!gene_doc.nil?)
-        marker_symbol = "#{gene_doc[:index][:marker_symbol]}"
-      end
-
-      # add the tm1a or tm1e allele AND the tm1 allele if they exist
-      add_targ_rep_data( mgi_accession_id, marker_symbol, @displayed_alleles)
-
-      # add the corresponding mouse alleles if they exist
-      add_imits_data( mgi_accession_id, @displayed_alleles)
-
-      @displayed_alleles["order"] = ["tm1a","tm1","tm1e","mouse_1","mouse_2"]
-      return @displayed_alleles
-    end
-
     # Function to perform the searches against the index and marts.
     #
     # Sets up a results stash (@search_data) holding the data in a structure like:
