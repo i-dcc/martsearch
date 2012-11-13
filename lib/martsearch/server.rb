@@ -346,12 +346,6 @@ module MartSearch
       @ms.dataviews_by_name[ dataview_name.to_sym ].javascript_base
     end
 
-    get '/impc_search/?' do
-      mgi_accession_id = params[:mgi_accession_id]
-      @alleles = @ms.search_impc(mgi_accession_id)
-      erb :impc_panel, :layout => false
-    end
-
     ##
     ## Load in any custom (per dataset) routes
     ##
