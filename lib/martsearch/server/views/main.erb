@@ -2,11 +2,11 @@
   <input type="text" id="query" name="query" value="" size="50" />&nbsp;
   <input type="submit" value="Search" /><br />
   <small>
-    Enter gene/product identifiers or phenotyping test names 
-    (e.g. <%= link_to 'Mysm1', '/search?query=mysm1' %>, 
-    <%= link_to 'EPD0019_1_A05', '/search?query=EPD0019_1_A05' %> or 
-    <%= link_to 'Dexa', '/search?query=dexa' %>) 
-    or any other search term described in the 
+    Enter gene/product identifiers or phenotyping test names
+    (e.g. <%= link_to 'Mysm1', '/search?query=mysm1' %>,
+    <%= link_to 'EPD0019_1_A05', '/search?query=EPD0019_1_A05' %> or
+    <%= link_to 'Dexa', '/search?query=dexa' %>)
+    or any other search term described in the
     <%= link_to 'help', '/help' %> section.
   </small>
 </form>
@@ -16,26 +16,26 @@
 <div>
   <h2>About This Portal</h2>
   <p class="larger">
-    The Wellcome Trust Sanger Institute generates, characterises, and 
-    uses a variety of reagents for mouse genetics research. It also 
-    aims to facilitate the distribution of these resources to the 
-    external scientific community. Here, you will find unified access 
-    to the different resources available from the Institute or its 
-    collaborators. The resources include: 129S7 and C57BL6/J bacterial 
-    artificial chromosomes (BACs), MICER gene targeting vectors, 
-    knock-out first conditional-ready gene targeting vectors, embryonic 
-    stem (ES) cells with gene targeted mutations or with retroviral gene 
-    trap insertions, mutant mouse lines, and phenotypic data generated 
+    The Wellcome Trust Sanger Institute generates, characterises, and
+    uses a variety of reagents for mouse genetics research. It also
+    aims to facilitate the distribution of these resources to the
+    external scientific community. Here, you will find unified access
+    to the different resources available from the Institute or its
+    collaborators. The resources include: 129S7 and C57BL6/J bacterial
+    artificial chromosomes (BACs), MICER gene targeting vectors,
+    knock-out first conditional-ready gene targeting vectors, embryonic
+    stem (ES) cells with gene targeted mutations or with retroviral gene
+    trap insertions, mutant mouse lines, and phenotypic data generated
     from the Institute's primary screen.
   </p>
-  
+
   <table class="welcome" width="100%">
     <tr>
       <td width="60%" style="padding: 0; padding-right: 10px;">
         <h2>Phenotyping Summary</h2>
         <p class="larger">
-          The table below displays the <strong>number of alleles</strong> that have completed 
-          different stages of the MGP Phenotyping pipeline (funded by <a href="http://www.sanger.ac.uk/Teams/Team109/">WTSI</a> 
+          The table below displays the <strong>number of alleles</strong> that have completed
+          different stages of the MGP Phenotyping pipeline (funded by <a href="http://www.sanger.ac.uk/Teams/Team109/">WTSI</a>
           &amp; <a href="http://www.eumodic.org/">EUMODIC</a>)
         </p>
         <table width="100%">
@@ -54,7 +54,7 @@
         </table>
         <h2>Other Data Summary</h2>
         <p class="larger">
-          The table below displays the <strong>number of unique genes</strong> with each individual 
+          The table below displays the <strong>number of unique genes</strong> with each individual
           product type produced at the Wellcome Trust Sanger Institute.
         </p>
         <table id="summary_statistics" width="100%">
@@ -62,15 +62,15 @@
             <tr>
               <th class="nobg noborder">Funding:</th>
               <th>
-                <a href="http://www.sanger.ac.uk/Teams/Team109/">WTSI</a><br /> 
+                <a href="http://www.sanger.ac.uk/Teams/Team109/">WTSI</a><br />
                 <a href="http://www.eumodic.org/">EUMODIC</a>
               </th>
               <th>
-                <a href="http://www.knockoutmouse.org/">KOMP</a><br /> 
+                <a href="http://www.knockoutmouse.org/">KOMP</a><br />
                 <a href="http://www.eucomm.org/">EUCOMM</a>
               </th>
               <th>
-                <a href="http://www.knockoutmouse.org/">KOMP</a><br /> 
+                <a href="http://www.knockoutmouse.org/">KOMP</a><br />
                 <a href="http://www.eucomm.org/">EUCOMM</a>
               </th>
               <th>
@@ -120,10 +120,10 @@
               %>
             </td>
             <td style="vertical-align:middle;">
-              <%= link_to( 'Download', '/phenotyping/mgp_heatmap.xls', :title => 'Download the Phenotyping Overview' ) %>  
-              a heat map of phenotyping results by assay.  This spreadsheet also links to the detailed phenotyping 
+              <%= link_to( 'Download', '/phenotyping/mgp_heatmap.xls', :title => 'Download the Phenotyping Overview' ) %>
+              a heat map of phenotyping results by assay.  This spreadsheet also links to the detailed phenotyping
               data on this portal.<br/><br/>
-              You can also access (and search) the same data via the 
+              You can also access (and search) the same data via the
               <a title="Visit the MGP Phenotyping BioMart" target="_blank" href="http://www.sanger.ac.uk/htgt/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=phenotyping.default.heatmap.allele_name|phenotyping.default.heatmap.colony_prefix|phenotyping.default.heatmap.strain_group|phenotyping.default.heatmap.adult_lac_z_expression|phenotyping.default.heatmap.auditory_brainstem_response|phenotyping.default.heatmap.body_composition_dexa|phenotyping.default.heatmap.brain_histopathology|phenotyping.default.heatmap.citrobacter_challenge|phenotyping.default.heatmap.dysmorphology|phenotyping.default.heatmap.embryo_lac_z_expression|phenotyping.default.heatmap.eye_histopathology|phenotyping.default.heatmap.eye_morphology|phenotyping.default.heatmap.fertility|phenotyping.default.heatmap.general_observations|phenotyping.default.heatmap.glucose_tolerance_ip|phenotyping.default.heatmap.grip_strength|phenotyping.default.heatmap.haematology_cbc|phenotyping.default.heatmap.heart_histology|phenotyping.default.heatmap.heart_weight|phenotyping.default.heatmap.hot_plate|phenotyping.default.heatmap.indirect_calorimetry|phenotyping.default.heatmap.micro_ct_and_quantitative_faxitron|phenotyping.default.heatmap.micronuclei|phenotyping.default.heatmap.modified_shirpa|phenotyping.default.heatmap.non_invasive_blood_pressure|phenotyping.default.heatmap.open_field|phenotyping.default.heatmap.peripheral_blood_lymphocytes|phenotyping.default.heatmap.plasma_chemistry|phenotyping.default.heatmap.plasma_immunoglobulins|phenotyping.default.heatmap.prepulse_inhibition|phenotyping.default.heatmap.recessive_lethal_study|phenotyping.default.heatmap.rotarod|phenotyping.default.heatmap.salmonella_challenge|phenotyping.default.heatmap.skin_histopathology|phenotyping.default.heatmap.stress_induced_hyperthermia|phenotyping.default.heatmap.tail_epidermis_wholemount|phenotyping.default.heatmap.tissue_biobank|phenotyping.default.heatmap.viability_at_weaning|phenotyping.default.heatmap.weight_curves|phenotyping.default.heatmap.x_ray_imaging&FILTERS=&VISIBLEPANEL=mainpanel">
               MGP Phenotyping BioMart</a>.
               <br/><br/>
@@ -137,8 +137,8 @@
               </a>
             </td>
             <td style="vertical-align:middle;">
-              If you would like to be kept updated with information on our phenotyping data, 
-              please subscribe to our 
+              If you would like to be kept updated with information on our phenotyping data,
+              please subscribe to our
               <a href="http://lists.sanger.ac.uk/mailman/listinfo/mgp-early-phenotype-alert" title="Sign up to our mailing list to be alerted of new data">mailing list</a>.
             </td>
           </tr>
@@ -146,11 +146,11 @@
       </td>
     </tr>
   </table>
-  
+
   <h2>Viewing Our Data in Ensembl</h2>
   <p class="larger">
-    Most of the products found within this portal can also be viewed as <a href="http://en.wikipedia.org/wiki/Distributed_Annotation_System" target="_blank">DAS</a> 
-    tracks in the <a href="http://www.ensembl.org/" target="_blank">Ensembl genome browser</a>.  Follow these links 
+    Most of the products found within this portal can also be viewed as <a href="http://en.wikipedia.org/wiki/Distributed_Annotation_System" target="_blank">DAS</a>
+    tracks in the <a href="http://www.ensembl.org/" target="_blank">Ensembl genome browser</a>.  Follow these links
     to have the tracks automatically activated for you:
   </p>
   <ul class="larger ensembl_link_list">
@@ -158,9 +158,26 @@
     <li><a href="<%= ensembl_link_url_from_coords( :mouse, 5, 151375042, 151385041, ['das:http://das.sanger.ac.uk/das/ens_m37_129AB22','das:http://das.sanger.ac.uk/das/ens_m36_micer','das:http://das.sanger.ac.uk/das/ens_m37_bacmap'] ) %>" class="ensembl_link" target="_blank">Sanger DNA products in Ensembl Mouse</a></li>
     <li><a href="<%= ensembl_link_url_from_coords( :human, 17, 46063149, 46263148, ['das:http://das.sanger.ac.uk/das/mouse_KOs'] ) %>" class="ensembl_link" target="_blank">IKMC alleles on orthologous genes in Ensembl Human</a></li>
   </ul>
-  
+
+  <h2>Papers</h2>
+
+  <div class="papers">
+  <p>Karp, Natasha A., Anne Segonds-Pichon, Anna-Karin B. Gerdin, Ramiro Ramírez-Solis, and Jacqueline K. White. "The fallacy of ratio correction to address confounding factors." <i>Laboratory Animals</i> 46, no. 3 (2012): 245-252. <a href='http://www.ncbi.nlm.nih.gov/pubmed?term=22829707'>pmid</a></p>
+  <p>Gerdin, Anna-Karin, Natalia Igosheva, Laura-Anne Roberson, Ozama Ismail, Natasha Karp, Mark Sanderson, Emma Cambridge et al. "Experimental and husbandry procedures as potential modifiers of the results of phenotyping tests." <i>Physiology & behavior</i> (2012). <a href='http://www.ncbi.nlm.nih.gov/pubmed?term=22713295'>pmid</a></p>
+  <p>Nijnik, Anastasia, Simon Clare, Christine Hale, Jing Chen, Claire Raisen, Lynda Mottram, Mark Lucas et al. "The Role of Sphingosine-1-Phosphate Transporter Spns2 in Immune System Function." <i>The Journal of Immunology</i> 189, no. 1 (2012): 102-111. <a href='http://www.ncbi.nlm.nih.gov/pubmed?term=22664872'>pmid</a></p>
+  <p>Karp, Natasha A., Lauren A. Baker, Anna-Karin B. Gerdin, Niels C. Adams, Ramiro Ramírez-Solis, and Jacqueline K. White. "Optimising experimental design for high-throughput phenotyping in mice: a case study." <i>Mammalian genome</i> 21, no. 9 (2010): 467-476. <a href='http://www.ncbi.nlm.nih.gov/pubmed?term=20799038'>pmid</a></p>
+  <p>Morgan, Hugh, Tim Beck, Andrew Blake, Hilary Gates, Niels Adams, Guillaume Debouzy, Sophie Leblanc et al. "EuroPhenome: a repository for high-throughput mouse phenotyping data." <i>Nucleic acids research</i> 38, no. suppl 1 (2010): D577-D585. <a href='http://www.ncbi.nlm.nih.gov/pubmed?term=19933761'>pmid</a></p>
+  <p>Ramírez‐Solis, Ramiro, Edward Ryder, Richard Houghton, Jacqueline K. White, and Joanna Bottomley. "Large‐scale mouse knockouts and phenotypes." <i>Wiley Interdisciplinary Reviews: Systems Biology and Medicine</i> (2012). <a href='http://www.ncbi.nlm.nih.gov/pubmed?term=22899600'>pmid</a></p>
+  <p>Migdalska, Anna M., Louise van der Weyden, Ozama Ismail, Jacqueline K. White, Gabriela Sánchez-Andrade, Darren W. Logan, Mark J. Arends, and David J. Adams. "Modeling Partial Monosomy for Human Chromosome 21q11. 2-q21. 1 Reveals Haploinsufficient Genes Influencing Behavior and Fat Deposition." PloS one 7, no. 1 (2012): e29681. <a href='http://www.ncbi.nlm.nih.gov/pubmed?term=22276124'>pmid</a></p>
+  <p>Bassett, JH Duncan, Apostolos Gogakos, Jacqueline K. White, Holly Evans, Richard M. Jacques, Anne H. van der Spek, Ramiro Ramirez-Solis et al. "Rapid-Throughput Skeletal Phenotyping of 100 Knockout Mice Identifies 9 New Genes That Determine Bone Strength." <i>PLoS Genetics</i> 8, no. 8 (2012): e1002858. <a href='http://www.ncbi.nlm.nih.gov/pubmed?term=22876197'>pmid</a></p>
+  <p>van der Weyden, Louise, Jacqueline K. White, David J. Adams, and Darren W. Logan. "The mouse genetics toolkit: revealing function and mechanism." <i>Genome biology</i> 12, no. 6 (2011): 224. <a href='http://www.ncbi.nlm.nih.gov/pubmed?term=21722353'>pmid</a></p>
+  <p>Migdalska, Anna M., Louise van der Weyden, Ozama Ismail, Alistair G. Rust, Mamunur Rashid, Jacqueline K. White, Gabriela Sánchez-Andrade et al. "Generation of the Sotos syndrome deletion in mice." <i>Mammalian Genome</i> (2012): 1-9. <a href='http://www.ncbi.nlm.nih.gov/pubmed?term=22926222'>pmid</a></p>
+  <p>Nijnik, Anastasia, Simon Clare, Christine Hale, Claire Raisen, Rebecca E. McIntyre, Kosuke Yusa, Aaron R. Everitt et al. "The critical role of histone H2A-deubiquitinase Mysm1 in hematopoiesis and lymphocyte differentiation." <i>Blood</i> 119, no. 6 (2012): 1370-1379. <a href='http://www.ncbi.nlm.nih.gov/pubmed?term=22184403'>pmid</a></p>
+  <p>Ayadi, Abdel, Marie-Christine Birling, Joanna Bottomley, James Bussell, Helmut Fuchs, Martin Fray, Valérie Gailus-Durner et al. "Mouse large-scale phenotyping initiatives: overview of the European Mouse Disease Clinic (EUMODIC) and of the Wellcome Trust Sanger Institute Mouse Genetics Project." <i>Mammalian Genome</i> (2012): 1-11. <a href='http://www.ncbi.nlm.nih.gov/pubmed?term=22961258'>pmid</a></p>
+  </div>
+
   <hr />
-  
+
   <div class="larger">
     <table class="noborder nobg">
       <tr>
@@ -170,8 +187,8 @@
         <td style="vertical-align:middle;">
           <h2 style="margin-bottom:5px;">Get in Touch</h2>
           <p style="margin-bottom:5px;">
-            For enquiries about the data displayed in this portal (or requests for 
-            further information), please contact 
+            For enquiries about the data displayed in this portal (or requests for
+            further information), please contact
             <a href="mailto:MGPEnquiries@sanger.ac.uk">MGPEnquiries@sanger.ac.uk</a>.
           </p>
           <p style="margin-bottom:5px;">
@@ -179,9 +196,9 @@
             <a href="mailto:mouseinterest@sanger.ac.uk">mouseinterest@sanger.ac.uk</a>.
           </p>
           <p style="margin-bottom:0;">
-            If you have any problems/comments with regards to this portal, or would like to 
+            If you have any problems/comments with regards to this portal, or would like to
             request a new feature please send an email to
-            <a href="mailto:mouseportal@sanger.ac.uk">mouseportal@sanger.ac.uk</a>, 
+            <a href="mailto:mouseportal@sanger.ac.uk">mouseportal@sanger.ac.uk</a>,
             we'd like to hear from you!
           </p>
         </td>

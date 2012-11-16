@@ -855,7 +855,7 @@ ul.ensembl_link_list li {
 }
 
 /* WTSI Header Customizations */
- 
+
 #wrapper {
 	padding-top: 0;
 }
@@ -1086,4 +1086,13 @@ table.ikmc-pipeline-progress-bar td.end_warn {
 .exon_downstream {
 	background-color: #376598;
 	color: #fff;
+}
+
+/* main page papers */
+
+.papers {
+  font-size: 1.1em;
+  margin-bottom: 10px !important;
+  color:red;
+  line-height: 12px;
 }
