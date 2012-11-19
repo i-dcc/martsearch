@@ -1092,7 +1092,8 @@ table.ikmc-pipeline-progress-bar td.end_warn {
 
 .papers {
   font-size: 1.1em;
-  margin-bottom: 10px !important;
-  color:red;
-  line-height: 12px;
+}
+
+div.papers p {
+  margin-bottom: 10px;
 }
