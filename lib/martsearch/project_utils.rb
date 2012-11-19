@@ -450,7 +450,7 @@ module MartSearch
             end
 
             # Now push the mouse into the correct category....
-            if result[:microinjection_status] == 'Genotype confirmed' and result[:emma] == '1'
+            if result[:microinjection_status] == 'Genotype confirmed'     #and result[:emma] == '1'
               mouse_results[:genotype_confirmed].push(result)
             else
               mouse_results[:mi_in_progress].push(result)
@@ -468,7 +468,7 @@ module MartSearch
 
           # Hide all non 'Genotype Confirmed' mice - until an undisclosed point in the future when we're
           # told to show them again...
-          # results[:data] = { :mice => [ mouse_results[:genotype_confirmed], mouse_results[:mi_in_progress] ].flatten }
+          #results[:data] = { :mice => [ mouse_results[:genotype_confirmed], mouse_results[:mi_in_progress] ].flatten }
           results[:data] = { :mice => mouse_results[:genotype_confirmed] }
         end
 
