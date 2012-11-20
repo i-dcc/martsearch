@@ -1,7 +1,10 @@
 <%
   @genetic_background_mapper = {}
-  result_data[:'dummy-mice'].each do |item|
-    @genetic_background_mapper[item[:colony_prefix]] = item[:genetic_background]
+  if result_data && result_data[:'dummy-mice']
+    result_data[:'dummy-mice'].each do |item|
+      next if ! item[:colony_prefix] || ! item[:genetic_background]
+      @genetic_background_mapper[item[:colony_prefix]] = item[:genetic_background]
+    end
   end
 %>
 
