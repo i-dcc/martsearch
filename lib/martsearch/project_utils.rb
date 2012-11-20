@@ -450,7 +450,7 @@ module MartSearch
             end
 
             # Now push the mouse into the correct category....
-            if result[:microinjection_status] == 'Genotype confirmed' and result[:emma] == '1'
+            if result[:microinjection_status] == 'Genotype confirmed'
               mouse_results[:genotype_confirmed].push(result)
             else
               mouse_results[:mi_in_progress].push(result)
