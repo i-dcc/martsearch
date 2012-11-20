@@ -1,8 +1,16 @@
+<%
+  @genetic_background_mapper = {}
+  result_data[:'dummy-mice'].each do |item|
+    @genetic_background_mapper[item[:colony_prefix]] = item[:genetic_background]
+  end
+%>
+
 <table class="wtsi-phenotyping_heatmap">
   <thead>
     <tr>
       <th>Allele Name</th>
       <th>Colony Prefix</th>
+      <th>Colony Strain</th>
       <% mp_groups.each do |mp_group| %>
         <th><span class="vertical_text"><%= mp_group[:name] %></span></th>
       <% end %>
@@ -13,6 +21,7 @@
       <tr>
         <td><%= result[:allele_name] %></td>
         <td><%= result[:colony_prefix] %></td>
+        <td><%= @genetic_background_mapper[result[:colony_prefix]] %></td>
         <% mp_groups.each do |mp_group| %>
           <%
             mp_data  = result[:mp_groups][ mp_group[:slug].to_sym ]
@@ -56,29 +65,29 @@
 <div class="help">
   <h6>About This Heatmap</h6>
   <p>
-    This heatmap is built up of top-level terms from the <a href="http://www.obofoundry.org/cgi-bin/detail.cgi?id=mammalian_phenotype" target="_blank">MP (Mammalian Phenotype) ontology</a>. 
-    We have mapped a majority of the parameters in our tests to appropriate MP terms, so when we perform a given test 
-    we can say if it should be annotated with the given MP term (if the phenotype is significant).  This is what you 
-    see in this heatmap - if a significant result has been annotated to a top-level MP term (or any of its children), 
+    This heatmap is built up of top-level terms from the <a href="http://www.obofoundry.org/cgi-bin/detail.cgi?id=mammalian_phenotype" target="_blank">MP (Mammalian Phenotype) ontology</a>.
+    We have mapped a majority of the parameters in our tests to appropriate MP terms, so when we perform a given test
+    we can say if it should be annotated with the given MP term (if the phenotype is significant).  This is what you
+    see in this heatmap - if a significant result has been annotated to a top-level MP term (or any of its children),
     the cell will be red, if the result was not significant, the cell will be blue.
   </p>
   <p>
-    <strong>Please Note:</strong> as mentioned above we do not annotate all of our phenotyping tests to the MP ontology.  
+    <strong>Please Note:</strong> as mentioned above we do not annotate all of our phenotyping tests to the MP ontology.
     The tests that are excluded are:
-      'Adult LacZ Expression', 
-      'Brain/Eye/Skin Histopathology', 
-      'Embryo LacZ Expression', 
-      'Fertility', 
-      'Heart Histology', 
-      'Micronuclei', 
-      'MicroCT &amp; Quantitative Faxitron', 
-      'Plasma Immunoglobulins', 
-      'Prepulse Inhibition', 
-      'Recessive Lethal Study', 
-      'Tail Epidermis Wholemount', 
-      'Tissue Biobank' and 
+      'Adult LacZ Expression',
+      'Brain/Eye/Skin Histopathology',
+      'Embryo LacZ Expression',
+      'Fertility',
+      'Heart Histology',
+      'Micronuclei',
+      'MicroCT &amp; Quantitative Faxitron',
+      'Plasma Immunoglobulins',
+      'Prepulse Inhibition',
+      'Recessive Lethal Study',
+      'Tail Epidermis Wholemount',
+      'Tissue Biobank' and
       'Viability at Weaning'.
-      
+
     You can find our results for these tests in the 'Phenotyping Test Based Heatmap' below.
   </p>
 </div>

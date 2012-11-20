@@ -1,8 +1,16 @@
+<%
+  @genetic_background_mapper = {}
+  result_data[:'dummy-mice'].each do |item|
+    @genetic_background_mapper[item[:colony_prefix]] = item[:genetic_background]
+  end
+%>
+
 <table class="wtsi-phenotyping_heatmap">
   <thead>
     <tr>
       <th>Allele Name</th>
       <th>Colony Prefix</th>
+      <th>Colony Strain</th>
       <% test_display_names.each do |test,display_name| %>
         <th><span class="vertical_text"><%= display_name %></span></th>
       <% end %>
@@ -13,6 +21,7 @@
       <tr>
         <td><%= result[:allele_name] %></td>
         <td><%= result[:colony_prefix] %></td>
+        <td><%= @genetic_background_mapper[result[:colony_prefix]] %></td>
         <% test_display_names.each do |test,display_name| %>
           <td class="<%= wtsi_phenotyping_css_class_for_test(result[test]) %> pheno_result">
             <% if result["#{test}_data".to_sym] %>

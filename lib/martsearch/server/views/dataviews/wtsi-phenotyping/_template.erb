@@ -5,32 +5,32 @@
       mp_based_pheno_data = result_data[:'wtsi-phenotyping-mp_heatmap']
       mp_groups           = result_data[:'wtsi-phenotyping-mp_group_config']
     %>
-    
+
     <% if mp_based_pheno_data.nil? %>
       <div class="messages dataset_error">
         Sorry, this ontology based heatmap is currently unavailable, please check back shortly.
       </div>
     <% else %>
-      <%= 
+      <%=
         partial(
           'dataviews/wtsi-phenotyping/mp_based_heatmap',
-          :locals => { :mp_based_pheno_data => mp_based_pheno_data, :mp_groups => mp_groups }
+          :locals => { :mp_based_pheno_data => mp_based_pheno_data, :mp_groups => mp_groups, :result_data => result_data }
         )
       %>
     <% end %>
   </div>
-  
+
   <h6><a href="">Phenotyping Test Based Heatmap</a></h6>
   <div>
     <%
       test_based_pheno_data = result_data[:'wtsi-phenotyping-heatmap']
       test_display_names    = result_data[:'wtsi-phenotyping-heatmap-test_display_names']
     %>
-    
-    <%= 
+
+    <%=
       partial(
         'dataviews/wtsi-phenotyping/test_based_heatmap',
-        :locals => { :test_based_pheno_data => test_based_pheno_data, :test_display_names => test_display_names }
+        :locals => { :test_based_pheno_data => test_based_pheno_data, :test_display_names => test_display_names, :result_data => result_data }
       )
     %>
   </div>
