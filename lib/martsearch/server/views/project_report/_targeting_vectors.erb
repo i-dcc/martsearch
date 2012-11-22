@@ -14,7 +14,6 @@
         <th>Design ID</th>
         <th>Vector Type</th>
         <th>Targeting Vector</th>
-        <th><%= @data[:deletion] ? "Deleted" : "Floxed" %> Exon<%= "s" if @data[:floxed_exon_count] > 1 %></th>
         <th>Cassette</th>
         <th>Backbone</th>
         <th class="hide_on_print">Genbank File</th>
@@ -35,7 +34,6 @@
             </td>
             <td><%= targvec[:design_type] %> (<%= targvec[:cassette_type] %> Cassette)</td>
             <td><%= targvec[:name] %></td>
-            <td><%= @data[:floxed_exon_link] %></td>
             <td><%= targvec[:cassette] %></td>
             <td><%= targvec[:backbone] %></td>
             <td class="hide_on_print">

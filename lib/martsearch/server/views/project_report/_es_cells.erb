@@ -48,7 +48,6 @@
         <th>Targeting Vector</th>
         <th>Allele</th>
         <th>Allele Type</th>
-        <th><%= @data[:deletion] ? "Deleted" : "Floxed" %> Exon<%= "s" if @data[:floxed_exon_count] > 1 %></th>
         <th>Parental ES Cell Line</th>
         <th class="hide_on_print">Genbank File</th>
         <th>Mouse</th>
@@ -68,7 +67,6 @@
               <% end %>
             </td>
             <td><%= cell[:allele_type] %> (<%= cell[:cassette_type] %> Cassette)</td>
-            <td><%= @data[:floxed_exon_link] %></td>
             <td><%= cell[:parental_cell_line] %></td>
             <td class="hide_on_print">
               <% if @data[:es_cells][cond_vs_noncond][:allele_gb].nil? %>
