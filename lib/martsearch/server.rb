@@ -14,6 +14,8 @@ module MartSearch
   # @author Darren Oakley
   class Server < Sinatra::Base
 
+   # set(:maintenance) { |filename| condition { File.exist?(filename) } }
+
     set :biomart_search_params_timeout, 2400
     set :biomart_search_options_timeout, 200
 
@@ -118,6 +120,15 @@ module MartSearch
     ##
     ## Basic Routes
     ##
+
+    #get '/*', :maintenance => "#{settings.root}/public/maintenance.html" do
+    #  redirect '/maintenance.html'
+    #end
+
+    get '/*' do
+      pass if ! File.exist?("#{settings.root}/public/maintenance.html")
+      redirect '/maintenance.html'
+    end
 
     get '/?' do
       @current               = 'home'
