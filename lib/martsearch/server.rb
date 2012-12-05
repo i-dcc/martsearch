@@ -119,6 +119,11 @@ module MartSearch
     ## Basic Routes
     ##
 
+    get '/*' do
+      pass if ! File.exist?("#{settings.root}/public/maintenance.html")
+      redirect '/maintenance.html'
+    end
+
     get '/?' do
       @current               = 'home'
       @hide_side_search_form = true
