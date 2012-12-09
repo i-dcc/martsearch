@@ -119,10 +119,10 @@ module MartSearch
     ## Basic Routes
     ##
 
-    get '/*' do
-      pass if ! File.exist?("#{settings.root}/public/maintenance.html")
-      redirect "#{request.script_name}/maintenance.html"
-    end
+    #get '/*' do
+      #pass if ! File.exist?("#{settings.root}/public/maintenance.html")
+      #redirect "#{request.script_name}/maintenance.html"
+    #end
 
     get '/?' do
       @current               = 'home'
