@@ -44,7 +44,7 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
 
     should "allow you to do a simple search..." do
       VCR.use_cassette('test_server_simple_search') do
-        search_terms_to_test = ['Mysm1','Cbx1','Arid4a','Art4','Myo7a']
+        search_terms_to_test = ['Cbx1','Arid4a','Art4','Myo7a']
 
         search_terms_to_test.each do |search_term|
           visit '/'
@@ -102,13 +102,15 @@ class MartSearchServerCapybaraTest < Test::Unit::TestCase
 
     should "render IKMC project pages" do
       VCR.use_cassette('test_server_project_page') do
-        project_ids_to_test = ['35505','27042','42474','82403','23242','VG12252','VG11490']
+        project_ids_to_test = ['35505','42474','82403','23242','VG12252','VG11490']
 
+        failures = []
         project_ids_to_test.each do |project_id|
           visit "/project/#{project_id}"
           assert_equal( "/project/#{project_id}", current_path )
-          assert( page.has_content?("(ID: #{project_id})") )
+          failures.push(project_id) if ! page.has_content?("(ID: #{project_id})")
         end
+        assert( failures.size == 0, "Failed project id's: #{failures.join(', ')}" )
       end
     end
 
