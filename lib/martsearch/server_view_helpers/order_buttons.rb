@@ -168,7 +168,7 @@ module MartSearch
 
           text = 'contact distributor'
 
-          if ! order_url.empty?
+          if order_url && ! order_url.empty?
             button_text = "<a href=\"#{order_url}\" class=\"order2\" target=\"_blank\">#{text}</a>"
           end
 
