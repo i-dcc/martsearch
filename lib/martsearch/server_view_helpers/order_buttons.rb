@@ -33,6 +33,7 @@ module MartSearch
       order_from_urls = object['response']['docs'][0]['order_from_urls']
       order_from_names = object['response']['docs'][0]['order_from_names']
 
+      return nil if ! order_from_urls || ! order_from_names
       return nil if order_from_urls.size != order_from_names.size
 
       return order_from_urls[0]
