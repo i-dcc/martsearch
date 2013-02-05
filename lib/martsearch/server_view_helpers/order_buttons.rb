@@ -8,6 +8,36 @@ module MartSearch
     # @author Darren Oakley
     module OrderButtons
 
+    extend MartSearch::Utils
+    include MartSearch::Utils
+
+    # routine to get order urls from solr
+
+    def get_order_url_from_solr(hash)
+      return nil if ! hash[:type] || ! hash[:product_type] || ! hash[:mgi_accession_id]
+
+      http_client = build_http_client()
+
+      type = hash[:type]
+      product_type = hash[:product_type]
+      mgi_accession_id = hash[:mgi_accession_id].gsub(/MGI:/i, '')
+
+      url = "http://ikmc.vm.bytemark.co.uk:8983/solr/allele/select/?q=type:#{type}%20product_type:#{product_type}%20mgi_accession_id:#{mgi_accession_id}&wt=json"
+
+      res = http_client.get( URI.parse(url) )
+
+      object = JSON.parse(res)
+
+      return nil if object["response"]["numFound"] != 1
+
+      order_from_urls = object['response']['docs'][0]['order_from_urls']
+      order_from_names = object['response']['docs'][0]['order_from_names']
+
+      return nil if order_from_urls.size != order_from_names.size
+
+      return order_from_urls[0]
+    end
+
       # Helper function to centralise the logic for producing a button for
       # ordering a mouse.
       #
@@ -23,25 +53,14 @@ module MartSearch
         order_url        = ikmc_product_order_url( :mouse, project, project_id, mgi_accession_id, marker_symbol )
         express_interest = false
 
-        if not flagged_for_dist
-          express_interest = true
-          centre = dist_centre ? dist_centre : mi_centre
+        hash = {}
+        hash[:type] = 'mi_attempt'
+        hash[:product_type] = 'Mouse'
+        hash[:mgi_accession_id] = mgi_accession_id
 
-          if centre == 'APN'
-            order_url = 'http://www.australianphenomics.org.au/contact/'
-          elsif project =~ /KOMP/
-            order_url = 'https://www.komp.org/index.php?link=3'
-          elsif project =~ /EUCOMM/
-            order_url = 'http://www.emmanet.org/contact.php'
-          end
-        else
-          centre = dist_centre ? dist_centre : mi_centre
-          if project =~ /KOMP/ and centre == "WTSI"
-            order_url = "mailto:mouseinterest@sanger.ac.uk?subject=Interest in Mouse for #{marker_symbol}"
-          end
-        end
+        order_url = get_order_url_from_solr(hash)
 
-        button_text = generic_order_button( project, order_url, express_interest )
+        button_text = generic_order_button2( project, order_url )
 
         return button_text
       end
@@ -132,6 +151,24 @@ module MartSearch
           if express_interest
             button_text = "<a href=\"#{order_url}\" class=\"order2 express_interest\">express&nbsp;interest</a>"
           elsif !order_url.empty?
+            button_text = "<a href=\"#{order_url}\" class=\"order2\" target=\"_blank\">#{text}</a>"
+          end
+
+          # blag to add the new order button
+          # we just add new text to the original button if we're a mirKO project
+          # we just add the new button if we're a mirKO project
+
+          button_text += mirko_order_button(project)
+
+          return button_text
+        end
+
+        def generic_order_button2( project, order_url )
+          button_text      = '<span class="order unavailable">currently&nbsp;unavailable</span>'
+
+          text = 'contact distributor'
+
+          if ! order_url.empty?
             button_text = "<a href=\"#{order_url}\" class=\"order2\" target=\"_blank\">#{text}</a>"
           end
 
