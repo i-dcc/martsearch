@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+require 'pp'
+
 module MartSearch
 
   # Utility module to house all of the data gathering logic for the IKMC
@@ -551,6 +553,10 @@ module MartSearch
           })
         end
 
+        puts "#### get_vectors_and_cells results.size = #{results[:data].size}:"
+        #puts "#### results (OLD):"
+        #pp results[:data]
+
         data = {
           'intermediate_vectors' => [],
           'targeting_vectors'    => [],
@@ -561,6 +567,10 @@ module MartSearch
         }
 
         results[:data].each do |result|
+
+          #puts "#### data:"
+          #pp result
+
           if result['vector_gb_file'] == 'yes'
             data['vector_image'] = "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/vector-image"
             data['vector_gb']    = "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/targeting-vector-genbank-file"
@@ -587,8 +597,11 @@ module MartSearch
           ## Targeting Vectors
           ##
 
+          puts "#### result['mutation_type']: '#{result['mutation_type']}'"
+
           unless result['mutation_type'] == 'Targeted Non Conditional'
             unless result['targeting_vector'].nil?
+            #puts "#### add..."
               data['targeting_vectors'].push(
                 'name'          => result['targeting_vector'],
                 'design_id'     => result['design_id'],
@@ -653,6 +666,10 @@ module MartSearch
         results[:data] = data.recursively_symbolize_keys!
 
         MartSearch::Controller.instance().logger.debug("[MartSearch::ProjectUtils] ::get_vectors_and_cells - running get_vectors_and_cells( datasources, '#{project_id}' ) - DONE")
+
+        puts "#### return results.size = #{results[:data].size}:"
+        #puts "#### return results"
+        #pp results[:data]
 
         return results
       end

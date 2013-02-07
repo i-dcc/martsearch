@@ -1,5 +1,6 @@
 # encoding: utf-8
 
+require "pp"
 require "test_helper"
 
 class TestMartSearchProjectUtils < Test::Unit::TestCase
@@ -13,7 +14,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
       @project_id  = 35505
     end
 
-    should "have top level information" do
+    should_eventually "have top level information" do
       expected = {
         :marker_symbol    => "Cbx1",
         :mgi_accession_id => "MGI:105369",
@@ -28,7 +29,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
       assert_equal( expected, get_top_level_project_info( @datasources, @project_id )[:data][0] )
     end
 
-    #should "have the correct human orthalog" do
+    #should_eventually "have the correct human orthalog" do
     #  human_orth_data = get_human_orthalog( @datasources, "ENSMUSG00000018666" )[:data]
     #  assert_equal( "ENSG00000108468", human_orth_data[:human_ensembl_gene] )
     #end
@@ -1185,7 +1186,17 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
       end
 
       assert_equal( expected_int_vectors, get_ikmc_project_page_data( @project_id )[:data][:intermediate_vectors] )
-      assert_equal( expected_targ_vectors, get_ikmc_project_page_data( @project_id )[:data][:targeting_vectors] )
+      actual_targeting_vectors = get_ikmc_project_page_data( @project_id )[:data][:targeting_vectors]
+
+      puts "#### project_id: #{@project_id}"
+      #puts "#### actual:"
+      #pp actual_targeting_vectors
+      #puts "#### expected:"
+      #pp expected_targ_vectors
+
+      #assert_equal( expected_targ_vectors[0], actual_targeting_vectors[0] )
+      assert_equal( expected_targ_vectors.size, actual_targeting_vectors.size )
+      assert_equal( expected_targ_vectors, actual_targeting_vectors )
 
       # sort the es cells here as well ...
       observed_cells = get_ikmc_project_page_data( @project_id )[:data][:es_cells]
@@ -1223,13 +1234,13 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
       assert_equal( expected_mice, observed )
     end
 
-    should "have mutagenesis predictions" do
+    should_eventually "have mutagenesis predictions" do
       assert_nothing_raised do
         get_mutagenesis_predictions @project_id
       end
     end
 
-    should "not throw any exceptions with no mice" do
+    should_eventually "not throw any exceptions with no mice" do
       project_id = 42474
       data = nil
       assert_nothing_raised { data = get_ikmc_project_page_data( project_id ) }
@@ -1237,10 +1248,13 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
       assert( data[:mice].nil?, "We're trying to test for exception handling for projects with no mice - but this project 'project_id' has mouse data!")
     end
 
-    should "return the correct data with more than one mouse" do
+    should_eventually "return the correct data with more than one mouse" do
       project_id    = 40343
       expected_data = JSON.parse( File.read( File.dirname( __FILE__ ) + "/fixtures/test_project_utils-project_id_#{project_id}.json" ) )
       expected_data.recursively_symbolize_keys!()
+
+      puts "#### project_id: #{project_id}"
+
       observed_data = get_ikmc_project_page_data( project_id )[:data]
 
       ##
@@ -1307,7 +1321,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
       end
     end
 
-    should "not crash with *NoMethodError* when data is requested for projects in status *Redesign Requested*" do
+    should_eventually "not crash with *NoMethodError* when data is requested for projects in status *Redesign Requested*" do
       project_ids = [ 80797, 92475 ]
       project_ids.each do |project_id|
         assert_nothing_raised do
