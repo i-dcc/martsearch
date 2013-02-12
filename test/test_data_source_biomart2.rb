@@ -83,20 +83,25 @@ class MartSearchBiomartDataSourceTest2 < Test::Unit::TestCase
           next
         end
 
-      #  puts "#### running #{conf[:internal_name]}"
+       # puts "#### running '#{conf[:internal_name]}'"
 
         ds_conf = JSON.load( File.new( "config/server/datasets/#{conf[:internal_name]}/config.json", 'r' ) )
+
+        attributes = ds_conf['searching']["attributes"].flatten
+
+        #attributes + qc_metrics if conf[:internal_name].to_s == 'ikmc-idcc_targ_rep'
+        #pp attributes if conf[:internal_name].to_s == 'ikmc-idcc_targ_rep'
 
         results = datasources[key].ds.search({
           :process_results => true,
           :filters         => filters[conf[:dataset]],
-          :attributes      => ds_conf['searching']["attributes"].flatten
+          :attributes      => attributes
         })
 
         assert( results && results.size > 0 )
 
         failures = []
-        ds_conf['searching']["attributes"].each do |key|
+        attributes.each do |key|
           failures.push(key) if ! results[0].has_key?(key)
         end
 
@@ -106,7 +111,7 @@ class MartSearchBiomartDataSourceTest2 < Test::Unit::TestCase
 
       end
 
-   #   puts "#### biomart_count: #{biomart_count}"
+      #   puts "#### biomart_count: #{biomart_count}"
     end
 
   end

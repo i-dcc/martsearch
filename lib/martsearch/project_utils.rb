@@ -1,7 +1,5 @@
 # encoding: utf-8
 
-require 'pp'
-
 module MartSearch
 
   # Utility module to house all of the data gathering logic for the IKMC
@@ -493,6 +491,7 @@ module MartSearch
           'production_qc_three_prime_screen',
           'production_qc_loss_of_allele',
           'production_qc_vector_integrity',
+
           'distribution_qc_karyotype_high',
           'distribution_qc_karyotype_low',
           'distribution_qc_copy_number',
@@ -500,6 +499,7 @@ module MartSearch
           'distribution_qc_five_prime_sr_pcr',
           'distribution_qc_three_prime_sr_pcr',
           'distribution_qc_thawing',
+
           'user_qc_southern_blot',
           'user_qc_map_test',
           'user_qc_karyotype',
@@ -548,14 +548,11 @@ module MartSearch
               'floxed_start_exon',
               'floxed_end_exon',
               'parental_cell_line',
+              'targ_vec_mutation_type',
               qc_metrics
             ].flatten
           })
         end
-
-        puts "#### get_vectors_and_cells results.size = #{results[:data].size}:"
-        #puts "#### results (OLD):"
-        #pp results[:data]
 
         data = {
           'intermediate_vectors' => [],
@@ -567,9 +564,6 @@ module MartSearch
         }
 
         results[:data].each do |result|
-
-          #puts "#### data:"
-          #pp result
 
           if result['vector_gb_file'] == 'yes'
             data['vector_image'] = "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/vector-image"
@@ -583,7 +577,7 @@ module MartSearch
           ## Intermediate Vectors
           ##
 
-          unless result['mutation_type'] == 'Targeted Non Conditional'
+          unless result['targ_vec_mutation_type'] == 'Targeted Non Conditional'
             unless result['intermediate_vector'].nil?
               data['intermediate_vectors'].push(
                 'name'              => result['intermediate_vector'],
@@ -597,15 +591,12 @@ module MartSearch
           ## Targeting Vectors
           ##
 
-          puts "#### result['mutation_type']: '#{result['mutation_type']}'"
-
-          unless result['mutation_type'] == 'Targeted Non Conditional'
+          unless result['targ_vec_mutation_type'] == 'Targeted Non Conditional'
             unless result['targeting_vector'].nil?
-            #puts "#### add..."
               data['targeting_vectors'].push(
                 'name'          => result['targeting_vector'],
                 'design_id'     => result['design_id'],
-                'design_type'   => allele_type( nil, result['mutation_type'] ),
+                'design_type'   => allele_type( nil, result['targ_vec_mutation_type'] ),
                 'cassette'      => result['cassette'],
                 'cassette_type' => result['cassette_type'],
                 'backbone'      => result['backbone']
@@ -666,10 +657,6 @@ module MartSearch
         results[:data] = data.recursively_symbolize_keys!
 
         MartSearch::Controller.instance().logger.debug("[MartSearch::ProjectUtils] ::get_vectors_and_cells - running get_vectors_and_cells( datasources, '#{project_id}' ) - DONE")
-
-        puts "#### return results.size = #{results[:data].size}:"
-        #puts "#### return results"
-        #pp results[:data]
 
         return results
       end

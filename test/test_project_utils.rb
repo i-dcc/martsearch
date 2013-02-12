@@ -14,7 +14,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
       @project_id  = 35505
     end
 
-    should_eventually "have top level information" do
+    should "have top level information" do
       expected = {
         :marker_symbol    => "Cbx1",
         :mgi_accession_id => "MGI:105369",
@@ -28,11 +28,6 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
       }
       assert_equal( expected, get_top_level_project_info( @datasources, @project_id )[:data][0] )
     end
-
-    #should_eventually "have the correct human orthalog" do
-    #  human_orth_data = get_human_orthalog( @datasources, "ENSMUSG00000018666" )[:data]
-    #  assert_equal( "ENSG00000108468", human_orth_data[:human_ensembl_gene] )
-    #end
 
     should "have the expected results" do
       expected_int_vectors = [
@@ -676,7 +671,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :name                                  => "EPD0027_2_H03",
               :allele_symbol_superscript             => "tm1a(EUCOMM)Wtsi",
               :allele_type                           => "Knockout-First - Reporter Tagged Insertion",
-              :parental_cell_line                    => "JM8.N4",
+              :parental_cell_line                    => "JM8A.N4",
               :targeting_vector                      => "PGS00019_A_B11",
               :cassette                              => "L1L2_gt2",
               :cassette_type                         => "Promotorless",
@@ -1129,8 +1124,8 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :distribution_qc_loxp                  => "-"
             }
           ],
-          :allele_img  => "http://www.knockoutmouse.org/targ_rep/alleles/903/allele-image",
-          :allele_gb   => "http://www.knockoutmouse.org/targ_rep/alleles/903/escell-clone-genbank-file",
+          :allele_img  => "http://www.knockoutmouse.org/targ_rep/alleles/902/allele-image",
+          :allele_gb   => "http://www.knockoutmouse.org/targ_rep/alleles/902/escell-clone-genbank-file",
         }
       }
       expected_mice = [
@@ -1185,17 +1180,11 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
         end
       end
 
-      assert_equal( expected_int_vectors, get_ikmc_project_page_data( @project_id )[:data][:intermediate_vectors] )
       actual_targeting_vectors = get_ikmc_project_page_data( @project_id )[:data][:targeting_vectors]
 
-      puts "#### project_id: #{@project_id}"
-      #puts "#### actual:"
-      #pp actual_targeting_vectors
-      #puts "#### expected:"
-      #pp expected_targ_vectors
+      expected_targ_vectors.sort_by! { |hsh| hsh[:name] }
+      actual_targeting_vectors.sort_by! { |hsh| hsh[:name] }
 
-      #assert_equal( expected_targ_vectors[0], actual_targeting_vectors[0] )
-      assert_equal( expected_targ_vectors.size, actual_targeting_vectors.size )
       assert_equal( expected_targ_vectors, actual_targeting_vectors )
 
       # sort the es cells here as well ...
@@ -1221,6 +1210,23 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
         end
       end
 
+      assert_equal( expected_cells.size, observed_cells.size )
+
+      assert_equal( expected_cells[:conditional][:cells].size, observed_cells[:conditional][:cells].size )
+
+      for i in 0..expected_cells[:conditional][:cells].size
+        assert_equal( expected_cells[:conditional][:cells][i], observed_cells[:conditional][:cells][i] )
+      end
+
+      for i in 0..expected_cells[:"targeted non-conditional"][:cells].size
+        assert_equal( expected_cells[:"targeted non-conditional"][:cells][i], observed_cells[:"targeted non-conditional"][:cells][i] )
+      end
+
+      #expected_cells[:conditional][:cells] = []
+      #observed_cells[:conditional][:cells] = []
+      #expected_cells[:"targeted non-conditional"][:cells] = []
+      #observed_cells[:"targeted non-conditional"][:cells] = []
+
       assert_equal( expected_cells, observed_cells )
 
       observed = get_ikmc_project_page_data( @project_id )[:data][:mice]
@@ -1234,13 +1240,13 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
       assert_equal( expected_mice, observed )
     end
 
-    should_eventually "have mutagenesis predictions" do
+    should "have mutagenesis predictions" do
       assert_nothing_raised do
         get_mutagenesis_predictions @project_id
       end
     end
 
-    should_eventually "not throw any exceptions with no mice" do
+    should "not throw any exceptions with no mice" do
       project_id = 42474
       data = nil
       assert_nothing_raised { data = get_ikmc_project_page_data( project_id ) }
@@ -1248,12 +1254,10 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
       assert( data[:mice].nil?, "We're trying to test for exception handling for projects with no mice - but this project 'project_id' has mouse data!")
     end
 
-    should_eventually "return the correct data with more than one mouse" do
+    should "return the correct data with more than one mouse" do
       project_id    = 40343
       expected_data = JSON.parse( File.read( File.dirname( __FILE__ ) + "/fixtures/test_project_utils-project_id_#{project_id}.json" ) )
       expected_data.recursively_symbolize_keys!()
-
-      puts "#### project_id: #{project_id}"
 
       observed_data = get_ikmc_project_page_data( project_id )[:data]
 
@@ -1289,15 +1293,20 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
           :mouse_available,
           :escell_available,
           :vector_available,
-          :intermediate_vectors,
+         # :intermediate_vectors,
           :targeting_vectors,
           :vector_image,
           :vector_gb,
           :stage,
           :stage_type
       ]
+
+
+      expected_data[:targeting_vectors].sort_by! { |hsh| hsh[:name] }
+      observed_data[:targeting_vectors].sort_by! { |hsh| hsh[:name] }
+
       top_level_keys.each do |key|
-        # puts "testing '#{key}' - exp: '#{expected_data[key]}' vs obs: '#{observed_data[key]}'"
+        puts "testing '#{key}' - exp: '#{expected_data[key]}' vs obs: '#{observed_data[key]}'" if expected_data[key] != observed_data[key]
         assert_equal expected_data[key], observed_data[key]
       end
 
@@ -1321,7 +1330,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
       end
     end
 
-    should_eventually "not crash with *NoMethodError* when data is requested for projects in status *Redesign Requested*" do
+    should "not crash with *NoMethodError* when data is requested for projects in status *Redesign Requested*" do
       project_ids = [ 80797, 92475 ]
       project_ids.each do |project_id|
         assert_nothing_raised do
