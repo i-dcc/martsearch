@@ -491,7 +491,6 @@ module MartSearch
           'production_qc_three_prime_screen',
           'production_qc_loss_of_allele',
           'production_qc_vector_integrity',
-
           'distribution_qc_karyotype_high',
           'distribution_qc_karyotype_low',
           'distribution_qc_copy_number',
@@ -499,7 +498,6 @@ module MartSearch
           'distribution_qc_five_prime_sr_pcr',
           'distribution_qc_three_prime_sr_pcr',
           'distribution_qc_thawing',
-
           'user_qc_southern_blot',
           'user_qc_map_test',
           'user_qc_karyotype',
@@ -564,7 +562,6 @@ module MartSearch
         }
 
         results[:data].each do |result|
-
           if result['vector_gb_file'] == 'yes'
             data['vector_image'] = "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/vector-image"
             data['vector_gb']    = "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/targeting-vector-genbank-file"
@@ -582,7 +579,7 @@ module MartSearch
               data['intermediate_vectors'].push(
                 'name'              => result['intermediate_vector'],
                 'design_id'         => result['design_id'],
-                'design_type'       => allele_type( nil, result['mutation_type'] )
+                'design_type'       => allele_type( nil, result['targ_vec_mutation_type'] )
               )
             end
           end
@@ -634,7 +631,7 @@ module MartSearch
             {
               'name'                      => result['escell_clone'],
               'allele_symbol_superscript' => result['allele_symbol_superscript'],
-              'allele_type'               => allele_type( result['allele_symbol_superscript'], result['mutation_type'] ),
+              'allele_type'               => allele_type( result['allele_symbol_superscript'], result['targ_vec_mutation_type'] ),
               'parental_cell_line'        => result['parental_cell_line'],
               'targeting_vector'          => result['targeting_vector'],
               'cassette'                  => result['cassette'],
