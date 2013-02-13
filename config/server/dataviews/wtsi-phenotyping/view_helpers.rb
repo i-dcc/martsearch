@@ -1,6 +1,6 @@
 require "#{File.expand_path(File.dirname(__FILE__))}/raw_data_sort"
 
-# Template helper function to map the status descriptions retrived from MIG into 
+# Template helper function to map the status descriptions retrived from MIG into
 # a CSS class that is used to draw the heat map.
 #
 # @param [String] status_desc The long status description (supplied by MIG)
@@ -22,7 +22,7 @@ def wtsi_phenotyping_css_class_for_test(status_desc)
   end
 end
 
-# Helper function to fetch report data (for the pheno report pages) out 
+# Helper function to fetch report data (for the pheno report pages) out
 # of the cache.
 #
 # @param [String] colony_prefix The WTSI colony_prefix to look up
@@ -30,13 +30,13 @@ end
 # @return [Object] Either an Array or Hash of data ready for the template
 def wtsi_phenotyping_fetch_report_data( colony_prefix, pheno_test )
   ms = MartSearch::Controller.instance()
-  
+
   cached_data = ms.fetch_from_cache("wtsi-pheno-data:#{colony_prefix}")
   if cached_data.nil?
     ms.search("colony_prefix:#{colony_prefix}")
     cached_data = ms.fetch_from_cache("wtsi-pheno-data:#{colony_prefix}")
   end
-  
+
   if cached_data != nil
     return cached_data[ "#{pheno_test}_data".to_sym ]
   else
@@ -46,20 +46,23 @@ end
 
 def wtsi_phenotyping_fetch_mp_report_data( colony_prefix, mp_slug )
   ms = MartSearch::Controller.instance()
-  
+
   cached_data = ms.fetch_from_cache("wtsi-pheno-mp-data:#{colony_prefix}")
   if cached_data.nil?
     ms.search("colony_prefix:#{colony_prefix}")
     cached_data = ms.fetch_from_cache("wtsi-pheno-mp-data:#{colony_prefix}")
   end
-  
+
   if cached_data != nil
     mp_data = cached_data[:mp_groups][mp_slug.to_sym]
+
+    return nil if ! mp_data
+
     cached_data.keys.each do |key|
       next if key == :mp_groups
       mp_data[key] = cached_data[key]
     end
-    
+
     return mp_data
   else
     return nil
@@ -69,7 +72,7 @@ end
 def wtsi_phenotyping_fetch_raw_data( population_id, parameter_id )
   ms = MartSearch::Controller.instance()
   mart = ms.datasources[:"wtsi-phenotyping"].ds
-  
+
   results = mart.search(
     :process_results => true,
     :attributes => [
@@ -102,6 +105,6 @@ def wtsi_phenotyping_fetch_raw_data( population_id, parameter_id )
   )
 
   graph_type, sorted_results = RawDataSort.sort( results )
-  
+
   return graph_type, sorted_results
 end
