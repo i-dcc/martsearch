@@ -407,33 +407,33 @@ class MartSearchServerRackTest < Test::Unit::TestCase
     #  assert_equal( 404, @browser.last_response.status )
     #end
 
-    should "serve up JSON for EMAP Ontology data (for Eurexpress)" do
-      VCR.use_cassette('test_server_emap_ontology_json') do
-        omit_if(
-          @controller.datasets[:eurexpress].nil?,
-          "Skipping Eurexpress EMAP JSON tests as the DataSet is not active."
-        )
-
-        @controller.search('Cbx1')
-        assay_id = 'euxassay_012256'
-        emap_ids_to_test = ['root','EMAP0','EMAP7148']
-
-        emap_ids_to_test.each do |emap_id|
-          @browser.get "/eurexpress_emap?id=#{assay_id}-#{emap_id}"
-          assert( @browser.last_response.ok?, "A request to '/eurexpress_emap?id=#{assay_id}-#{emap_id}' failed" )
-          json = JSON.parse( @browser.last_response.body, :max_nesting => false )
-          assert json.is_a? Array
-          assert json.first['data'] != nil
-          assert json.first['state'] != nil
-        end
-
-        @browser.get "/eurexpress_emap?id=#{assay_id}-foooo"
-        assert_equal 404, @browser.last_response.status
-
-        @browser.get "/eurexpress_emap?id=weeeeee-root"
-        assert_equal 404, @browser.last_response.status
-      end
-    end
+    #should "serve up JSON for EMAP Ontology data (for Eurexpress)" do
+    #  VCR.use_cassette('test_server_emap_ontology_json') do
+    #    omit_if(
+    #      @controller.datasets[:eurexpress].nil?,
+    #      "Skipping Eurexpress EMAP JSON tests as the DataSet is not active."
+    #    )
+    #
+    #    @controller.search('Cbx1')
+    #    assay_id = 'euxassay_012256'
+    #    emap_ids_to_test = ['root','EMAP0','EMAP7148']
+    #
+    #    emap_ids_to_test.each do |emap_id|
+    #      @browser.get "/eurexpress_emap?id=#{assay_id}-#{emap_id}"
+    #      assert( @browser.last_response.ok?, "A request to '/eurexpress_emap?id=#{assay_id}-#{emap_id}' failed" )
+    #      json = JSON.parse( @browser.last_response.body, :max_nesting => false )
+    #      assert json.is_a? Array
+    #      assert json.first['data'] != nil
+    #      assert json.first['state'] != nil
+    #    end
+    #
+    #    @browser.get "/eurexpress_emap?id=#{assay_id}-foooo"
+    #    assert_equal 404, @browser.last_response.status
+    #
+    #    @browser.get "/eurexpress_emap?id=weeeeee-root"
+    #    assert_equal 404, @browser.last_response.status
+    #  end
+    #end
 
   end
 end
