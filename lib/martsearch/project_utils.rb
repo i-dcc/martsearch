@@ -631,7 +631,7 @@ module MartSearch
             {
               'name'                      => result['escell_clone'],
               'allele_symbol_superscript' => result['allele_symbol_superscript'],
-              'allele_type'               => allele_type( result['allele_symbol_superscript'], result['mutation_type'] ),
+              'allele_type'               => allele_type( result['allele_symbol_superscript'], result['targ_vec_mutation_type'] ),
               'parental_cell_line'        => result['parental_cell_line'],
               'targeting_vector'          => result['targeting_vector'],
               'cassette'                  => result['cassette'],
