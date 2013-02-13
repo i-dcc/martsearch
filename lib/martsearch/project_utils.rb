@@ -546,6 +546,7 @@ module MartSearch
               'floxed_start_exon',
               'floxed_end_exon',
               'parental_cell_line',
+              'targ_vec_mutation_type',
               qc_metrics
             ].flatten
           })
@@ -573,12 +574,12 @@ module MartSearch
           ## Intermediate Vectors
           ##
 
-          unless result['mutation_type'] == 'Targeted Non Conditional'
+          unless result['targ_vec_mutation_type'] == 'Targeted Non Conditional'
             unless result['intermediate_vector'].nil?
               data['intermediate_vectors'].push(
                 'name'              => result['intermediate_vector'],
                 'design_id'         => result['design_id'],
-                'design_type'       => allele_type( nil, result['mutation_type'] )
+                'design_type'       => allele_type( nil, result['targ_vec_mutation_type'] )
               )
             end
           end
@@ -587,12 +588,12 @@ module MartSearch
           ## Targeting Vectors
           ##
 
-          unless result['mutation_type'] == 'Targeted Non Conditional'
+          unless result['targ_vec_mutation_type'] == 'Targeted Non Conditional'
             unless result['targeting_vector'].nil?
               data['targeting_vectors'].push(
                 'name'          => result['targeting_vector'],
                 'design_id'     => result['design_id'],
-                'design_type'   => allele_type( nil, result['mutation_type'] ),
+                'design_type'   => allele_type( nil, result['targ_vec_mutation_type'] ),
                 'cassette'      => result['cassette'],
                 'cassette_type' => result['cassette_type'],
                 'backbone'      => result['backbone']
