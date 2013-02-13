@@ -28,11 +28,6 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
       assert_equal( expected, get_top_level_project_info( @datasources, @project_id )[:data][0] )
     end
 
-    #should "have the correct human orthalog" do
-    #  human_orth_data = get_human_orthalog( @datasources, "ENSMUSG00000018666" )[:data]
-    #  assert_equal( "ENSG00000108468", human_orth_data[:human_ensembl_gene] )
-    #end
-
     should "have the expected results" do
       expected_int_vectors = [
         {
@@ -675,7 +670,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :name                                  => "EPD0027_2_H03",
               :allele_symbol_superscript             => "tm1a(EUCOMM)Wtsi",
               :allele_type                           => "Knockout-First - Reporter Tagged Insertion",
-              :parental_cell_line                    => "JM8.N4",
+              :parental_cell_line                    => "JM8A.N4",
               :targeting_vector                      => "PGS00019_A_B11",
               :cassette                              => "L1L2_gt2",
               :cassette_type                         => "Promotorless",
@@ -1128,8 +1123,8 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :distribution_qc_loxp                  => "-"
             }
           ],
-          :allele_img  => "http://www.knockoutmouse.org/targ_rep/alleles/903/allele-image",
-          :allele_gb   => "http://www.knockoutmouse.org/targ_rep/alleles/903/escell-clone-genbank-file",
+          :allele_img  => "http://www.knockoutmouse.org/targ_rep/alleles/902/allele-image",
+          :allele_gb   => "http://www.knockoutmouse.org/targ_rep/alleles/902/escell-clone-genbank-file",
         }
       }
       expected_mice = [
@@ -1184,8 +1179,12 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
         end
       end
 
-      assert_equal( expected_int_vectors, get_ikmc_project_page_data( @project_id )[:data][:intermediate_vectors] )
-      assert_equal( expected_targ_vectors, get_ikmc_project_page_data( @project_id )[:data][:targeting_vectors] )
+      actual_targeting_vectors = get_ikmc_project_page_data( @project_id )[:data][:targeting_vectors]
+
+      expected_targ_vectors.sort_by! { |hsh| hsh[:name] }
+      actual_targeting_vectors.sort_by! { |hsh| hsh[:name] }
+
+      assert_equal( expected_targ_vectors, actual_targeting_vectors )
 
       # sort the es cells here as well ...
       observed_cells = get_ikmc_project_page_data( @project_id )[:data][:es_cells]
@@ -1209,6 +1208,23 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
           warn "targeted non-conditional: #{i}: #{key}: #{expected_cells[:"targeted non-conditional"][:cells][i][key]}/#{observed_cells[:"targeted non-conditional"][:cells][i][key]}" if expected_cells[:"targeted non-conditional"][:cells][i][key] != observed_cells[:"targeted non-conditional"][:cells][i][key]
         end
       end
+
+      assert_equal( expected_cells.size, observed_cells.size )
+
+      assert_equal( expected_cells[:conditional][:cells].size, observed_cells[:conditional][:cells].size )
+
+      for i in 0..expected_cells[:conditional][:cells].size
+        assert_equal( expected_cells[:conditional][:cells][i], observed_cells[:conditional][:cells][i] )
+      end
+
+      for i in 0..expected_cells[:"targeted non-conditional"][:cells].size
+        assert_equal( expected_cells[:"targeted non-conditional"][:cells][i], observed_cells[:"targeted non-conditional"][:cells][i] )
+      end
+
+      #expected_cells[:conditional][:cells] = []
+      #observed_cells[:conditional][:cells] = []
+      #expected_cells[:"targeted non-conditional"][:cells] = []
+      #observed_cells[:"targeted non-conditional"][:cells] = []
 
       assert_equal( expected_cells, observed_cells )
 
@@ -1275,15 +1291,20 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
           :mouse_available,
           :escell_available,
           :vector_available,
-          :intermediate_vectors,
+          #:intermediate_vectors,
           :targeting_vectors,
           :vector_image,
           :vector_gb,
           :stage,
           :stage_type
       ]
+
+
+      expected_data[:targeting_vectors].sort_by! { |hsh| hsh[:name] }
+      observed_data[:targeting_vectors].sort_by! { |hsh| hsh[:name] }
+
       top_level_keys.each do |key|
-        # puts "testing '#{key}' - exp: '#{expected_data[key]}' vs obs: '#{observed_data[key]}'"
+        # puts "testing '#{key}' - exp: '#{expected_data[key]}' vs obs: '#{observed_data[key]}'" if expected_data[key] != observed_data[key]
         assert_equal expected_data[key], observed_data[key]
       end
 
