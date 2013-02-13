@@ -450,8 +450,8 @@
         "allele_gb":"http://www.knockoutmouse.org/targ_rep/alleles/4282/escell-clone-genbank-file"
       }
     },
-    "vector_image":"http://www.knockoutmouse.org/targ_rep/alleles/4282/vector-image",
-    "vector_gb":"http://www.knockoutmouse.org/targ_rep/alleles/4282/targeting-vector-genbank-file",
+    "vector_image":"http://www.knockoutmouse.org/targ_rep/alleles/4281/vector-image",
+    "vector_gb":"http://www.knockoutmouse.org/targ_rep/alleles/4281/targeting-vector-genbank-file",
     "floxed_start_exon":"ENSMUSE00000208803",
     "floxed_end_exon":"ENSMUSE00000208803",
     "allele_design_type":"Knockout-First - Reporter Tagged Insertion",
