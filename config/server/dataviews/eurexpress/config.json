@@ -1,8 +1,8 @@
 {
   "name":                 "Eurexpress",
   "description":          "Gene expression annotation supplied by the Eurexpress project.",
-  "enabled":              true,
-  "display":              true,
+  "enabled":              false,
+  "display":              false,
   "custom_css":           true,
   "custom_head_js":       true,
   "custom_base_js":       true,

@@ -1,8 +1,8 @@
 {
   "name":                 "IKMC Trapped Products",
   "description":          "Gene trapped mutant ES cells and vectors.",
-  "enabled":              true,
-  "display":              true,
+  "enabled":              false,
+  "display":              false,
   "custom_css":           true,
   "custom_head_js":       false,
   "custom_base_js":       true,
