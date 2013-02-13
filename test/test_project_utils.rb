@@ -1,6 +1,5 @@
 # encoding: utf-8
 
-require "pp"
 require "test_helper"
 
 class TestMartSearchProjectUtils < Test::Unit::TestCase
@@ -1258,7 +1257,6 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
       project_id    = 40343
       expected_data = JSON.parse( File.read( File.dirname( __FILE__ ) + "/fixtures/test_project_utils-project_id_#{project_id}.json" ) )
       expected_data.recursively_symbolize_keys!()
-
       observed_data = get_ikmc_project_page_data( project_id )[:data]
 
       ##
@@ -1306,7 +1304,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
       observed_data[:targeting_vectors].sort_by! { |hsh| hsh[:name] }
 
       top_level_keys.each do |key|
-        puts "testing '#{key}' - exp: '#{expected_data[key]}' vs obs: '#{observed_data[key]}'" if expected_data[key] != observed_data[key]
+        # puts "testing '#{key}' - exp: '#{expected_data[key]}' vs obs: '#{observed_data[key]}'" if expected_data[key] != observed_data[key]
         assert_equal expected_data[key], observed_data[key]
       end
 
