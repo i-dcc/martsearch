@@ -180,33 +180,33 @@ module MartSearch
             'phenotype_status',
             'phenotype_is_active',
             'distribution_centre',
-            'report_ikmc_project_id'
+            #'report_ikmc_project_id'
           ].flatten
         })
       end
     end
 
-    def add_order_fields (new_row, result)
-      order_url = nil
-      order_visual = nil
-      if(result["distribution_centre"]=="UCD")
-        project_id = result["report_ikmc_project_id"]
-        if(project_id =~ /VG/)
-          order_url = "http://www.komp.org/geneinfo.php?project=#{project_id}"
-        else
-          order_url = "http://www.komp.org/geneinfo.php?project=CSD#{project_id}"
-        end
-        order_visual = "KOMP"
-      elsif(result["emma"] == "1")
-        order_url = "http://www.emmanet.org/mutant_types.php?keyword=#{result["marker_symbol"]}"
-        order_visual = "EMMA"
-      elsif(result["distribution_centre"] == "WTSI")
-        order_url = "mailto:mouseinterest@sanger.ac.uk?Subject=Mutant mouse for #{result["marker_symbol"]}"
-        order_visual = "WTSI"
-      end
-      new_row["order_url"] = order_url
-      new_row["order_visual"] = order_visual
-    end
+    #def add_order_fields (new_row, result)
+    #  order_url = nil
+    #  order_visual = nil
+    #  if(result["distribution_centre"]=="UCD")
+    #    project_id = result["report_ikmc_project_id"]
+    #    if(project_id =~ /VG/)
+    #      order_url = "http://www.komp.org/geneinfo.php?project=#{project_id}"
+    #    else
+    #      order_url = "http://www.komp.org/geneinfo.php?project=CSD#{project_id}"
+    #    end
+    #    order_visual = "KOMP"
+    #  elsif(result["emma"] == "1")
+    #    order_url = "http://www.emmanet.org/mutant_types.php?keyword=#{result["marker_symbol"]}"
+    #    order_visual = "EMMA"
+    #  elsif(result["distribution_centre"] == "WTSI")
+    #    order_url = "mailto:mouseinterest@sanger.ac.uk?Subject=Mutant mouse for #{result["marker_symbol"]}"
+    #    order_visual = "WTSI"
+    #  end
+    #  new_row["order_url"] = order_url
+    #  new_row["order_visual"] = order_visual
+    #end
 
     def add_mouse_allele( result, displayed_alleles, new_row)
       starting_allele = result["allele_symbol_superscript"]
@@ -275,7 +275,7 @@ module MartSearch
           #puts "after add_mouse_allele"
           #puts new_row
 
-          add_order_fields(new_row, result)
+          #add_order_fields(new_row, result)
 
           displayed_alleles["mouse_1"] = new_row
         end
