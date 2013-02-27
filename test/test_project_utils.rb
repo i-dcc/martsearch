@@ -670,7 +670,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :name                                  => "EPD0027_2_H03",
               :allele_symbol_superscript             => "tm1a(EUCOMM)Wtsi",
               :allele_type                           => "Knockout-First - Reporter Tagged Insertion",
-              :parental_cell_line                    => "JM8A.N4",
+              :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
               :cassette                              => "L1L2_gt2",
               :cassette_type                         => "Promotorless",
