@@ -563,8 +563,8 @@ module MartSearch
 
         results[:data].each do |result|
           if result['vector_gb_file'] == 'yes'
-            data['vector_image'] = "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/vector-image"
-            data['vector_gb']    = "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/targeting-vector-genbank-file"
+            data['vector_image'] = result['allele_id'] ? "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/vector-image" : nil
+            data['vector_gb']    = result['allele_id'] ? "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/targeting-vector-genbank-file" : nil
           end
 
           data['floxed_start_exon'] = result['floxed_start_exon']

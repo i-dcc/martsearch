@@ -1,7 +1,7 @@
 <%
   allele_links = []
   vector_links = []
-  
+
   if allele_gb
     allele_links.push({
       :href  => "http://www.i-dcc.org/targ_rep/alleles/#{allele_id}/escell-clone-genbank-file",
@@ -17,7 +17,7 @@
       })
     end
   end
-  
+
   if vector_gb
     vector_links.push({
       :href  => "http://www.i-dcc.org/targ_rep/alleles/#{allele_id}/targeting-vector-genbank-file",
@@ -29,16 +29,17 @@
         :href  => "http://www.i-dcc.org/targ_rep/alleles/#{allele_id}/vector-image",
         :class => 'image',
         :rel   => 'prettyPhoto',
-        :txt   => 'image'
+        :txt   => 'image',
+        :alt   => 'no image available'
       })
     end
   end
-  
+
   allele_links.map! do |link|
     content = link.delete(:txt)
     content_tag( 'a', content, link )
   end
-  
+
   vector_links.map! do |link|
     content = link.delete(:txt)
     content_tag( 'a', content, link )
@@ -58,6 +59,6 @@
         <td>Targeting Vector:</td>
         <td><%= vector_links.join(' | ') %></td>
       </tr>
-    <% end %>    
+    <% end %>
   </table>
 <% end %>
