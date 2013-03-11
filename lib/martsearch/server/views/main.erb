@@ -3,9 +3,9 @@
     <tr>
       <td width="50%">
         <p>
-          The IKMC MartSearch project integrates data from numerous 
-          <a href="http://www.biomart.org">BioMarts</a> to facilitate 
-          both simple and expert searches.  Use the search bar 
+          The IKMC MartSearch project integrates data from numerous
+          <a href="http://www.biomart.org">BioMarts</a> to facilitate
+          both simple and expert searches.  Use the search bar
           to the right to perform simple searches of our data.
         </p>
       </td>
@@ -14,10 +14,10 @@
           <input type="text" id="query" name="query" value="" size="50" />&nbsp;
           <input type="submit" value="Search" /><br />
           <small>
-            Enter gene/product identifiers (e.g. 
-            <%= link_to( 'Cbx1', '/search/Cbx1' ) %> or 
-            <%= link_to( 'EPD0027_2_A01', '/search/EPD0027_2_A01' ) %>) 
-            or any other <br />search term described in the 
+            Enter gene/product identifiers (e.g.
+            <%= link_to( 'Cbx1', '/search/Cbx1' ) %> or
+            <%= link_to( 'EPD0027_2_A01', '/search/EPD0027_2_A01' ) %>)
+            or any other <br />search term described in the
             <%= link_to( 'help', '/help' ) %> section.
           </small>
         </form>
@@ -27,8 +27,8 @@
 
   <h3>Viewing IKMC Data in Ensembl</h3>
   <p>
-    Most of the products/data found within this portal can also be viewed as <a href="http://en.wikipedia.org/wiki/Distributed_Annotation_System" target="_blank">DAS</a> 
-    tracks in the <a href="http://www.ensembl.org/" target="_blank">Ensembl genome browser</a>.  Follow these links 
+    Most of the products/data found within this portal can also be viewed as <a href="http://en.wikipedia.org/wiki/Distributed_Annotation_System" target="_blank">DAS</a>
+    tracks in the <a href="http://www.ensembl.org/" target="_blank">Ensembl genome browser</a>.  Follow these links
     to have the tracks automatically activated for you:
   </p>
   <ul class="ensembl_link_list">
@@ -40,7 +40,7 @@
 
   <h2>Federated Searches</h2>
   <p>
-    The links below take you to the <a href="http://www.knockoutmouse.org/biomart">standard 
+    The links below take you to the <a href="http://www.knockoutmouse.org/biomart">standard
     MartView interface</a> for several examples of federated queries:
   </p>
   <ol>
@@ -53,7 +53,7 @@
       </span>
     </li>
     <li>
-      <a href='http://www.knockoutmouse.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=imits.default.attributes.marker_symbol|imits.default.attributes.emma|imits.default.attributes.production_centre|imits.default.attributes.pipeline|idcc_targ_rep.default.attributes.cassette|idcc_targ_rep.default.attributes.allele_symbol_superscript|idcc_targ_rep.default.attributes.escell_clone|idcc_targ_rep.default.attributes.targeting_vector|idcc_targ_rep.default.attributes.pipeline|idcc_targ_rep.default.attributes.parental_cell_line|idcc_targ_rep.default.attributes.mutation_subtype|idcc_targ_rep.default.attributes.mutation_type&FILTERS=imits.default.filters.emma."1"|imits.default.filters.microinjection_status."Genotype confirmed"&VISIBLEPANEL=resultspanel' target="_blank">
+      <a href='http://www.knockoutmouse.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=imits2.default.attributes.marker_symbol|imits2.default.attributes.emma|imits2.default.attributes.production_centre|imits2.default.attributes.pipeline|genes_targ_rep.default.attributes.cassette|genes_targ_rep.default.attributes.allele_symbol_superscript|genes_targ_rep.default.attributes.escell_clone|genes_targ_rep.default.attributes.targeting_vector|genes_targ_rep.default.attributes.pipeline|genes_targ_rep.default.attributes.parental_cell_line|genes_targ_rep.default.attributes.mutation_subtype|genes_targ_rep.default.attributes.mutation_type&FILTERS=imits2.default.filters.emma."1"|imits2.default.filters.microinjection_status."Genotype confirmed"&VISIBLEPANEL=resultspanel' target="_blank">
         Find all IKMC mice available from the EMMA Repository with information on the vector used to make the mutation.
       </a>
       <span style="color:#666;font-style:italic;">
@@ -69,7 +69,7 @@
       </span>
     </li>
     <li>
-      <a href='http://www.knockoutmouse.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=idcc_targ_rep.default.attributes.pipeline|idcc_targ_rep.default.attributes.ikmc_project_id|idcc_targ_rep.default.attributes.mgi_accession_id|idcc_targ_rep.default.attributes.cassette|idcc_targ_rep.default.attributes.cassette_type|idcc_targ_rep.default.attributes.escell_clone|idcc_targ_rep.default.attributes.parental_cell_line|dcc.default.attributes.marker_symbol&FILTERS=idcc_targ_rep.default.filters.production_qc_loxp_screen."pass"&VISIBLEPANEL=resultspanel' target="_blank">
+      <a href='http://www.knockoutmouse.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=genes_targ_rep.default.attributes.pipeline|genes_targ_rep.default.attributes.ikmc_project_id|genes_targ_rep.default.attributes.mgi_accession_id|genes_targ_rep.default.attributes.cassette|genes_targ_rep.default.attributes.cassette_type|genes_targ_rep.default.attributes.escell_clone|genes_targ_rep.default.attributes.parental_cell_line|dcc.default.attributes.marker_symbol&FILTERS=genes_targ_rep.default.filters.production_qc_loxp_screen."pass"&VISIBLEPANEL=resultspanel' target="_blank">
         Find all conditionally targeted IKMC ES cells that are suitable for micro-injection.
       </a>
       <span style="color:#666;font-style:italic;">
@@ -82,11 +82,11 @@
 
   <h2>The BioMarts</h2>
   <p>
-    This portal integrates information on IKMC mouse knockout resources with numerous 
-    other relevant datasets, including Ensembl, Europhenome, EurExpress and EMMA.  For more 
-    information about this portal and the way in which it unites and searches the data, 
+    This portal integrates information on IKMC mouse knockout resources with numerous
+    other relevant datasets, including Ensembl, Europhenome, EurExpress and EMMA.  For more
+    information about this portal and the way in which it unites and searches the data,
     please see the <%= link_to( 'about', '/about' ) %> page.  If you wish to access any of these
-    BioMarts directly, click on the names of the datasets in the image below and you will be taken 
+    BioMarts directly, click on the names of the datasets in the image below and you will be taken
     to the standard MartView interface.
   </p>
   <div style="text-align:center">
@@ -114,8 +114,8 @@
     <img class="image_map_img" src="<%= url_for '/images/about-page/ikmc-biomarts.png' %>" alt="The BioMarts Linked into this Portal" />
     <dl class="image_map">
       <dd><a id="ikmc_proj_alle_link" title="IKMC Projects / Alleles" href="http://www.knockoutmouse.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=dcc.default.attributes.marker_symbol|dcc.default.attributes.mgi_accession_id|dcc.default.attributes.ikmc_project|dcc.default.attributes.ikmc_project_id|dcc.default.attributes.status|dcc.default.attributes.mouse_available|dcc.default.attributes.escell_available|dcc.default.attributes.vector_available&FILTERS=&VISIBLEPANEL=mainpanel" target="_blank"></a></dd>
-      <dd><a id="ikmc_targ_prod_link" title="IKMC Targeted Products" href="http://www.knockoutmouse.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=idcc_targ_rep.default.attributes.pipeline|idcc_targ_rep.default.attributes.ikmc_project_id|idcc_targ_rep.default.attributes.mgi_accession_id|idcc_targ_rep.default.attributes.targeting_vector|idcc_targ_rep.default.attributes.escell_clone&FILTERS=&VISIBLEPANEL=mainpanel" target="_blank"></a></dd>
-      <dd><a id="ikmc_imits_link" title="IKMC Mouse Production (iMits)" href="http://www.knockoutmouse.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=imits.default.attributes.marker_symbol|imits.default.attributes.mgi_accession_id|imits.default.attributes.escell_clone|imits.default.attributes.allele_symbol_superscript|imits.default.attributes.production_centre|imits.default.attributes.microinjection_status&FILTERS=&VISIBLEPANEL=mainpanel" target="_blank"></a></dd>
+      <dd><a id="ikmc_targ_prod_link" title="IKMC Targeted Products" href="http://www.knockoutmouse.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=genes_targ_rep.default.attributes.pipeline|genes_targ_rep.default.attributes.ikmc_project_id|genes_targ_rep.default.attributes.mgi_accession_id|genes_targ_rep.default.attributes.targeting_vector|genes_targ_rep.default.attributes.escell_clone&FILTERS=&VISIBLEPANEL=mainpanel" target="_blank"></a></dd>
+      <dd><a id="ikmc_imits_link" title="IKMC Mouse Production (iMits)" href="http://www.knockoutmouse.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=imits2.default.attributes.marker_symbol|imits2.default.attributes.mgi_accession_id|imits2.default.attributes.escell_clone|imits2.default.attributes.allele_symbol_superscript|imits2.default.attributes.production_centre|imits2.default.attributes.microinjection_status&FILTERS=&VISIBLEPANEL=mainpanel" target="_blank"></a></dd>
       <dd><a id="ikmc_omim_link" title="OMIM" href="http://www.knockoutmouse.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=omim.default.attributes.omim_id|omim.default.attributes.title|omim.default.attributes.human_gene_symbol|omim.default.attributes.mouse_gene_symbol|omim.default.attributes.mgi_accession_id|omim.default.attributes.location|omim.default.attributes.gene_status|omim.default.attributes.mapping_method|omim.default.attributes.disorder_name|omim.default.attributes.disorder_type|omim.default.attributes.tentative&FILTERS=&VISIBLEPANEL=mainpanel" target="_blank"></a></dd>
       <dd><a id="mgi_features_link" title="Genes &amp; Geneome Features" href="http://biomart.informatics.jax.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=markers.default.markers_attributes.marker_symbol_107|markers.default.markers_attributes.marker_name_107&FILTERS=&VISIBLEPANEL=mainpanel" target="_blank"></a></dd>
       <dd><a id="mgi_gxd_link" title="Gene Expression Data (GXD)" href="http://biomart.informatics.jax.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=result.default.naive_attributes.markersymbol|result.default.naive_attributes.assaymgiid|result.default.naive_attributes.assaytype|result.default.naive_attributes.mutantalleles|result.default.naive_attributes.age|result.default.naive_attributes.stagenumber|result.default.naive_attributes.printname|result.default.naive_attributes.strength|result.default.naive_attributes.pattern|result.default.naive_attributes.imagefigure&FILTERS=&VISIBLEPANEL=mainpanel" target="_blank"></a></dd>
@@ -133,8 +133,8 @@
 
   <h2>Information for Developers</h2>
   <p>
-    All the code and data that we produce is open-source and free to use. The following links 
-    will guide you to our source-code and documentation on how you can interact with the 
+    All the code and data that we produce is open-source and free to use. The following links
+    will guide you to our source-code and documentation on how you can interact with the
     services we provide.
   </p>
   <ul>
