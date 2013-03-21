@@ -1097,3 +1097,19 @@ table.ikmc-pipeline-progress-bar td.end_warn {
 div.papers p {
   margin-bottom: 10px;
 }
+
+.credits {
+  font-size: 1.1em;
+}
+
+.credits ul {
+	list-style: disc
+}
+
+.credits li {
+	margin-left: 30px
+}
+
+.credits_indent li {
+	margin-left: 60px
+}
