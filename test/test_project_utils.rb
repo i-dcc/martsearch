@@ -1123,8 +1123,8 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :distribution_qc_loxp                  => "-"
             }
           ],
-          :allele_img  => "http://www.knockoutmouse.org/targ_rep/alleles/902/allele-image",
-          :allele_gb   => "http://www.knockoutmouse.org/targ_rep/alleles/902/escell-clone-genbank-file",
+          :allele_img  => "http://www.knockoutmouse.org/targ_rep/alleles/903/allele-image",
+          :allele_gb   => "http://www.knockoutmouse.org/targ_rep/alleles/903/escell-clone-genbank-file",
         }
       }
       expected_mice = [
@@ -1225,6 +1225,37 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
       #observed_cells[:conditional][:cells] = []
       #expected_cells[:"targeted non-conditional"][:cells] = []
       #observed_cells[:"targeted non-conditional"][:cells] = []
+
+      counter = 0
+      expected_cells[:conditional][:cells].each do |cell|
+        cell.keys.each do |key|
+          puts "#### #{key}: exp: #{cell[key]}, obs: #{observed_cells[:conditional][:cells][counter][key]}" if cell[key] != observed_cells[:conditional][:cells][counter][key]
+          assert_equal cell[key], observed_cells[:conditional][:cells][counter][key]
+        end
+        assert_equal cell, observed_cells[:conditional][:cells][counter]
+        counter += 1
+      end
+
+      assert_equal( expected_cells[:conditional][:allele_gb], observed_cells[:conditional][:allele_gb] )
+      assert_equal( expected_cells[:conditional][:allele_img], observed_cells[:conditional][:allele_img] )
+
+      assert_equal( expected_cells[:"targeted non-conditional"][:allele_gb], observed_cells[:"targeted non-conditional"][:allele_gb] )
+      assert_equal( expected_cells[:"targeted non-conditional"][:allele_img], observed_cells[:"targeted non-conditional"][:allele_img] )
+
+      counter = 0
+      expected_cells[:"targeted non-conditional"][:cells].each do |cell|
+        cell.keys.each do |key|
+          puts "#### #{key}: exp: #{cell[key]}, obs: #{observed_cells[:"targeted non-conditional"][:cells][counter][key]}" if cell[key] != observed_cells[:"targeted non-conditional"][:cells][counter][key]
+          assert_equal cell[key], observed_cells[:conditional][:cells][counter][key]
+        end
+        assert_equal cell, observed_cells[:conditional][:cells][counter]
+        counter += 1
+      end
+
+      expected_cells[:conditional][:cells] = nil
+      observed_cells[:conditional][:cells] = nil
+      expected_cells[:"targeted non-conditional"][:cells] = nil
+      observed_cells[:"targeted non-conditional"][:cells] = nil
 
       assert_equal( expected_cells, observed_cells )
 

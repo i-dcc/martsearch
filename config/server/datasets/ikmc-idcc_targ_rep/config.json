@@ -29,6 +29,7 @@
       "intermediate_vector",
       "targeting_vector",
       "ikmc_project_id",
+      "escell_ikmc_project_id",
       "escell_clone",
       "escell_strain",
       "parental_cell_line",
