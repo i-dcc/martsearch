@@ -1123,8 +1123,8 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :distribution_qc_loxp                  => "-"
             }
           ],
-          :allele_img  => "http://www.knockoutmouse.org/targ_rep/alleles/902/allele-image",
-          :allele_gb   => "http://www.knockoutmouse.org/targ_rep/alleles/902/escell-clone-genbank-file",
+          :allele_img  => "http://www.knockoutmouse.org/targ_rep/alleles/903/allele-image",
+          :allele_gb   => "http://www.knockoutmouse.org/targ_rep/alleles/903/escell-clone-genbank-file",
         }
       }
       expected_mice = [
@@ -1171,6 +1171,11 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
           :genotyping_comment                    => "-"
         }
       ]
+
+      #Started
+      #.....mice: testing [:mice][0][:colony_background_strain] - exp: '' vs obs: 'C57BL/6Dnk'
+      #mice: testing [:mice][0][:test_cross_strain] - exp: 'C57BL/6J-Tyr<sup>c-Brd</sup>' vs obs: 'C57BL/6Brd-Tyr<sup>c-Brd</sup>'
+      #mice: testing [:mice][0][:genetic_background] - exp: 'C57BL/6J-Tyr<sup>c-Brd</sup>;C57BL/6N' vs obs: 'C57BL/6Dnk;C57BL/6Brd-Tyr<sup>c-Brd</sup>;C57BL/6N'
 
       # sort the es cells ...
       [ ':targeted non-conditional', :conditional ].each do |symbol|
@@ -1225,6 +1230,37 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
       #observed_cells[:conditional][:cells] = []
       #expected_cells[:"targeted non-conditional"][:cells] = []
       #observed_cells[:"targeted non-conditional"][:cells] = []
+
+      #counter = 0
+      #expected_cells[:conditional][:cells].each do |cell|
+      #  cell.keys.each do |key|
+      #    puts "#### #{key}: exp: #{cell[key]}, obs: #{observed_cells[:conditional][:cells][counter][key]}" if cell[key] != observed_cells[:conditional][:cells][counter][key]
+      #    #assert_equal cell[key], observed_cells[:conditional][:cells][counter][key]
+      # end
+      #  #assert_equal cell, observed_cells[:conditional][:cells][counter]
+      #  counter += 1
+      #end
+      #
+      #assert_equal( expected_cells[:conditional][:allele_gb], observed_cells[:conditional][:allele_gb] )
+      #assert_equal( expected_cells[:conditional][:allele_img], observed_cells[:conditional][:allele_img] )
+      #
+      #assert_equal( expected_cells[:"targeted non-conditional"][:allele_gb], observed_cells[:"targeted non-conditional"][:allele_gb] )
+      #assert_equal( expected_cells[:"targeted non-conditional"][:allele_img], observed_cells[:"targeted non-conditional"][:allele_img] )
+      #
+      #counter = 0
+      #expected_cells[:"targeted non-conditional"][:cells].each do |cell|
+      #  cell.keys.each do |key|
+      #    puts "#### #{key}: exp: #{cell[key]}, obs: #{observed_cells[:"targeted non-conditional"][:cells][counter][key]}" if cell[key] != observed_cells[:"targeted non-conditional"][:cells][counter][key]
+      #    #assert_equal cell[key], observed_cells[:conditional][:cells][counter][key]
+      #  end
+      #  #assert_equal cell, observed_cells[:conditional][:cells][counter]
+      #  counter += 1
+      #end
+      #
+      #expected_cells[:conditional][:cells] = nil
+      #observed_cells[:conditional][:cells] = nil
+      #expected_cells[:"targeted non-conditional"][:cells] = nil
+      #observed_cells[:"targeted non-conditional"][:cells] = nil
 
       assert_equal( expected_cells, observed_cells )
 
@@ -1312,7 +1348,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
       expected_data[:mice][0].keys.each do |key|
         expected_data[:mice].each_index do |index|
           puts "mice: testing [:mice][#{index}][:#{key}] - exp: '#{expected_data[:mice][index][key]}' vs obs: '#{observed_data[:mice][index][key]}'" if expected_data[:mice][index][key] != observed_data[:mice][index][key]
-          #assert_equal( expected_data[:mice][index][key], observed_data[:mice][index][key], "Mouse data has changed... We're now getting: \n\n #{observed_data[:mice].to_json}" )
+          assert_equal( expected_data[:mice][index][key], observed_data[:mice][index][key], "Mouse data has changed... We're now getting: \n\n #{observed_data[:mice].to_json}" )
         end
       end
 

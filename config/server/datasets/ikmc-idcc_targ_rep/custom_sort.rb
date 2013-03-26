@@ -43,6 +43,7 @@ module MartSearch
 
         # Get the ikmc_project_id
         ikmc_project_id           = result[:ikmc_project_id] || project[:ikmc_project_id]
+        ikmc_project_id           = result[:escell_ikmc_project_id] || result[:ikmc_project_id] || project[:ikmc_project_id]
         project[:ikmc_project_id] = ikmc_project_id if project[:ikmc_project_id].nil?
 
         # ES Cells
