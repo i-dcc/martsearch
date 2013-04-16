@@ -1246,9 +1246,9 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
       expected_cells[:"targeted non-conditional"][:cells].each do |cell|
         cell.keys.each do |key|
           puts "#### #{key}: exp: #{cell[key]}, obs: #{observed_cells[:"targeted non-conditional"][:cells][counter][key]}" if cell[key] != observed_cells[:"targeted non-conditional"][:cells][counter][key]
-          assert_equal cell[key], observed_cells[:conditional][:cells][counter][key]
+          assert_equal cell[key], observed_cells[:"targeted non-conditional"][:cells][counter][key]
         end
-        assert_equal cell, observed_cells[:conditional][:cells][counter]
+        assert_equal cell, observed_cells[:"targeted non-conditional"][:cells][counter]
         counter += 1
       end
 
