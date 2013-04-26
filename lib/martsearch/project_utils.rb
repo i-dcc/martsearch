@@ -552,6 +552,36 @@ module MartSearch
           })
         end
 
+        if results[:data].empty?
+          results       = handle_biomart_errors( "ikmc-ikmc-targ_rep", error_string ) do
+            targ_rep_mart.search({
+              :process_results => true,
+              :filters         => { 'escell_ikmc_project_id' => project_id },
+              :attributes      => [
+                'allele_id',
+                'design_id',
+                'mutation_subtype',
+                'mutation_type',
+                'mutation_method',
+                'cassette',
+                'cassette_type',
+                'backbone',
+                'allele_gb_file',
+                'vector_gb_file',
+                'intermediate_vector',
+                'targeting_vector',
+                'allele_symbol_superscript',
+                'escell_clone',
+                'floxed_start_exon',
+                'floxed_end_exon',
+                'parental_cell_line',
+                'targ_vec_mutation_type',
+                qc_metrics
+              ].flatten
+            })
+          end
+        end
+
         data = {
           'intermediate_vectors' => [],
           'targeting_vectors'    => [],
