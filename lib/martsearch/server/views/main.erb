@@ -123,10 +123,14 @@
               <%= link_to( 'Download', '/phenotyping/mgp_heatmap.xls', :title => 'Download the Phenotyping Overview' ) %>
               a heat map of phenotyping results by assay.  This spreadsheet also links to the detailed phenotyping
               data on this portal.<br/><br/>
+
+         <!--
               You can also access (and search) the same data via the
               <a title="Visit the MGP Phenotyping BioMart" target="_blank" href="http://www.sanger.ac.uk/htgt/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=phenotyping.default.heatmap.allele_name|phenotyping.default.heatmap.colony_prefix|phenotyping.default.heatmap.strain_group|phenotyping.default.heatmap.adult_lac_z_expression|phenotyping.default.heatmap.auditory_brainstem_response|phenotyping.default.heatmap.body_composition_dexa|phenotyping.default.heatmap.brain_histopathology|phenotyping.default.heatmap.citrobacter_challenge|phenotyping.default.heatmap.dysmorphology|phenotyping.default.heatmap.embryo_lac_z_expression|phenotyping.default.heatmap.eye_histopathology|phenotyping.default.heatmap.eye_morphology|phenotyping.default.heatmap.fertility|phenotyping.default.heatmap.general_observations|phenotyping.default.heatmap.glucose_tolerance_ip|phenotyping.default.heatmap.grip_strength|phenotyping.default.heatmap.haematology_cbc|phenotyping.default.heatmap.heart_histology|phenotyping.default.heatmap.heart_weight|phenotyping.default.heatmap.hot_plate|phenotyping.default.heatmap.indirect_calorimetry|phenotyping.default.heatmap.micro_ct_and_quantitative_faxitron|phenotyping.default.heatmap.micronuclei|phenotyping.default.heatmap.modified_shirpa|phenotyping.default.heatmap.non_invasive_blood_pressure|phenotyping.default.heatmap.open_field|phenotyping.default.heatmap.peripheral_blood_lymphocytes|phenotyping.default.heatmap.plasma_chemistry|phenotyping.default.heatmap.plasma_immunoglobulins|phenotyping.default.heatmap.prepulse_inhibition|phenotyping.default.heatmap.recessive_lethal_study|phenotyping.default.heatmap.rotarod|phenotyping.default.heatmap.salmonella_challenge|phenotyping.default.heatmap.skin_histopathology|phenotyping.default.heatmap.stress_induced_hyperthermia|phenotyping.default.heatmap.tail_epidermis_wholemount|phenotyping.default.heatmap.tissue_biobank|phenotyping.default.heatmap.viability_at_weaning|phenotyping.default.heatmap.weight_curves|phenotyping.default.heatmap.x_ray_imaging&FILTERS=&VISIBLEPANEL=mainpanel">
               MGP Phenotyping BioMart</a>.
               <br/><br/>
+           -->
+
               <b>NEW - </b><a href="http://www.sanger.ac.uk/htgt/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=pheno_candidates.default.naive_attributes.omim_disease_id|pheno_candidates.default.naive_attributes.omim_term|pheno_candidates.default.naive_attributes.mgi_gene_symbol|pheno_candidates.default.naive_attributes.rank|pheno_candidates.default.naive_attributes.score|pheno_candidates.default.naive_attributes.source&FILTERS=&VISIBLEPANEL=filterpanel">Disease predictions</a> based on semantic similarity between OMIM disorder clinical features and model organism phenotypes.
             </td>
           </tr>
@@ -143,6 +147,99 @@
             </td>
           </tr>
         </table>
+
+
+
+        <h4>Phenotyping Raw Data Access</h4>
+        <table class="noborder larger">
+          <tr>
+            <td style="text-align:left;">
+              Raw phenotyping data can be accessed and searched using the
+              <a title="Visit the MGP Phenotyping BioMart" target="_blank" href="http://www.sanger.ac.uk/htgt/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=phenotyping.default.heatmap.allele_name|phenotyping.default.heatmap.colony_prefix|phenotyping.default.heatmap.strain_group|phenotyping.default.heatmap.adult_lac_z_expression|phenotyping.default.heatmap.auditory_brainstem_response|phenotyping.default.heatmap.body_composition_dexa|phenotyping.default.heatmap.brain_histopathology|phenotyping.default.heatmap.citrobacter_challenge|phenotyping.default.heatmap.dysmorphology|phenotyping.default.heatmap.embryo_lac_z_expression|phenotyping.default.heatmap.eye_histopathology|phenotyping.default.heatmap.eye_morphology|phenotyping.default.heatmap.fertility|phenotyping.default.heatmap.general_observations|phenotyping.default.heatmap.glucose_tolerance_ip|phenotyping.default.heatmap.grip_strength|phenotyping.default.heatmap.haematology_cbc|phenotyping.default.heatmap.heart_histology|phenotyping.default.heatmap.heart_weight|phenotyping.default.heatmap.hot_plate|phenotyping.default.heatmap.indirect_calorimetry|phenotyping.default.heatmap.micro_ct_and_quantitative_faxitron|phenotyping.default.heatmap.micronuclei|phenotyping.default.heatmap.modified_shirpa|phenotyping.default.heatmap.non_invasive_blood_pressure|phenotyping.default.heatmap.open_field|phenotyping.default.heatmap.peripheral_blood_lymphocytes|phenotyping.default.heatmap.plasma_chemistry|phenotyping.default.heatmap.plasma_immunoglobulins|phenotyping.default.heatmap.prepulse_inhibition|phenotyping.default.heatmap.recessive_lethal_study|phenotyping.default.heatmap.rotarod|phenotyping.default.heatmap.salmonella_challenge|phenotyping.default.heatmap.skin_histopathology|phenotyping.default.heatmap.stress_induced_hyperthermia|phenotyping.default.heatmap.tail_epidermis_wholemount|phenotyping.default.heatmap.tissue_biobank|phenotyping.default.heatmap.viability_at_weaning|phenotyping.default.heatmap.weight_curves|phenotyping.default.heatmap.x_ray_imaging&FILTERS=&VISIBLEPANEL=mainpanel">
+              MGP Phenotyping BioMart</a>.
+            </td>
+          </tr>
+        </table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <h4>Help files</h4>
+        <table class="noborder larger">
+          <tr>
+
+            <td style="text-align:left;">
+
+            <img src='/images/pdficon_small.png'/>
+
+              <a title="How to extract raw phenotyping data" target="_blank" href="http://img1.sanger.ac.uk/pdfs/Portal/extract_raw_phenotyping_data.pdf">
+              How to extract raw phenotyping data</a>.
+
+            </td>
+            <td style="text-align:left;">
+
+            <img src='/images/pdficon_small.png'/>
+
+              <a title="How to extract summary ontology calls" target="_blank" href="http://img1.sanger.ac.uk/pdfs/Portal/extract_summary_ontology_calls.pdf">
+              How to extract summary ontology calls</a>.
+            </td>
+          </tr>
+
+          <tr>
+
+            <td style="text-align:left;">
+
+            <img src='/images/pdficon_small.png'/>
+
+              <a title="How to search gene expression data" target="_blank" href="http://img1.sanger.ac.uk/pdfs/Portal/search_lacz_reporter_gene_expression_data.pdf">
+              How to search gene expression data</a>.
+
+            </td>
+            <td style="text-align:left;">
+
+            <img src='/images/pdficon_small.png'/>
+
+              <a title="How to search by gene" target="_blank" href="http://img1.sanger.ac.uk/pdfs/Portal/search_on_a_per_gene_basis.pdf">
+              How to search by gene</a>.
+            </td>
+          </tr>
+
+          <tr>
+            <td style="text-align:left;">
+
+            <img src='/images/pdficon_small.png'/>
+
+              <a title="How to search by mammalian phenotyping ontology term" target="_blank" href="http://img1.sanger.ac.uk/pdfs/Portal/search_on_a_per_mammalian_phenotype_ontology_term_ basis.pdf">
+              How to search by mammalian phenotyping ontology term</a>.
+
+            </td>
+            <td style="text-align:left;">
+
+            <img src='/images/pdficon_small.png'/>
+
+              <a title="How to view a summary of all phenotyping data" target="_blank" href="http://img1.sanger.ac.uk/pdfs/Portal/view_a_summary_of_all_phenotyping_data.pdf">
+              How to view a summary of all phenotyping data</a>.
+            </td>
+          </tr>
+
+        </table>
+
+
+
+
       </td>
     </tr>
   </table>
