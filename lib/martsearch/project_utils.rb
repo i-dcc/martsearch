@@ -754,7 +754,6 @@ module MartSearch
         MartSearch::Controller.instance().logger.debug("[MartSearch::ProjectUtils] ::get_mutagenesis_predictions - running get_mutagenesis_predictions( '#{project_id}' )")
 
         result  = { :data => {}, :error => {} }
-        return result if ! project_id.is_a? Integer
 
         message = "There was a problem retrieving mutagenesis predictions for this project.  As a result this data will not be available on the page.  Please try refreshing your browser or come back in 10 minutes to obtain this data."
         begin
