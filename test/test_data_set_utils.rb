@@ -14,9 +14,9 @@ class MartSearchDataSetUtilsTest < Test::Unit::TestCase
   end
   
   def test_allele_type
-    assert_equal( "Knockout-First - Reporter Tagged Insertion", allele_type('tm1a(EUCOMM)WTSI') )
-    assert_equal( "Knockout-First - Reporter Tagged Insertion", allele_type('tm2a(EUCOMM)WTSI') )
-    assert_equal( "Knockout-First - Reporter Tagged Insertion", allele_type('tm10a(EUCOMM)WTSI') )
+    assert_equal( "Knockout First, Reporter-tagged insertion with conditional potential", allele_type('tm1a(EUCOMM)WTSI') )
+    assert_equal( "Knockout First, Reporter-tagged insertion with conditional potential", allele_type('tm2a(EUCOMM)WTSI') )
+    assert_equal( "Knockout First, Reporter-tagged insertion with conditional potential", allele_type('tm10a(EUCOMM)WTSI') )
     
     assert_equal( "Knockout-First, Post-Cre - Reporter Tagged Deletion", allele_type('tm1b(EUCOMM)WTSI') )
     assert_equal( "Knockout-First, Post-Cre - Reporter Tagged Deletion", allele_type('tm12b(EUCOMM)WTSI') )
@@ -35,7 +35,7 @@ class MartSearchDataSetUtilsTest < Test::Unit::TestCase
     
     assert_equal( "", allele_type( nil, nil ) )
     assert_equal( "Deletion", allele_type( nil, 'deletion' ) )
-    assert_equal( "Knockout-First - Reporter Tagged Insertion", allele_type( nil, 'ko_first' ) )
+    assert_equal( "Knockout First, Reporter-tagged insertion with conditional potential", allele_type( nil, 'ko_first' ) )
   end
   
 end
