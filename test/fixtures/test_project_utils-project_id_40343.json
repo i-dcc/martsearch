@@ -38,7 +38,7 @@
 				"qc_loxp_confirmation":"pass",
 				"qc_three_prime_lr_pcr":null,
 				"allele_name":"Abcd1<sup>tm1a(EUCOMM)Wtsi</sup>",
-				"allele_type":"Knockout-First - Reporter Tagged Insertion",
+				"allele_type":"Knockout First, Reporter-tagged insertion with conditional potential",
 				"genetic_background":"C57BL/6Dnk;C57BL/6Brd-Tyr<sup>c-Brd</sup>;C57BL/6N",
 				"qc_count":11,
 				"cassette":"L1L2_gt0",
@@ -50,7 +50,7 @@
         {
             "name":"PCS00030_B_D01",
             "design_id":"40651",
-            "design_type":"Knockout-First - Reporter Tagged Insertion"
+            "design_type":"Knockout First, Reporter-tagged insertion with conditional potential"
         },
         {
             "name":"PCS00030_B_D01",
@@ -63,7 +63,7 @@
         {
             "name":"PG00030_B_3_D01",
             "design_id":"40651",
-            "design_type":"Knockout-First - Reporter Tagged Insertion",
+            "design_type":"Knockout First, Reporter-tagged insertion with conditional potential",
             "cassette":"L1L2_gt0",
             "cassette_type":"Promotorless",
             "backbone":"L3L4_pZero_DTA_kan"
@@ -71,7 +71,7 @@
         {
             "name":"PG00030_C_1_D01",
             "design_id":"40651",
-            "design_type":"Knockout-First - Reporter Tagged Insertion",
+            "design_type":"Knockout First, Reporter-tagged insertion with conditional potential",
             "cassette":"L1L2_gt0",
             "cassette_type":"Promotorless",
             "backbone":"L3L4_pZero_DTA_kan"
@@ -79,7 +79,7 @@
         {
             "name":"PG00030_C_2_D01",
             "design_id":"40651",
-            "design_type":"Knockout-First - Reporter Tagged Insertion",
+            "design_type":"Knockout First, Reporter-tagged insertion with conditional potential",
             "cassette":"L1L2_gt0",
             "cassette_type":"Promotorless",
             "backbone":"L3L4_pZero_DTA_kan"
@@ -87,7 +87,7 @@
         {
             "name":"PG00030_C_3_D01",
             "design_id":"40651",
-            "design_type":"Knockout-First - Reporter Tagged Insertion",
+            "design_type":"Knockout First, Reporter-tagged insertion with conditional potential",
             "cassette":"L1L2_gt0",
             "cassette_type":"Promotorless",
             "backbone":"L3L4_pZero_DTA_kan"
@@ -95,7 +95,7 @@
         {
             "name":"PG00030_C_4_D01",
             "design_id":"40651",
-            "design_type":"Knockout-First - Reporter Tagged Insertion",
+            "design_type":"Knockout First, Reporter-tagged insertion with conditional potential",
             "cassette":"L1L2_gt0",
             "cassette_type":"Promotorless",
             "backbone":"L3L4_pZero_DTA_kan"
@@ -103,7 +103,7 @@
         {
             "name":"PGS00030_B_D01",
             "design_id":"40651",
-            "design_type":"Knockout-First - Reporter Tagged Insertion",
+            "design_type":"Knockout First, Reporter-tagged insertion with conditional potential",
             "cassette":"L1L2_gt0",
             "cassette_type":"Promotorless",
             "backbone":"L3L4_pZero_DTA_kan"
@@ -111,7 +111,7 @@
         {
             "name":"PGS00030_C_D01",
             "design_id":"40651",
-            "design_type":"Knockout-First - Reporter Tagged Insertion",
+            "design_type":"Knockout First, Reporter-tagged insertion with conditional potential",
             "cassette":"L1L2_gt0",
             "cassette_type":"Promotorless",
             "backbone":"L3L4_pZero_DTA_kan"
@@ -125,7 +125,7 @@
           {
             "name":"EPD0103_2_C01",
             "allele_symbol_superscript":"tm1a(EUCOMM)Wtsi",
-            "allele_type":"Knockout-First - Reporter Tagged Insertion",
+            "allele_type":"Knockout First, Reporter-tagged insertion with conditional potential",
             "parental_cell_line":"JM8.F6",
             "targeting_vector":"PGS00030_C_D01",
             "cassette":"L1L2_gt0",
@@ -161,7 +161,7 @@
           {
             "name":"EPD0103_2_A01",
             "allele_symbol_superscript":"tm1a(EUCOMM)Wtsi",
-            "allele_type":"Knockout-First - Reporter Tagged Insertion",
+            "allele_type":"Knockout First, Reporter-tagged insertion with conditional potential",
             "parental_cell_line":"JM8.F6",
             "targeting_vector":"PGS00030_C_D01",
             "cassette":"L1L2_gt0",
@@ -197,7 +197,7 @@
           {
             "name":"EPD0103_2_A02",
             "allele_symbol_superscript":"tm1a(EUCOMM)Wtsi",
-            "allele_type":"Knockout-First - Reporter Tagged Insertion",
+            "allele_type":"Knockout First, Reporter-tagged insertion with conditional potential",
             "parental_cell_line":"JM8.F6",
             "targeting_vector":"PGS00030_C_D01",
             "cassette":"L1L2_gt0",
@@ -233,7 +233,7 @@
           {
             "name":"EPD0103_2_E02",
             "allele_symbol_superscript":"tm1a(EUCOMM)Wtsi",
-            "allele_type":"Knockout-First - Reporter Tagged Insertion",
+            "allele_type":"Knockout First, Reporter-tagged insertion with conditional potential",
             "parental_cell_line":"JM8.F6",
             "targeting_vector":"PGS00030_C_D01",
             "cassette":"L1L2_gt0",
@@ -269,7 +269,7 @@
           {
             "name":"EPD0103_2_E03",
             "allele_symbol_superscript":"tm1a(EUCOMM)Wtsi",
-            "allele_type":"Knockout-First - Reporter Tagged Insertion",
+            "allele_type":"Knockout First, Reporter-tagged insertion with conditional potential",
             "parental_cell_line":"JM8.F6",
             "targeting_vector":"PGS00030_C_D01",
             "cassette":"L1L2_gt0",
@@ -305,7 +305,7 @@
           {
             "name":"EPD0103_2_H03",
             "allele_symbol_superscript":"tm1a(EUCOMM)Wtsi",
-            "allele_type":"Knockout-First - Reporter Tagged Insertion",
+            "allele_type":"Knockout First, Reporter-tagged insertion with conditional potential",
             "parental_cell_line":"JM8.F6",
             "targeting_vector":"PGS00030_C_D01",
             "cassette":"L1L2_gt0",
@@ -455,7 +455,7 @@
     "vector_gb":"http://www.knockoutmouse.org/targ_rep/alleles/4281/targeting-vector-genbank-file",
     "floxed_start_exon":"ENSMUSE00000208803",
     "floxed_end_exon":"ENSMUSE00000208803",
-    "allele_design_type":"Knockout-First - Reporter Tagged Insertion",
+    "allele_design_type":"Knockout First, Reporter-tagged insertion with conditional potential",
     "stage":"mice",
     "stage_type":"normal"
 }
