@@ -32,7 +32,7 @@ module MartSearch
     def allele_type( allele_symbol, design_type=nil )
 
        type = case allele_symbol
-       when /tm\d+a/ then "Knockout-First - Reporter Tagged Insertion"
+       when /tm\d+a/ then "Knockout First, Reporter-tagged insertion with conditional potential";
        when /tm\d+b/ then "Knockout-First, Post-Cre - Reporter Tagged Deletion"
        when /tm\d+c/ then "Knockout-First, Post-Flp - Conditional"
        when /tm\d+d/ then "Knockout-First, Post-Flp and Cre - Deletion, No Reporter"
@@ -47,7 +47,7 @@ module MartSearch
           when nil          then ""
           when /Cre Knock In/i  then "Cre Knock In"
           when /Deletion/i  then "Deletion"
-          else                   "Knockout-First - Reporter Tagged Insertion"
+          else                   "Knockout First, Reporter-tagged insertion with conditional potential"
           end
 
          end
