@@ -29,9 +29,8 @@ gem 'hoptoad_notifier',                   :require => false
 
 # Misc
 gem 'awesome_print',                      :require => false
-gem 'vlad',                               :require => false
-gem 'vlad-git',                           :require => false
 gem 'hoe',                                :require => false
+gem 'unicorn'
 
 group :development, :test do
   gem 'yard',                             :require => false
