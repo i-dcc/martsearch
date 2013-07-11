@@ -8,6 +8,6 @@ $stdout.reopen(log)
 $stderr.reopen(log)
 MartSearch::Server.use Rack::CommonLogger, log
 
-map '/' do
+map '/martsearch' do
   run MartSearch::Server
 end

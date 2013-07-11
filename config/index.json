@@ -1,6 +1,6 @@
 {
-  "url":             "http://www.knockoutmouse.org/martsearch/solr",
-  "builder_url":     "http://htgt.internal.sanger.ac.uk:8984/solr",
+  "url":             "http://htgt-web.internal.sanger.ac.uk:8984/solr",
+  "builder_url":     "http://htgt-web.internal.sanger.ac.uk:8984/solr",
   "docs_per_page":   10,
   "sort_results_by": "marker_symbol_str asc",
   "schema_name":     "martsearch-search",
