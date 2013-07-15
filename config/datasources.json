@@ -11,8 +11,8 @@
   "ikmc-omim":              { "type": "Biomart", "url": "http://htgt-web.internal.sanger.ac.uk:9011/biomart", "dataset": "omim" },
   "ikmc-unitrap":           { "type": "Biomart", "url": "http://biomart.helmholtz-muenchen.de/biomart", "dataset": "unitrap" },
   "mgi-markers":            { "type": "Biomart", "url": "http://biomart.informatics.jax.org/biomart", "dataset": "markers" },
-  "wtsi-bacs":              { "type": "Biomart", "url": "http://htgt-web.internal.sanger.ac.uk:9001/htgt/biomart", "dataset": "bacs" },
-  "wtsi-phenotyping":       { "type": "Biomart", "url": "http://htgt-web.internal.sanger.ac.uk:9001/htgt/biomart", "dataset": "phenotyping" },
-  "wtsi-possible_mp_terms": { "type": "Biomart", "url": "http://htgt-web.internal.sanger.ac.uk:9001/htgt/biomart", "dataset": "possible_mp_terms" },
+  "wtsi-bacs":              { "type": "Biomart", "url": "http://htgt-web.internal.sanger.ac.uk:8000/htgt/biomart", "dataset": "bacs" },
+  "wtsi-phenotyping":       { "type": "Biomart", "url": "http://htgt-web.internal.sanger.ac.uk:8000/htgt/biomart", "dataset": "phenotyping" },
+  "wtsi-possible_mp_terms": { "type": "Biomart", "url": "http://htgt-web.internal.sanger.ac.uk:8000/htgt/biomart", "dataset": "possible_mp_terms" },
   "wtsi-phenotyping-abr":   { "type": "FileSystem", "location": "/tmp/pheno_abr" }
 }
