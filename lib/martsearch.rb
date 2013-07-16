@@ -27,6 +27,20 @@ require 'mongo_store'
 
 require 'awesome_print'
 
+USE_CACHE = true
+USE_OLS = true
+
+# OLS
+OLS_OBJECT = OLS.setup_cache(
+  {
+    :host => 'web-mei-t87p.internal.sanger.ac.uk',
+    :port => 3334,
+    :database => 'htgt_ols_cache',
+    :user => 'htgt',
+    :password => 'htgt'
+  }
+) if USE_OLS
+
 MARTSEARCH_PATH = "#{File.expand_path(File.dirname(__FILE__))}/.." unless Object.const_defined? :MARTSEARCH_PATH
 
 require "#{MARTSEARCH_PATH}/lib/martsearch/array"

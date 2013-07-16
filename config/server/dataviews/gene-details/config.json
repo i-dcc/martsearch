@@ -13,8 +13,8 @@
       "mgi-markers"
     ],
     "optional": [
-      "ikmc-omim",
-      "ensembl-mouse-go"
+      "ikmc-omim"//,
+      //"ensembl-mouse-go"
     ]
   }
 }

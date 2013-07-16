@@ -37,4 +37,7 @@ before_fork do |server, worker|
       # someone else did our job for us
     end
   end
+  
+  # We need to do a DB.disconnect here
+  OLS_OBJECT.instance_variable_get(:@db_connection).disconnect
 end

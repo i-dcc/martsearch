@@ -12,8 +12,6 @@ module MartSearch
     include MartSearch::Utils
     include MartSearch::ControllerUtils
 
-    USE_CACHE = true
-    USE_OLS = true
     warn "#### NOT USING CACHE!!!" if ! USE_CACHE
     warn "#### NOT USING OLS!!!" if ! USE_OLS
 
@@ -36,17 +34,6 @@ module MartSearch
       @datasets          = @config[:server][:datasets]
       @dataviews         = @config[:server][:dataviews]
       @dataviews_by_name = @config[:server][:dataviews_by_name]
-
-      # OLS
-      OLS.setup_cache(
-        {
-          :host => 'web-mei-t87p.internal.sanger.ac.uk',
-          :port => 3334,
-          :database => 'htgt_ols_cache',
-          :user => 'htgt',
-          :password => 'htgt'
-        }
-      ) if USE_OLS
 
       # Logger
       @logger                 = Logger.new($stdout)
