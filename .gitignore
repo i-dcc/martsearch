@@ -18,3 +18,6 @@ tmp/*.json
 tmp/index_builder*
 tmp/ols_cache*
 tmp/pids
+tmp/sockets
+tmp/pheno_overview.xls
+tmp/pheno_abr/*
