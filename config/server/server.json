@@ -14,7 +14,7 @@
   },
   "datasets": [
     "emma-strains",
-    "ensembl-mouse-go",
+    //"ensembl-mouse-go",
     "ikmc-dcc-knockout_attempts",
     "ikmc-idcc_targ_rep",
     "ikmc-imits",
