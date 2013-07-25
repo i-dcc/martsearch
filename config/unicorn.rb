@@ -16,7 +16,8 @@ logger Logger.new(File.join(File.expand_path('../../', __FILE__), 'log', 'unicor
 pid File.join(File.expand_path('../../', __FILE__), 'tmp', 'pids', 'unicorn.pid')
 
 ## Listen on a unix data socket
-listen File.join(File.expand_path('../../', __FILE__), 'tmp', 'sockets', 'unicorn.sock')
+#listen File.join(File.expand_path('../../', __FILE__), 'tmp', 'sockets', 'unicorn.sock')
+listen 8080
 
 before_fork do |server, worker|
   # When sent a USR2, Unicorn will suffix its pidfile with .oldbin and
