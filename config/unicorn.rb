@@ -1,5 +1,5 @@
 #rails environment for the unicorn
-rails_env = ENV['RAILS_ENV'] || 'development'
+rails_env = ENV['RACK_ENV'] || 'development'
 
 ## Set the number of worker processes which can be spawned
 worker_processes 4
