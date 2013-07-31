@@ -33,14 +33,14 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
         {
           :name               => "PCS00019_A_B11",
           :design_id          => "39792",
-          :design_type        => "Knockout-First - Reporter Tagged Insertion"
+          :design_type        => "Knockout First, Reporter-tagged insertion with conditional potential"
         }
       ]
       expected_targ_vectors = [
         {
           :name           => "PG00019_A_1_B11",
           :design_id      => "39792",
-          :design_type    => "Knockout-First - Reporter Tagged Insertion",
+          :design_type    => "Knockout First, Reporter-tagged insertion with conditional potential",
           :cassette       => "L1L2_gt2",
           :cassette_type  => "Promotorless",
           :backbone       => "L3L4_pZero_kan",
@@ -48,7 +48,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
         {
           :name           => "PG00019_A_2_B11",
           :design_id      => "39792",
-          :design_type    => "Knockout-First - Reporter Tagged Insertion",
+          :design_type    => "Knockout First, Reporter-tagged insertion with conditional potential",
           :cassette       => "L1L2_gt2",
           :cassette_type  => "Promotorless",
           :backbone       => "L3L4_pZero_kan"
@@ -56,7 +56,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
         {
           :name           => "PG00019_A_3_B11",
           :design_id      => "39792",
-          :design_type    => "Knockout-First - Reporter Tagged Insertion",
+          :design_type    => "Knockout First, Reporter-tagged insertion with conditional potential",
           :cassette       => "L1L2_gt2",
           :cassette_type  => "Promotorless",
           :backbone       => "L3L4_pZero_kan"
@@ -64,7 +64,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
         {
           :name           => "PG00019_A_4_B11",
           :design_id      => "39792",
-          :design_type    => "Knockout-First - Reporter Tagged Insertion",
+          :design_type    => "Knockout First, Reporter-tagged insertion with conditional potential",
           :cassette       => "L1L2_gt2",
           :cassette_type  => "Promotorless",
           :backbone       => "L3L4_pZero_kan"
@@ -72,7 +72,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
         {
           :name           => "PGS00019_A_B11",
           :design_id      => "39792",
-          :design_type    => "Knockout-First - Reporter Tagged Insertion",
+          :design_type    => "Knockout First, Reporter-tagged insertion with conditional potential",
           :cassette       => "L1L2_gt2",
           :cassette_type  => "Promotorless",
           :backbone       => "L3L4_pZero_kan"
@@ -84,7 +84,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
             {
               :name                                  => "EPD0027_2_B01",
               :allele_symbol_superscript             => "tm1a(EUCOMM)Wtsi",
-              :allele_type                           => "Knockout-First - Reporter Tagged Insertion",
+              :allele_type                           => "Knockout First, Reporter-tagged insertion with conditional potential",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
               :cassette                              => "L1L2_gt2",
@@ -129,7 +129,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
             {
               :name                                  => "EPD0027_2_A02",
               :allele_symbol_superscript             => "tm1a(EUCOMM)Wtsi",
-              :allele_type                           => "Knockout-First - Reporter Tagged Insertion",
+              :allele_type                           => "Knockout First, Reporter-tagged insertion with conditional potential",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
               :cassette                              => "L1L2_gt2",
@@ -174,7 +174,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
             {
               :name                                  => "EPD0027_2_B03",
               :allele_symbol_superscript             => "tm1a(EUCOMM)Wtsi",
-              :allele_type                           => "Knockout-First - Reporter Tagged Insertion",
+              :allele_type                           => "Knockout First, Reporter-tagged insertion with conditional potential",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
               :cassette                              => "L1L2_gt2",
@@ -219,13 +219,13 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
             {
               :name                                  => "EPD0027_2_C01",
               :allele_symbol_superscript             => "tm1a(EUCOMM)Wtsi",
-              :allele_type                           => "Knockout-First - Reporter Tagged Insertion",
+              :allele_type                           => "Knockout First, Reporter-tagged insertion with conditional potential",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
               :cassette                              => "L1L2_gt2",
               :cassette_type                         => "Promotorless",
               :"mouse?"                              => "no",
-              :qc_count                              => 3,
+              :qc_count                              => 9,
               :production_qc_five_prime_screen       => "pass",
               :production_qc_loxp_screen             => "pass",
               :production_qc_three_prime_screen      => "pass",
@@ -251,26 +251,26 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :user_qc_mutant_specific_sr_pcr        => "-",
               :user_qc_loxp_confirmation             => "-",
               :user_qc_three_prime_lr_pcr            => "-",
-              :distribution_qc_chr1                  => "-",
+              :distribution_qc_chr1                  => "pass",
               :distribution_qc_chr11a                => "-",
-              :distribution_qc_chr11b                => "-",
-              :distribution_qc_chr8a                 => "-",
+              :distribution_qc_chr11b                => "pass",
+              :distribution_qc_chr8a                 => "pass",
               :distribution_qc_chr8b                 => "-",
-              :distribution_qc_chry                  => "-",
-              :distribution_qc_lacz                  => "-",
+              :distribution_qc_chry                  => "pass",
+              :distribution_qc_lacz                  => "pass",
               :distribution_qc_loa                   => "-",
-              :distribution_qc_loxp                  => "-"
+              :distribution_qc_loxp                  => "pass"
             },
             {
               :name                                  => "EPD0027_2_C03",
               :allele_symbol_superscript             => "tm1a(EUCOMM)Wtsi",
-              :allele_type                           => "Knockout-First - Reporter Tagged Insertion",
+              :allele_type                           => "Knockout First, Reporter-tagged insertion with conditional potential",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
               :cassette                              => "L1L2_gt2",
               :cassette_type                         => "Promotorless",
               :"mouse?"                              => "no",
-              :qc_count                              => 3,
+              :qc_count                              => 9,
               :production_qc_five_prime_screen       => "pass",
               :production_qc_loxp_screen             => "pass",
               :production_qc_three_prime_screen      => "pass",
@@ -296,20 +296,20 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
               :user_qc_mutant_specific_sr_pcr        => "-",
               :user_qc_loxp_confirmation             => "-",
               :user_qc_three_prime_lr_pcr            => "-",
-              :distribution_qc_chr1                  => "-",
+              :distribution_qc_chr1                  => "pass",
               :distribution_qc_chr11a                => "-",
-              :distribution_qc_chr11b                => "-",
-              :distribution_qc_chr8a                 => "-",
+              :distribution_qc_chr11b                => "pass",
+              :distribution_qc_chr8a                 => "pass",
               :distribution_qc_chr8b                 => "-",
-              :distribution_qc_chry                  => "-",
-              :distribution_qc_lacz                  => "-",
+              :distribution_qc_chry                  => "pass",
+              :distribution_qc_lacz                  => "pass",
               :distribution_qc_loa                   => "-",
-              :distribution_qc_loxp                  => "-"
+              :distribution_qc_loxp                  => "pass"
             },
             {
               :name                                  => "EPD0027_2_E01",
               :allele_symbol_superscript             => "tm1a(EUCOMM)Wtsi",
-              :allele_type                           => "Knockout-First - Reporter Tagged Insertion",
+              :allele_type                           => "Knockout First, Reporter-tagged insertion with conditional potential",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
               :cassette                              => "L1L2_gt2",
@@ -354,7 +354,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
             {
               :name                                  => "EPD0027_2_E02",
               :allele_symbol_superscript             => "tm1a(EUCOMM)Wtsi",
-              :allele_type                           => "Knockout-First - Reporter Tagged Insertion",
+              :allele_type                           => "Knockout First, Reporter-tagged insertion with conditional potential",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
               :cassette                              => "L1L2_gt2",
@@ -399,7 +399,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
             {
               :name                                  => "EPD0027_2_F01",
               :allele_symbol_superscript             => "tm1a(EUCOMM)Wtsi",
-              :allele_type                           => "Knockout-First - Reporter Tagged Insertion",
+              :allele_type                           => "Knockout First, Reporter-tagged insertion with conditional potential",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
               :cassette                              => "L1L2_gt2",
@@ -444,7 +444,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
             {
               :name                                  => "EPD0027_2_F02",
               :allele_symbol_superscript             => "tm1a(EUCOMM)Wtsi",
-              :allele_type                           => "Knockout-First - Reporter Tagged Insertion",
+              :allele_type                           => "Knockout First, Reporter-tagged insertion with conditional potential",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
               :cassette                              => "L1L2_gt2",
@@ -489,7 +489,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
             {
               :name                                  => "EPD0027_2_F03",
               :allele_symbol_superscript             => "tm1a(EUCOMM)Wtsi",
-              :allele_type                           => "Knockout-First - Reporter Tagged Insertion",
+              :allele_type                           => "Knockout First, Reporter-tagged insertion with conditional potential",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
               :cassette                              => "L1L2_gt2",
@@ -534,7 +534,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
             {
               :name                                  => "EPD0027_2_A01",
               :allele_symbol_superscript             => "tm1a(EUCOMM)Wtsi",
-              :allele_type                           => "Knockout-First - Reporter Tagged Insertion",
+              :allele_type                           => "Knockout First, Reporter-tagged insertion with conditional potential",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
               :cassette                              => "L1L2_gt2",
@@ -579,7 +579,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
             {
               :name                                  => "EPD0027_2_H01",
               :allele_symbol_superscript             => "tm1a(EUCOMM)Wtsi",
-              :allele_type                           => "Knockout-First - Reporter Tagged Insertion",
+              :allele_type                           => "Knockout First, Reporter-tagged insertion with conditional potential",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
               :cassette                              => "L1L2_gt2",
@@ -624,7 +624,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
             {
               :name                                  => "EPD0027_2_H02",
               :allele_symbol_superscript             => "tm1a(EUCOMM)Wtsi",
-              :allele_type                           => "Knockout-First - Reporter Tagged Insertion",
+              :allele_type                           => "Knockout First, Reporter-tagged insertion with conditional potential",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
               :cassette                              => "L1L2_gt2",
@@ -669,7 +669,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
             {
               :name                                  => "EPD0027_2_H03",
               :allele_symbol_superscript             => "tm1a(EUCOMM)Wtsi",
-              :allele_type                           => "Knockout-First - Reporter Tagged Insertion",
+              :allele_type                           => "Knockout First, Reporter-tagged insertion with conditional potential",
               :parental_cell_line                    => "JM8.N4",
               :targeting_vector                      => "PGS00019_A_B11",
               :cassette                              => "L1L2_gt2",
@@ -1131,7 +1131,7 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
         {
           :allele_name                           => "Cbx1<sup>tm1a(EUCOMM)Wtsi</sup>",
           :allele_symbol_superscript             => "tm1a(EUCOMM)Wtsi",
-          :allele_type                           => "Knockout-First - Reporter Tagged Insertion",
+          :allele_type                           => "Knockout First, Reporter-tagged insertion with conditional potential",
           :cassette                              => "L1L2_gt2",
           :cassette_type                         => "Promotorless",
           :colony_background_strain              => "C57BL/6Dnk",
@@ -1324,8 +1324,8 @@ class TestMartSearchProjectUtils < Test::Unit::TestCase
           :vector_available,
           #:intermediate_vectors,
           :targeting_vectors,
-          :vector_image,
-          :vector_gb,
+          #:vector_image,
+          #:vector_gb,
           :stage,
           :stage_type
       ]
