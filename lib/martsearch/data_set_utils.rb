@@ -40,13 +40,13 @@ module MartSearch
        else
 
          if /tm\d+\(/ =~ allele_symbol && ! design_type
-           "Deletion"
+           "Reporter-Tagged Deletion"
          else
 
           case design_type
           when nil          then ""
           when /Cre Knock In/i  then "Cre Knock In"
-          when /Deletion/i  then "Deletion"
+          when /Deletion/i  then "Reporter-Tagged Deletion"
           else                   "Knockout First, Reporter-tagged insertion with conditional potential"
           end
 
