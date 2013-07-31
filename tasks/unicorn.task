@@ -10,7 +10,7 @@ namespace :uc do
 
   desc 'Start unicorn master & workers'
   task :start do
-    exec("bundle exec unicorn_rails -E #{ENV['RAILS_ENV'] || 'development'} -c #{unicorn_config_path} -D")
+    exec("bundle exec unicorn_rails -E #{ENV['RACK_ENV'] || 'development'} -c #{unicorn_config_path} -D")
   end
 
   desc 'Stop unicorn master & workers'
