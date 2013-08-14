@@ -19,8 +19,6 @@ module MartSearch
         http_client = build_http_client()
 
         url = "http://ikmc.vm.bytemark.co.uk:8983/solr/allele/select/?q="
-        #url = "http://deskpro101067.internal.sanger.ac.uk:8983/solr/allele/select/?q="
-        #url = "http://ikmc.vm.bytemark.co.uk:8984/solr/allele/select/?q="
 
         hash_map = { /\s+/ => '%20', /\</ => '%3C', /\>/ => '%3E' }
 
@@ -53,93 +51,6 @@ module MartSearch
         return rv
       end
 
-      #def get_order_url_from_solr4(hash, url = "http://deskpro101067.internal.sanger.ac.uk:8983/solr/allele/select/?q=")
-      #  return nil if ! hash[:type] || ! hash[:product_type] || ! hash[:mgi_accession_id]
-      #
-      #  http_client = build_http_client()
-      #
-      #  url2 = "http://ikmc.vm.bytemark.co.uk:8983/solr/allele/select/?q="
-      #  #url = "http://deskpro101067.internal.sanger.ac.uk:8983/solr/allele/select/?q="
-      #
-      #  # TODO2 make array of escape chars or use built-in
-      #
-      #  # old = false
-      #
-      #  #if old
-      #  #
-      #  #  hash.keys.each do |key|
-      #  #    value = hash[key].to_s.gsub(/\s+/, '%20')
-      #  #    value = value.gsub(/\</, '%3C')
-      #  #    value = value.gsub(/\>/, '%3E')
-      #  #    url += "#{key.to_s}%3A%22#{value}%22%20"
-      #  #  end
-      #  #
-      #  #else
-      #
-      #  hash_map = {
-      #    /\s+/ => '%20',
-      #    /\</ => '%3C',
-      #    /\>/ => '%3E'
-      #  }
-      #
-      #  hash.keys.each do |key|
-      #    value = hash[key].to_s
-      #    hash_map.keys.each do |i|
-      #      value = value.gsub(i, hash_map[i])
-      #    end
-      #    url += "#{key.to_s}%3A%22#{value}%22%20"
-      #  end
-      #  #   end
-      #
-      #  url = url.strip || url
-      #
-      #  url += "&wt=json"   #&indent=on"
-      #
-      #  res = http_client.get( URI.parse(url) )
-      #
-      #  object = JSON.parse(res)
-      #
-      #  #return nil if object["response"]["numFound"] < 1
-      #
-      #  # TODO2: fix me!!
-      #
-      #  return get_order_url_from_solr4(hash, url2) if url != url2 && object["response"]["numFound"] < 1
-      #
-      #  #rv = []
-      #  #seen_map = {}
-      #  #object['response']['docs'].each do |doc|
-      #  #  order_from_urls = doc['order_from_urls']
-      #  #  order_from_names = doc['order_from_names']
-      #  #
-      #  #  next if ! order_from_urls || ! order_from_names || order_from_urls.size != order_from_names.size
-      #  #
-      #  #  (0..order_from_urls.size-1).to_a.each do |i|
-      #  #
-      #  #    next if seen_map.has_key? order_from_names[i]
-      #  #    seen_map[order_from_names[i]] = true
-      #  #    rv.push({:name => order_from_names[i], :url => order_from_urls[i]})
-      #  #  end
-      #  #end
-      #  #
-      #  #return rv
-      #
-      #  return nil if object["response"]["numFound"] != 1
-      #
-      #  rv = []
-      #  doc = object['response']['docs'][0]
-      #
-      #  order_from_urls = doc['order_from_urls']
-      #  order_from_names = doc['order_from_names']
-      #
-      #  return nil if ! order_from_urls || ! order_from_names || order_from_urls.size != order_from_names.size
-      #
-      #  (0..order_from_urls.size-1).to_a.each do |i|
-      #    rv.push({:name => order_from_names[i], :url => order_from_urls[i]})
-      #  end
-      #
-      #  return rv
-      #end
-
       def mouse_order_button2( hash )
 
         solr_hash = {
@@ -150,9 +61,6 @@ module MartSearch
         }
 
         order_urls = get_order_url_from_solr5(solr_hash)
-
-        #puts "#### :"
-        #pp order_urls
 
         return 'not-found' if ! order_urls
 
@@ -170,61 +78,6 @@ module MartSearch
 
         return button_texts
       end
-
-      # routine to get order urls from solr
-
-      #def get_order_url_from_solr(hash)
-      #  return nil if ! hash[:type] || ! hash[:product_type] || ! hash[:mgi_accession_id]
-      #
-      #  http_client = build_http_client()
-      #
-      #  type = hash[:type]
-      #  product_type = hash[:product_type]
-      #  mgi_accession_id = hash[:mgi_accession_id].gsub(/MGI:/i, '')
-      #
-      #  url = "http://ikmc.vm.bytemark.co.uk:8983/solr/allele/select/?q=type:#{type}%20product_type:#{product_type}%20mgi_accession_id:#{mgi_accession_id}&wt=json"
-      #
-      #  res = http_client.get( URI.parse(url) )
-      #
-      #  object = JSON.parse(res)
-      #
-      #  return nil if object["response"]["numFound"] != 1
-      #
-      #  order_from_urls = object['response']['docs'][0]['order_from_urls']
-      #  order_from_names = object['response']['docs'][0]['order_from_names']
-      #
-      #  return nil if ! order_from_urls || ! order_from_names
-      #  return nil if order_from_urls.size != order_from_names.size
-      #
-      #  return order_from_urls[0]
-      #end
-
-      # Helper function to centralise the logic for producing a button for
-      # ordering a mouse.
-      #
-      # @param [String] mgi_accession_id The MGI accession ID for the gene
-      # @param [String] marker_symbol The marker symbol for the gene
-      # @param [String] project The IKMC project name ['KOMP/KOMP-CSD','KOMP-Regeneron','NorCOMM','EUCOMM','mirKO']
-      # @param [String] project_id The IKMC project ID
-      # @param [Boolean] flagged_for_dist Whether the mouse has been flagged as available at the repositories
-      # @param [String] mi_centre The microinjection centre for the mouse
-      # @param [String] dist_centre The distribution centre for the mouse
-      # @return [String] The html markup for a button
-      #def mouse_order_button( mgi_accession_id, marker_symbol, project, project_id, flagged_for_dist, mi_centre='', dist_centre='' )
-      #  order_url        = ikmc_product_order_url( :mouse, project, project_id, mgi_accession_id, marker_symbol )
-      #  express_interest = false
-      #
-      #  hash = {}
-      #  hash[:type] = 'mi_attempt'
-      #  hash[:product_type] = 'Mouse'
-      #  hash[:mgi_accession_id] = mgi_accession_id
-      #
-      #  order_url = get_order_url_from_solr(hash)
-      #
-      #  button_text = generic_order_button2( project, order_url )
-      #
-      #  return button_text
-      #end
 
       # Helper function to build an order button Non-IKMC EMMA lines.
       #
