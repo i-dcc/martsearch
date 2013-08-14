@@ -4,48 +4,48 @@ require 'test_helper'
 
 class MartSearchServerViewHelpersTest < Test::Unit::TestCase
   include MartSearch::ServerViewHelpers
-  
+
   def test_content_tag
     assert_equal( "<p>w00t</p>", content_tag( 'p', 'w00t' ) )
     assert_equal( '<a href="http://google.com">google</a>', content_tag( :a, 'google', { :href => 'http://google.com' } ) )
   end
-  
+
   def test_ensembl_link_url_from_gene
     link = ensembl_link_url_from_gene( :human, 'ENSG00001' )
     assert( link =~ /ensembl.org/ )
     assert( link =~ /Homo_sapiens/ )
     assert( link =~ /ENSG00001/ )
-    
+
     link = ensembl_link_url_from_gene( :mouse, 'ENSMUS00001' )
     assert( link =~ /Mus_musculus/ )
-    
+
     link = ensembl_link_url_from_gene( :human, 'ENSG00001', ['das:wibble'] )
     assert( link =~ /das:wibble=normal/ )
-    
+
     assert_raise(TypeError) { ensembl_link_url_from_gene( :monkey, 'ENSG00001' ) }
   end
-  
+
   def test_ensembl_link_url_from_coords
     link = ensembl_link_url_from_coords( :human, 1, 20, 42 )
     assert( link =~ /Homo_sapiens/ )
     assert( link =~ /\?r=1:20-42/ )
-    
+
     link = ensembl_link_url_from_coords( :mouse, 1, 20, 42 )
     assert( link =~ /Mus_musculus/ )
-    
+
     link = ensembl_link_url_from_coords( :human, 1, 20, 42, ['das:wibble'] )
     assert( link =~ /das:wibble=normal/ )
-    
+
     assert_raise(TypeError) { ensembl_link_url_from_coords( :monkey, 1, 20, 42 ) }
   end
-  
+
   def test_vega_link_url_from_gene
     link = vega_link_url_from_gene( :mouse, 'OTTMUSG00001' )
     assert( link =~ /vega.sanger.ac.uk/ )
     assert( link =~ /Mus_musculus/ )
     assert( link =~ /OTTMUSG00001/ )
   end
-  
+
   def test_ensembl_link_url_from_transcript
     link = ensembl_link_url_from_transcript( :mouse, 'ENSMUSG00000018666', 'ENSMUST00000093943' )
     assert_match( /Mus_musculus/, link )
@@ -57,21 +57,21 @@ class MartSearchServerViewHelpersTest < Test::Unit::TestCase
 
     assert_raise(TypeError) { ensembl_link_url_from_transcript( :mouse, 'ENSMUSG00000018666', 'ENSMUST00000093943', :foo ) }
   end
-  
+
   def test_ensembl_vega_link_url_from_exon
     ens_link = ensembl_link_url_from_exon( :mouse, 'ENSMUSE00000810911' )
     assert_match( /ensembl/, ens_link )
     assert_match( /Mus_musculus/, ens_link )
     assert_match( /exonview/, ens_link )
-    
+
     veg_link = vega_link_url_from_exon( :mouse, 'OTTMUSE00000014611' )
     assert_match( /vega/, veg_link )
     assert_match( /Mus_musculus/, veg_link )
     assert_match( /exonview/, veg_link )
-    
+
     assert_raise(TypeError) { vega_link_url_from_exon( :monkey, 'OTTMUSE00000014611' ) }
   end
-  
+
   def test_mouse_order_button
     # In future we should add to this list mice from NorCOMM and TIGM as well
     mice = [
@@ -97,30 +97,30 @@ class MartSearchServerViewHelpersTest < Test::Unit::TestCase
       },
     ]
 
-    mice.each do |mouse|
-      assert_match( mouse[:expected_regex], mouse_order_button(
-        mouse[:mgi_accession_id],
-        mouse[:marker_symbol],
-        mouse[:sponsor],
-        mouse[:ikmc_project_id],
-        mouse[:dist_flag],
-        mouse[:mi_centre],
-        mouse[:distribution_centre]
-      ) )
-    end
+    #mice.each do |mouse|
+    #  assert_match( mouse[:expected_regex], mouse_order_button(
+    #    mouse[:mgi_accession_id],
+    #    mouse[:marker_symbol],
+    #    mouse[:sponsor],
+    #    mouse[:ikmc_project_id],
+    #    mouse[:dist_flag],
+    #    mouse[:mi_centre],
+    #    mouse[:distribution_centre]
+    #  ) )
+    #end
   end
-  
-  def test_emma_mouse_order_button
-    order_button = emma_mouse_order_button( 'EM:05020' )
-    assert_match( /EM\:\d+/, order_button )
-    assert_match( /emmanet/, order_button )
-    assert_match( /order/, order_button )
-  end
-  
+
+  #def test_emma_mouse_order_button
+  #  order_button = emma_mouse_order_button( 'EM:05020' )
+  #  assert_match( /EM\:\d+/, order_button )
+  #  assert_match( /emmanet/, order_button )
+  #  assert_match( /order/, order_button )
+  #end
+
   ##
   ## DataView Helper Tests...
   ##
-  
+
   def test_emma_strain_type
     if   MartSearch::ServerViewHelpers.private_methods.include?(:emma_strain_type) \
       or MartSearch::ServerViewHelpers.private_methods.include?('emma_strain_type')
@@ -129,7 +129,7 @@ class MartSearchServerViewHelpersTest < Test::Unit::TestCase
       assert_raise( ArgumentError ) { emma_strain_type('IN') }
     end
   end
-  
+
   def test_europhenome_link_url
     if   MartSearch::ServerViewHelpers.private_methods.include?(:europhenome_link_url) \
       or MartSearch::ServerViewHelpers.private_methods.include?('europhenome_link_url')
@@ -141,17 +141,17 @@ class MartSearchServerViewHelpersTest < Test::Unit::TestCase
         :test_id        => 'ESLIM_007_001',
         :parameter_id   => 'ESLIM_007_001_001'
       }
-      
+
       tar_url = URI.parse(url)
       gen_url = URI.parse( europhenome_link_url(opts) )
-      
+
       assert_equal( tar_url.host, gen_url.host )
       assert_equal( tar_url.path, gen_url.path )
       assert_raise( ArgumentError ) { europhenome_link_url() }
       assert_raise( ArgumentError ) { europhenome_link_url({}) }
     end
   end
-  
+
   def test_idcc_targ_rep_get_progressbar_info
     if   MartSearch::ServerViewHelpers.private_methods.include?(:idcc_targ_rep_get_progressbar_info) \
       or MartSearch::ServerViewHelpers.private_methods.include?('idcc_targ_rep_get_progressbar_info')
@@ -162,5 +162,5 @@ class MartSearchServerViewHelpersTest < Test::Unit::TestCase
       assert_equal( { :vectors => "incomp", :cells => "incomp", :mice => "incomp" }, idcc_targ_rep_get_progressbar_info({}) )
     end
   end
-  
+
 end

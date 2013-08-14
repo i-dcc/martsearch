@@ -20,7 +20,16 @@
                 dist_flag = false
                 dist_flag = true if mouse[:emma] == "1"
               %>
-              <%= mouse_order_button( @data[:mgi_accession_id], @data[:marker_symbol], @data[:ikmc_project], @data[:project_id], dist_flag, mouse[:production_centre], mouse[:distribution_centre] ) %>
+
+            <%
+            hash = {
+            :mgi_accession_id => @data[:mgi_accession_id],
+            :colony_name => mouse[:colony_prefix]
+            }
+            %>
+            
+            <%= mouse_order_button2( hash ) %>
+
             </td>
             <td><%= mouse[:microinjection_status]%></td>
             <td><%= mouse[:allele_name] %></td>

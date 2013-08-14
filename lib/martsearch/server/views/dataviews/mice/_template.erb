@@ -21,11 +21,16 @@
             dist_flag = false
             dist_flag = true if mouse[:emma] == "1"
           %>
-          <% if mouse[:pipeline].blank? and !mouse[:emma_id].blank? %>
-            <%= emma_mouse_order_button( mouse[:emma_id] ) %>
-          <% else %>
-            <%= mouse_order_button( mouse[:mgi_accession_id], mouse[:marker_symbol], mouse[:pipeline], mouse[:ikmc_project_id], dist_flag, mouse[:production_centre], mouse[:distribution_centre] ) %>
-          <% end %>
+
+          <%
+            hash = {
+            :mgi_accession_id => mouse[:mgi_accession_id],
+            :colony_name => mouse[:colony_prefix]
+            }
+            %>
+
+            <%= mouse_order_button2( hash ) %>
+
         </td>
         <td><%= mouse[:allele_name] %></td>
         <td>

@@ -405,6 +405,7 @@ module MartSearch
               'colony_background_strain',
               'test_cross_strain',
               'is_active',
+              'colony_prefix',
               qc_metrics
             ].flatten
           }
