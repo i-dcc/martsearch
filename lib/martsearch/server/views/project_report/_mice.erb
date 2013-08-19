@@ -3,7 +3,7 @@
   <div class="dataset_content">
     <table>
       <thead>
-        <th class="hide_on_print"></th>
+        <th class="hide_on_print">Order</th>
         <th>Microinjection Status</th>
         <th>Allele</th>
         <th>Allele Type</th>
@@ -27,8 +27,8 @@
             :colony_name => mouse[:colony_prefix]
             }
             %>
-            
-            <%= mouse_order_button2( hash ) %>
+
+            <%= mouse_order_button( hash ) %>
 
             </td>
             <td><%= mouse[:microinjection_status]%></td>

@@ -13,7 +13,7 @@ module MartSearch
       extend MartSearch::Utils
       include MartSearch::Utils
 
-      def get_order_url_from_solr5(hash)
+      def get_order_url_from_solr(hash)
         return nil if ! hash[:type] || ! hash[:product_type] || ! hash[:mgi_accession_id]
 
         http_client = build_http_client()
@@ -51,7 +51,7 @@ module MartSearch
         return rv
       end
 
-      def mouse_order_button2( hash )
+      def mouse_order_button( hash )
 
         solr_hash = {
           :type => 'mi_attempt',
@@ -60,9 +60,9 @@ module MartSearch
           :colony_name => hash[:colony_name]
         }
 
-        order_urls = get_order_url_from_solr5(solr_hash)
+        order_urls = get_order_url_from_solr(solr_hash)
 
-        return 'not-found' if ! order_urls
+        return '' if ! order_urls
 
         button_texts = ''
 
@@ -165,24 +165,6 @@ module MartSearch
         if express_interest
           button_text = "<a href=\"#{order_url}\" class=\"order2 express_interest\">express&nbsp;interest</a>"
         elsif !order_url.empty?
-          button_text = "<a href=\"#{order_url}\" class=\"order2\" target=\"_blank\">#{text}</a>"
-        end
-
-        # blag to add the new order button
-        # we just add new text to the original button if we're a mirKO project
-        # we just add the new button if we're a mirKO project
-
-        button_text += mirko_order_button(project)
-
-        return button_text
-      end
-
-      def generic_order_button2( project, order_url )
-        button_text      = '<span class="order unavailable">currently&nbsp;unavailable</span>'
-
-        text = 'contact distributor'
-
-        if order_url && ! order_url.empty?
           button_text = "<a href=\"#{order_url}\" class=\"order2\" target=\"_blank\">#{text}</a>"
         end
 
