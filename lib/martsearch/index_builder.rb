@@ -2,7 +2,7 @@
 
 module MartSearch
 
-  # This class is responsible for building and updating of a Solr search 
+  # This class is responsible for building and updating of a Solr search
   # index for use with a MartSearch application.
   #
   # @author Darren Oakley
@@ -36,8 +36,8 @@ module MartSearch
       @ontology_cache = {}
     end
 
-    # Function to control the dataset download process.  Determines if 
-    # we need to download each dataset (configured using the 'days_between_downlads' 
+    # Function to control the dataset download process.  Determines if
+    # we need to download each dataset (configured using the 'days_between_downlads'
     # option) - then only downloads the datasets that need downloading.
     def fetch_datasets
       @log.info "Starting dataset downloads..."
@@ -45,7 +45,7 @@ module MartSearch
       pwd = Dir.pwd
       setup_and_move_to_work_directory()
 
-      # First see which datasets we need to download (based on the age 
+      # First see which datasets we need to download (based on the age
       # of the 'current' dump file).
       Dir.chdir('dataset_dowloads/current')
       datasets_to_download = []
@@ -68,19 +68,26 @@ module MartSearch
 
       open_daily_directory( 'dataset_dowloads', false )
       Parallel.each( datasets_to_download, :in_threads => 10 ) do |ds|
-      # datasets_to_download.each do |ds|
-        # puts " - #{ds}: requesting data"
-        @log.info " - #{ds}: requesting data"
-        results = fetch_dataset( ds )
-        # puts " - #{ds}: #{results[:data].size} rows of data returned"
-        @log.info " - #{ds}: #{results[:data].size} rows of data returned"
+
+        begin
+          # datasets_to_download.each do |ds|
+          # puts " - #{ds}: requesting data"
+          @log.info " - #{ds}: requesting data"
+          results = fetch_dataset( ds )
+          # puts " - #{ds}: #{results[:data].size} rows of data returned"
+          @log.info " - #{ds}: #{results[:data].size} rows of data returned"
+        rescue => e
+          @log.error "IndexBuilder::fetch_datasets - #{ds}: failed!"
+          @log.error("IndexBuilder::fetch_datasets - #{e}")
+        end
+
       end
 
       @log.info "Dataset downloads completed."
       Dir.chdir(pwd)
     end
 
-    # Function to control the processing of the dataset downloads. 
+    # Function to control the processing of the dataset downloads.
     # Once the processing is complete it will also save the @document_cache to disk.
     def process_datasets
       @log.info "Starting dataset processing..."
@@ -90,10 +97,17 @@ module MartSearch
       Dir.chdir('dataset_dowloads/current')
 
       @builder_config[:datasets_to_index].each do |ds|
-        @log.info " - #{ds}: processing results"
-        process_dataset(ds)
-        clean_document_cache()
-        @log.info " - #{ds}: processing results complete"
+
+        begin
+          @log.info " - #{ds}: processing results"
+          process_dataset(ds)
+          clean_document_cache()
+          @log.info " - #{ds}: processing results complete"
+        rescue => e
+          @log.error "IndexBuilder::process_datasets - #{ds}: failed!"
+          @log.error("IndexBuilder::process_datasets - #{e}")
+        end
+
       end
 
       @log.info "Finished dataset processing."
@@ -104,7 +118,7 @@ module MartSearch
       Dir.chdir(pwd)
     end
 
-    # Function to build and store the XML files needed to update a Solr 
+    # Function to build and store the XML files needed to update a Solr
     # index based on the @document_cache store in this current instance.
     def save_solr_document_xmls
       pwd = Dir.pwd
@@ -195,8 +209,8 @@ module MartSearch
         Dir.chdir(pwd)
       end
 
-      # Helper function to do the actual work of querying a datasource for 
-      # data to index, stores the returned data to two files, a Marshal.dump 
+      # Helper function to do the actual work of querying a datasource for
+      # data to index, stores the returned data to two files, a Marshal.dump
       # (for computer consumption) and a CSV file (for human consumption).
       #
       # @param [String] ds The name of the dataset
@@ -228,7 +242,7 @@ module MartSearch
         return results
       end
 
-      # Function used to process the data returned from a dataset and build 
+      # Function used to process the data returned from a dataset and build
       # up the @document_cache.
       #
       # @param [String] ds The name of the dataset that the data is from
@@ -351,8 +365,8 @@ module MartSearch
         end
       end
 
-      # Utility function to cache a lookup for the @document_cache by a given field. 
-      # This allows a much faster lookup of documents when we are not linking by 
+      # Utility function to cache a lookup for the @document_cache by a given field.
+      # This allows a much faster lookup of documents when we are not linking by
       # the primary field.
       #
       # @param [Symbol] field The document field to cache the documents by
@@ -377,7 +391,7 @@ module MartSearch
               document[index_field] = index_values.uniq
             end
 
-            # If we have multiple value entries in what should be a single valued 
+            # If we have multiple value entries in what should be a single valued
             # field, not the best solution, but just arbitrarily pick the first entry.
             if !@index_config[:schema][:fields][index_field][:multi_valued] and index_values.size > 1
               new_array = []
