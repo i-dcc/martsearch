@@ -17,7 +17,7 @@ pid File.join(File.expand_path('../../', __FILE__), 'tmp', 'pids', 'unicorn.pid'
 
 ## Listen on a unix data socket
 #listen File.join(File.expand_path('../../', __FILE__), 'tmp', 'sockets', 'unicorn.sock')
-listen 8080
+listen 8082
 
 before_fork do |server, worker|
   # When sent a USR2, Unicorn will suffix its pidfile with .oldbin and
@@ -38,7 +38,7 @@ before_fork do |server, worker|
       # someone else did our job for us
     end
   end
-  
+
   # We need to do a DB.disconnect here
   OLS_OBJECT.instance_variable_get(:@db_connection).disconnect
 end
