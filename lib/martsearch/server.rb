@@ -1,5 +1,6 @@
 # encoding: utf-8
-
+require "sinatra"
+require "sinatra/namespace"
 HoptoadNotifier.configure do |config|
   config.api_key          = '1fad0eaacba687ba1ded863171b814c4'
   config.host             = 'htgt1.internal.sanger.ac.uk'
@@ -29,6 +30,7 @@ module MartSearch
     include MartSearch::ServerUtils
     include MartSearch::ProjectUtils
     register Sinatra::StaticAssets
+    register Sinatra::Namespace
     use HoptoadNotifier::Rack
 
     set :root, Proc.new { File.join( File.dirname(__FILE__), 'server' ) }
@@ -77,9 +79,12 @@ module MartSearch
       if request.env["HTTP_REFERER"] and request.env["HTTP_REFERER"].match(request.env["HTTP_HOST"])
         @martsearch_error = true
       end
-
+      if request.env["QUERY_STRING"].blank?
+        @params = {}
+        @params[:page_not_found] = true
+      end
       @request = request
-      erb :not_found
+      erb :redirect_to_impc
     end
 
     before do
@@ -104,6 +109,8 @@ module MartSearch
       @page_title            = nil
       @hide_side_search_form = false
       @errors                = {}
+      @foward_to             = nil
+      @params                = {:page_not_found=>false}
     end
 
     helpers do
@@ -118,72 +125,130 @@ module MartSearch
     ##
     ## Basic Routes
     ##
-
-    get '/?' do
-      @current               = 'home'
-      @hide_side_search_form = true
-      erb :main
+    get '/' do
+      @foward_to = {'description' => 'view the IMPC home page', 'http' => 'https://www.mousephenotype.org/'}
+      erb :redirect_to_impc
     end
 
-    get '/about/?' do
-      @current    = 'about'
-      @page_title = 'About'
-      erb :about
+    get '/query.php/?' do
+      if params.blank? or params.has_key?(:criteria) or params[:criteria].blank?
+        puts 'BLAH'
+        @params[:page_not_found] = true
+      else
+        params[:criteria] = params[:criteria].gsub(/ENSMUSG[\d]+/i, '').gsub(/Chr[\d]+:[\d]*-*[\d]*[([-+])]*/i, '')
+        if params[:criteria] =~ /^[ ,]*$/
+          params.delete(:criteria)
+          @params[:page_not_found] = true
+        else
+          params[:criteria] = params[:criteria].gsub(/[ ,]+/, ' OR ')
+        end
+      end
+      @foward_to = {'description' => "search for #{params[:criteria]}", 'http' => "https://www.mousephenotype.org/mi/impc/phenotype-archive/search#q=#{params[:criteria]}"} if params.has_key?(:criteria)
+      erb :redirect_to_impc
     end
 
-    get '/help/?' do
-      @current    = 'help'
-      @page_title = 'Help'
-      erb :help
+    get '/search_results/?' do
+      if params.blank? or params.has_key?(:criteria) or params[:criteria].blank?
+        @params[:page_not_found] = true
+                puts 'BLAH'
+      else
+        params[:criteria] = params[:criteria].gsub(/ENSMUSG[\d]+/i, '').gsub(/Chr[\d]+:[\d]*-*[\d]*[([-+])]*/i, '')
+        if params[:criteria] =~ /^[ ,]*$/
+          params.delete(:criteria)
+          @params[:page_not_found] = true
+        else
+          params[:criteria] = params[:criteria].gsub(/[ ,]+/, ' OR ')
+        end
+      @foward_to = {'description' => "search for #{params[:criteria]}", 'http' => "https://www.mousephenotype.org/mi/impc/phenotype-archive/search#q=#{params[:criteria]}"} if params.has_key?(:criteria)
+      end
+      erb :redirect_to_impc
     end
 
-    get '/clear_cache/?' do
-      @ms.cache.clear
-      redirect "#{request.script_name}/"
-    end
+#    get 'kb/?' do
+#      redirect "http://www.knockoutmouse.org/kb/"
+#    end
+
+    namespace '/martsearch' do
+
+      get '/redirect_to_impc/?' do
+        @foward_to = {'description' => 'view the IMPC home page', 'http' => 'https://www.mousephenotype.org/'}
+        @hide_side_search_form = true
+        erb :redirect_to_impc
+      end
+
+      get '/?' do
+        @foward_to = {'description' => 'view the IMPC home page', 'http' => 'https://www.mousephenotype.org/'}
+        @current               = 'home'
+        @hide_side_search_form = true
+        erb :redirect_to_impc
+      end
+
+#    get '/about/?' do
+#      @current    = 'about'
+#      @page_title = 'About'
+#      erb :about
+#    end
+
+#    get '/help/?' do
+#      @current    = 'help'
+#      @page_title = 'Help'
+#      erb :help
+#    end
+
+      get '/clear_cache/?' do
+        @ms.cache.clear
+        redirect "#{request.script_name}/"
+      end
 
     ##
     ## Searching
     ##
 
-    get '/search/?' do
-      if params.empty?
-        redirect "#{request.script_name}/"
-      else
-        @current    = 'home'
-        @page_title = "Search Results for '#{params[:query]}'"
-
-        @ms.logger.debug("[MartSearch::Server] /search?query=#{params[:query]}&page=#{params[:page]} - running search")
-        # Marker.mark("running search") do
-          use_cache   = params[:fresh] == "true" ? false : true
-          @results    = @ms.search( params[:query], params[:page].to_i, use_cache )
-        # end
-        @ms.logger.debug("[MartSearch::Server] /search?query=#{params[:query]}&page=#{params[:page]} - running search - DONE")
-
-        @data       = @ms.search_data
-        @errors     = @ms.errors
-
-        if params[:wt] == 'json'
-          @ms.logger.debug("[MartSearch::Server] /search?query=#{params[:query]}&page=#{params[:page]} - rendering JSON")
-          content_type 'application/json', :charset => 'utf-8'
-          return JSON.generate( @data, :max_nesting => false )
+      get '/search/?' do
+        if params.blank? or params.has_key?(:query) or params[:query].blank?
+          @params[:page_not_found] = true
+          erb :redirect_to_impc
         else
-          @ms.logger.debug("[MartSearch::Server] /search?query=#{params[:query]}&page=#{params[:page]} - rendering templates")
-          # Marker.mark("rendering page") do
-            erb :search
-          # end
+          if params[:wt] == 'json'
+            @current    = 'home'
+            @page_title = "Search Results for '#{params[:query]}'"
+
+            @ms.logger.debug("[MartSearch::Server] /search?query=#{params[:query]}&page=#{params[:page]} - running search")
+            # Marker.mark("running search") do
+              use_cache   = params[:fresh] == "true" ? false : true
+              @results    = @ms.search( params[:query], params[:page].to_i, use_cache )
+            # end
+            @ms.logger.debug("[MartSearch::Server] /search?query=#{params[:query]}&page=#{params[:page]} - running search - DONE")
+
+            @data       = @ms.search_data
+            @errors     = @ms.errors
+
+            @ms.logger.debug("[MartSearch::Server] /search?query=#{params[:query]}&page=#{params[:page]} - rendering JSON")
+            content_type 'application/json', :charset => 'utf-8'
+            return JSON.generate( @data, :max_nesting => false )
+          else
+            params[:query] = params[:query].gsub(/ENSMUSG[\d]+/i, '').gsub(/Chr[\d]+:[\d]*-*[\d]*[([-+])]*/i, '')
+            if params[:query] =~ /^[ ,]*$/
+              params.delete(:query)
+              @params[:page_not_found] = true
+            else
+              params[:query] = params[:query].gsub(/[ ,]+/, ' OR ')
+            end
+            params[:criteria] = params[:query]
+            @foward_to  = {'description' => "search for #{params[:query]}", 'http' => "https://www.mousephenotype.org/mi/impc/phenotype-archive/search#q=#{params[:query]}"} if params[:query]
+            erb :redirect_to_impc
+          end
         end
       end
-    end
 
-    ['/search/:query/?', '/search/:query/:page/?'].each do |path|
-      get path do
-        url = "#{request.script_name}/search?query=#{params[:query]}"
-        url << "&page=#{params[:page]}" if params[:page]
-        status 301
-        redirect url
+      ['/search/:query/?', '/search/:query/:page/?'].each do |path|
+        get path do
+          url = "#{request.script_name}/search?query=#{params[:query]}"
+          url << "&page=#{params[:page]}" if params[:page]
+          status 301
+          redirect url
+        end
       end
-    end
 
     ##
     ## Browsing
@@ -194,41 +259,43 @@ module MartSearch
       @page_title    = 'Browse'
       @results       = nil
       @data          = nil
-      @params        = params
       @browse_counts = @ms.browse_counts
 
-      if params[:field] and params[:query]
-        if !@config[:browsable_content].has_key?(params[:field].to_sym)
-          status 404
-          halt
-        elsif !@config[:browsable_content][params[:field].to_sym][:options].has_key?(params[:query].to_sym)
-          status 404
-          halt
-        else
-          browser_field_conf = @config[:browsable_content][params[:field].to_sym]
-          browser            = browser_field_conf[:options][params[:query].to_sym]
-          use_cache          = params[:fresh] == "true" ? false : true
-
-          @page_title    = "Browsing Data by #{browser_field_conf[:display_name]}: '#{browser[:text]}'"
-          @results_title = @page_title
-          @solr_query    = browser[:query]
-          @ms.logger.debug("[MartSearch::Server] /browse?field=#{params[:field]}&query=#{params[:query]}&page=#{params[:page]} - running search")
-          @results       = @ms.search( @solr_query, params[:page].to_i, use_cache )
-          @ms.logger.debug("[MartSearch::Server] /browse?field=#{params[:field]}&query=#{params[:query]}&page=#{params[:page]} - running search - DONE")
-          @data          = @ms.search_data
-          @errors        = @ms.errors
-          # @do_not_show_search_explaination = true if browser_field_conf[:exact_search] == false
-          @do_not_show_search_explaination = false
-        end
-      end
-
-      if params[:wt] == 'json'
-        @ms.logger.debug("[MartSearch::Server] /browse?field=#{params[:field]}&query=#{params[:query]}&page=#{params[:page]} - rendering JSON")
-        content_type 'application/json', :charset => 'utf-8'
-        return JSON.generate( @data, :max_nesting => false )
+      if params.blank? or params.has_key?(:query) or params[:query].blank?
+        @params[:page_not_found] = true
+        erb :redirect_to_impc
       else
-        @ms.logger.debug("[MartSearch::Server] /browse?field=#{params[:field]}&query=#{params[:query]}&page=#{params[:page]} - rendering templates")
-        erb :browse
+        if params[:field] and params[:query] and params[:wt] == 'json'
+          if !@config[:browsable_content].has_key?(params[:field].to_sym)
+            status 404
+            halt
+          elsif !@config[:browsable_content][params[:field].to_sym][:options].has_key?(params[:query].to_sym)
+            status 404
+            halt
+          else
+            browser_field_conf = @config[:browsable_content][params[:field].to_sym]
+            browser            = browser_field_conf[:options][params[:query].to_sym]
+            use_cache          = params[:fresh] == "true" ? false : true
+
+            @page_title    = "Browsing Data by #{browser_field_conf[:display_name]}: '#{browser[:text]}'"
+            @results_title = @page_title
+            @solr_query    = browser[:query]
+            @ms.logger.debug("[MartSearch::Server] /browse?field=#{params[:field]}&query=#{params[:query]}&page=#{params[:page]} - running search")
+            @results       = @ms.search( @solr_query, params[:page].to_i, use_cache )
+            @ms.logger.debug("[MartSearch::Server] /browse?field=#{params[:field]}&query=#{params[:query]}&page=#{params[:page]} - running search - DONE")
+            @data          = @ms.search_data
+            @errors        = @ms.errors
+            # @do_not_show_search_explaination = true if browser_field_conf[:exact_search] == false
+            @do_not_show_search_explaination = false
+          end
+
+          @ms.logger.debug("[MartSearch::Server] /browse?field=#{params[:field]}&query=#{params[:query]}&page=#{params[:page]} - rendering JSON")
+          content_type 'application/json', :charset => 'utf-8'
+          return JSON.generate( @data, :max_nesting => false )
+        else
+          @foward_to  = {'description' => "search for #{params[:query]}", 'http' => "https://www.mousephenotype.org/mi/impc/phenotype-archive/search#q=#{params[:query]}"} if params[:query]
+          erb :redirect_to_impc
+        end
       end
     end
 
@@ -245,117 +312,130 @@ module MartSearch
     ## IKMC Project Reports
     ##
 
-    ['/project/:id','/project/?'].each do |path|
-      get path do
-        project_id = params[:id]
-        redirect "#{request.script_name}/" if project_id.nil?
+      ['/project/:id','/project/?'].each do |path|
+        get path do
+          @foward_to = {'description' => "view project no #{params[:id]}", 'http' => "#{request.script_name}/martsearch/ikmc_project/#{params[:id]}"}
+          erb :redirect_to_impc
+        end
+      end
 
-        @current    = "home"
-        @page_title = "IKMC Project: #{project_id}"
 
-        @ms.logger.debug("[MartSearch::Server] /project/#{params[:id]} - running get_project_page_data")
-        get_project_page_data( project_id, params )
-        @ms.logger.debug("[MartSearch::Server] /project/#{params[:id]} - running get_project_page_data - DONE")
+      ['/ikmc_project/:id','/ikmc_project/?'].each do |path|
+        get path do
+          project_id = params[:id]
+          redirect "#{request.script_name}/" if project_id.nil?
 
-        if @data.nil?
-          status 404
-          erb :not_found
-        else
-          if params[:wt] == 'json'
-            @ms.logger.debug("[MartSearch::Server] /project/#{params[:id]} - rendering JSON")
-            content_type 'application/json', :charset => 'utf-8'
-            return JSON.generate( @data, :max_nesting => false )
+          @current    = "home"
+          @page_title = "IKMC Project: #{project_id}"
+
+          @ms.logger.debug("[MartSearch::Server] /project/#{params[:id]} - running get_project_page_data")
+          get_project_page_data( project_id, params )
+          @ms.logger.debug("[MartSearch::Server] /project/#{params[:id]} - running get_project_page_data - DONE")
+
+          if @data.nil?
+            status 404
+            halt
           else
-            @ms.logger.debug("[MartSearch::Server] /project/#{params[:id]} - rendering templates")
-            erb :project_report
+            if params[:wt] == 'json'
+              @ms.logger.debug("[MartSearch::Server] /project/#{params[:id]} - rendering JSON")
+              content_type 'application/json', :charset => 'utf-8'
+              return JSON.generate( @data, :max_nesting => false )
+            else
+              @ms.logger.debug("[MartSearch::Server] /project/#{params[:id]} - rendering templates")
+              erb :project_report
+            end
           end
         end
       end
-    end
 
-    get '/project/:id/pcr_primers/?' do
-      project_id = params[:id]
+      get '/project/:id/pcr_primers/?' do
+          @foward_to = {'description' => "view pcr primer (id = #{params[:id]})", 'http' => "#{request.script_name}/martsearch/ikmc_project/#{project_id}/pcr_primers/#{params[:id]}"}
+          erb :redirect_to_impc
+      end
 
-      if project_id.nil?
-        status 404
-        erb :not_found
-      else
-        get_project_page_data( project_id, params )
+      get 'ikmc/project/:id/pcr_primers/?' do
+        project_id = params[:id]
 
-        if @data[:pcr_primers].nil?
+        if project_id.nil?
           status 404
           erb :not_found
         else
-          erb :'project_report/pcr_primers', :layout => :ajax_layout
+          get_project_page_data( project_id, params )
+
+          if @data[:pcr_primers].nil?
+            status 404
+            erb :not_found
+          else
+            erb :'project_report/pcr_primers', :layout => :ajax_layout
+          end
         end
       end
-    end
 
-    def get_project_page_data( project_id, params )
-      @ms.logger.debug("[MartSearch::Server] ::get_project_page_data - running get_project_page_data( '#{project_id}', '#{params}' )")
-      @data = @ms.fetch_from_cache("project-report-#{project_id}")
-      if @data.nil? or params[:fresh] == "true"
-        results = get_ikmc_project_page_data( project_id )
-        @data   = results[:data]
-        @errors = { :project_page_errors => results[:errors] }
+      def get_project_page_data( project_id, params )
+        @ms.logger.debug("[MartSearch::Server] ::get_project_page_data - running get_project_page_data( '#{project_id}', '#{params}' )")
+        @data = @ms.fetch_from_cache("project-report-#{project_id}")
+        if @data.nil? or params[:fresh] == "true"
+          results = get_ikmc_project_page_data( project_id )
+          @data   = results[:data]
+          @errors = { :project_page_errors => results[:errors] }
 
-        unless @data.nil?
-          @ms.write_to_cache( "project-report-#{project_id}", @data )
+          unless @data.nil?
+            @ms.write_to_cache( "project-report-#{project_id}", @data )
+          end
         end
+        @ms.logger.debug("[MartSearch::Server] ::get_project_page_data - running get_project_page_data( '#{project_id}', '#{params}' ) - DONE")
       end
-      @ms.logger.debug("[MartSearch::Server] ::get_project_page_data - running get_project_page_data( '#{project_id}', '#{params}' ) - DONE")
-    end
 
     ##
     ## Dynamic CSS/Javascript
     ##
 
-    get '/css/martsearch-*.css' do
-      content_type 'text/css', :charset => 'utf-8'
-      @compressed_css = compressed_css( VERSION ) if @compressed_css.nil?
-      return @compressed_css
-    end
+      get '/css/martsearch-*.css' do
+        content_type 'text/css', :charset => 'utf-8'
+        @compressed_css = compressed_css( VERSION ) if @compressed_css.nil?
+        return @compressed_css
+      end
 
-    get '/js/martsearch-head-*.js' do
-      content_type 'text/javascript', :charset => 'utf-8'
-      @compressed_head_js = compressed_head_js( VERSION ) if @compressed_head_js.nil?
-      return @compressed_head_js
-    end
+#      get '/js/martsearch-head-*.js' do
+#        content_type 'text/javascript', :charset => 'utf-8'
+#        @compressed_head_js = compressed_head_js( VERSION ) if @compressed_head_js.nil?
+#        return @compressed_head_js
+#      end
 
-    get '/js/martsearch-base-*.js' do
-      content_type 'text/javascript', :charset => 'utf-8'
-      @compressed_base_js = compressed_base_js( VERSION ) if @compressed_base_js.nil?
-      return @compressed_base_js
-    end
+#      get '/js/martsearch-base-*.js' do
+#        content_type 'text/javascript', :charset => 'utf-8'
+#        @compressed_base_js = compressed_base_js( VERSION ) if @compressed_base_js.nil?
+#        return @compressed_base_js
+#      end
 
-    get '/dataview-css/:dataview_name' do
-      content_type 'text/css', :charset => 'utf-8'
-      dataview_name = params[:dataview_name].sub('.css','')
-      @ms.dataviews_by_name[ dataview_name.to_sym ].stylesheet
-    end
+      get '/dataview-css/:dataview_name' do
+        content_type 'text/css', :charset => 'utf-8'
+        dataview_name = params[:dataview_name].sub('.css','')
+        @ms.dataviews_by_name[ dataview_name.to_sym ].stylesheet
+      end
 
-    get '/dataview-head-js/:dataview_name' do
-      content_type 'text/javascript', :charset => 'utf-8'
-      dataview_name = params[:dataview_name].sub('.js','')
-      @ms.dataviews_by_name[ dataview_name.to_sym ].javascript_head
-    end
+#      get '/dataview-head-js/:dataview_name' do
+#        content_type 'text/javascript', :charset => 'utf-8'
+#        dataview_name = params[:dataview_name].sub('.js','')
+#        @ms.dataviews_by_name[ dataview_name.to_sym ].javascript_head
+#      end
 
-    get '/dataview-base-js/:dataview_name' do
-      content_type 'text/javascript', :charset => 'utf-8'
-      dataview_name = params[:dataview_name].sub('.js','')
-      @ms.dataviews_by_name[ dataview_name.to_sym ].javascript_base
-    end
+#      get '/dataview-base-js/:dataview_name' do
+#        content_type 'text/javascript', :charset => 'utf-8'
+#        dataview_name = params[:dataview_name].sub('.js','')
+#        @ms.dataviews_by_name[ dataview_name.to_sym ].javascript_base
+#      end
 
     ##
     ## Load in any custom (per dataset) routes
     ##
 
-    MartSearch::Controller.instance().dataviews.each do |dv|
-      if dv.use_custom_routes?
-        load "#{MARTSEARCH_PATH}/config/server/dataviews/#{dv.internal_name}/routes.rb"
+      MartSearch::Controller.instance().dataviews.each do |dv|
+        if dv.use_custom_routes?
+          load "#{MARTSEARCH_PATH}/config/server/dataviews/#{dv.internal_name}/routes.rb"
+        end
       end
     end
-
   end
 
 end

@@ -9,6 +9,7 @@ gem 'mysql2'
 # Server
 gem 'sinatra',                '~>1.0',    :require => false
 gem 'sinatra-static-assets',  '~>0.5',    :require => false
+gem 'sinatra-contrib',                    :require => false
 gem 'rack',                   '>=1.0',    :require => false
 gem 'rack-contrib',                       :require => false
 gem 'erubis',                             :require => false
