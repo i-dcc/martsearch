@@ -1,6 +1,5 @@
 # encoding: utf-8
 require "sinatra"
-require "sinatra/namespace"
 HoptoadNotifier.configure do |config|
   config.api_key          = '1fad0eaacba687ba1ded863171b814c4'
   config.host             = 'htgt1.internal.sanger.ac.uk'
@@ -30,7 +29,6 @@ module MartSearch
     include MartSearch::ServerUtils
     include MartSearch::ProjectUtils
     register Sinatra::StaticAssets
-    register Sinatra::Namespace
     use HoptoadNotifier::Rack
 
     set :root, Proc.new { File.join( File.dirname(__FILE__), 'server' ) }
@@ -168,15 +166,14 @@ module MartSearch
 #      redirect "http://www.knockoutmouse.org/kb/"
 #    end
 
-    namespace '/martsearch' do
 
-      get '/redirect_to_impc/?' do
+      get '/martsearch/redirect_to_impc/?' do
         @foward_to = {'description' => 'view the IMPC home page', 'http' => 'https://www.mousephenotype.org/'}
         @hide_side_search_form = true
         erb :redirect_to_impc
       end
 
-      get '/?' do
+      get '/martsearch/?' do
         @foward_to = {'description' => 'view the IMPC home page', 'http' => 'https://www.mousephenotype.org/'}
         @current               = 'home'
         @hide_side_search_form = true
@@ -195,7 +192,7 @@ module MartSearch
 #      erb :help
 #    end
 
-      get '/clear_cache/?' do
+      get '/martsearch/clear_cache/?' do
         @ms.cache.clear
         redirect "#{request.script_name}/"
       end
@@ -204,7 +201,7 @@ module MartSearch
     ## Searching
     ##
 
-      get '/search/?' do
+      get '/martsearch/search/?' do
         if params.blank? or params.has_key?(:query) or params[:query].blank?
           @params[:page_not_found] = true
           erb :redirect_to_impc
@@ -241,7 +238,7 @@ module MartSearch
         end
       end
 
-      ['/search/:query/?', '/search/:query/:page/?'].each do |path|
+      ['/martsearch/search/:query/?', '/martsearch/search/:query/:page/?'].each do |path|
         get path do
           url = "#{request.script_name}/search?query=#{params[:query]}"
           url << "&page=#{params[:page]}" if params[:page]
@@ -254,7 +251,7 @@ module MartSearch
     ## Browsing
     ##
 
-    get '/browse/?' do
+    get '/martsearch/browse/?' do
       @current       = 'browse'
       @page_title    = 'Browse'
       @results       = nil
@@ -299,7 +296,7 @@ module MartSearch
       end
     end
 
-    ['/browse/:field/:query/?', '/browse/:field/:query/:page?'].each do |path|
+    ['/martsearch/browse/:field/:query/?', '/martsearch/browse/:field/:query/:page?'].each do |path|
       get path do
         url = "#{request.script_name}/browse?field=#{params[:field]}&query=#{params[:query]}"
         url << "&page=#{params[:page]}" if params[:page]
@@ -312,7 +309,7 @@ module MartSearch
     ## IKMC Project Reports
     ##
 
-      ['/project/:id','/project/?'].each do |path|
+      ['/martsearch/project/:id','/martsearch/project/?'].each do |path|
         get path do
           @foward_to = {'description' => "view project no #{params[:id]}", 'http' => "#{request.script_name}/martsearch/ikmc_project/#{params[:id]}"}
           erb :redirect_to_impc
@@ -320,7 +317,7 @@ module MartSearch
       end
 
 
-      ['/ikmc_project/:id','/ikmc_project/?'].each do |path|
+      ['/martsearch/ikmc_project/:id','/martsearch/ikmc_project/?'].each do |path|
         get path do
           project_id = params[:id]
           redirect "#{request.script_name}/" if project_id.nil?
@@ -348,12 +345,12 @@ module MartSearch
         end
       end
 
-      get '/project/:id/pcr_primers/?' do
+      get '/martsearch/project/:id/pcr_primers/?' do
           @foward_to = {'description' => "view pcr primer (id = #{params[:id]})", 'http' => "#{request.script_name}/martsearch/ikmc_project/#{project_id}/pcr_primers/#{params[:id]}"}
           erb :redirect_to_impc
       end
 
-      get 'ikmc/project/:id/pcr_primers/?' do
+      get '/martsearch/ikmc/project/:id/pcr_primers/?' do
         project_id = params[:id]
 
         if project_id.nil?
@@ -390,7 +387,7 @@ module MartSearch
     ## Dynamic CSS/Javascript
     ##
 
-      get '/css/martsearch-*.css' do
+      get '/martsearch/css/martsearch-*.css' do
         content_type 'text/css', :charset => 'utf-8'
         @compressed_css = compressed_css( VERSION ) if @compressed_css.nil?
         return @compressed_css
@@ -408,7 +405,7 @@ module MartSearch
 #        return @compressed_base_js
 #      end
 
-      get '/dataview-css/:dataview_name' do
+      get '/martsearch/dataview-css/:dataview_name' do
         content_type 'text/css', :charset => 'utf-8'
         dataview_name = params[:dataview_name].sub('.css','')
         @ms.dataviews_by_name[ dataview_name.to_sym ].stylesheet
@@ -435,7 +432,6 @@ module MartSearch
           load "#{MARTSEARCH_PATH}/config/server/dataviews/#{dv.internal_name}/routes.rb"
         end
       end
-    end
   end
 
 end
