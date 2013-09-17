@@ -1,15 +1,11 @@
 <div class="larger">
-  <div style="padding-top:30px; padding-bottom:125px; padding-left:25px">
-    <h1>Redirect too?</h1>
-    <p> The web services of the IKMC have been taken over by the <a href= "https://www.mousephenotype.org/background">IMPC</a>.
+  <div style="padding-top:30px; padding-bottom:70px; padding-left:25px">
+    <p style="font-size:large"> The web services of the IKMC have been taken over by the <a style="font-weight:bold" href= "https://www.mousephenotype.org/background">International Mouse Phenotyping Consortium (IMPC)</a>.</p>
     <% if !@foward_to.blank? %>
-      From your search we believe you want to <a href= "<%= @foward_to['http'] %>"> <%= @foward_to['description'] %></a>.
-    <% elsif @params.has_key?(:page_not_found) and @params[:page_not_found] == true %>
-      Hello
+      <p style="font-size:small">From your search we believe you want to <a style="font-weight:bold" href= "<%= @foward_to['http'] %>"> <%= @foward_to['description'] %></a>.</p>
     <% end %>
-    </p>
-    <p> You can continue on to. </p>
-    <ul>
+    <p style="font-size:small"> You can continue on to:</p>
+    <ul style="font-size:small">
       <li><a href="https://www.mousephenotype.org/" target="_blank">IMPC home page</a></li>
       <li><a href="https://www.mousephenotype.org/mi/impc/phenotype-archive/search" target="_blank">Browse gene list</a></li>
       <% if params.has_key?(:criteria) %>
