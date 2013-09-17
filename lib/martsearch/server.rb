@@ -387,7 +387,7 @@ module MartSearch
     ## Dynamic CSS/Javascript
     ##
 
-      get '/martsearch/css/martsearch-*.css' do
+      get '/css/martsearch-*.css' do
         content_type 'text/css', :charset => 'utf-8'
         @compressed_css = compressed_css( VERSION ) if @compressed_css.nil?
         return @compressed_css
@@ -405,7 +405,7 @@ module MartSearch
 #        return @compressed_base_js
 #      end
 
-      get '/martsearch/dataview-css/:dataview_name' do
+      get '/dataview-css/:dataview_name' do
         content_type 'text/css', :charset => 'utf-8'
         dataview_name = params[:dataview_name].sub('.css','')
         @ms.dataviews_by_name[ dataview_name.to_sym ].stylesheet
