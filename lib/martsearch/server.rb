@@ -393,17 +393,17 @@ module MartSearch
         return @compressed_css
       end
 
-#      get '/js/martsearch-head-*.js' do
-#        content_type 'text/javascript', :charset => 'utf-8'
-#        @compressed_head_js = compressed_head_js( VERSION ) if @compressed_head_js.nil?
-#        return @compressed_head_js
-#      end
+      get '/js/martsearch-head-*.js' do
+        content_type 'text/javascript', :charset => 'utf-8'
+        @compressed_head_js = compressed_head_js( VERSION ) if @compressed_head_js.nil?
+        return @compressed_head_js
+      end
 
-#      get '/js/martsearch-base-*.js' do
-#        content_type 'text/javascript', :charset => 'utf-8'
-#        @compressed_base_js = compressed_base_js( VERSION ) if @compressed_base_js.nil?
-#        return @compressed_base_js
-#      end
+      get '/js/martsearch-base-*.js' do
+        content_type 'text/javascript', :charset => 'utf-8'
+        @compressed_base_js = compressed_base_js( VERSION ) if @compressed_base_js.nil?
+        return @compressed_base_js
+      end
 
       get '/dataview-css/:dataview_name' do
         content_type 'text/css', :charset => 'utf-8'
@@ -411,17 +411,17 @@ module MartSearch
         @ms.dataviews_by_name[ dataview_name.to_sym ].stylesheet
       end
 
-#      get '/dataview-head-js/:dataview_name' do
-#        content_type 'text/javascript', :charset => 'utf-8'
-#        dataview_name = params[:dataview_name].sub('.js','')
-#        @ms.dataviews_by_name[ dataview_name.to_sym ].javascript_head
-#      end
+      get '/dataview-head-js/:dataview_name' do
+        content_type 'text/javascript', :charset => 'utf-8'
+        dataview_name = params[:dataview_name].sub('.js','')
+        @ms.dataviews_by_name[ dataview_name.to_sym ].javascript_head
+      end
 
-#      get '/dataview-base-js/:dataview_name' do
-#        content_type 'text/javascript', :charset => 'utf-8'
-#        dataview_name = params[:dataview_name].sub('.js','')
-#        @ms.dataviews_by_name[ dataview_name.to_sym ].javascript_base
-#      end
+      get '/dataview-base-js/:dataview_name' do
+        content_type 'text/javascript', :charset => 'utf-8'
+        dataview_name = params[:dataview_name].sub('.js','')
+        @ms.dataviews_by_name[ dataview_name.to_sym ].javascript_base
+      end
 
     ##
     ## Load in any custom (per dataset) routes
