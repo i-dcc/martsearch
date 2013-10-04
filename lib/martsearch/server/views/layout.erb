@@ -107,10 +107,10 @@
 
       <div id="browser_warnings" class="messages serious_errors" style="display:none;"></div>
 
-
+<!--
       <div id="user_messages" class="messages">
       </div>
-
+-->
 
       <% if @errors[:index] and !@errors[:index].empty? %>
         <!-- search engine errors -->
@@ -135,7 +135,7 @@
         <%= yield %>
       </div>
 
-<!-- REMOVE due to IMPC take over-->
+<!-- REMOVE due to IMPC take over
 
       <div id="footer">
         <p>
@@ -147,7 +147,7 @@
         <p><%= MartSearch::Server::VERSION %></p>
       </div>
     </div>
-
+-->
     <% if @config[:debug] %>
       <div id="debug-config">
         <h3>MartSearch::Server Config (Debug Info)</h3>
