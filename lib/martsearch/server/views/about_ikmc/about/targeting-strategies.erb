@@ -6,21 +6,21 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Targeting strategies | International Knockout Mouse Consortium (IKMC)</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="shortcut icon" href="/misc/favicon.ico" type="image/x-icon" />
-    <link type="text/css" rel="stylesheet" media="all" href="/sites/default/files/css/css_81b0f44fca24e723d49836eaa6cd58ff.css" />
-<link type="text/css" rel="stylesheet" media="print" href="/sites/default/files/css/css_e69dd856dfae2a651ffc5c252c6bd0ff.css" />
-    <script type="text/javascript" src="/sites/default/files/js/js_ea242cb25786147b418353190287ca7a.js"></script>
+<link rel="shortcut icon" href="<%= request.script_name %>/misc/favicon.ico" type="image/x-icon" />
+    <link type="text/css" rel="stylesheet" media="all" href="<%= request.script_name %>/sites/default/files/css/css_81b0f44fca24e723d49836eaa6cd58ff.css" />
+<link type="text/css" rel="stylesheet" media="print" href="<%= request.script_name %>/sites/default/files/css/css_e69dd856dfae2a651ffc5c252c6bd0ff.css" />
+    <script type="text/javascript" src="<%= request.script_name %>/sites/default/files/js/js_ea242cb25786147b418353190287ca7a.js"></script>
 <script type="text/javascript">
 <!--//--><![CDATA[//><!--
 jQuery.extend(Drupal.settings, { "basePath": "http://www.knockoutmouse.org", "dhtmlMenu": { "clone": "clone", "slide": 0, "siblings": 0, "relativity": 0, "children": 0, "doubleclick": 0 } });
 //--><!]]>
 </script>
-    <!--[if lte IE 7]><link type="text/css" rel="stylesheet" media="all" href="/sites/all/themes/ikmc/fix-ie.css" /><![endif]--><!--If Less Than or Equal (lte) to IE 7-->
+    <!--[if lte IE 7]><link type="text/css" rel="stylesheet" media="all" href="<%= request.script_name %>/sites/all/themes/ikmc/fix-ie.css" /><![endif]--><!--If Less Than or Equal (lte) to IE 7-->
 
 <script>
 function jscss(a,o,c1){switch(a){case'add':if(!jscss('check',o,c1)){o.className+=o.className?' '+c1:c1;}break;case'remove':var rep=o.className.match(' '+c1)?' '+c1:c1;o.className=o.className.replace(rep,'');break;case'check':return new RegExp('\\b'+c1+'\\b').test(o.className);break;}}function actsearch(){var stab=document.getElementById('stab');var sbody=document.getElementById('sbody');var btab=document.getElementById('btab');var bbody=document.getElementById('bbody');if(!jscss('check',stab,'active-tab')){jscss('remove',btab,'active-tab');jscss('add',stab,'active-tab');jscss('remove',sbody,'hide');jscss('add',bbody,'hide');}return false;}function actbrowse(){var stab=document.getElementById('stab');var sbody=document.getElementById('sbody');var btab=document.getElementById('btab');var bbody=document.getElementById('bbody');if(!jscss('check',btab,'active-tab')){jscss('remove',stab,'active-tab');jscss('add',btab,'active-tab');jscss('remove',bbody,'hide');jscss('add',sbody,'hide');}return false;}
 
-function _ikmctoggle(obj, elName, showtext, hidetext) { if (showtext == null){ showtext = 'show'; } else { showtext = "<img src='/static/images/plus.png' alt='Plus sign'> " + showtext; } if (hidetext == null){ hidetext = 'hide'; } else { hidetext = "<img src='/static/images/minus.png' alt='Minus sign'> " + hidetext;  } var el = document.getElementById(elName); if (el.style.display == 'block'){ el.style.display='none'; obj.innerHTML = showtext; }else{ el.style.display='block'; obj.innerHTML = hidetext; } return false; }
+function _ikmctoggle(obj, elName, showtext, hidetext) { if (showtext == null){ showtext = 'show'; } else { showtext = "<img src='<%= request.script_name %>/static/images/plus.png' alt='Plus sign'> " + showtext; } if (hidetext == null){ hidetext = 'hide'; } else { hidetext = "<img src='<%= request.script_name %>/static/images/minus.png' alt='Minus sign'> " + hidetext;  } var el = document.getElementById(elName); if (el.style.display == 'block'){ el.style.display='none'; obj.innerHTML = showtext; }else{ el.style.display='block'; obj.innerHTML = hidetext; } return false; }
 </script>
 
 <meta name="google-site-verification" content="XZZraOH6fjBquF37qY_fDUXLbmU8SBxQtgfmnoXUZMQ" />
@@ -33,7 +33,7 @@ function _ikmctoggle(obj, elName, showtext, hidetext) { if (showtext == null){ s
   <div id="wrapper">
     <div id="header">
       <a href="http://www.knockoutmouse.org" title="International Knockout Mouse Consortium">
-        <img src="/sites/all/themes/ikmc/logo.png" alt="International Knockout Mouse Consortium" id="logo" />
+        <img src="<%= request.script_name %>/sites/all/themes/ikmc/logo.png" alt="International Knockout Mouse Consortium" id="logo" />
       </a>
       <h1 style="margin-top:47px;"><a href="http://www.knockoutmouse.org" title="International Knockout Mouse Consortium"><span id="sitename">International Knockout Mouse Consortium</span></a></h1>
       <div class="clear"></div>
@@ -44,19 +44,19 @@ function _ikmctoggle(obj, elName, showtext, hidetext) { if (showtext == null){ s
         <div id="block-menu-menu-aboutmenu" class="block block-menu">
           <h3>About...</h3>
           <div class="content">
-            <ul class="menu"><li class="expanded first dhtml-menu  odd"><a href="/aboutikmc" title="About the IKMC" id="dhtml_menu-287">IKMC</a><ul class="menu"><li class="leaf first dhtml-menu  odd"><a href="/about/targeting-strategies" title="Targeting strategies" id="dhtml_menu-340">Targeting strategies</a></li>
-              <li class="leaf last dhtml-menu  even"><a href="/about/view-all-ikmc-allele-types" title="" id="dhtml_menu-339">IKMC alleles</a></li>
+            <ul class="menu"><li class="expanded first dhtml-menu  odd"><a href="<%= request.script_name %>/aboutikmc" title="About the IKMC" id="dhtml_menu-287">IKMC</a><ul class="menu"><li class="leaf first dhtml-menu  odd"><a href="<%= request.script_name %>/about/targeting-strategies" title="Targeting strategies" id="dhtml_menu-340">Targeting strategies</a></li>
+              <li class="leaf last dhtml-menu  even"><a href="<%= request.script_name %>/about/view-all-ikmc-allele-types" title="" id="dhtml_menu-339">IKMC alleles</a></li>
               </ul></li>
-              <li class="leaf  dhtml-menu  even"><a href="/about/IKMC" title="" id="dhtml_menu-277">IMPC</a></li>
-              <li class="expanded  dhtml-menu  even"><a href="/aboutkomp" title="About KOMP" id="dhtml_menu-231">KOMP</a><ul class="menu"><li class="leaf first dhtml-menu  odd"><a href="/aboutkompdcc" title="About KOMP DCC" id="dhtml_menu-232">KOMP DCC</a></li>
+              <li class="leaf  dhtml-menu  even"><a href="<%= request.script_name %>/about/IKMC" title="" id="dhtml_menu-277">IMPC</a></li>
+              <li class="expanded  dhtml-menu  even"><a href="<%= request.script_name %>/aboutkomp" title="About KOMP" id="dhtml_menu-231">KOMP</a><ul class="menu"><li class="leaf first dhtml-menu  odd"><a href="<%= request.script_name %>/aboutkompdcc" title="About KOMP DCC" id="dhtml_menu-232">KOMP DCC</a></li>
               <li class="leaf  dhtml-menu  even"><a href="http://komp.org/index.php?link=5" title="" id="dhtml_menu-233">KOMP Repository</a></li>
-              <li class="leaf last dhtml-menu  odd"><a href="/aboutkompstrategies" title="KOMP Targeting Strategies" id="dhtml_menu-234">KOMP Targeting Strategies</a></li>
+              <li class="leaf last dhtml-menu  odd"><a href="<%= request.script_name %>/aboutkompstrategies" title="KOMP Targeting Strategies" id="dhtml_menu-234">KOMP Targeting Strategies</a></li>
               </ul></li>
-              <li class="expanded  dhtml-menu  odd"><a href="/about/eucomm" title="" id="dhtml_menu-372">EUCOMM</a><ul class="menu"><li class="leaf first dhtml-menu  odd"><a href="/about/eucomm/allele-types" title="EUCOMM Targeting Strategies" id="dhtml_menu-375">EUCOMM Targeting Strategies</a></li>
-              <li class="leaf last dhtml-menu  even"><a href="/about/eucomm/recommendations-users-eucomm-alleles" title="Recommendations for Users of EUCOMM Alleles" id="dhtml_menu-376">Recommendations for Users</a></li>
+              <li class="expanded  dhtml-menu  odd"><a href="<%= request.script_name %>/about/eucomm" title="" id="dhtml_menu-372">EUCOMM</a><ul class="menu"><li class="leaf first dhtml-menu  odd"><a href="<%= request.script_name %>/about/eucomm/allele-types" title="EUCOMM Targeting Strategies" id="dhtml_menu-375">EUCOMM Targeting Strategies</a></li>
+              <li class="leaf last dhtml-menu  even"><a href="<%= request.script_name %>/about/eucomm/recommendations-users-eucomm-alleles" title="Recommendations for Users of EUCOMM Alleles" id="dhtml_menu-376">Recommendations for Users</a></li>
               </ul></li>
-              <li class="expanded  dhtml-menu  odd"><a href="/about/eucommtools" title="EUCOMMTOOLS" id="dhtml_menu-378">EUCOMMTOOLS</a><ul class="menu"><li class="leaf first dhtml-menu  even"><a href="/about/eucommtools/vectors" title="EUCOMMTOOLs Targeting Strategies" id="dhtml_menu-380">EUCOMMTOOLs Targeting Strategies</a></li>
-              <li class="leaf  dhtml-menu  odd"><a href="/about/eucommtools/recommendations" title="Recommendations to Users of EUCOMMTOOLS Alleles" id="dhtml_menu-384">Recommendations to Users</a></li>
+              <li class="expanded  dhtml-menu  odd"><a href="<%= request.script_name %>/about/eucommtools" title="EUCOMMTOOLS" id="dhtml_menu-378">EUCOMMTOOLS</a><ul class="menu"><li class="leaf first dhtml-menu  even"><a href="<%= request.script_name %>/about/eucommtools/vectors" title="EUCOMMTOOLs Targeting Strategies" id="dhtml_menu-380">EUCOMMTOOLs Targeting Strategies</a></li>
+              <li class="leaf  dhtml-menu  odd"><a href="<%= request.script_name %>/about/eucommtools/recommendations" title="Recommendations to Users of EUCOMMTOOLS Alleles" id="dhtml_menu-384">Recommendations to Users</a></li>
               </ul></li>
               <li class="leaf  dhtml-menu  even"><a href="http://www.norcomm.org" title="" id="dhtml_menu-268">NorCOMM</a></li>
               <li class="leaf last dhtml-menu  odd"><a href="http://www.tigm.org/" title="" id="dhtml_menu-269">TIGM</a></li>
@@ -72,18 +72,18 @@ function _ikmctoggle(obj, elName, showtext, hidetext) { if (showtext == null){ s
             <p>The groups funded to produce IKMC knockout alleles use targeting constructs that have different and complementary properties. Below is a general outline of these constructs that may be helpful in your assessment of the preferred approach for targeting your gene(s) of interest.</p>
             <h3>Constructs used by KOMP-Regeneron</h3>
             <p>The VelociGene group at Regeneron, Inc. will use the following general construct for creating knockouts for KOMP. In most cases these will be complete null alleles that delete the entire protein coding sequence of the target gene. This allele design can be applied to any gene transcribed by RNA polymerase II regardless of its size, intron-exon structure, RNA splicing pattern, or protein-coding capacity.</p>
-            <p><img src="/sites/default/files/image001.jpg" /> </p>
+            <p><img src="<%= request.script_name %>/sites/default/files/image001.jpg" /> </p>
             <p>Reference: Valenzuela, D. M., Murphy, A. J., Frendewey, D., Gale, N. W., Economides, A. N., Auerbach, W., Poueymirou, W. T., Adams, N. C., Rojas, J., Yasenchak, J., et al. (2003). High-throughput engineering of the mouse genome coupled with high-resolution expression analysis. Nat Biotechnol 21, 652-659.</p>
             <h3>Constructs used by KOMP-CSD and EUCOMM</h3>
             <p><b>EUCOMM</b> and <b>KOMP-CSD</b> use promoterless and promoter-driven targeting cassettes for the generation of a 'Knockout-first allele' (Skarnes et al., 2011) in C57BL/6N embryonic stem cells (Pettit et al., 2009). This strategy relies on the identification of a 'critical' exon common to all transcript variants that, when deleted, creates a frame-shift mutation. The KO-first allele is flexible and can produce reporter knockouts, conditional knockouts, and null alleles following exposure to site-specific recombinases Cre and Flp. Knockout-first alleles can also be readily modified in cells using dual recombination-mediated cassette exchange (Osterwalder et al., 2010).</p>
-            <p><img src="/sites/default/files/image002.png" /><br />
-            <img src="/sites/default/files/image003.png" /> </p>
+            <p><img src="<%= request.script_name %>/sites/default/files/image002.png" /><br />
+            <img src="<%= request.script_name %>/sites/default/files/image003.png" /> </p>
             <p>In cases where the target gene is small and does not contain a "critical" exon, the approach is to split an exon and introduce the targeting cassette imbedded in an ‘artificial intron’.</p>
-            <p><img src="/sites/default/files/image004.png" /> </p>
+            <p><img src="<%= request.script_name %>/sites/default/files/image004.png" /> </p>
             <p>"Targeted, non-conditional " alleles (tm1e) are missing the downstream loxP site. The 3’ loxP site is often lost due recombination events in the homology region between the targeting cassette and 3’ loxP site. Approximately one half of the clones retain the loxP site, however, in extreme cases, the loxP site is absent in all clones. These lacZ-tagged alleles report endogenous gene expression and are highly likely to be null mutations. However, these mutations cannot be converted to conditional alleles with Flp recombinase.</p>
-            <p><img src="/sites/default/files/image005.png" /> </p>
+            <p><img src="<%= request.script_name %>/sites/default/files/image005.png" /> </p>
             <p>KOMP-CSD also generates standard deletion alleles with the promoter-driven targeting cassette</p>
-            <p><img src="/sites/default/files/image006.png" /> </p>
+            <p><img src="<%= request.script_name %>/sites/default/files/image006.png" /> </p>
             <p><b>Derivative alleles</b></p>
             <p>tm1a: KO first allele (reporter-tagged insertion allele)<br />
             tm1b: Reporter-tagged deletion allele (post-Cre)<br />
@@ -102,8 +102,8 @@ function _ikmctoggle(obj, elName, showtext, hidetext) { if (showtext == null){ s
       </div> <!-- /#center -->
 
       <div id="footer" class="clear">
-        <a href="/disclaimer">Warranty Disclaimer and Copyright Notice</a><br />
-         This site is maintained by the <a href="/about">I-DCC and the KOMP-DCC</a>.<br />Supported by the European Union (Project number: 223592) <br />and the National Institutes of Health (Grant number: NIH HG004074).
+        <a href="<%= request.script_name %>/disclaimer">Warranty Disclaimer and Copyright Notice</a><br />
+         This site is maintained by the <a href="<%= request.script_name %>/about">I-DCC and the KOMP-DCC</a>.<br />Supported by the European Union (Project number: 223592) <br />and the National Institutes of Health (Grant number: NIH HG004074).
       </div> <!-- /#footer -->
     </div> <!-- /#container -->
     <span class="clear"></span>
