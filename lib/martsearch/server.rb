@@ -129,55 +129,55 @@ module MartSearch
     end
 
     get '/about' do
-      erb :'about_ikmc/about'
+      erb :'about_ikmc/about', :layout => false
     end
 
     get '/aboutkomp' do
-      erb :'about_ikmc/aboutkomp'
+      erb :'about_ikmc/aboutkomp', :layout => false
     end
 
     get '/aboutkompdcc' do
-      erb :'about_ikmc/aboutkompdcc'
+      erb :'about_ikmc/aboutkompdcc', :layout => false
     end
 
     get '/aboutkompstrategies' do
-      erb :'about_ikmc/aboutkompstrategies'
+      erb :'about_ikmc/aboutkompstrategies', :layout => false
     end
 
     get '/targeting-strategies' do
-      erb :'about_ikmc/targeting_strategies'
+      erb :'about_ikmc/targeting_strategies', :layout => false
     end
 
     get '/view-all-ikmc-allele-types' do
-      erb :'about_ikmc/view_all_ikmc_allele_types'
+      erb :'about_ikmc/view_all_ikmc_allele_types', :layout => false
     end
 
     get '/about/IKMC' do
-      erb :'about_ikmc/about/ikmc'
+      erb :'about_ikmc/about/ikmc', :layout => false
     end
 
     get '/about/eucomm' do
-      erb :'about_ikmc/about/eucomm'
+      erb :'about_ikmc/about/eucomm', :layout => false
     end
 
     get '/about/eucomm/allele_types' do
-      erb :'about_ikmc/about/eucomm/allele_types'
+      erb :'about_ikmc/about/eucomm/allele_types', :layout => false
     end
 
     get '/about/eucomm/recommendations-users-eucomm-alleles' do
-      erb :'about_ikmc/about/eucomm/recommendations_users_eucomm_alleles'
+      erb :'about_ikmc/about/eucomm/recommendations_users_eucomm_alleles', :layout => false
     end
 
     get '/about/eucommtools' do
-      erb :'about_ikmc/about/eucommtools'
+      erb :'about_ikmc/about/eucommtools', :layout => false
     end
 
     get '/about/eucommtools/recommendations' do
-      erb :'about_ikmc/about/eucommtools/recommendations'
+      erb :'about_ikmc/about/eucommtools/recommendations', :layout => false
     end
 
     get '/about/eucommtools/vectors' do
-      erb :'about_ikmc/about/eucommtools/vectors'
+      erb :'about_ikmc/about/eucommtools/vectors', :layout => false
     end
 
     get '/query.php/?' do
