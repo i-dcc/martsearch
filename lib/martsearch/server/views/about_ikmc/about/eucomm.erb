@@ -1,0 +1,590 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>EUCOMM | International Knockout Mouse Consortium (IKMC)</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" href="/misc/favicon.ico" type="image/x-icon" />
+    <link type="text/css" rel="stylesheet" media="all" href="/sites/default/files/css/css_81b0f44fca24e723d49836eaa6cd58ff.css" />
+<link type="text/css" rel="stylesheet" media="print" href="/sites/default/files/css/css_e69dd856dfae2a651ffc5c252c6bd0ff.css" />
+    <script type="text/javascript" src="/sites/default/files/js/js_ea242cb25786147b418353190287ca7a.js"></script>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+jQuery.extend(Drupal.settings, { "basePath": "http://www.knockoutmouse.org", "dhtmlMenu": { "clone": "clone", "slide": 0, "siblings": 0, "relativity": 0, "children": 0, "doubleclick": 0 } });
+//--><!]]>
+</script>
+    <!--[if lte IE 7]><link type="text/css" rel="stylesheet" media="all" href="/sites/all/themes/ikmc/fix-ie.css" /><![endif]--><!--If Less Than or Equal (lte) to IE 7-->
+
+<script>
+function jscss(a,o,c1){switch(a){case'add':if(!jscss('check',o,c1)){o.className+=o.className?' '+c1:c1;}break;case'remove':var rep=o.className.match(' '+c1)?' '+c1:c1;o.className=o.className.replace(rep,'');break;case'check':return new RegExp('\\b'+c1+'\\b').test(o.className);break;}}function actsearch(){var stab=document.getElementById('stab');var sbody=document.getElementById('sbody');var btab=document.getElementById('btab');var bbody=document.getElementById('bbody');if(!jscss('check',stab,'active-tab')){jscss('remove',btab,'active-tab');jscss('add',stab,'active-tab');jscss('remove',sbody,'hide');jscss('add',bbody,'hide');}return false;}function actbrowse(){var stab=document.getElementById('stab');var sbody=document.getElementById('sbody');var btab=document.getElementById('btab');var bbody=document.getElementById('bbody');if(!jscss('check',btab,'active-tab')){jscss('remove',stab,'active-tab');jscss('add',btab,'active-tab');jscss('remove',bbody,'hide');jscss('add',sbody,'hide');}return false;}
+
+function _ikmctoggle(obj, elName, showtext, hidetext) { if (showtext == null){ showtext = 'show'; } else { showtext = "<img src='/static/images/plus.png' alt='Plus sign'> " + showtext; } if (hidetext == null){ hidetext = 'hide'; } else { hidetext = "<img src='/static/images/minus.png' alt='Minus sign'> " + hidetext;  } var el = document.getElementById(elName); if (el.style.display == 'block'){ el.style.display='none'; obj.innerHTML = showtext; }else{ el.style.display='block'; obj.innerHTML = hidetext; } return false; }
+</script>
+
+<meta name="google-site-verification" content="XZZraOH6fjBquF37qY_fDUXLbmU8SBxQtgfmnoXUZMQ" />
+
+</head>
+
+<body class="sidebar-left">
+
+<!-- Layout -->
+  <div id="wrapper">
+    <div id="header">
+      <a href="http://www.knockoutmouse.org" title="International Knockout Mouse Consortium">
+        <img src="/sites/all/themes/ikmc/logo.png" alt="International Knockout Mouse Consortium" id="logo" />
+      </a>
+      <h1 style="margin-top:47px;"><a href="http://www.knockoutmouse.org" title="International Knockout Mouse Consortium"><span id="sitename">International Knockout Mouse Consortium</span></a></h1>
+      <div class="clear"></div>
+    </div> <!-- /#header -->
+
+    <div id="container">
+      <div id="sidebar-left" class="sidebar">
+        <div id="block-menu-menu-aboutmenu" class="block block-menu">
+          <h3>About...</h3>
+          <div class="content">
+            <ul class="menu"><li class="expanded first dhtml-menu  odd"><a href="/aboutikmc" title="About the IKMC" id="dhtml_menu-287">IKMC</a><ul class="menu"><li class="leaf first dhtml-menu  odd"><a href="/about/targeting-strategies" title="Targeting strategies" id="dhtml_menu-340">Targeting strategies</a></li>
+              <li class="leaf last dhtml-menu  even"><a href="/about/view-all-ikmc-allele-types" title="" id="dhtml_menu-339">IKMC alleles</a></li>
+              </ul></li>
+              <li class="leaf  dhtml-menu  even"><a href="/about/IKMC" title="" id="dhtml_menu-277">IMPC</a></li>
+              <li class="expanded  dhtml-menu  even"><a href="/aboutkomp" title="About KOMP" id="dhtml_menu-231">KOMP</a><ul class="menu"><li class="leaf first dhtml-menu  odd"><a href="/aboutkompdcc" title="About KOMP DCC" id="dhtml_menu-232">KOMP DCC</a></li>
+              <li class="leaf  dhtml-menu  even"><a href="http://komp.org/index.php?link=5" title="" id="dhtml_menu-233">KOMP Repository</a></li>
+              <li class="leaf last dhtml-menu  odd"><a href="/aboutkompstrategies" title="KOMP Targeting Strategies" id="dhtml_menu-234">KOMP Targeting Strategies</a></li>
+              </ul></li>
+              <li class="expanded  dhtml-menu  odd"><a href="/about/eucomm" title="" id="dhtml_menu-372">EUCOMM</a><ul class="menu"><li class="leaf first dhtml-menu  odd"><a href="/about/eucomm/allele-types" title="EUCOMM Targeting Strategies" id="dhtml_menu-375">EUCOMM Targeting Strategies</a></li>
+              <li class="leaf last dhtml-menu  even"><a href="/about/eucomm/recommendations-users-eucomm-alleles" title="Recommendations for Users of EUCOMM Alleles" id="dhtml_menu-376">Recommendations for Users</a></li>
+              </ul></li>
+              <li class="expanded  dhtml-menu  odd"><a href="/about/eucommtools" title="EUCOMMTOOLS" id="dhtml_menu-378">EUCOMMTOOLS</a><ul class="menu"><li class="leaf first dhtml-menu  even"><a href="/about/eucommtools/vectors" title="EUCOMMTOOLs Targeting Strategies" id="dhtml_menu-380">EUCOMMTOOLs Targeting Strategies</a></li>
+              <li class="leaf  dhtml-menu  odd"><a href="/about/eucommtools/recommendations" title="Recommendations to Users of EUCOMMTOOLS Alleles" id="dhtml_menu-384">Recommendations to Users</a></li>
+              </ul></li>
+              <li class="leaf  dhtml-menu  even"><a href="http://www.norcomm.org" title="" id="dhtml_menu-268">NorCOMM</a></li>
+              <li class="leaf last dhtml-menu  odd"><a href="http://www.tigm.org/" title="" id="dhtml_menu-269">TIGM</a></li>
+            </ul>
+          </div>
+        </div>
+      </div> <!-- /#sidebar-left -->
+
+      <div id="center">
+        <div class="breadcrumb"><a href="/">Home</a> » EUCOMM</div>
+        <div id="node-89" class="node">
+          <div class="content">
+              <p><img src="/sites/default/files/image001_3.jpg" /></p>
+              <p><b>EUCOMM</b> - The European Conditional Mouse Mutagenesis Program is founder member and European cornerstone of the International Knockout Mouse Consortium (IKMC).<br />
+              <b>EUCOMM</b> contributes the largest fraction of conditionally trapped and targeted genes in mouse C57BL/6N embryonic stem (ES) cells to the IKMC.<br />
+              <b>EUCOMM</b> vectors, mutant ES cells and mutant mice are distributed worldwide, enabling functional genomics research in a standardized and cost-effective manner by a much wider biomedical research community than has been possible previously.<br />
+              <b>EUCOMM</b> mutant ES cells and vectors can be obtained from the European Mouse Mutant Cell Repository (EuMMCR).<br />
+              <b>EUCOMM</b> mutant mice are archived and distributed by the European Mouse Mutant Archive (EMMA).</p>
+              <p><b>EUCOMM Farewell Meeting Participants</b></p>
+              <p><img src="/sites/default/files/image002.jpg" /></p>
+              <p><img src="/sites/default/files/image003.jpg" /><img src="/sites/default/files/image004_3.png" /></p>
+              <h2>EUCOMM Project Information</h2>
+              <h3>Main Objectives</h3>
+              <p>•    Generation, archiving, and world-wide distribution of up to 12.000 conditional mutations across the mouse genome in mouse embryonic stem (ES) cells<br />
+              •   Establishment of a limited number of mouse mutants from this resource</p>
+              <h3>Mutagenesis Strategies</h3>
+              <p>•    Conditional gene trapping - random approach for expressed genes<br />
+              •   Conditional targeted trapping - directed approach, used for expressed genes<br />
+              •   Conditional gene targeting - directed approach, used for non-expressed genes</p>
+              <h3>Networking</h3>
+              <p>•    Generation of European mouse functional genomics platform by synergistic integration of EMMA, EUMODIC, EURExpress, FLPFLEX ,FunGenES, PRIME and others<br />
+              •   Cornerstone of world-wide mouse mutagenesis effort, member of the International Knockout Mouse Consortium (IKMC)</p>
+              <h3>Societal Benefits</h3>
+              <p>•    Improvement of health research<br />
+              •   Speedup of drug development, therapy and diagnosis<br />
+              •   Competitive advantage for pharmaceutical industry</p>
+              <h3>Funding &amp; Structure</h3>
+              <p>•    Funded by European Union (FP 6, Priority 1 "Life Sciences, Genomics and Biotechnology for Health")<br />
+              •   EU funding: up to 13 million Euros<br />
+              •   Integrated Project<br />
+              •   Consortium: 9 participants from four European countries<br />
+              <br /></p>
+              <h2>EUCOMM Scientific Advisory Board</h2>
+              <ul>
+              <li>Phil Avner, Paris, France</li>
+              <li>David Beier, Boston, MA, USA</li>
+              <li>Pierre Chambon, Strasbourg, France</li>
+              <li>Deanna Church, Bethesda, MD, USA</li>
+              <li>Frank Grosveld, Rotterdam, The Netherlands</li>
+              <li>Monica Justice, Houston, TX, USA</li>
+              <li>George Kollias, Vari, Greece</li>
+              <li>Bj&ouml;rn L&ouml;wenadler, M&ouml;lndal, Sweden</li>
+              <li>Bernard Malissen, Marseille-Luminy, France</li>
+              <li>Andrew McMahon, Cambridge, MA, USA</li>
+              <li>H. Earl Ruley, Nashville, TN, USA</li>
+              <li>Phil Soriano, New York, NY, USA</li>
+              </ul>
+              <h2>EUCOMM Coordination</h2>
+              <ul>
+              <li>Wolfgang Wurst</li>
+              <li>Allan Bradley</li>
+              </ul>
+              <h2>EUCOMM Management</h2>
+              <ul>
+              <li>Cornelia Kaloff</li>
+              <li>Derek Matthews</li>
+              <li>Karin Simmerl</li>
+              </ul>
+              <h2>EUCOMM Participants</h2>
+              <ul>
+              <li>
+              Helmholtz Zentrum M&uuml;nchen, German Research Center for Environmental Health GmbH (formerly GSF), Munich/Neuherberg, Germany<br />
+              <em>Wolfgang Wurst, Martin Hrab&eacute; de Angelis, Joel Schick, Andreas H&ouml;rlein, Cornelia Kaloff, Claudia Seisenberger, Antje B&uuml;rger, Karin Simmerl</em><br />
+              <a href="http://www.helmholtz-muenchen.de/idg/">http://www.helmholtz-muenchen.de/idg/</a>, <a href="http://www.helmholtz-muenchen.de/ieg/">http://www.helmholtz-muenchen.de/ieg/</a>
+              </li>
+              <li>
+              The Wellcome Trust Sanger Institute Hinxton, Cambridge, UK<br />
+              <em>Allan Bradley, William C. Skarnes, Barry Rosen, Anthony West, Wendy Bushell, Vivek Iyer, Ramiro Ramirez-Solis, Derek Matthews</em><br />
+              <a href="http://www.sanger.ac.uk/htgt">http://www.sanger.ac.uk/htgt</a>
+              </li>
+              <li>
+              University of Frankfurt, Germany<br />
+              <em>Harald von Melchner, Frank Schn&uuml;tgen</em><br />
+              <a href="http://www.vonmelchner.de/">http://www.vonmelchner.de/</a>
+              </li>
+              <li>
+              Charit&eacute;, Berlin, Germany<br />
+              <em>Patricia Ruiz</em><br />
+              <a href="http://www.ccr.charite.de/">http://www.ccr.charite.de/</a>
+              </li>
+              <li>
+              University of Technology, Dresden, Germany<br />
+              <em>Francis Stewart, Konstantinos Anastassiadis, Andrea Kranz</em><br />
+              <a href="http://www.biotec.tu-dresden.de/stewart">http://www.biotec.tu-dresden.de/stewart</a>
+              </li>
+              <li>
+              Institut Clinique de la Souris, Strasbourg, France<br />
+              <em>Yann H&eacute;rault, Marie-Christine Birling, Guillaume Pavlovic, Mohammed Selloum</em><br />
+              <a href="http://www-mci.u-strasbg.fr/">http://www-mci.u-strasbg.fr/</a>
+              </li>
+              <li>
+              European Molecular Biology Laboratory (EMBL) Monterotondo, Italy<br />
+              <em>Nadia Rosenthal</em><br />
+              <a href="http://www.embl-monterotondo.it/">http://www.embl-monterotondo.it/</a>
+              </li>
+              <li>
+              Medical Research Council (MRC), Mammalian Genetics Unit, Harwell, UK<br />
+              <em>Steve Brown</em><br />
+              <a href="http://www.mgu.har.mrc.ac.uk/">http://www.mgu.har.mrc.ac.uk/</a>
+              </li>
+              <li>
+              Consiglio Nazionale delle Ricerche, Monterotondo, Italy<br />
+              <em>Glauco Tocchini-Valentini, Brendan Doe</em><br />
+              <a href="http://www.emma.cnr.it/">http://www.emma.cnr.it/</a>
+              </li>
+              </ul>
+              <p>/></p>
+              <h2>EUCOMM Publications</h2>
+              <h3>2012</h3>
+              <ul  class="inner">
+
+              <li class="pub1">
+              <b>Highly-efficient, fluorescent, locus directed cre and FlpO deleter mice on a pure C57BL/6N genetic background.</b><br />
+              <i>Birling MC, Dierich A, Jacquot S, Hérault Y, Pavlovic G.</i><br />
+              Genesis. 2012 Jun;50(6):482-9. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/22121025" id="22121025" target="external">22121025</a> DOI: <a href="http://onlinelibrary.wiley.com/doi/10.1002/dvg.20826/abstract;jsessionid=58A028AA12EA7443755BABA83D34A105.d03t04" id="10.1002/dvg.20826" target="external">10.1002/dvg.20826</a><br />
+              </li>
+              <li class="pub1">
+              <b>The mammalian gene function resource: the international knockout mouse consortium.</b><br />
+              <i>Bradley A, Anastassiadis K, Ayadi A, Battey JF, Bell C, Birling MC, Bottomley J, Brown SD, Bürger A, Bult CJ, Bushell W, Collins FS, Desaintes C, Doe B, Economides A, Eppig JT, Finnell RH, Fletcher C, Fray M, Frendewey D, Friedel RH, Grosveld FG, Hansen J, Hérault Y, Hicks G, Hörlein A, Houghton R, Hrabé de Angelis M, Huylebroeck D, Iyer V, de Jong PJ, Kadin JA, Kaloff C, Kennedy K, Koutsourakis M, Lloyd KCK, Marschall S, Mason J, McKerlie C, McLeod MP, von Melchner H, Moore M, Mujica AO, Nagy A, Nefedov M, Nutter LM, Pavlovic G, Peterson JL, Pollock J, Ramirez-Solis R, Rancourt DE, Raspa M, Remacle JE, Ringwald M, Rosen B, Rosenthal N, Rossant J, Ruiz Noppinger P, Ryder E, Schick JZ, Schnütgen F, Schofield P, Seisenberger C, Selloum M, Simpson EM, Skarnes WC, Smedley D, Stanford WL, Stewart AF, Stone K, Swan K, Tadepally H, Teboul L, Tocchini-Valentini GP, Valenzuela D, West AP, Yamamura KI, Yoshinaga Y, Wurst W.</i><br />
+              Mamm Genome. 2012 Oct;23(9-10):580-6. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/22968824?cmd=Retrieve&amp;db=PubMed&amp;list_uids=22968824&amp;dopt=Abstract" id="22968824" target="external">22968824</a> DOI: <a href="http://link.springer.com/article/10.1007%2Fs00335-012-9422-2" id="10.1007/s00335-012-9422-2" target="external">10.1007/s00335-012-9422-2</a><br />
+              </li>
+              <li class="pub1">
+              <b>Isolation of homozygous mutant mouse embryonic stem cells using a dual selection system.</b><br />
+              <i>Huang Y, Pettitt SJ, Guo G, Liu G, Li MA, Yang F, Bradley A.</i><br />
+              Nucleic Acids Res. 2012 Feb 1;40(3):e21. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/22127858" id="22127858" target="external">22127858</a> DOI: <a href="http://nar.oxfordjournals.org/content/40/3/e21.long" id="10.1093/nar/gkr908" target="external">10.1093/nar/gkr908</a><br />
+              </li>
+              </ul>
+
+              <h3>2011</h3>
+              <ul  class="inner">
+
+              <li class="pub1">
+              <b>High efficiency counterselection recombineering for site-directed mutagenesis in bacterial artificial chromosomes.</b><br />
+              <i>Bird AW, Erler A, Fu J, Hériché JK, Maresca M, Zhang Y, Hyman AA, Stewart AF.</i><br />
+              Nat Methods. 2011 Dec 4;9(1):103-9. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/22138824" id="22138824" target="external">22138824</a> DOI: <a href="http://www.nature.com/nmeth/journal/v9/n1/full/nmeth.1803.html" id="10.1038/nmeth.1803" target="external">10.1038/nmeth.1803</a><br />
+              </li>
+              <li class="pub1">
+              <b>Disease model discovery and translation. Introduction.</b><br />
+              <i>Brown SD.</i><br />
+              Mamm Genome. 2011 Aug;22(7-8):361. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/21796466" id="21796466" target="external">21796466</a> DOI: <a href="http://www.springerlink.com/content/g12n44x368810554/?MUD=MP" id="10.1007/s00335-011-9352-4" target="external">10.1007/s00335-011-9352-4</a><br />
+              </li>
+              <li class="pub1">
+              <b>HIF-VEGF pathways are critical for chronic otitis media in Junbo and Jeff mouse mutants.</b><br />
+              <i>Cheeseman MT, Tyrer HE, Williams D, Hough TA, Pathak P, Romero MR, Hilton H, Bali S, Parker A, Vizor L, Purnell T, Vowell K, Wells S, Bhutta MF, Potter PK, Brown SD.</i><br />
+              PLoS Genet. 2011 Oct;7(10):e1002336. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/22028672" id="22028672" target="external">22028672</a> DOI: <a href="http://www.plosgenetics.org/article/info%3Adoi%2F10.1371%2Fjournal.pgen.1002336" id="10.1371/journal.pgen.1002336" target="external">10.1371/journal.pgen.1002336</a><br />
+              </li>
+              <li class="pub1">
+              <b>Genetic screens using the piggyBac transposon.</b><br />
+              <i>Chew SK, Rad R, Futreal PA, Bradley A, Liu P.</i><br />
+              Methods. 2011 Apr;53(4):366-71. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/21185377" id="21185377" target="external">21185377</a> DOI: <a href="http://www.sciencedirect.com/science/article/pii/S1046202310003051" id="10.1016/j.ymeth.2010.12.022" target="external">10.1016/j.ymeth.2010.12.022</a><br />
+              </li>
+              <li class="pub1">
+              <b>Recombineering BAC transgenes for protein tagging.</b><br />
+              <i>Ciotta G, Hofemeister H, Maresca M, Fu J, Sarov M, Anastassiadis K, Stewart AF.</i><br />
+              Methods. 2011 Feb;53(2):113-9.  PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/20868752" id="20868752" target="external">20868752</a> DOI: <a href="http://www.sciencedirect.com/science/article/pii/S1046202310002343" id="10.1016/j.ymeth.2010.09.003" target="external">10.1016/j.ymeth.2010.09.003</a><br />
+              </li>
+              <li class="pub1">
+              <b>Disruption of mouse Slx4, a regulator of structure-specific nucleases, phenocopies Fanconi anemia.</b><br />
+              <i>Crossan GP, van der Weyden L, Rosado IV, Langevin F, Gaillard PH, McIntyre RE; Sanger Mouse Genetics Project, Gallagher F, Kettunen MI, Lewis DY, Brindle K, Arends MJ, Adams DJ, Patel KJ</i><br />
+              Nat Genet. 2011 Feb;43(2):147-52. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=21240276&amp;dopt=Abstract" id="21240276" target="external">21240276</a> DOI: <a href="http://www.nature.com/ng/journal/v43/n2/full/ng.752.html" id="10.1038/ng.752" target="external">10.1038/ng.752</a><br />
+              </li>
+              <li class="pub1">
+              <b>Recombination-mediated genetic engineering of large genomic DNA transgenes.</b><br />
+              <i>Ejsmont RK, Ahlfeld P, Pozniakovsky A, Stewart AF, Tomancak P, Sarov M.</i><br />
+              Methods Mol Biol. 2011;772:445-58. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/22065454" id="22065454" target="external">22065454</a> DOI: <a href="http://www.springerlink.com/content/tt17j853m110163v/?MUD=MP" id="10.1007/978-1-61779-228-1_26 " target="external">10.1007/978-1-61779-228-1_26 </a><br />
+              </li>
+              <li class="pub1">
+              <b>Forward and reverse genetics through derivation of haploid mouse embryonic stem cells.</b><br />
+              <i>Elling U, Taubenschmid J, Wirnsberger G, O'Malley R, Demers SP, Vanhaelen Q, Shukalyuk AI, Schmauss G, Schramek D, Schnuetgen F, von Melchner H, Ecker JR, Stanford WL, Zuber J, Stark A, Penninger JM.</i><br />
+              Cell Stem Cell. 2011 Dec 2;9(6):563-74. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/22136931" id="22136931" target="external">22136931</a> DOI: <a href="http://www.sciencedirect.com/science/article/pii/S1934590911004929" id="10.1016./j.stem.2011.10.012" target="external">10.1016./j.stem.2011.10.012</a><br />
+              </li>
+              <li class="pub1">
+              <b>Generating conditional knockout mice.</b><br />
+              <i>Friedel RH, Wurst W, Wefers B, Kühn R</i><br />
+              Methods Mol Biol. 2011;693;205-31. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=21080282&amp;dopt=Abstract" id="21080282" target="external">21080282</a> DOI: <a href="http://dx.doi.org/10.1007/978-1-60761-974-1_12" id="10.1007/978-1-60761-974-1_12">10.1007/978-1-60761-974-1_12</a><br />
+              </li>
+              <li class="pub1">
+              <b>Mouse phenotyping.</b><br />
+              <i>Fuchs H, Gailus-Durner V, Adler T, Aguilar-Pimentel JA, Becker L, Calzada-Wack J, Da Silva-Buttkus P, Neff F, Götz A, Hans W, Hölter SM, Horsch M, Kastenmüller G, Kemter E, Lengger C, Maier H, Matloka M, Möller G, Naton B, Prehn C, Puk O, Rácz I, Rathkolb B, Römisch-Margl W, Rozman J, Wang-Sattler R, Schrewe A, Stöger C, Tost M, Adamski J, Aigner B, Beckers J, Behrendt H, Busch DH, Esposito I, Graw J, Illig T, Ivandic B, Klingenspor M, Klopstock T, Kremmer E, Mempel M, Neschen S, Ollert M, Schulz H, Suhre K, Wolf E, Wurst W, Zimmer A, Hrabé de Angelis M.</i><br />
+              Methods. 2011 Feb;53(2):120-35. Review. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/20708688" id="20708688" target="external">20708688</a> DOI: <a href="http://www.sciencedirect.com/science/article/pii/S1046202310002070" id="10.1016/j.ymeth.2010.08.006" target="external">10.1016/j.ymeth.2010.08.006</a><br />
+              </li>
+              <li class="pub1">
+              <b>High-throughput mouse phenotyping.</b><br />
+              <i>Gates H, Mallon AM, Brown SD; EUMODIC Consortium.</i><br />
+              Methods. 2011 Apr;53(4):394-404. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/21185382" id="21185382" target="external">21185382</a> DOI: <a href="http://www.sciencedirect.com/science/article/pii/S1046202310003002" id="10.1016/j.ymeth.2010.12.017" target="external">10.1016/j.ymeth.2010.12.017</a><br />
+              </li>
+              <li class="pub1">
+              <b>BioMart Central Portal: an open database network for the biological community.</b><br />
+              <i>Guberman JM, Ai J, Arnaiz O, Baran J, Blake A, Baldock R, Chelala C, Croft D, Cros A, Cutts RJ, Di Génova A, Forbes S, Fujisawa T, Gadaleta E, Goodstein DM, Gundem G, Haggarty B, Haider S, Hall M, Harris T, Haw R, Hu S, Hubbard S, Hsu J, Iyer V, Jones P, Katayama T, Kinsella R, Kong L, Lawson D, Liang Y, Lopez-Bigas N, Luo J, Lush M, Mason J, Moreews F, Ndegwa N, Oakley D, Perez-Llamas C, Primig M, Rivkin E, Rosanoff S, Shepherd R, Simon R, Skarnes B, Smedley D, Sperling L, Spooner W, Stevenson P, Stone K, Teague J, Wang J, Wang J, Whitty B, Wong DT, Wong-Erasmus M, Yao L, Youens-Clark K, Yung C, Zhang J, Kasprzyk A.</i><br />
+              Database (Oxford). 2011 Sep 18;2011:bar041.  PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/21930507" id="21930507" target="external">21930507</a> DOI: <a href="http://database.oxfordjournals.org/content/2011/bar041" id="10.1093/database/bar041" target="external">10.1093/database/bar041</a><br />
+              </li>
+              <li class="pub1">
+              <b>Recombineering, transfection, Western, IP and ChIP methods for protein tagging via gene targeting or BAC transgenesis.</b><br />
+              <i>Hofemeister H, Ciotta G, Fu J, Seibert PM, Schulz A, Maresca M, Sarov M, Anastassiadis K, Stewart AF.</i><br />
+              Methods. 2011 Apr;53(4):437-52. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/21195765" id="21195765" target="external">21195765</a> DOI: <a href="http://www.sciencedirect.com/science/article/pii/S1046202310003099" id="10.1016/j.ymeth.2010.12.026" target="external">10.1016/j.ymeth.2010.12.026</a><br />
+              </li>
+              <li class="pub1">
+              <b>A homozygous mutant embryonic stem cell bank applicable for phenotype-driven genetic screening.</b><br />
+              <i>Horie K, Kokubu C, Yoshida J, Akagi K, Isotani A, Oshitani A, Yusa K, Ikeda R, Huang Y, Bradley A, Takeda J.</i><br />
+              Nat Methods. 2011 Oct 23;8(12):1071-7. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/22020066" id="22020066" target="external">22020066</a> DOI: <a href="http://www.nature.com/nmeth/journal/v8/n12/full/nmeth.1739.html" id="10.1038/nmeth.1739" target="external">10.1038/nmeth.1739</a><br />
+              </li>
+              <li class="pub1">
+              <b>Technical approaches for mouse models of human disease.</b><br />
+              <i>Justice MJ, Siracusa LD, Stewart AF.</i><br />
+              Dis Model Mech. 2011 May;4(3):305-10. Review. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/21558063" id="21558063" target="external">21558063</a> DOI: <a href="http://dmm.biologists.org/content/4/3/305" id="10.1242/dmm.000901" target="external">10.1242/dmm.000901</a><br />
+              </li>
+              <li class="pub1">
+              <b>Conditional RNAi in mice.</b><br />
+              <i>Kleinhammer A, Deussing J, Wurst W, Kühn R.</i><br />
+              Methods. 2011 Feb;53(2):142-50. Review. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/20705138" id="20705138" target="external">20705138</a> DOI: <a href="http://www.sciencedirect.com/science/article/pii/S1046202310002045" id="10.1016/j.ymeth.2010.08.003" target="external">10.1016/j.ymeth.2010.08.003</a><br />
+              </li>
+              <li class="pub1">
+              <b>Constitutive and conditional RNAi transgenesis in mice.</b><br />
+              <i>Kleinhammer A, Wurst W, Kühn R.</i><br />
+              Methods. 2011 Apr;53(4):430-6. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/21184828" id="21184828" target="external">21184828</a> DOI: <a href="http://www.sciencedirect.com/science/article/pii/S1046202310002987" id="10.1016/j.ymeth.2010.12.015" target="external">10.1016/j.ymeth.2010.12.015</a><br />
+              </li>
+              <li class="pub1">
+              <b>Animal models for arthritis: innovative tools for prevention and treatment.</b><br />
+              <i>Kollias G, Papadaki P, Apparailly F, Vervoordeldonk MJ, Holmdahl R, Baumans V, Desaintes C, Di Santo J, Distler J, Garside P, Hegen M, Huizinga TW, Jüngel A, Klareskog L, McInnes I, Ragoussis I, Schett G, Hart B, Tak PP, Toes R, van den Berg W, Wurst W, Gay S.</i><br />
+              Ann Rheum Dis. 2011 Aug;70(8):1357-62. Review. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/21628308" id="21628308" target="external">21628308</a> DOI: <a href="http://ard.bmj.com/content/70/8/1357.long" id="10.1136/ard.2010.148551" target="external">10.1136/ard.2010.148551</a><br />
+              </li>
+              <li class="pub1">
+              <b>Fancd2 counteracts the toxic effects of naturally produced aldehydes in mice. </b><br />
+              <i>Langevin F, Crossan GP, Rosado IV, Arends MJ, Patel KJ. </i><br />
+              Nature. 2011 Jul 6;475(7354):53-8. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=21734703&amp;dopt=Abstract" id="21734703" target="external">21734703</a> DOI: <a href="http://dx.crossref.org/10.1038%2Fnature10192" id="10.1038/nature10192">10.1038/nature10192</a><br />
+              </li>
+              <li class="pub2">
+              <b>Crafting rat genomes with zinc fingers.</b><br />
+              <i>Li MA, Bradley A</i><br />
+              Nat Biotechnol. 2011;29;39-41. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=21221099&amp;dopt=Abstract" id="21221099" target="external">21221099</a> DOI: <a href="http://dx.doi.org/10.1038/nbt.1749" id="10.1038/nbt.1749">10.1038/nbt.1749</a><br />
+              </li>
+              <li class="pub1">
+              <b>Mobilization of giant piggyBac transposons in the mouse genome.</b><br />
+              <i>Li MA, Turner DJ, Ning Z, Yusa K, Liang Q, Eckert S, Rad L, Fitzgerald TW, Craig NL, Bradley A.</i><br />
+              Nucleic Acids Res. 2011 Dec;39(22):e148. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/21948799" id="21948799" target="external">21948799</a> DOI: <a href="http://nar.oxfordjournals.org/content/39/22/e148.long" id="10.1093/nar/gkr764" target="external">10.1093/nar/gkr764</a><br />
+              </li>
+              <li class="pub1">
+              <b>Semaphorin 4C and 4G are ligands of Plexin-B2 required in cerebellar development.</b><br />
+              <i>Maier V, Jolicoeur C, Rayburn H, Takegahara N, Kumanogoh A, Kikutani H, Tessier-Lavigne M, Wurst W, Friedel RH.</i><br />
+              Mol Cell Neurosci. 2011 Feb;46(2):419-31. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/21122816" id="21122816" target="external">21122816</a> DOI: <a href="http://www.sciencedirect.com/science/article/pii/S1044743110002563" id="10.1016/j.mcn.2010.11.005" target="external">10.1016/j.mcn.2010.11.005</a><br />
+              </li>
+              <li class="pub1">
+              <b>Methods for extracting function from mammalian genomes.</b><br />
+              <i>von Melchner H, Stewart AF.</i><br />
+              Methods. 2011 Apr;53(4):329-30. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/21392581" id="21392581" target="external">21392581</a> DOI: <a href="http://www.sciencedirect.com/science/article/pii/S1046202311000624" id="10.1016/j.ymeth.2011.03.002" target="external">10.1016/j.ymeth.2011.03.002</a><br />
+              </li>
+              <li class="pub1">
+              <b>Aspartoacylase-LacZ Knockin Mice: An Engineered Model of Canavan Disease.</b><br />
+              <i>Mersmann N, Tkachev D, Jelinek R, Röth PT, Möbius W, Ruhwedel T, Rühle S, Weber-Fahr W, Sartorius A, Klugmann M</i><br />
+              PLoS One. 2011;6(5):e20336. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=21625469&amp;dopt=Abstract" id="21625469" target="external">21625469</a> DOI: <a href="http://dx.crossref.org/10.1371%2Fjournal.pone.0020336" id="10.1371/journal.pone.0020336">10.1371/journal.pone.0020336</a><br />
+              </li>
+              <li class="pub1">
+              <b>Cop1 constitutively regulates c-Jun protein stability and functions as a tumor suppressor in mice.  </b><br />
+              <i>Migliorini D, Bogaerts S, Defever D, Vyas R, Denecker G, Radaelli E, Zwolinska A, Depaepe V, Hochepied T, Skarnes WC, Marine JC</i><br />
+              J Clin Invest. 2011 Apr 1;121(4):1329-43. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=21403399&amp;dopt=Abstract" id="21403399" target="external">21403399</a> DOI: <a href="http://dx.crossref.org/10.1172%2FJCI45784" id="10.1172/JCI45784">10.1172/JCI45784</a><br />
+              </li>
+              <li class="pub1">
+              <b>Targeted isolation of cloned genomic regions by recombineering for haplotype phasing and isogenic targeting.</b><br />
+              <i>Nedelkova M, Maresca M, Fu J, Rostovskaya M, Chenna R, Thiede C, Anastassiadis K, Sarov M, Stewart AF.</i><br />
+              Nucleic Acids Res. 2011 Nov 1;39(20):e137. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/21852329" id="21852329" target="external">21852329</a> DOI: <a href="http://nar.oxfordjournals.org/content/39/20/e137.long" id="10.1093/nar/gkr668" target="external">10.1093/nar/gkr668</a><br />
+              </li>
+              <li class="pub1">
+              <b>BioMart as an integration solution for the International Knockout Mouse Consortium.</b><br />
+              <i>Oakley DJ, Iyer V, Skarnes WC, Smedley D.</i><br />
+              Database (Oxford). 2011 Sep 18;2011:bar028. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/21930503" id="21930503" target="external">21930503</a> DOI: <a href="http://database.oxfordjournals.org/content/2011/bar028" id="10.1093/database/bar028" target="external">10.1093/database/bar028</a><br />
+              </li>
+              <li class="pub1">
+              <b>Expression of the splicing factor gene SFRS10 is reduced in human obesity and contributes to enhanced lipogenesis.</b><br />
+              <i>Pihlajamäki J, Lerin C, Itkonen P, Boes T, Floss T, Schroeder J, Dearie F, Crunkhorn S, Burak F, Jimenez-Chillaron JC, Kuulasmaa T, Miettinen P, Park PJ, Nasser I, Zhao Z, Zhang Z, Xu Y, Wurst W, Ren H, Morris AJ, Stamm S, Goldfine AB, Laakso M, Patti ME.</i><br />
+              Cell Metab. 2011 Aug 3;14(2):208-18. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/21803291" id="21803291" target="external">21803291</a> DOI: <a href="http://www.sciencedirect.com/science/article/pii/S1550413111002567" id="10.1016/j.cmet.2011.06.007" target="external">10.1016/j.cmet.2011.06.007</a><br />
+              </li>
+              <li class="pub1">
+              <b>A resource of vectors and ES cells for targeted deletion of microRNAs in mice.</b><br />
+              <i>Prosser HM, Koike-Yusa H, Cooper JD, Law FC, Bradley A.</i><br />
+              Nat Biotechnol. 2011 Aug 7;29(9):840-5. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/21822254" id="21822254" target="external">21822254</a> DOI: <a href="http://www.nature.com/nbt/journal/v29/n9/full/nbt.1929.html" id="10.1038/nbt.1929" target="external">10.1038/nbt.1929</a><br />
+              </li>
+              <li class="pub1">
+              <b>Glutamatergic and dopaminergic neurons mediate anxiogenic and anxiolytic effects of CRHR1.</b><br />
+              <i>Refojo D, Schweizer M, Kuehne C, Ehrenberg S, Thoeringer C, Vogl AM, Dedic N, Schumacher M, von Wolff G, Avrabos C, Touma C, Engblom D, Schütz G, Nave KA, Eder M, Wotjak CT, Sillaber I, Holsboer F, Wurst W, Deussing JM.</i><br />
+              Science. 2011 Sep 30;333(6051):1903-7. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/21885734" id="21885734" target="external">21885734</a> DOI: <a href="http://www.sciencemag.org/content/333/6051/1903.long" id="10.1126/science.1202107" target="external">10.1126/science.1202107</a><br />
+              </li>
+              <li class="pub1">
+              <b>The IKMC web portal: a central point of entry to data and resources from the International Knockout Mouse Consortium.</b><br />
+              <i>Ringwald M, Iyer V, Mason JC, Stone KR, Tadepally HD, Kadin JA, Bult CJ, Eppig JT, Oakley DJ, Briois S, Stupka E, Maselli V, Smedley D, Liu S, Hansen J, Baldock R, Hicks GG, Skarnes WC</i><br />Nucleic Acids Res. 2011;39;D849-55. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=20929875&amp;dopt=Abstract" id="20929875" target="external">20929875</a> DOI: <a href="http://dx.doi.org/10.1093/nar/gkq879" id="10.1093/nar/gkq879">10.1093/nar/gkq879</a><br />
+              </li>
+              <li class="pub1">
+              <b>Unraveling the genetics of otitis media: from mouse to human and back again.</b><br />
+              <i>Rye MS, Bhutta MF, Cheeseman MT, Burgner D, Blackwell JM, Brown SD, Jamieson SE.</i><br />
+              Mamm Genome. 2011 Feb;22(1-2):66-82. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/21107580" id="21107580" target="external">21107580</a> DOI: <a href="http://www.springerlink.com/content/1118l70730261m62/?MUD=MP" id="10.1007/s00335-010-9295-1" target="external">10.1007/s00335-010-9295-1</a><br />
+              </li>
+              <li class="pub1">
+              <b>Resources for proteomics in mouse embryonic stem cells.</b><br />
+              <i>Schn&uuml;tgen F, Ehrmann F, Poser I, Hubner NC, Hansen J, Floss T, deVries I, Wurst W, Hyman A, Mann M, von Melchner H.</i><br />Nat Methods. 2011 Feb;8(2):103-4. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=21278719&amp;dopt=Abstract" id="21278719" target="external">21278719</a> DOI: <a href="http://www.nature.com/nmeth/journal/v8/n2/full/nmeth0211-103.html" id="10.1038/nmeth0211-103" target="external">10.1038/nmeth0211-103</a>
+              </li>
+              <li class="pub1">
+              <b>High throughput gene trapping and postinsertional modifications of gene trap alleles.</b><br />
+              <i>Schn&uuml;tgen F, Ehrmann F, Ruiz-Noppinger P, von Melchner H.</i><br />Methods. 2011 Apr;53(4):347-55. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=21334922&amp;dopt=Abstract" id="21334922" target="external">21334922</a> DOI: <a href="http://www.sciencedirect.com/science/article/pii/S1046202311000028" id="10.1016/j.ymeth.2010.12.037" target="external">10.1016/j.ymeth.2010.12.037</a>
+              </li>
+              <li class="pub1">
+              <b>A conditional knockout resource for the genome-wide study of mouse gene function. </b><br />
+              <i>Skarnes WC, Rosen B, West AP, Koutsourakis M, Bushell W, Iyer V, Mujica AO, Thomas M, Harrow J, Cox T,  Jackson D, Severin J, Biggs P, Fu J, Nefedov M, de Jong PJ, Stewart AF, Bradley A</i><br />
+              Nature. 2011 Jun 15;474(7351):337-42. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=21677750&amp;dopt=Abstract" id="21677750" target="external">21677750</a> DOI: <a href="http://dx.crossref.org/10.1038%2Fnature10163" id="10.1038/nature10163">10.1038/nature10163</a>
+              </li>
+              <li class="pub1">
+              <b>Cre recombinase resources for conditional mouse mutagenesis.</b><br />
+              <i>Smedley D, Salimova E, Rosenthal N.</i><br />
+              Methods. 2011 Apr;53(4):411-6. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/21195764" id="21195764" target="external">21195764</a> DOI: <a href="http://www.sciencedirect.com/science/article/pii/S1046202310003105" id="10.1016/j.ymeth.2010.12.027" target="external">10.1016/j.ymeth.2010.12.027</a><br />
+              </li>
+              <li class="pub1">
+              <b>Utilization of a mutagenesis screen to generate mouse models of hyperaldosteronism.</b><br />
+              <i>Spyroglou A, Wagner S, Gomez-Sanchez C, Rathkolb B, Wolf E, Manolopoulou J, Reincke M, Bidlingmaier M, Hrabé de Angelis M, Beuschlein F.</i><br />
+              Endocrinology. 2011 Jan;152(1):326-31. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/21068155" id="21068155" target="external">21068155</a> DOI: <a href="http://endo.endojournals.org/content/152/1/326.long" id="10.1210/en.2010-1081" target="external">10.1210/en.2010-1081</a><br />
+              </li>
+              <li class="pub1">
+              <b>Bi-allelic gene targeting in mouse embryonic stem cells. </b><br />
+              <i>Tate PH, Skarnes WC. </i><br />
+              Methods. 2011 Apr;53(4):331-8. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=21288739&amp;dopt=Abstract" id="21288739" target="external">21288739</a> DOI: <a href="http://www.sciencedirect.com/science/article/pii/S1046202310003087" id="10.1016/j.ymeth.2010.12.025" target="external">10.1016/j.ymeth.2010.12.025</a><br />
+              </li>
+              <li class="pub1">
+              <b>Rapid and efficient reprogramming of somatic cells to induced pluripotent stem cells by retinoic acid receptor gamma and liver receptor homolog 1.</b><br />
+              <i>Wang W, Yang J, Liu H, Lu D, Chen X, Zenonos Z, Campos LS, Rad R, Guo G, Zhang S, Bradley A, Liu P.</i><br />
+              Proc Natl Acad Sci U S A. 2011 Nov 8;108(45):18283-8. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/21990348" id="21990348" target="external">21990348</a> DOI: <a href="http://www.pnas.org/content/108/45/18283.long" id="10.1073/pnas.1100893108" target="external">10.1073/pnas.1100893108</a><br />
+              </li>
+              <li class="pub1">
+              <b>Targeted gene correction of α1-antitrypsin deficiency in induced pluripotent stem cells.</b><br />
+              <i>Yusa K, Rashid ST, Strick-Marchand H, Varela I, Liu PQ, Paschon DE, Miranda E, Ordóñez A, Hannan NR, Rouhani FJ, Darche S, Alexander G, Marciniak SJ, Fusaki N, Hasegawa M, Holmes MC, Di Santo JP, Lomas DA, Bradley A, Vallier L.</i><br />
+              Nature. 2011 Oct 12;478(7369):391-4. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/21993621" id="21993621" target="external">21993621</a> DOI: <a href="http://www.nature.com/nature/journal/v478/n7369/full/nature10424.html" id="10.1038/nature10424" target="external">10.1038/nature10424</a><br />
+              </li>
+              <li class="pub1">
+              <b>A hyperactive piggyBac transposase for mammalian applications.</b><br /> <i>Yusa K, Zhou L, Li MA, Bradley A, Craig NL</i><br />Proc Natl Acad Sci U S A. 2011 Jan 25;108(4):1531-6. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=21205896&amp;dopt=Abstract" id="21205896" target="external">21205896</a> DOI: <a href="http://dx.doi.org/10.1073/pnas.1008322108" id="10.1073/pnas.1008322108">10.1073/pnas.1008322108</a> </li>
+              </ul>
+
+              <h3>2010</h3>
+              <div class="papers">
+              <ul  class="inner">
+              <li class="pub1"><b>A practical summary of site-specific recombination, conditional mutagenesis, and tamoxifen induction of CreERT2.</b><br /> <i>Anastassiadis K, Glaser S, Kranz A, Berhardt K, Stewart AF</i><br />Methods Enzymol. 2010;477;109-23. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=20699139&amp;dopt=Abstract" id="20699139" target="external">20699139</a> DOI: <a href="http://dx.doi.org/10.1016/S0076-6879(10)77007-5" id="10.1016/S0076-6879(10)77007-5">10.1016/S0076-6879(10)77007-5</a> </li>
+              <li class="pub2"><b>MouseBook: an integrated portal of mouse resources.</b><br /> <i>Blake A, Pickford K, Greenaway S, Thomas S, Pickard A, Williamson CM, Adams NC, Walling A, Beck T, Fray M, Peters J, Weaver T, Brown SD, Hancock JM, Mallon AM</i><br />Nucleic Acids Res. 2010;38;D593-9. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=19854936&amp;dopt=Abstract" id="19854936" target="external">19854936</a> DOI: <a href="http://dx.doi.org/10.1093/nar/gkp867" id="10.1093/nar/gkp867">10.1093/nar/gkp867</a> </li>
+              <li class="pub1"><b>Phenotypic annotation of the mouse X chromosome.</b><br /> <i>Cox BJ, Vollmer M, Tamplin O, Lu M, Biechele S, Gertsenstein M, van Campenhout C, Floss T, Kühn R, Wurst W, Lickert H, Rossant J</i><br />Genome Res. 2010;20;1154-64. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=20548051&amp;dopt=Abstract" id="20548051" target="external">20548051</a> DOI: <a href="http://dx.doi.org/10.1101/gr.105106.110" id="10.1101/gr.105106.110">10.1101/gr.105106.110</a> </li>
+              <li class="pub2"><b>ARCHAEA-ExPRESs targeting of alpha-tubulin 4 mRNA: a model for high-specificity trans-splicing.</b><br /> <i>Deidda G, Rossi N, Putti S, Tocchini-Valentini GP</i><br />FASEB J. 2010;24;2976-84. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=20371619&amp;dopt=Abstract" id="20371619" target="external">20371619</a> DOI: <a href="http://dx.doi.org/10.1096/fj.10-154658" id="10.1096/fj.10-154658">10.1096/fj.10-154658</a> </li>
+              <li class="pub1"><b>A recombineering pipeline to make conditional targeting constructs.</b><br /> <i>Fu J, Teucher M, Anastassiadis K, Skarnes W, Stewart AF</i><br />Methods Enzymol. 2010;477;125-44. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=20699140&amp;dopt=Abstract" id="20699140" target="external">20699140</a> DOI: <a href="http://dx.doi.org/10.1016/S0076-6879(10)77008-7" id="10.1016/S0076-6879(10)77008-7">10.1016/S0076-6879(10)77008-7</a> </li>
+              <li class="pub1"><b>Down syndrome: from understanding the neurobiology to therapy.</b><br /> <i>Gardiner K, Herault Y, Lott IT, Antonarakis SE, Reeves RH, Dierssen M</i><br />J Neurosci. 2010;30;14943-5. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=21068296&amp;dopt=Abstract" id="21068296" target="external">21068296</a> DOI: <a href="http://dx.doi.org/10.1523/JNEUROSCI.3728-10.2010" id="10.1523/JNEUROSCI.3728-10.2010">10.1523/JNEUROSCI.3728-10.2010</a> </li>
+              <li class="pub2"><b>Gene knockdown in the mouse through RNAi.</b><br /> <i>Kleinhammer A, Wurst W, Kühn R</i><br />Methods Enzymol. 2010;477;387-414. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=20699152&amp;dopt=Abstract" id="20699152" target="external">20699152</a> DOI: <a href="http://dx.doi.org/10.1016/S0076-6879(10)77020-8" id="10.1016/S0076-6879(10)77020-8">10.1016/S0076-6879(10)77020-8</a> </li>
+              <li class="pub1"><b>An improved Flp deleter mouse in C57Bl/6 based on Flpo recombinase.</b><br /> <i>Kranz A, Fu J, Duerschke K, Weidlich S, Naumann R, Stewart AF, Anastassiadis K</i><br />Genesis. 2010;48;512-20. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=20506501&amp;dopt=Abstract" id="20506501" target="external">20506501</a> DOI: <a href="http://dx.doi.org/10.1002/dvg.20641" id="10.1002/dvg.20641">10.1002/dvg.20641</a> </li>
+              <li class="pub2"><b>Jarid2 is a PRC2 component in embryonic stem cells required for multi-lineage differentiation and recruitment of PRC1 and RNA Polymerase II to developmental regulators.</b><br /> <i>Landeira D, Sauer S, Poot R, Dvorkina M, Mazzarella L, Jørgensen HF, Pereira CF, Leleu M, Piccolo FM, Spivakov M, Brookes E, Pombo A, Fisher C, Skarnes WC, Snoek T, Bezstarosti K, Demmers J, Klose RJ, Casanova M, Tavares L, Brockdorff N, Merkenschlager M, Fisher AG</i><br />Nat Cell Biol. 2010;12;618-24. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=20473294&amp;dopt=Abstract" id="20473294" target="external">20473294</a> DOI: <a href="http://dx.doi.org/10.1038/ncb2065" id="10.1038/ncb2065">10.1038/ncb2065</a> </li>
+              <li class="pub1"><b>Genome-wide forward genetic screens in mouse ES cells.</b><br /> <i>Li MA, Pettitt SJ, Yusa K, Bradley A</i><br />Methods Enzymol. 2010;477;217-42. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=20699144&amp;dopt=Abstract" id="20699144" target="external">20699144</a> DOI: <a href="http://dx.doi.org/10.1016/S0076-6879(10)77012-9" id="10.1016/S0076-6879(10)77012-9">10.1016/S0076-6879(10)77012-9</a> </li>
+              <li class="pub1"><b>Gene targeting by homologous recombination in mouse zygotes mediated by zinc-finger nucleases.</b><br /> <i>Meyer M, de Angelis MH, Wurst W, Kühn R</i><br />Proc Natl Acad Sci U S A. 2010;107;15022-6. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=20686113&amp;dopt=Abstract" id="20686113" target="external">20686113</a> DOI: <a href="http://dx.doi.org/10.1073/pnas.1009424107" id="10.1073/pnas.1009424107">10.1073/pnas.1009424107</a> </li>
+              <li class="pub2"><b>EuroPhenome: a repository for high-throughput mouse phenotyping data.</b><br /> <i>Morgan H, Beck T, Blake A, Gates H, Adams N, Debouzy G, Leblanc S, Lengger C, Maier H, Melvin D, Meziane H, Richardson D, Wells S, White J, Wood J, The EUMODIC Consortium, de Angelis MH, Brown SD, Hancock JM, Mallon AM</i><br />Nucleic Acids Res. 2010 Jan;38(Database issue):D577-85. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=19933761&amp;dopt=Abstract" id="19933761" target="external">19933761</a> DOI: <a href="http://dx.doi.org/10.1093/nar/gkp1007" id="10.1093/nar/gkp1007">10.1093/nar/gkp1007</a> </li>
+              <li class="pub1"><b>Dual RMCE for efficient re-engineering of mouse mutant alleles.</b><br /> <i>Osterwalder M, Galli A, Rosen B, Skarnes WC, Zeller R, Lopez-Rios J</i><br />Nat Methods. 2010;7;893-5. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=20953177&amp;dopt=Abstract" id="20953177" target="external">20953177</a> DOI: <a href="http://dx.doi.org/10.1038/nmeth.1521" id="10.1038/nmeth.1521">10.1038/nmeth.1521</a> </li>
+              <li class="pub2"><b>PiggyBac transposon mutagenesis: a tool for cancer gene discovery in mice.</b><br /> <i>Rad R, Rad L, Wang W, Cadinanos J, Vassiliou G, Rice S, Campos LS, Yusa K, Banerjee R, Li MA, de la Rosa J, Strong A, Lu D, Ellis P, Conte N, Yang FT, Liu P, Bradley A</i><br />Science. 2010;330;1104-7. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=20947725&amp;dopt=Abstract" id="20947725" target="external">20947725</a> DOI: <a href="http://dx.doi.org/10.1126/science.1193004" id="10.1126/science.1193004">10.1126/science.1193004</a> </li>
+              <li class="pub1"><b>Microphthalmia, parkinsonism, and enhanced nociception in Pitx3 ( 416insG ) mice.</b><br /> <i>Rosemann M, Ivashkevich A, Favor J, Dalke C, Hölter SM, Becker L, Rácz I, Bolle I, Klempt M, Rathkolb B, Kalaydjiev S, Adler T, Aguilar A, Hans W, Horsch M, Rozman J, Calzada-Wack J, Kunder S, Naton B, Gailus-Durner V, Fuchs H, Schulz H, Beckers J, Busch DH, Burbach JP, Smidt MP, Quintanilla-Martinez L, Esposito I, Klopstock T, Klingenspor M, Ollert M, Wolf E, Wurst W, Zimmer A, de Angelis MH, Atkinson M, Heinzmann U, Graw J</i><br />Mamm Genome. 2010;21;13-27. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=20033184&amp;dopt=Abstract" id="20033184" target="external">20033184</a> DOI: <a href="http://dx.doi.org/10.1007/s00335-009-9235-0" id="10.1007/s00335-009-9235-0">10.1007/s00335-009-9235-0</a> </li>
+              <li class="pub1"><b>Efficient conditional and promoter-specific in vivo expression of cDNAs of choice by taking advantage of recombinase-mediated cassette exchange using FlEx gene traps.</b><br /> <i>Schebelle L, Wolf C, Stribl C, Javaheri T, Schnütgen F, Ettinger A, Ivics Z, Hansen J, Ruiz P, von Melchner H, Wurst W, Floss T</i><br />Nucleic Acids Res. 2010;38;e106. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=20139417&amp;dopt=Abstract" id="20139417" target="external">20139417</a> DOI: <a href="http://dx.doi.org/10.1093/nar/gkq044" id="10.1093/nar/gkq044">10.1093/nar/gkq044</a> </li>
+              <li class="pub2"><b>Research funding. Sustaining the data and bioresource commons.</b><br /> <i>Schofield PN, Eppig J, Huala E, de Angelis MH, Harvey M, Davidson D, Weaver T, Brown S, Smedley D, Rosenthal N, Schughart K, Aidinis V, Tocchini-Valentini G, Hancock JM</i><br />Science. 2010;330;592-3. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=21030633&amp;dopt=Abstract" id="21030633" target="external">21030633</a> DOI: <a href="http://dx.doi.org/10.1126/science.1191506" id="10.1126/science.1191506">10.1126/science.1191506</a> </li>
+              <li class="pub1"><b>CIN85 regulates dopamine receptor endocytosis and governs behaviour in mice.</b><br /> <i>Shimokawa N, Haglund K, Hölter SM, Grabbe C, Kirkin V, Koibuchi N, Schultz C, Rozman J, Hoeller D, Qiu CH, Londoño MB, Ikezawa J, Jedlicka P, Stein B, Schwarzacher SW, Wolfer DP, Ehrhardt N, Heuchel R, Nezis I, Brech A, Schmidt MH, Fuchs H, Gailus-Durner V, Klingenspor M, Bogler O, Wurst W, Deller T, de Angelis MH, Dikic I</i><br />EMBO J. 2010;29;2421-32. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=20551902&amp;dopt=Abstract" id="20551902" target="external">20551902</a> DOI: <a href="http://dx.doi.org/10.1038/emboj.2010.120" id="10.1038/emboj.2010.120">10.1038/emboj.2010.120</a> </li>
+              <li class="pub2"><b>Floxin, a resource for genetically engineering mouse ESCs.</b><br /> <i>Singla V, Hunkapiller J, Santos N, Seol AD, Norman AR, Wakenight P, Skarnes WC, Reiter JF</i><br />Nat Methods. 2010;7;50-2. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=19966808&amp;dopt=Abstract" id="19966808" target="external">19966808</a> DOI: <a href="http://dx.doi.org/10.1038/nmeth.1406" id="10.1038/nmeth.1406">10.1038/nmeth.1406</a><br />
+              </li>
+              <li class="pub1"><b>Finding and sharing: new approaches to registries of databases and services for the biomedical sciences.</b><br /> <i>Smedley D, Schofield P, Chen CK, Aidinis V, Ainali C, Bard J, Balling R, Birney E, Blake A, Bongcam-Rudloff E, Brookes AJ, Cesareni G, Chandras C, Eppig J, Flicek P, Gkoutos G, Greenaway S, Gruenberger M, Hériché JK, Lyall A, Mallon AM, Muddyman D, Reisinger F, Ringwald M, Rosenthal N, Schughart K, Swertz M, Thorisson GA, Zouberakis M, Hancock JM</i><br />Database (Oxford). 2010;2010;baq014. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=20627863&amp;dopt=Abstract" id="20627863" target="external">20627863</a> DOI: <a href="http://dx.doi.org/10.1093/database/baq014" id="10.1093/database/baq014">10.1093/database/baq014</a> </li>
+              <li class="pub2"><b>Structural modeling of histone methyltransferase complex Set1C from Saccharomyces cerevisiae using constraint-based docking.</b><br /> <i>Tuukkanen A, Huang B, Henschel A, Stewart F, Schroeder M</i><br />Proteomics. 2010;10;4186-95. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=21046623&amp;dopt=Abstract" id="21046623" target="external">21046623</a> DOI: <a href="http://dx.doi.org/10.1002/pmic.201000283" id="10.1002/pmic.201000283">10.1002/pmic.201000283</a> </li>
+              <li class="pub1"><b>The use of DNA transposons for cancer gene discovery in mice.</b><br /> <i>Vassiliou G, Rad R, Bradley A</i><br />Methods Enzymol. 2010;477;91-106. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=20699138&amp;dopt=Abstract" id="20699138" target="external">20699138</a> DOI: <a href="http://dx.doi.org/10.1016/S0076-6879(10)77006-3" id="10.1016/S0076-6879(10)77006-3">10.1016/S0076-6879(10)77006-3</a> </li>
+              <li class="pub2"><b>EMMA--mouse mutant resources for the international scientific community.</b><br /> <i>Wilkinson P, Sengerova J, Matteoni R, Chen CK, Soulat G, Ureta-Vidal A, Fessele S, Hagn M, Massimi M, Pickford K, Butler RH, Marschall S, Mallon AM, Pickard A, Raspa M, Scavizzi F, Fray M, Larrigaldie V, Leyritz J, Birney E, Tocchini-Valentini GP, Brown S, Herault Y, Montoliu L, de Angelis MH, Smedley D</i><br />Nucleic Acids Res. 2010;38;D570-6. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=19783817&amp;dopt=Abstract" id="19783817" target="external">19783817</a> DOI: <a href="http://dx.doi.org/10.1093/nar/gkp799" id="10.1093/nar/gkp799">10.1093/nar/gkp799</a> </li>
+              <li class="pub1"><b>Systematic phenotyping of mouse mutants.</b><br /> <i>Wurst W, de Angelis MH</i><br />Nat Biotechnol. 2010;28;684-5. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=20622838&amp;dopt=Abstract" id="20622838" target="external">20622838</a> DOI: <a href="http://dx.doi.org/10.1038/nbt0710-684" id="10.1038/nbt0710-684">10.1038/nbt0710-684</a> </li>
+              <li class="pub2"><b>A mouse model of Down syndrome trisomic for all human chromosome 21 syntenic regions.</b><br /> <i>Yu T, Li Z, Jia Z, Clapcote SJ, Liu C, Li S, Asrar S, Pao A, Chen R, Fan N, Carattini-Rivera S, Bechard AR, Spring S, Henkelman RM, Stoica G, Matsui S, Nowak NJ, Roder JC, Chen C, Bradley A, Yu YE</i><br />Hum Mol Genet. 2010;19;2780-91. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=20442137&amp;dopt=Abstract" id="20442137" target="external">20442137</a> DOI: <a href="http://dx.doi.org/10.1093/hmg/ddq179" id="10.1093/hmg/ddq179">10.1093/hmg/ddq179</a> </li>
+              </ul>
+              </div>
+              <h3>2009</h3>
+              <div class="papers">
+              <ul  class="inner">
+              <li class="pub1"><b>Dre recombinase, like Cre, is a highly efficient site-specific recombinase in E. coli, mammalian cells and mice.</b><br /> <i>Anastassiadis K, Fu J, Patsch C, Hu S, Weidlich S, Duerschke K, Buchholz F, Edenhofer F, Stewart AF</i><br />Dis Model Mech. 2009 Sep-Oct ;2;508-15. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=19692579&amp;dopt=Abstract" id="19692579" target="external">19692579</a> DOI: <a href="http://dx.doi.org/10.1242/dmm.003087" id="10.1242/dmm.003087">10.1242/dmm.003087</a> </li>
+              <li class="pub1"><b>Towards better mouse models: enhanced genotypes, systemic phenotyping and envirotype modelling.</b><br /> <i>Beckers J, Wurst W, de Angelis MH</i><br />Nat Rev Genet. 2009 Jun;10(6):371-80. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=19434078&amp;dopt=Abstract" id="19434078" target="external">19434078</a> DOI: <a href="http://dx.doi.org/10.1038/nrg2578" id="10.1038/nrg2578">10.1038/nrg2578</a> </li>
+              <li class="pub2"><b>Site-specific recombinases for manipulation of the mouse genome.</b><br /> <i>Birling MC, Gofflot F, Warot X</i><br />Methods Mol Biol. 2009;561;245-63. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=19504076&amp;dopt=Abstract" id="19504076" target="external">19504076</a> DOI: <a href="http://dx.doi.org/10.1007/978-1-60327-019-9_16" id="10.1007/978-1-60327-019-9_16">10.1007/978-1-60327-019-9_16</a> </li>
+              <li class="pub2"><b>The functional annotation of mammalian genomes: the challenge of phenotyping.</b><br /> <i>Brown SD, Wurst W, Kühn R, Hancock JM</i><br />Annu Rev Genet. 2009;43;305-33. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=19689210&amp;dopt=Abstract" id="19689210" target="external">19689210</a> DOI: <a href="http://dx.doi.org/10.1146/annurev-genet-102108-134143" id="10.1146/annurev-genet-102108-134143">10.1146/annurev-genet-102108-134143</a> </li>
+              <li class="pub2"><b>Doxycycline-dependent photoactivated gene expression in eukaryotic systems.</b><br /> <i>Cambridge SB, Geissler D, Calegari F, Anastassiadis K, Hasan MT, Stewart AF, Huttner WB, Hagen V, Bonhoeffer T</i><br />Nat Methods. 2009;6;527-31. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=19503080&amp;dopt=Abstract" id="19503080" target="external">19503080</a> DOI: <a href="http://dx.doi.org/10.1038/nmeth.1340" id="10.1038/nmeth.1340">10.1038/nmeth.1340</a> </li>
+              <li class="pub2"><b>Gene-trap vectors and mutagenesis.</b><br /> <i>De-Zolt S, Altschmied J, Ruiz P, von Melchner H, Schnütgen F</i><br />Methods Mol Biol. 2009;530;29-47. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=19266330&amp;dopt=Abstract" id="19266330" target="external">19266330</a> DOI: <a href="http://dx.doi.org/10.1007/978-1-59745-471-1_3" id="10.1007/978-1-59745-471-1_3">10.1007/978-1-59745-471-1_3</a> </li>
+              <li class="pub1"><b>A humanized version of Foxp2 affects cortico-basal ganglia circuits in mice.</b><br /> <i>Enard W, Gehre S, Hammerschmidt K, Hölter SM, Blass T, Somel M, Brückner MK, Schreiweis C, Winter C, Sohr R, Becker L, Wiebe V, Nickel B, Giger T, Müller U, Groszer M, Adler T, Aguilar A, Bolle I, Calzada-Wack J, Dalke C, Ehrhardt N, Favor J, Fuchs H, Gailus-Durner V, Hans W, Hölzlwimmer G, Javaheri A, Kalaydjiev S, Kallnik M, Kling E, Kunder S, Mossbrugger I, Naton B, Racz I, Rathkolb B, Rozman J, Schrewe A, Busch DH, Graw J, Ivandic B, Klingenspor M, Klopstock T, Ollert M, Quintanilla-Martinez L, Schulz H, Wolf E, Wurst W, Zimmer A, Fisher SE, Morgenstern R, Arendt T, de Angelis MH, Fischer J, Schwarz J, Pääbo S</i><br />Cell. 2009;137;961-71. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=19490899&amp;dopt=Abstract" id="19490899" target="external">19490899</a> DOI: <a href="http://dx.doi.org/10.1016/j.cell.2009.03.041" id="10.1016/j.cell.2009.03.041">10.1016/j.cell.2009.03.041</a> </li>
+              <li class="pub2"><b>Targeting embryonic stem cells.</b><br /> <i>Friedel RH</i><br />Methods Mol Biol. 2009;561;185-97. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=19504072&amp;dopt=Abstract" id="19504072" target="external">19504072</a> DOI: <a href="http://dx.doi.org/10.1007/978-1-60327-019-9_12" id="10.1007/978-1-60327-019-9_12">10.1007/978-1-60327-019-9_12</a> </li>
+              <li class="pub2"><b>Transposon-mediated genome manipulation in vertebrates.</b><br /> <i>Ivics Z, Li MA, Mátés L, Boeke JD, Nagy A, Bradley A, Izsvák Z</i><br />Nat Methods. 2009;6;415-22. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=19478801&amp;dopt=Abstract" id="19478801" target="external">19478801</a> DOI: <a href="http://dx.doi.org/10.1038/nmeth.1332" id="10.1038/nmeth.1332">10.1038/nmeth.1332</a> </li>
+              <li class="pub1"><b>Overview on mouse mutagenesis.</b><br /> <i>Kühn R, Wurst W</i><br />Methods Mol Biol. 2009;530;1-12. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=19266348&amp;dopt=Abstract" id="19266348" target="external">19266348</a> DOI: <a href="http://dx.doi.org/10.1007/978-1-59745-471-1_1" id="10.1007/978-1-59745-471-1_1">10.1007/978-1-59745-471-1_1</a> </li>
+              <li class="pub2"><b>Construction of gene-targeting vectors by recombineering.</b><br /> <i>Lee SC, Wang W, Liu P</i><br />Methods Mol Biol. 2009;530;1-13. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=19266337&amp;dopt=Abstract" id="19266337" target="external">19266337</a> DOI: <a href="http://dx.doi.org/10.1007/978-1-59745-471-1_2" id="10.1007/978-1-59745-471-1_2">10.1007/978-1-59745-471-1_2</a> </li>
+              <li class="pub1"><b>Chromosomal mobilization and reintegration of Sleeping Beauty and PiggyBac transposons.</b><br /> <i>Liang Q, Kong J, Stalker J, Bradley A</i><br />Genesis. 2009 Jun;47(6):404-8. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=19391106&amp;dopt=Abstract" id="19391106" target="external">19391106</a> DOI: <a href="http://dx.doi.org/10.1002/dvg.20508" id="10.1002/dvg.20508">10.1002/dvg.20508</a> </li>
+              <li class="pub1"><b>Agouti C57BL/6N embryonic stem cells for mouse genetic resources.</b><br /> <i>Pettitt SJ, Liang Q, Rairdan XY, Moran JL, Prosser HM, Beier DR, Lloyd KC, Bradley A, Skarnes WC</i><br />Nat Methods. 2009 Jul;6(7):493-5. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=19525957&amp;dopt=Abstract" id="19525957" target="external">19525957</a> DOI: <a href="http://dx.doi.org/10.1038/nmeth.1342" id="10.1038/nmeth.1342">10.1038/nmeth.1342</a> </li>
+              <li class="pub2"><b>PRIME importance of pathology expertise.</b><br /> <i>Schofield PN, Brown SD, Sundberg JP, Arends M, Warren MV, Dubus P, Ellender M, Fiette L, Rozell B, Quintanilla-Martinez L, Raspa M, Song JY, van der Valk M, McKerlie C</i><br />Nat Biotechnol. 2009;27;24-5. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=19131991&amp;dopt=Abstract" id="19131991" target="external">19131991</a> DOI: <a href="http://dx.doi.org/10.1038/nbt0109-24" id="10.1038/nbt0109-24">10.1038/nbt0109-24</a> </li>
+              <li class="pub1"><b>Post-publication sharing of data and tools.</b><br /> <i>Schofield PN, Bubela T, Weaver T, Portilla L, Brown SD, Hancock JM, Einhorn D, Tocchini-Valentini G, Hrabe de Angelis M, Rosenthal N, CASIMIR Rome Meeting participants</i><br />Nature. 2009;461;171-3. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=19741686&amp;dopt=Abstract" id="19741686" target="external">19741686</a> DOI: <a href="http://dx.doi.org/10.1038/461171a" id="10.1038/461171a">10.1038/461171a</a> </li>
+              <li class="pub1"><b>Identification of protein/DNA contacts with dimethyl sulfate: methylation protection and methylation interference.</b><br /> <i>Shaw PE, Stewart AF</i><br />Methods Mol Biol. 2009;543;97-104. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=19378162&amp;dopt=Abstract" id="19378162" target="external">19378162</a> DOI: <a href="http://dx.doi.org/10.1007/978-1-60327-015-1_8" id="10.1007/978-1-60327-015-1_8">10.1007/978-1-60327-015-1_8</a> </li>
+              <li class="pub1"><b>Processing of multiple-intron-containing pretRNA.</b><br /> <i>Tocchini-Valentini GD, Fruscoloni P, Tocchini-Valentini GP</i><br />Proc Natl Acad Sci U S A. 2009;106;20246-51. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=19910528&amp;dopt=Abstract" id="19910528" target="external">19910528</a> DOI: <a href="http://dx.doi.org/10.1073/pnas.0911658106" id="10.1073/pnas.0911658106">10.1073/pnas.0911658106</a> </li>
+              <li class="pub1"><b>A piggyBac transposon-based genome-wide library of insertionally mutated Blm-deficient murine ES cells.</b><br /> <i>Wang W, Bradley A, Huang Y</i><br />Genome Res. 2009 Apr;19(4):667-73. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=19233961&amp;dopt=Abstract" id="19233961" target="external">19233961</a> DOI: <a href="http://dx.doi.org/10.1101/gr.085621.108" id="10.1101/gr.085621.108">10.1101/gr.085621.108</a> </li>
+              <li class="pub1"><b>Chromosome Engineering in ES Cells.</b><br /> <i>van der Weyden L, Shaw-Smith C, Bradley A</i><br />Methods Mol Biol. 2009;530;1-29. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=19266329&amp;dopt=Abstract" id="19266329" target="external">19266329</a> DOI: <a href="http://dx.doi.org/10.1007/978-1-59745-471-1_4" id="10.1007/978-1-59745-471-1_4">10.1007/978-1-59745-471-1_4</a> </li>
+              <li class="pub2"><b>piggyBac transposition reprograms fibroblasts to induced pluripotent stem cells.</b><br /> <i>Woltjen K, Michael IP, Mohseni P, Desai R, Mileikovsky M, Hämäläinen R, Cowling R, Wang W, Liu P, Gertsenstein M, Kaji K, Sung HK, Nagy A</i><br />Nature. 2009 Apr 9;458(7239):766-70. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=19252478&amp;dopt=Abstract" id="19252478" target="external">19252478</a> DOI: <a href="http://dx.doi.org/10.1038/nature07863" id="10.1038/nature07863">10.1038/nature07863</a> </li>
+              <li class="pub2"><b>Generation of transgene-free induced pluripotent mouse stem cells by the piggyBac transposon.</b><br /> <i>Yusa K, Rad R, Takeda J, Bradley A</i><br />Nat Methods. 2009 May;6(5):363-9. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=19337237&amp;dopt=Abstract" id="19337237" target="external">19337237</a> DOI: <a href="http://dx.doi.org/10.1038/nmeth.1323" id="10.1038/nmeth.1323">10.1038/nmeth.1323</a> </li>
+              </ul>
+              </div>
+              <h3>2008</h3>
+              <div class="papers">
+              <ul  class="inner">
+              <li class="pub1"><b>Novel caspase-suicide proteins for tamoxifen-inducible apoptosis.</b><br /> <i>Chu Y, Senghaas N, Köster RW, Wurst W, Kühn R</i><br />Genesis. 2008;46;530-6. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=18802959&amp;dopt=Abstract" id="18802959" target="external">18802959</a> DOI: <a href="http://dx.doi.org/10.1002/dvg.20426" id="10.1002/dvg.20426">10.1002/dvg.20426</a> </li>
+              <li class="pub2"><b>EUCOMM--the European conditional mouse mutagenesis program.</b><br /> <i>Friedel RH, Seisenberger C, Kaloff C, Wurst W</i><br />Brief Funct Genomic Proteomic. 2007;6;180-5. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=17967808&amp;dopt=Abstract" id="17967808" target="external">17967808</a> DOI: <a href="http://dx.doi.org/10.1093/bfgp/elm022" id="10.1093/bfgp/elm022">10.1093/bfgp/elm022</a> </li>
+              <li class="pub2"><b>ES cell pluripotency and germ-layer formation require the SWI/SNF chromatin remodeling component BAF250a.</b><br /> <i>Gao X, Tate P, Hu P, Tjian R, Skarnes WC, Wang Z</i><br />Proc Natl Acad Sci U S A. 2008;105;6656-61. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=18448678&amp;dopt=Abstract" target="external">18448678</a> DOI: <a href="http://dx.doi.org/10.1073/pnas.0801802105">10.1073/pnas.0801802105</a> </li>
+              <li class="pub1"><b>Extensive genomic copy number variation in embryonic stem cells.</b><br /> <i>Liang Q, Conte N, Skarnes WC, Bradley A</i><br />Proc Natl Acad Sci U S A. 2008;105;17453-6. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=18988746&amp;dopt=Abstract" id="18988746" target="external">18988746</a> DOI: <a href="http://dx.doi.org/10.1073/pnas.0805638105" id="10.1073/pnas.0805638105">10.1073/pnas.0805638105</a> </li>
+              <li class="pub2"><b>MausDB: an open source application for phenotype data and mouse colony management in large-scale mouse phenotyping projects.</b><br /> <i>Maier H, Lengger C, Simic B, Fuchs H, Gailus-Durner V, Hrabé de Angelis M</i><br />BMC Bioinformatics. 2008;9;169. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=18366799&amp;dopt=Abstract" id="18366799" target="external">18366799</a> DOI: <a href="http://dx.doi.org/10.1186/1471-2105-9-169" id="10.1186/1471-2105-9-169">10.1186/1471-2105-9-169</a> </li>
+              <li class="pub1"><b>Analysis of CRE-mediated recombination driven by myosin light chain 1/3 regulatory elements in embryonic and adult skeletal muscle: a tool to study fiber specification.</b><br /> <i>Mourkioti F, Slonimsky E, Huth M, Berno V, Rosenthal N</i><br />Genesis. 2008;46;424-30. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=18693277&amp;dopt=Abstract" id="18693277" target="external">18693277</a> DOI: <a href="http://dx.doi.org/10.1002/dvg.20419" id="10.1002/dvg.20419">10.1002/dvg.20419</a> </li>
+              <li class="pub1"><b>Modeling insertional mutagenesis using gene length and expression in murine embryonic stem cells.</b><br /> <i>Nord AS, Vranizan K, Tingley W, Zambon AC, Hanspers K, Fong LG, Hu Y, Bacchetti P, Ferrin TE, Babbitt PC, Doniger SW, Skarnes WC, Young SG, Conklin BR</i><br />PLoS ONE. 2007;2;e617. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=17637833&amp;dopt=Abstract" target="external">17637833</a> DOI: <a href="http://dx.doi.org/10.1371/journal.pone.0000617">10.1371/journal.pone.0000617</a> </li>
+              <li class="pub1"><b>Deletion of glucose transporter GLUT8 in mice increases locomotor activity.</b><br /> <i>Schmidt S, Gawlik V, Hölter SM, Augustin R, Scheepers A, Behrens M, Wurst W, Gailus-Durner V, Fuchs H, Hrabé de Angelis M, Kluge R, Joost HG, Schürmann A</i><br />Behav Genet. 2008;38;396-406. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=18461434&amp;dopt=Abstract" id="18461434" target="external">18461434</a> DOI: <a href="http://dx.doi.org/10.1007/s10519-008-9208-1" id="10.1007/s10519-008-9208-1">10.1007/s10519-008-9208-1</a> </li>
+              <li class="pub1"><b>Enhanced gene trapping in mouse embryonic stem cells.</b><br /> <i>Schnütgen F, Hansen J, De-Zolt S, Horn C, Lutz M, Floss T, Wurst W, Noppinger PR, von Melchner H</i><br />Nucleic Acids Res. 2008;36;e133. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=18812397&amp;dopt=Abstract" id="18812397" target="external">18812397</a> DOI: <a href="http://dx.doi.org/10.1093/nar/gkn603" id="10.1093/nar/gkn603">10.1093/nar/gkn603</a> </li>
+              <li class="pub2"><b>Pleiotropic effects in Eya3 knockout mice.</b><br /> <i>Soker T, Dalke C, Puk O, Floss T, Becker L, Bolle I, Favor J, Hans W, Hoelter SM, Horsch M, Kallnik M, Kling E, Morth C, Schrewe A, Stigloher C, Topp S, Gailus-Durner V, Naton B, Beckers J, Fuchs H, Ivandic B, Klopstock T, Schulz H, Wolf E, Wurst W, Bally-Cuif L, Hrabe de Angelis M, Graw J</i><br />BMC Dev Biol. 2008;8;118. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=19102749&amp;dopt=Abstract" id="19102749" target="external">19102749</a> DOI: <a href="http://dx.doi.org/10.1186/1471-213X-8-118" id="10.1186/1471-213X-8-118">10.1186/1471-213X-8-118</a> </li>
+              <li class="pub2"><b>Simultaneous Cre-mediated conditional knockdown of two genes in mice.</b><br /> <i>Steuber-Buchberger P, Wurst W, Kühn R</i><br />Genesis. 2008;46;144-51. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=18327788&amp;dopt=Abstract" id="18327788" target="external">18327788</a> DOI: <a href="http://dx.doi.org/10.1002/dvg.20376" id="10.1002/dvg.20376">10.1002/dvg.20376</a> </li>
+              <li class="pub1"><b>A DNA transposon-based approach to validate oncogenic mutations in the mouse.</b><br /> <i>Su Q, Prosser HM, Campos LS, Ortiz M, Nakamura T, Warren M, Dupuy AJ, Jenkins NA, Copeland NG, Bradley A, Liu P</i><br />Proc Natl Acad Sci U S A. 2008;105;19904-9. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=19064922&amp;dopt=Abstract" id="19064922" target="external">19064922</a> DOI: <a href="http://dx.doi.org/10.1073/pnas.0807785105" id="10.1073/pnas.0807785105">10.1073/pnas.0807785105</a> </li>
+              <li class="pub2"><b>Chromosomal transposition of PiggyBac in mouse embryonic stem cells.</b><br /> <i>Wang W, Lin C, Lu D, Ning Z, Cox T, Melvin D, Wang X, Bradley A, Liu P</i><br />Proc Natl Acad Sci U S A. 2008 Jul 8;105(27):9290-5. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=18579772&amp;dopt=Abstract" target="external">18579772</a> DOI: <a href="http://dx.doi.org/10.1073/pnas.0801017105">10.1073/pnas.0801017105</a> </li>
+              </ul>
+              </div>
+              <h3>2007</h3>
+              <div class="papers">
+               <ul  class="inner">
+              <li class="pub2"><b>A mouse for all reasons.</b><br /> <i>International Mouse Knockout Consortium, Collins FS, Rossant J, Wurst W</i><br />Cell. 2007;128;9-13. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=17218247&amp;dopt=Abstract" target="external">17218247</a> DOI: <a href="http://dx.doi.org/10.1016/j.cell.2006.12.018">10.1016/j.cell.2006.12.018</a> </li>
+              <li class="pub1"><b>A new partner for the international knockout mouse consortium.</b><br /> <i>Collins FS, Finnell RH, Rossant J, Wurst W</i><br />Cell. 2007;129;235. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=17448981&amp;dopt=Abstract" target="external">17448981</a> DOI: <a href="http://dx.doi.org/10.1016/j.cell.2007.04.007">10.1016/j.cell.2007.04.007</a> </li>
+              <li class="pub1"><b>Hdac2 regulates the cardiac hypertrophic response by modulating Gsk3 beta activity.</b><br /> <i>Trivedi CM, Luo Y, Yin Z, Zhang M, Zhu W, Wang T, Floss T, Goettlicher M, Noppinger PR, Wurst W, Ferrari VA, Abrams CS, Gruber PJ, Epstein JA</i><br />Nat Med. 2007;13;324-31. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=17322895&amp;dopt=Abstract" target="external">17322895</a> DOI: <a href="http://dx.doi.org/10.1038/nm1552">10.1038/nm1552</a> </li>
+              </ul>
+              </div>
+              <h3>2006</h3>
+              <div class="papers">
+              <ul  class="inner">
+              <li class="pub2"><b>The International Gene Trap Consortium Website: a portal to all publicly available gene trap cell lines in mouse.</b><br /> <i>Nord AS, Chang PJ, Conklin BR, Cox AV, Harper CA, Hicks GG, Huang CC, Johns SJ, Kawamoto M, Liu S, Meng EC, Morris JH, Rossant J, Ruiz P, Skarnes WC, Soriano P, Stanford WL, Stryke D, von Melchner H, Wurst W, Yamamura K, Young SG, Babbitt PC, Ferrin TE</i><br />Nucleic Acids Res. 2006;34;D642-8. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=16381950&amp;dopt=Abstract" target="external">16381950</a> DOI: <a href="http://dx.doi.org/10.1093/nar/gkj097">10.1093/nar/gkj097</a> </li>
+              <li class="pub1"><b>Engineering embryonic stem cells with recombinase systems.</b><br /> <i>Schnütgen F, Stewart AF, von Melchner H, Anastassiadis K</i><br />Methods Enzymol. 2006;420;100-36. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=17161696&amp;dopt=Abstract" target="external">17161696</a> DOI: <a href="http://dx.doi.org/10.1016/S0076-6879(06)20007-7">10.1016/S0076-6879(06)20007-7</a> </li>
+              </ul>
+              </div>
+              <h3>2005</h3>
+              <div class="papers">
+              <ul  class="inner">
+              <li class="pub1"><b>EMPReSS: standardized phenotype screens for functional annotation of the mouse genome.</b><br /> <i>Brown SD, Chambon P, de Angelis MH, </i><br />Nat Genet. 2005;37;1155. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=16254554&amp;dopt=Abstract" target="external">16254554</a> DOI: <a href="http://dx.doi.org/10.1038/ng1105-1155">10.1038/ng1105-1155</a> </li>
+              <li class="pub2"><b>Genomewide production of multipurpose alleles for the functional analysis of the mouse genome.</b><br /> <i>Schnütgen F, De-Zolt S, Van Sloun P, Hollatz M, Floss T, Hansen J, Altschmied J, Seisenberger C, Ghyselinck NB, Ruiz P, Chambon P, Wurst W, von Melchner H</i><br />Proc Natl Acad Sci U S A. 2005;102;7221-6. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=15870191&amp;dopt=Abstract" target="external">15870191</a> DOI: <a href="http://dx.doi.org/10.1073/pnas.0502273102">10.1073/pnas.0502273102</a> </li>
+              </ul>
+              </div>
+              <h3>2004</h3>
+              <div class="papers">
+              <ul  class="inner">
+              <li class="pub1"><b>The knockout mouse project.</b><br /> <i>Austin CP, Battey JF, Bradley A, Bucan M, Capecchi M, Collins FS, Dove WF, Duyk G, Dymecki S, Eppig JT, Grieder FB, Heintz N, Hicks G, Insel TR, Joyner A, Koller BH, Lloyd KC, Magnuson T, Moore MW, Nagy A, Pollock JD, Roses AD, Sands AT, Seed B, Skarnes WC, Snoddy J, Soriano P, Stewart DJ, Stewart F, Stillman B, Varmus H, Varticovski L, Verma IM, Vogt TF, von Melchner H, Witkowski J, Woychik RP, Wurst W, Yancopoulos GD, Young SG, Zambrowicz B</i><br />Nat Genet. 2004;36;921-4. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=15340423&amp;dopt=Abstract" target="external">15340423</a> DOI: <a href="http://dx.doi.org/10.1038/ng0904-921">10.1038/ng0904-921</a> </li>
+              <li class="pub1"><b>The European dimension for the mouse genome mutagenesis program.</b><br /> <i>Auwerx J, Avner P, Baldock R, Ballabio A, Balling R, Barbacid M, Berns A, Bradley A, Brown S, Carmeliet P, Chambon P, Cox R, Davidson D, Davies K, Duboule D, Forejt J, Granucci F, Hastie N, de Angelis MH, Jackson I, Kioussis D, Kollias G, Lathrop M, Lendahl U, Malumbres M, von Melchner H, Müller W, Partanen J, Ricciardi-Castagnoli P, Rigby P, Rosen B, Rosenthal N, Skarnes B, Stewart AF, Thornton J, Tocchini-Valentini G, Wagner E, Wahli W, Wurst W</i><br />Nat Genet. 2004;36;925-7. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=15340424&amp;dopt=Abstract" target="external">15340424</a> DOI: <a href="http://dx.doi.org/10.1038/ng0904-925">10.1038/ng0904-925</a> </li>
+              <li class="pub2"><b>A public gene trap resource for mouse functional genomics.</b><br /> <i>Skarnes WC, von Melchner H, Wurst W, Hicks G, Nord AS, Cox T, Young SG, Ruiz P, Soriano P, Tessier-Lavigne M, Conklin BR, Stanford WL, Rossant J, </i><br />Nat Genet. 2004;36;543-4. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=15167922&amp;dopt=Abstract" target="external">15167922</a> DOI: <a href="http://dx.doi.org/10.1038/ng0604-543">10.1038/ng0604-543</a> </li>
+              </ul>
+              </div>
+              <ul class="books">
+              <li>
+              Von Melchner H, Stewart AF. 2004. Engineering of ES cell genomes with recombinase systems.<br />
+              In: Handbook of Stem Cells, ed. R Lanza, pp. 609-22. Elsevier Academic Press.
+              </li>
+              </ul>
+              <h3>2003</h3>
+              <div class="papers">
+              <ul  class="inner">
+              <li class="pub1"><b>A large-scale, gene-driven mutagenesis approach for the functional analysis of the mouse genome.</b><br /> <i>Hansen J, Floss T, Van Sloun P, Füchtbauer EM, Vauti F, Arnold HH, Schnütgen F, Wurst W, von Melchner H, Ruiz P</i><br />Proc Natl Acad Sci U S A. 2003;100;9918-22. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=12904583&amp;dopt=Abstract" target="external">12904583</a> DOI: <a href="http://dx.doi.org/10.1073/pnas.1633296100">10.1073/pnas.1633296100</a> </li>
+              </ul>
+              </div>
+              <h3>2001</h3>
+              <div class="papers">
+              <ul  class="inner">
+              <li class="pub1"><b>Functional analysis of secreted and transmembrane proteins critical to mouse development.</b><br /> <i>Mitchell KJ, Pinson KI, Kelly OG, Brennan J, Zupicich J, Scherz P, Leighton PA, Goodrich LV, Lu X, Avery BJ, Tate P, Dill K, Pangilinan E, Wakenight P, Tessier-Lavigne M, Skarnes WC</i><br />Nat Genet. 2001;28;241-9. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=11431694&amp;dopt=Abstract" target="external">11431694</a> DOI: <a href="http://dx.doi.org/10.1038/90074">10.1038/90074</a> </li>
+              </ul>
+              </div>
+              <h3>2000</h3>
+              <div class="papers">
+              <ul  class="inner">
+              <li class="pub2"><b>An LDL-receptor-related protein mediates Wnt signalling in mice.</b><br /> <i>Pinson KI, Brennan J, Monkley S, Avery BJ, Skarnes WC</i><br />Nature. 2000;407;535-8. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=11029008&amp;dopt=Abstract" target="external">11029008</a> DOI: <a href="http://dx.doi.org/10.1038/35035124">10.1038/35035124</a> </li>
+              <li class="pub1"><b>Gene trapping methods for the identification and functional analysis of cell surface proteins in mice.</b><br /> <i>Skarnes WC</i><br />Methods Enzymol. 2000;328;592-615. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=11075368&amp;dopt=Abstract" target="external">11075368</a>  </li>
+              </ul>
+              </div>
+              <h3>1997</h3>
+              <div class="papers">
+              <ul  class="inner">
+              <li class="pub1"><b>Rapid sequence analysis of gene trap integrations to generate a resource of insertional mutations in mice.</b><br /> <i>Townley DJ, Avery BJ, Rosen B, Skarnes WC</i><br />Genome Res. 1997;7;293-8. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=9074932&amp;dopt=Abstract" target="external">9074932</a> DOI: <a href="http://genome.cshlp.org/content/7/3/293.long">10.1101/gr.7.3.293</a><br />
+              </li>
+              </ul>
+              </div>
+              <h3>1995</h3>
+              <div class="papers">
+              <ul  class="inner">
+              <li class="pub1"><b>Capturing genes encoding membrane and secreted proteins important for mouse development.</b><br /> <i>Skarnes WC, Moss JE, Hurtley SM, Beddington RS</i><br />Proc Natl Acad Sci U S A. 1995;92;6592-6. PMID: <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=7604039&amp;dopt=Abstract" target="external">7604039</a>  </li>
+              </ul>
+              </div>
+          </div>
+        </div>
+      </div> <!-- /#center -->
+      <div id="footer" class="clear">
+        <a href="/disclaimer">Warranty Disclaimer and Copyright Notice</a><br />
+        This site is maintained by the <a href="/about">I-DCC and the KOMP-DCC</a>.<br />Supported by the European Union (Project number: 223592) <br />and the National Institutes of Health (Grant number: NIH HG004074).
+      </div> <!-- /#footer -->
+    </div> <!-- /#container -->
+    <span class="clear"></span>
+  </div> <!-- /#wrapper -->
+<!-- /layout -->
+
+<script type="text/javascript">
+    //
+    if (navigator.userAgent.indexOf("Safari") > 0)
+    {
+        // Fix safari "label click/toggle checkbox" issue
+        var labels = document.getElementsByTagName("label");
+        for (i = 0; i < labels.length; i++)
+        {
+            labels[i].addEventListener("click", addLabelFocus, false);
+        }
+
+        // Fix Safari "back button re-execute onload" issue
+        var jj=onload;
+        if(jj){
+            if(onunload==null){
+                document.body.setAttribute('onunload',jj);
+            }
+        }
+        $('search-link').style.marginRight="10px";
+    }
+    //
+    </script>
+<script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+            </script>
+            <script type="text/javascript">
+            var pageTracker = _gat._getTracker("UA-6140792-1");
+            pageTracker._trackPageview();
+            </script>
+
+
+  </body>
+</html>

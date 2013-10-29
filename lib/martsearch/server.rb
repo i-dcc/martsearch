@@ -128,6 +128,58 @@ module MartSearch
       erb :redirect_to_impc
     end
 
+    get '/about' do
+      erb :'about_ikmc/about'
+    end
+
+    get '/aboutkomp' do
+      erb :'about_ikmc/aboutkomp'
+    end
+
+    get '/aboutkompdcc' do
+      erb :'about_ikmc/aboutkompdcc'
+    end
+
+    get '/aboutkompstrategies' do
+      erb :'about_ikmc/aboutkompstrategies'
+    end
+
+    get '/targeting-strategies' do
+      erb :'about_ikmc/targeting_strategies'
+    end
+
+    get '/view-all-ikmc-allele-types' do
+      erb :'about_ikmc/view_all_ikmc_allele_types'
+    end
+
+    get '/about/IKMC' do
+      erb :'about_ikmc/about/ikmc'
+    end
+
+    get '/about/eucomm' do
+      erb :'about_ikmc/about/eucomm'
+    end
+
+    get '/about/eucomm/allele_types' do
+      erb :'about_ikmc/about/eucomm/allele_types'
+    end
+
+    get '/about/eucomm/recommendations-users-eucomm-alleles' do
+      erb :'about_ikmc/about/eucomm/recommendations_users_eucomm_alleles'
+    end
+
+    get '/about/eucommtools' do
+      erb :'about_ikmc/about/eucommtools'
+    end
+
+    get '/about/eucommtools/recommendations' do
+      erb :'about_ikmc/about/eucommtools/recommendations'
+    end
+
+    get '/about/eucommtools/vectors' do
+      erb :'about_ikmc/about/eucommtools/vectors'
+    end
+
     get '/query.php/?' do
       if params.blank? or params.has_key?(:criteria) or params[:criteria].blank?
         puts 'BLAH'
