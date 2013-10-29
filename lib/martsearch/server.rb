@@ -144,12 +144,12 @@ module MartSearch
       erb :'about_ikmc/aboutkompstrategies', :layout => false
     end
 
-    get '/targeting-strategies' do
-      erb :'about_ikmc/targeting_strategies', :layout => false
+    get '/about/targeting-strategies' do
+      erb :'about_ikmc/targeting-strategies', :layout => false
     end
 
-    get '/view-all-ikmc-allele-types' do
-      erb :'about_ikmc/view_all_ikmc_allele_types', :layout => false
+    get '/about/view-all-ikmc-allele-types' do
+      erb :'about_ikmc/view-all-ikmc-allele-types', :layout => false
     end
 
     get '/about/IKMC' do
@@ -160,12 +160,12 @@ module MartSearch
       erb :'about_ikmc/about/eucomm', :layout => false
     end
 
-    get '/about/eucomm/allele_types' do
-      erb :'about_ikmc/about/eucomm/allele_types', :layout => false
+    get '/about/eucomm/allele-types' do
+      erb :'about_ikmc/about/eucomm/allele-types', :layout => false
     end
 
     get '/about/eucomm/recommendations-users-eucomm-alleles' do
-      erb :'about_ikmc/about/eucomm/recommendations_users_eucomm_alleles', :layout => false
+      erb :'about_ikmc/about/eucomm/recommendations-users-eucomm-alleles', :layout => false
     end
 
     get '/about/eucommtools' do
