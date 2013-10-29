@@ -145,11 +145,11 @@ module MartSearch
     end
 
     get '/about/targeting-strategies' do
-      erb :'about_ikmc/targeting-strategies', :layout => false
+      erb :'about_ikmc/about/targeting-strategies', :layout => false
     end
 
     get '/about/view-all-ikmc-allele-types' do
-      erb :'about_ikmc/view-all-ikmc-allele-types', :layout => false
+      erb :'about_ikmc/about/view-all-ikmc-allele-types', :layout => false
     end
 
     get '/about/IKMC' do
@@ -161,7 +161,7 @@ module MartSearch
     end
 
     get '/about/eucomm/allele-types' do
-      erb :'about_ikmc/about/eucomm/allele-types', :layout => false
+      erb :'about_ikmc/about/eucomm/allele_types', :layout => false
     end
 
     get '/about/eucomm/recommendations-users-eucomm-alleles' do
