@@ -214,11 +214,11 @@ module MartSearch
       erb :redirect_to_impc
     end
 
-    get '/browse/[w+]' do
+    get %r{^/browse/.*$} do
       redirect "https://www.mousephenotype.org/mi/impc/phenotype-archive/search"
     end
 
-    get '/targ_rep/([w+])' do
+    get %r{^/targ_rep/(.*)$} do
       redirect "https://www.mousephenotype.org/imits/targ_rep/#{params[:captures].first}"
     end
 
