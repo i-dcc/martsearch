@@ -82,7 +82,7 @@ module MartSearch
         @params[:page_not_found] = true
       end
       @request = request
-      erb :redirect_to_impc
+      erb :redirect_to_impc, :layout => :layout_IMPC
     end
 
     before do
@@ -125,7 +125,7 @@ module MartSearch
     ##
     get '/' do
       @foward_to = {'description' => 'view the IMPC home page', 'http' => 'https://www.mousephenotype.org/'}
-      erb :redirect_to_impc
+      erb :redirect_to_impc, :layout => :layout_IMPC
     end
 
     get '/about' do
@@ -194,7 +194,7 @@ module MartSearch
         end
       end
       @foward_to = {'description' => "search for #{params[:criteria]}", 'http' => "https://www.mousephenotype.org/mi/impc/phenotype-archive/search#q=#{params[:criteria]}"} if params.has_key?(:criteria)
-      erb :redirect_to_impc
+      erb :redirect_to_impc, :layout => :layout_IMPC
     end
 
     get '/search_results/?' do
@@ -211,7 +211,7 @@ module MartSearch
         end
       @foward_to = {'description' => "search for #{params[:criteria]}", 'http' => "https://www.mousephenotype.org/mi/impc/phenotype-archive/search#q=#{params[:criteria]}"} if params.has_key?(:criteria)
       end
-      erb :redirect_to_impc
+      erb :redirect_to_impc, :layout => :layout_IMPC
     end
 
     get %r{^/browse/.*$} do
@@ -227,17 +227,17 @@ module MartSearch
 #    end
 
 
-      get '/martsearch/redirect_to_impc/?' do
+      get '/martsearch/redirect_to_impc, :layout => false/?' do
         @foward_to = {'description' => 'view the IMPC home page', 'http' => 'https://www.mousephenotype.org/'}
         @hide_side_search_form = true
-        erb :redirect_to_impc
+        erb :redirect_to_impc, :layout => :layout_IMPC
       end
 
       get '/martsearch/?' do
         @foward_to = {'description' => 'view the IMPC home page', 'http' => 'https://www.mousephenotype.org/'}
         @current               = 'home'
         @hide_side_search_form = true
-        erb :redirect_to_impc
+        erb :redirect_to_impc, :layout => :layout_IMPC
       end
 
 #    get '/about/?' do
@@ -264,7 +264,7 @@ module MartSearch
       get '/martsearch/search/?' do
         if params.blank? or params.has_key?(:query) or params[:query].blank?
           @params[:page_not_found] = true
-          erb :redirect_to_impc
+          erb :redirect_to_impc, :layout => :layout_IMPC
         else
           if params[:wt] == 'json'
             @current    = 'home'
@@ -293,7 +293,7 @@ module MartSearch
             end
             params[:criteria] = params[:query]
             @foward_to  = {'description' => "search for #{params[:query]}", 'http' => "https://www.mousephenotype.org/mi/impc/phenotype-archive/search#q=#{params[:query]}"} if params[:query]
-            erb :redirect_to_impc
+            erb :redirect_to_impc, :layout => :layout_IMPC
           end
         end
       end
@@ -320,7 +320,7 @@ module MartSearch
 
       if params.blank? or params.has_key?(:query) or params[:query].blank?
         @params[:page_not_found] = true
-        erb :redirect_to_impc
+        erb :redirect_to_impc, :layout => :layout_IMPC
       else
         if params[:field] and params[:query] and params[:wt] == 'json'
           if !@config[:browsable_content].has_key?(params[:field].to_sym)
@@ -351,7 +351,7 @@ module MartSearch
           return JSON.generate( @data, :max_nesting => false )
         else
           @foward_to  = {'description' => "search for #{params[:query]}", 'http' => "https://www.mousephenotype.org/mi/impc/phenotype-archive/search#q=#{params[:query]}"} if params[:query]
-          erb :redirect_to_impc
+          erb :redirect_to_impc, :layout => :layout_IMPC
         end
       end
     end
@@ -372,7 +372,7 @@ module MartSearch
       ['/martsearch/project/:id','/martsearch/project/?'].each do |path|
         get path do
           @foward_to = {'description' => "view project no #{params[:id]}", 'http' => "#{request.script_name}/martsearch/ikmc_project/#{params[:id]}"}
-          erb :redirect_to_impc
+          erb :redirect_to_impc, :layout => :layout_IMPC
         end
       end
 
@@ -407,7 +407,7 @@ module MartSearch
 
       get '/martsearch/project/:id/pcr_primers/?' do
           @foward_to = {'description' => "view pcr primer (id = #{params[:id]})", 'http' => "#{request.script_name}/martsearch/ikmc_project/#{project_id}/pcr_primers/#{params[:id]}"}
-          erb :redirect_to_impc
+          erb :redirect_to_impc, :layout => :layout_IMPC
       end
 
       get '/martsearch/ikmc/project/:id/pcr_primers/?' do
