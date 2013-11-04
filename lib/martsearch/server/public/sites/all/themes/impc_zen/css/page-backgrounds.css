@@ -13,11 +13,6 @@ body {
 background-image:url('/martsearch_ikmc_project/sites/all/themes/impc_zen/images/bannerBG.jpg');
 background-repeat:repeat-x;
 }
-#page-wrapper {
-background-image:url('/martsearch_ikmc_project/sites/all/themes/impc_zen/images/logo.png');
-background-repeat:no-repeat;
-padding-top: 200px;
-}
 
 #page {
 }
