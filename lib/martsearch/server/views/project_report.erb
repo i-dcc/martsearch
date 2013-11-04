@@ -19,7 +19,7 @@
 <h3>IKMC Project Report - <%= @data[:ikmc_project] %> (ID: <%= @data[:project_id] %>)</h3>
 
 <h5>
-  <a href="http://www.knockoutmouse.org/genedetails/<%= @data[:mgi_accession_id] %>"><%= @data[:marker_symbol] %></a> 
+  <a href="https://www.mousephenotype.org/phenotype-archive/search#q=<%= @data[:mgi_accession_id] %>"><%= @data[:marker_symbol] %></a> 
   <a href="http://www.informatics.jax.org/searches/accession_report.cgi?id=<%= @data[:mgi_accession_id] %>"><%= @data[:mgi_accession_id] %></a> 
   <a href="http://www.ensembl.org/Mus_musculus/contigview?gene=<%= @data[:ensembl_gene_id] %>&bottom=%7Cmanaged_das_KO_vectors%3Aon"><%= @data[:ensembl_gene_id] %></a> 
   <a href="http://www.ensembl.org/Mus_musculus/contigview?gene=<%= @data[:vega_gene_id] %>&bottom=%7Cmanaged_das_KO_vectors%3Aon"><%= @data[:vega_gene_id] %></a>
