@@ -399,7 +399,7 @@ module MartSearch
               return JSON.generate( @data, :max_nesting => false )
             else
               @ms.logger.debug("[MartSearch::Server] /project/#{params[:id]} - rendering templates")
-              erb :project_report
+              erb :project_report, :layout => :layout_IMPC
             end
           end
         end
