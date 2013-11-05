@@ -68,9 +68,9 @@ alt=true
         <% if(allele["allele_id"]=="not yet") %>
             Not available yet
         <% else %>
-            <a href="http://www.knockoutmouse.org/targ_rep/alleles/<%= allele["allele_id"] %>/allele-image" target="_blank">
+            <a href="http://www.mousephenotype.org/imits/targ_rep/alleles/<%= allele["allele_id"] %>/allele-image" target="_blank">
                 <img ismap="true" height="50" width="200"
-                src="http://www.knockoutmouse.org/targ_rep/alleles/<%= allele["allele_id"] %>/allele-image">
+                src="http://www.mousephenotype.org/imits/targ_rep/alleles/<%= allele["allele_id"] %>/allele-image">
             </a>
         <% end %>
     </td>
@@ -78,7 +78,7 @@ alt=true
         <% if(allele["allele_id"]=="not yet") %>
             Not available yet
         <% else %>
-            <a href="http://www.knockoutmouse.org/targ_rep/alleles/<%= allele["allele_id"] %>/escell-clone-genbank-file">Genbank file</a>
+            <a href="http://www.mousephenotype.org/imits/targ_rep/alleles/<%= allele["allele_id"] %>/escell-clone-genbank-file">Genbank file</a>
         <% end %>
     </td>
     <td><a href="<%= allele["order_url"]%>" target="_blank"><%= allele["order_visual"] %></a></td>

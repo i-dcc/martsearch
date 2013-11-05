@@ -4,13 +4,13 @@
 
   if allele_gb
     allele_links.push({
-      :href  => "http://www.i-dcc.org/targ_rep/alleles/#{allele_id}/escell-clone-genbank-file",
+      :href  => "http://www.mousephenotype.org/imits/targ_rep/alleles/#{allele_id}/escell-clone-genbank-file",
       :class => 'file',
       :txt   => 'genbank&nbsp;file'
     })
     unless ['KOMP-Regeneron','mirKO'].include?(pipeline)
       allele_links.push({
-        :href  => "http://www.i-dcc.org/targ_rep/alleles/#{allele_id}/allele-image",
+        :href  => "http://www.mousephenotype.org/imits/targ_rep/alleles/#{allele_id}/allele-image",
         :class => 'image',
         :rel   => 'prettyPhoto',
         :txt   => 'image'
@@ -20,13 +20,13 @@
 
   if vector_gb
     vector_links.push({
-      :href  => "http://www.i-dcc.org/targ_rep/alleles/#{allele_id}/targeting-vector-genbank-file",
+      :href  => "http://www.mousephenotype.org/imits/targ_rep/alleles/#{allele_id}/targeting-vector-genbank-file",
       :class => 'file',
       :txt   => 'genbank&nbsp;file'
     })
     unless ['KOMP-Regeneron','mirKO'].include?(pipeline)
       vector_links.push({
-        :href  => "http://www.i-dcc.org/targ_rep/alleles/#{allele_id}/vector-image",
+        :href  => "http://www.mousephenotype.org/imits/targ_rep/alleles/#{allele_id}/vector-image",
         :class => 'image',
         :rel   => 'prettyPhoto',
         :txt   => 'image',

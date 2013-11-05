@@ -594,8 +594,8 @@ module MartSearch
 
       results[:data].each do |result|
         if result['vector_gb_file'] == 'yes'
-          data['vector_image'] = result['allele_id'] ? "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/vector-image" : nil
-          data['vector_gb']    = result['allele_id'] ? "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/targeting-vector-genbank-file" : nil
+          data['vector_image'] = result['allele_id'] ? "http://www.mousephenotype.org/imits/targ_rep/alleles/#{result['allele_id']}/vector-image" : nil
+          data['vector_gb']    = result['allele_id'] ? "http://www.mousephenotpye.org/imits/targ_rep/alleles/#{result['allele_id']}/targeting-vector-genbank-file" : nil
         end
 
         data['floxed_start_exon'] = result['floxed_start_exon']
@@ -654,8 +654,8 @@ module MartSearch
 
         # Genbank files
         if result['allele_gb_file'] == 'yes'
-          data['es_cells'][push_to]['allele_img'] = "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/allele-image"
-          data['es_cells'][push_to]['allele_gb']  = "http://www.knockoutmouse.org/targ_rep/alleles/#{result['allele_id']}/escell-clone-genbank-file"
+          data['es_cells'][push_to]['allele_img'] = "http://www.mousephenotype.org/imits/targ_rep/alleles/#{result['allele_id']}/allele-image"
+          data['es_cells'][push_to]['allele_gb']  = "http://www.mousephenotype.org/imits/targ_rep/alleles/#{result['allele_id']}/escell-clone-genbank-file"
         end
 
         data['es_cells'][push_to]['cells'].push(
