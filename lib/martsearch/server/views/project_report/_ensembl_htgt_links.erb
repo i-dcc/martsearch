@@ -65,7 +65,7 @@
   }) unless escell.nil?
 
   tools_links.push({
-    :url   => url_for( "#{@data[:project_id]}/pcr_primers?iframe=true&width=60%&height=60%" ),
+    :url   => url_for( "/martsearch/ikmc_project/#{@data[:project_id]}/pcr_primers?iframe=true&width=60%&height=60%" ),
     :class => 'ext_link',
     :rel   => 'prettyPhoto',
     :text  => 'LRPCR Genotyping Primers'
