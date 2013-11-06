@@ -405,12 +405,13 @@ module MartSearch
         end
       end
 
-      get '/martsearch/project/:id/pcr_primers/?' do
-          @foward_to = {'description' => "view pcr primer (id = #{params[:id]})", 'http' => "#{request.script_name}/martsearch/ikmc_project/#{project_id}/pcr_primers/#{params[:id]}"}
+      get '/martsearch/project/:id/pcr_primers?' do
+          project_id = params[:id]
+          @foward_to = {'description' => "view pcr primer (id = #{params[:id]})", 'http' => "#{request.script_name}/martsearch/ikmc_project/#{project_id}/pcr_primers"}
           erb :redirect_to_impc, :layout => :layout_IMPC
       end
 
-      get '/martsearch/ikmc/project/:id/pcr_primers/?' do
+      get '/martsearch/ikmc_project/:id/pcr_primers?' do
         project_id = params[:id]
 
         if project_id.nil?

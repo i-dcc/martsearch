@@ -1,7 +1,7 @@
 <%
   genome_browser_links = []
   tools_links          = []
-  
+
   if !@data[:ensembl_gene_id].nil?
     genome_browser_links.push({
       :url   => ensembl_link_url_from_gene( :mouse, @data[:ensembl_gene_id], ['das:http://das.sanger.ac.uk/das/ikmc_products'] ),
@@ -17,18 +17,18 @@
       :title => "View this mutation in a genomic context in Ensembl. This link will also enable our DAS track ('KO Alleles'), showing the exact location/structure of the mutation."
     })
   end
-  
+
   genome_browser_links.push({
     :url   => ensembl_link_url_from_gene( :human, @data[:human_ensembl_gene], ['das:http://das.sanger.ac.uk/das/mouse_KOs'] ),
     :class => 'ensembl_link',
     :text  => 'Ensembl (human)',
     :title => "View the human ortholog of this gene in Ensembl. This link will also enable our DAS track ('mouse_KOs'), showing the availability of IKMC products for orthologous human genes."
   }) unless @data[:human_ensembl_gene].nil?
-  
+
   unless @data[:chromosome].nil? and @data[:coord_start].nil? and @data[:coord_end].nil?
     tracks = { 'ikmc' => 'pack', 'ensGene' => 'pack' }
     tracks['miRNA'] = 'pack' if @data[:ikmc_project] == 'mirKO'
-    
+
     genome_browser_links.push({
       :url   => ucsc_link_url( :mouse, @data[:chromosome], @data[:coord_start], @data[:coord_end], tracks ),
       :class => 'ucsc_link',
@@ -36,11 +36,11 @@
       :title => 'View this gene in UCSC Genome Browser. This link will also enable the IKMC tracks in the UCSC Genome Browser, showing the exact location/structure of the mutation.'
     })
   end
-  
+
   unless @data[:human_ensembl_chromosome].nil? and @data[:human_ensembl_start].nil? and @data[:human_ensembl_end].nil?
     tracks = { 'hgIkmc' => 'pack', 'ensGene' => 'pack' }
     tracks['wgRNA'] = 'pack' if @data[:ikmc_project] == 'mirKO'
-    
+
     genome_browser_links.push({
       :url   => ucsc_link_url( :human, @data[:human_ensembl_chromosome], @data[:human_ensembl_start], @data[:human_ensembl_end], tracks ),
       :class => 'ucsc_link',
@@ -48,7 +48,7 @@
       :title => 'View the human ortholog of this gene in UCSC Genome Browser. This link will also enable the IKMC tracks in the UCSC Genome Browser, showing the exact location/structure of the mutation.'
     })
   end
-  
+
   genome_browser_links.map! do |link|
     tag = "<a href=\"#{link[:url]}\" target=\"_blank\""
     tag << " class=\"#{link[:class]}\"" unless link[:class].nil?
@@ -56,21 +56,21 @@
     tag << " rel=\"#{link[:rel]}\""     unless link[:rel].nil?
     tag << '>' + link[:text] + '</a>'
   end
-  
+
   tools_links.push({
     :url   => "http://www.sanger.ac.uk/htgt/tools/restrictionenzymes?es_clone_name=#{escell}&iframe=true&width=100%&height=100%",
     :class => 'ext_link',
     :rel   => 'prettyPhoto',
     :text  => 'Southern Blot Tool'
   }) unless escell.nil?
-  
+
   tools_links.push({
-    :url   => url_for( "/project/#{@data[:project_id]}/pcr_primers?iframe=true&width=60%&height=60%" ),
+    :url   => url_for( "#{@data[:project_id]}/pcr_primers?iframe=true&width=60%&height=60%" ),
     :class => 'ext_link',
     :rel   => 'prettyPhoto',
     :text  => 'LRPCR Genotyping Primers'
   }) if !@data[:pcr_primers].nil?
-  
+
   tools_links.map! do |link|
     tag = "<a href=\"#{link[:url]}\" target=\"_blank\""
     tag << " class=\"#{link[:class]}\"" unless link[:class].nil?
