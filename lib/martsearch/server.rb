@@ -222,10 +222,17 @@ module MartSearch
       redirect "https://www.mousephenotype.org/imits/targ_rep/#{params[:captures].first}"
     end
 
-#    get 'kb/?' do
-#      redirect "http://www.knockoutmouse.org/kb/"
-#    end
 
+    get %r{^/genedetails/(.*)$} do
+
+      if params.blank? or params.has_key?(:captures) or params[:captures].first.blank?
+        @params[:page_not_found] = true
+        erb :redirect_to_impc, :layout => :layout_IMPC
+      else
+        @foward_to  = {'description' => "search for #{params[:captures].first}", 'http' => "https://www.mousephenotype.org/data/genes/#{params[:captures].first}"} if params[:captures].first
+        erb :redirect_to_impc, :layout => :layout_IMPC
+      end
+    end
 
       get '/martsearch/redirect_to_impc, :layout => false/?' do
         @foward_to = {'description' => 'view the IMPC home page', 'http' => 'https://www.mousephenotype.org/'}
