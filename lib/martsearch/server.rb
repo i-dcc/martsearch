@@ -229,8 +229,7 @@ module MartSearch
         @params[:page_not_found] = true
         erb :redirect_to_impc, :layout => :layout_IMPC
       else
-        @foward_to  = {'description' => "search for #{params[:captures].first}", 'http' => "https://www.mousephenotype.org/data/genes/#{params[:captures].first}"} if params[:captures].first
-        erb :redirect_to_impc, :layout => :layout_IMPC
+        redirect "https://www.mousephenotype.org/data/genes/#{params[:captures].first}" if params[:captures].first
       end
     end
 
