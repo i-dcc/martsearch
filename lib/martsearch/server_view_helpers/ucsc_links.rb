@@ -2,12 +2,12 @@
 
 module MartSearch
   module ServerViewHelpers
-    
+
     # View helpers for linking to the UCSC Genome Browser
-    # 
+    #
     # @author Darren Oakley
     module UcscLinks
-      
+
       # Helper function to generate link URL to Mouse UCSC
       #
       # @param  [Symbol] species The species to link to
@@ -18,21 +18,21 @@ module MartSearch
       # @return [String] The URL for UCSC
       def ucsc_link_url( species, chromosome, start_pos, end_pos, tracks={} )
         url = 'http://genome.ucsc.edu/cgi-bin/hgTracks?'
-        
+
         db = case species
-        when :mouse then 'mm9'
+        when :mouse then 'mm10'
         when :human then 'hg19'
         end
-        
+
         url << "db=#{db}"
         url << "&#{process_ucsc_tracks(tracks)}" unless tracks.empty?
         url << "&position=chr#{chromosome}:#{start_pos}-#{end_pos}"
-        
+
         return url
       end
-      
+
       private
-        
+
         def process_ucsc_tracks( tracks )
           urls = []
           tracks.each do |name,display|
@@ -40,8 +40,8 @@ module MartSearch
           end
           return urls.join('&')
         end
-        
+
     end
-    
+
   end
 end
