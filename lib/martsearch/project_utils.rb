@@ -18,37 +18,6 @@ module MartSearch
     #
     # @param [String] project_id The IKMC project ID
     # @return [Hash] A hash containing all the data for the given project
-
-    def get_project_status_from_solr(project_id)
-      return nil if project_id.blank?
-      MartSearch::Controller.instance().logger.debug("[MartSearch::ProjectUtils] ::get_project_status_from_solr - running get_project_status_from_solr( '#{project_id}' )")
-
-      http_client = build_http_client()
-      url = "http://ikmc.vm.bytemark.co.uk:8983/solr/allele/select/?q=type%3Agene%0D%0Aproject_ids%3A#{project_id}&wt=json"
-#      url = "http://deskpro101887.internal.sanger.ac.uk:8983/solr/allele/select/?q=type%3Agene%0D%0Aproject_ids%3A#{project_id}&wt=json"
-      res = http_client.get( URI.parse(url) )
-      object = JSON.parse(res)
-
-      if object["response"]["numFound"] != 1
-        results = { :data => [ { :marker_symbol=>"", "mgi_accession_id"=>"", :ikmc_project=>"", :status=>""} ],
-                    :error => { :text  => "There was a problem querying the 'allele_core' Solr index. " + 'This supplies information on gene identifiers and IKMC tracking information. This page will not work without this datasource.' + " Try refreshing your browser or come back in 10 minutes.",
-                              :error => "Could not retreive data for project #{project_id}",
-                              :type  => ''
-                            }
-                  }
-      else
-        data = object["response"]["docs"][0]
-        results =  {
-            :data=> [ { :marker_symbol => data["marker_symbol"], :mgi_accession_id => data["mgi_accession_id"], :ikmc_project => data["ikmc_project_id"], :status => data["project_statuses"][data["project_ids"].find_index(project_id)] }],
-            :error=>{}
-          }
-      end
-
-      MartSearch::Controller.instance().logger.debug("[MartSearch::ProjectUtils] ::get_project_status_from_solr - running get_top_level_project_info( datasources, '#{project_id}' ) - DONE")
-
-      return results
-    end
-
     def get_ikmc_project_page_data( project_id )
       MartSearch::Controller.instance().logger.debug("[MartSearch::ProjectUtils] ::get_ikmc_project_page_data - rget_project_status_from_solr( '#{project_id}' )")
       datasources = MartSearch::Controller.instance().datasources
@@ -284,6 +253,45 @@ module MartSearch
       return results
     end
 
+
+
+
+    # This function hits the allele_core solr index for top level information
+    # about the IKMC project ID being looked at.
+    #
+    # @param [String] project_id The IKMC project ID
+    # @return [Hash] The data relating to this project
+    def get_project_status_from_solr(project_id)
+      return nil if project_id.blank?
+      MartSearch::Controller.instance().logger.debug("[MartSearch::ProjectUtils] ::get_project_status_from_solr - running get_project_status_from_solr( '#{project_id}' )")
+
+      http_client = build_http_client()
+      url = "http://ikmc.vm.bytemark.co.uk:8983/solr/allele/select/?q=type%3Agene%0D%0Aproject_ids%3A#{project_id}&wt=json"
+#      url = "http://deskpro101887.internal.sanger.ac.uk:8983/solr/allele/select/?q=type%3Agene%0D%0Aproject_ids%3A#{project_id}&wt=json"
+      res = http_client.get( URI.parse(url) )
+      object = JSON.parse(res)
+
+      if object["response"]["numFound"] != 1
+        results = { :data => [ { :marker_symbol=>"", "mgi_accession_id"=>"", :ikmc_project=>"", :status=>""} ],
+                    :error => { :text  => "There was a problem querying the 'allele_core' Solr index. " + 'This supplies information on gene identifiers and IKMC tracking information. This page will not work without this datasource.' + " Try refreshing your browser or come back in 10 minutes.",
+                              :error => "Could not retreive data for project #{project_id}",
+                              :type  => ''
+                            }
+                  }
+      else
+        data = object["response"]["docs"][0]
+        results =  {
+            :data=> [ { :marker_symbol => data["marker_symbol"], :mgi_accession_id => data["mgi_accession_id"], :ikmc_project => data["ikmc_project_id"], :status => data["project_statuses"][data["project_ids"].find_index(project_id)] }],
+            :error=>{}
+          }
+      end
+
+      MartSearch::Controller.instance().logger.debug("[MartSearch::ProjectUtils] ::get_project_status_from_solr - running get_top_level_project_info( datasources, '#{project_id}' ) - DONE")
+
+      return results
+    end
+
+    # DEPRECIATED
     # This function hits the ikmc-dcc mart for top level information
     # about the IKMC project ID being looked at.
     #
