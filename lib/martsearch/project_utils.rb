@@ -267,7 +267,6 @@ module MartSearch
 
       http_client = build_http_client()
       url = "http://ikmc.vm.bytemark.co.uk:8983/solr/allele/select/?q=type%3Agene%0D%0Aproject_ids%3A#{project_id}&wt=json"
-#      url = "http://deskpro101887.internal.sanger.ac.uk:8983/solr/allele/select/?q=type%3Agene%0D%0Aproject_ids%3A#{project_id}&wt=json"
       res = http_client.get( URI.parse(url) )
       object = JSON.parse(res)
 
