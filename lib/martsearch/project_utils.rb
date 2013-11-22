@@ -266,7 +266,7 @@ module MartSearch
       MartSearch::Controller.instance().logger.debug("[MartSearch::ProjectUtils] ::get_project_status_from_solr - running get_project_status_from_solr( '#{project_id}' )")
 
       http_client = build_http_client()
-      url = "http://ikmc.vm.bytemark.co.uk:8983/solr/allele/select/?q=type%3Agene%0D%0Aproject_ids%3A#{project_id}&wt=json"
+      url = "http://ikmc.vm.bytemark.co.uk:8984/solr/allele/select/?q=type%3Agene%0D%0Aproject_ids%3A#{project_id}&wt=json"
       res = http_client.get( URI.parse(url) )
       object = JSON.parse(res)
 
