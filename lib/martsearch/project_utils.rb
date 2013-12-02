@@ -279,8 +279,9 @@ module MartSearch
                   }
       else
         data = object["response"]["docs"][0]
+        array_index = data["project_ids"].find_index(project_id)
         results =  {
-            :data=> [ { :marker_symbol => data["marker_symbol"], :mgi_accession_id => data["mgi_accession_id"], :ikmc_project => data["ikmc_project_id"], :status => data["project_statuses"][data["project_ids"].find_index(project_id)] }],
+            :data=> [ { :marker_symbol => data["marker_symbol"], :mgi_accession_id => data["mgi_accession_id"], :ikmc_project => data["project_pipelines"][array_index], :status => data["project_statuses"][array_index] }],
             :error=>{}
           }
       end
