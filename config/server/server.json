@@ -13,12 +13,9 @@
     "db":     "wtsi_portal"
   },
   "datasets": [
-    "emma-strains",
-    //"ensembl-mouse-go",
     "ikmc-dcc-knockout_attempts",
     "ikmc-idcc_targ_rep",
     "ikmc-imits",
-    "ikmc-omim",
     "mgi-markers",
     "wtsi-bacs",
     "wtsi-phenotyping-abr",
