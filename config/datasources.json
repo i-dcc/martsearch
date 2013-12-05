@@ -1,6 +1,5 @@
 {
   "dummy":                  { "type": "Dummy" },
-  "emma-strains":           { "type": "Biomart", "url": "http://www.emmanet.org/biomart", "dataset": "strains" },
   "ensembl-mouse":          { "type": "Biomart", "url": "http://www.ensembl.org/biomart", "dataset": "mmusculus_gene_ensembl" },
   "ensembl-human":          { "type": "Biomart", "url": "http://www.ensembl.org/biomart", "dataset": "hsapiens_gene_ensembl" },
   "eurexpress":             { "type": "Biomart", "url": "http://biomart.eurexpress.org/biomart", "dataset": "template" },
@@ -8,7 +7,6 @@
   "ikmc-dcc":               { "type": "Biomart", "url": "http://htgt-web.internal.sanger.ac.uk:9011/biomart", "dataset": "dcc" },
   "ikmc-idcc_targ_rep":     { "type": "Biomart", "url": "http://htgt-web.internal.sanger.ac.uk:9011/biomart", "dataset": "genes_targ_rep" },
   "ikmc-imits":             { "type": "Biomart", "url": "http://htgt-web.internal.sanger.ac.uk:9011/biomart", "dataset": "imits2" },
-  "ikmc-omim":              { "type": "Biomart", "url": "http://htgt-web.internal.sanger.ac.uk:9011/biomart", "dataset": "omim" },
   "ikmc-unitrap":           { "type": "Biomart", "url": "http://biomart.helmholtz-muenchen.de/biomart", "dataset": "unitrap" },
   "mgi-markers":            { "type": "Biomart", "url": "http://biomart.informatics.jax.org/biomart", "dataset": "markers" },
   "wtsi-bacs":              { "type": "Biomart", "url": "http://htgt-web.internal.sanger.ac.uk:8000/htgt/biomart", "dataset": "bacs" },

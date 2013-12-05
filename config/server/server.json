@@ -13,15 +13,12 @@
     "db":     "ikmc_portal"
   },
   "datasets": [
-    "emma-strains",
-//    "ensembl-mouse-go",
     "eurexpress",
     "europhenome",
     "ikmc-dcc-knockout_attempts",
     "ikmc-dcc-other_mutants",
     "ikmc-idcc_targ_rep",
     "ikmc-imits",
-    "ikmc-omim",
     "ikmc-unitrap",
     "mgi-markers",
     "dummy-mice"

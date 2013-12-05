@@ -7,14 +7,11 @@
     "ikmc-imits",
     "eurexpress",
     "europhenome",
-    "emma-strains",
     "ikmc-unitrap",
     "ensembl-mouse-homologs-human",
     "ensembl-mouse-homologs-rat",
     "ensembl-mouse-homologs-zebrafish",
-    "ensembl-mouse-interpro_features",
-//    "ensembl-mouse-go",
-    "ikmc-omim"
+    "ensembl-mouse-interpro_features"
   ],
   "datasets": {}
 }
