@@ -143,6 +143,12 @@ module MartSearch
           else
             "http://www.eummcr.org/order.php"
           end
+        when "EUCOMMTools", "EUCOMMToolsCre" then "http://www.eummcr.org/order.php"
+        when "Sanger MGP"
+          case product_type
+            when :vector then "mailto:mouseinterest@sanger.ac.uk?subject=Mutant Vector line for #{marker_symbol}"
+            when :escell then "mailto:mouseinterest@sanger.ac.uk?subject=Mutant ES Cell line for #{marker_symbol}"
+          end
         when "mirKO" then "http://www.mmrrc.org/catalog/StrainCatalogSearchForm.php?SourceCollection=Sanger%20MirKO&jboEvent=Search&LowerCaseSymbol=#{marker_symbol}"
         else
           ""
