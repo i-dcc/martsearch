@@ -137,8 +137,8 @@ module MartSearch
         when "TIGM"           then "http://www.tigm.org/cgi-bin/tigminfo.cgi?survey=IKMC%20Website&mgi1=#{mgi_accession_id}&gene1=#{marker_symbol}"
         when "EUCOMM"
           case product_type
-          when :vector  then "http://www.eummcr.org/final_vectors.php?mgi_id=#{mgi_accession_id}"
-          when :escell  then "http://www.eummcr.org/es_cells.php?mgi_id=#{mgi_accession_id}"
+          when :vector  then "http://www.eummcr.org/order?add=#{mgi_accession_id}&material=vectors"
+          when :escell  then "http://www.eummcr.org/order?add=#{mgi_accession_id}&material=es_cells"
           when :mouse   then "http://www.emmanet.org/mutant_types.php?keyword=#{marker_symbol}%25EUCOMM&select_by=InternationalStrainName&search=ok"
           else
             "http://www.eummcr.org/order.php"
