@@ -4,7 +4,8 @@
   if cond_vs_noncond == :conditional
     title = 'with Knockout First mutation (Reporter-tagged insertion with conditional potential)'
   else
-    if @data[:es_cells][cond_vs_noncond][:cells].first[:allele_type] == 'Deletion'
+    #if @data[:es_cells][cond_vs_noncond][:cells].first[:allele_type] == 'Deletion'
+    if ['Deletion', 'Reporter-Tagged Deletion'].include? @data[:es_cells][cond_vs_noncond][:cells].first[:allele_type]
       if @data[:ikmc_project] == "NorCOMM"
         title   = ' (conditional ready)'
         img_txt = 'These mutations can be made conditional by a &quot;docking&quot; procedure which uses the attP/puro docking site in the cassette.'
