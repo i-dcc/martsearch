@@ -42,9 +42,9 @@
 
     <!-- Mutagenesis Predictions -->
     <% if @data[:mutagenesis_predictions].blank? or @data[:mutagenesis_predictions][:transcripts].blank? %>
-      <%= partial("no_data", :locals => { :title => 'Mutagenesis Predictions' }) %>
+      <%#= partial("no_data", :locals => { :title => 'Mutagenesis Predictions' }) %>
     <% else %>
-      <%= partial("project_report/mutagenesis_predictions") %>
+      <%#= partial("project_report/mutagenesis_predictions") %>
     <% end %>
 
     <% @show_allele_and_vector_images = true %>
