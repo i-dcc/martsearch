@@ -54,17 +54,17 @@
       </div>
 
       <!-- Mutagenesis Predictions -->
-      <div class="accordion-group">
+<!--      <div class="accordion-group">
         <div class="accordion-heading">Mutagenesis Predictions</div>
         <div class="accordion-body">
         <% if @data[:mutagenesis_predictions].blank? or @data[:mutagenesis_predictions][:transcripts].blank? %>
-          <%= partial("no_data", :locals => { :title => 'Mutagenesis Predictions' }) %>
+          <#%= partial("no_data", :locals => { :title => 'Mutagenesis Predictions' }) %>
         <% else %>
-          <%= partial("project_report/mutagenesis_predictions") %>
+          <#%= partial("project_report/mutagenesis_predictions") %>
         <% end %>
         </div>
       </div>
-
+-->
       <% @show_allele_and_vector_images = true %>
 
       <% if @data[:es_cells].blank? or ( @data[:es_cells][:conditional][:cells].empty? and @data[:es_cells][:'targeted non-conditional'][:cells].empty? ) %>
