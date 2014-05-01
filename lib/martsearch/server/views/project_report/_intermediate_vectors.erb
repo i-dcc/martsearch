@@ -1,16 +1,15 @@
 <div class="dataset">
-  <h4 class="dataset_title toggle-open">Intermediate Vectors</h4>
   <div class="dataset_content">
     <table>
       <thead>
-        <th>Design ID</th>
+        <th>Design</th>
         <th>Vector Type</th>
         <th>Intermediate Vector</th>
       </thead>
       <tbody>
         <% @data[:intermediate_vectors].each do |intvec| %>
           <tr>
-            <td><%= intvec[:design_id] ? intvec[:design_id] : '-' %></td>
+            <td style="text-align: center;"><a href="<%= htgt_design_url( intvec[:design_id] ) %>" target="_blank"><i class="fa fa-pencil-square-o fa-2x"></i></a></td>
             <td><%= intvec[:design_type] %></td>
             <td><%= intvec[:name] %></td>
           </tr>

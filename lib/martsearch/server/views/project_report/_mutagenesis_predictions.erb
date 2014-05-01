@@ -1,5 +1,4 @@
 <div class="dataset">
-  <h4 class="dataset_title toggle-open">Mutagenesis Predictions</h4>
   <div class="dataset_content">
 
     <% counts = @data[:mutagenesis_predictions][:statistics] %>
@@ -71,7 +70,9 @@
       </tbody>
     </table>
     <% if @data[:mutagenesis_predictions][:transcripts].size > 1 %>
-      <a class="products_toggle">show/hide more transcripts</a>
+      <p class="textright">
+        <a class="products_toggle">show all <%= @data[:mutagenesis_predictions][:transcripts].size %> transcripts</a>
+      </p>
     <% end %>
     <div class="clear"></div>
   </div>

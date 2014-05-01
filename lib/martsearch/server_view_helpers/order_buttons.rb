@@ -70,7 +70,7 @@ module MartSearch
           button_text = '<span class="order unavailable">currently&nbsp;unavailable</span>'
 
           if order_url.has_key?(:url) && ! order_url[:url].empty?
-            button_text = "<a href=\"#{order_url[:url]}\" class=\"order2\" target=\"_blank\">#{order_url[:name]}</a>\n"
+            button_text = "<a class=\"btn\" href=\"#{order_url[:url]}\"> <i class=\"fa fa-shopping-cart\"></i> #{order_url[:name]} </a>\n"
           end
 
           button_texts += button_text
@@ -168,10 +168,8 @@ module MartSearch
 
         text = project == 'mirKO' ? 'order from MMRRC' : 'order'
 
-        if express_interest
-          button_text = "<a href=\"#{order_url}\" class=\"order2 express_interest\">express&nbsp;interest</a>"
-        elsif !order_url.empty?
-          button_text = "<a href=\"#{order_url}\" class=\"order2\" target=\"_blank\">#{text}</a>"
+        if !order_url.empty?
+          button_text = "<a class=\"btn\" href=\"#{order_url}\"> <i class=\"fa fa-shopping-cart\"></i> #{text} </a>\n"
         end
 
         # blag to add the new order button

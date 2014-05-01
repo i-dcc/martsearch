@@ -1,5 +1,4 @@
 <div class="dataset">
-  <h4 class="dataset_title toggle-open">Targeting Vectors</h4>
   <div class="dataset_content">
     <% if !@data[:vector_image].nil? && show_allele_and_vector_images %>
       <img src="<%= @data[:vector_image] %>" width="930px" />
@@ -11,7 +10,7 @@
     <table>
       <thead>
         <th class="hide_on_print"></th>
-        <th>Design ID</th>
+        <th>Design</th>
         <th>Vector Type</th>
         <th>Targeting Vector</th>
         <th>Cassette</th>
@@ -25,9 +24,9 @@
             <td class="hide_on_print">
               <%= order_vector_txt %>
             </td>
-            <td>
+            <td style="text-align: center;">
             <% if targvec[:design_id] %>
-              <a href="<%= htgt_design_url( targvec[:design_id] ) %>" target="_blank"><%= targvec[:design_id] %></a>
+              <a href="<%= htgt_design_url( targvec[:design_id] ) %>" target="_blank"><i class="fa fa-pencil-square-o fa-2x"></i></a>
             <% else %>
               -
             <% end %>
@@ -36,11 +35,11 @@
             <td><%= targvec[:name] %></td>
             <td><%= targvec[:cassette] %></td>
             <td><%= targvec[:backbone] %></td>
-            <td class="hide_on_print">
+            <td class="hide_on_print" style="text-align: center;">
               <% if @data[:vector_gb].nil? %>
                 <span style="color:#999;">unavailable</span>
               <% else %>
-                <a href="<%= @data[:vector_gb] %>" target="_blank" class="file ext_link">view</a>
+                <a href="<%= @data[:vector_gb] %>" target="_blank" class="file ext_link"><i class="fa fa-file-text fa-2x"></i></a>
               <% end %>
             </td>
           </tr>
@@ -48,7 +47,9 @@
       </tbody>
     </table>
     <% if @data[:targeting_vectors].size > 1 %>
-      <a class="products_toggle">show/hide more targeting vectors</a>
+      <p class="textright">
+        <a class="products_toggle">show all <%= @data[:targeting_vectors].size %> targeting vectors</a>
+      </p>
     <% end %>
     <div class="clear"></div>
   </div>

@@ -39,13 +39,14 @@ module MartSearch
     # if you change the CSS or JS)!!!
     VERSION = '1.1.47'
     DEFAULT_CSS_FILES = [
-      'reset.css',
-      'jquery.prettyPhoto.css',
-      'jquery.tablesorter.css',
-      'jquery.fontresize.css',
-      'jquery-ui-1.8.9.redmond.css',
-      'jquery.qtip.css',
-      'screen.css'
+#      'reset.css',
+#      'jquery.prettyPhoto.css',
+#      'jquery.tablesorter.css',
+#      'jquery.fontresize.css',
+#      'jquery-ui-1.8.9.redmond.css',
+#      'jquery.qtip.css',
+      'screen.css',
+      'wdm.css'
     ]
     DEFAULT_HEAD_JS_FILES  = [
       'jquery-1.4.4.min.js',
@@ -405,7 +406,7 @@ module MartSearch
               return JSON.generate( @data, :max_nesting => false )
             else
               @ms.logger.debug("[MartSearch::Server] /project/#{params[:id]} - rendering templates")
-              erb :project_report, :layout => :layout_IMPC
+              erb :project_report, :layout => :layout_IMPC_with_navigation_bar
             end
           end
         end

@@ -81,20 +81,14 @@
 %>
 
 <% if !genome_browser_links.empty? or !tools_links.empty? %>
-  <div class="larger">
-    <table style="margin-bottom:7px;" class="noborder nopadding nobg">
-      <% if !genome_browser_links.empty? %>
-        <tr>
-          <th>Genome Browsers:</th>
-          <td><%= genome_browser_links.join(" - ") %></td>
-        </tr>
-      <% end %>
-      <% if !tools_links.empty? %>
-        <tr>
-          <th>Tools:</th>
-          <td><%= tools_links.join(" - ") %></td>
-        </tr>
-      <% end %>
-    </table>
-  </div>
+  <p class="with-label no-margin">
+    <% if !genome_browser_links.empty? %>
+      <span class="label">Genome Browsers</span><%= genome_browser_links.join(" - ") %>
+    <% end %>
+  </p>
+  <p class="with-label no-margin">
+    <% if !tools_links.empty? %>
+      <span class="label">Tools</span><%= tools_links.join(" - ") %>
+    <% end %>
+  </p>
 <% end %>

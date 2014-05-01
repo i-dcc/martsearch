@@ -26,20 +26,17 @@
 -%>
 
 <div class="dataset">
-  <h4 class="dataset_title toggle-open">ES Cell Clones <%= title.titlecase %></h4>
   <div class="dataset_content">
     <%- cells = @data[:es_cells][cond_vs_noncond][:cells] -%>
 
     <% if !@data[:es_cells][cond_vs_noncond][:allele_img].nil? && show_allele_and_vector_images %>
       <img src="<%= @data[:es_cells][cond_vs_noncond][:allele_img] %>" width="930px" />
-      <div class="clear"></div>
 
       <% if cond_vs_noncond != 'conditional' and img_txt != '' %>
         <p><strong>Note:</strong> <%= img_txt %></p>
       <% end %>
     <% end %>
 
-    <div class="clear"></div>
     <%= partial( "project_report/ensembl_htgt_links", { :locals => { :escell => cells.first[:name] } }) %>
 
     <table>
@@ -69,11 +66,11 @@
             </td>
             <td><%= cell[:allele_type] %> (<%= cell[:cassette_type] %> Cassette)</td>
             <td><%= cell[:parental_cell_line] %></td>
-            <td class="hide_on_print">
+            <td class="hide_on_print" style="text-align: center;">
               <% if @data[:es_cells][cond_vs_noncond][:allele_gb].nil? %>
                 <span style="color:#999;">unavailable</span>
               <% else %>
-                <a href="<%= @data[:es_cells][cond_vs_noncond][:allele_gb] %>" target="_blank" class="file ext_link">view</a>
+                <a href="<%= @data[:es_cells][cond_vs_noncond][:allele_gb] %>" target="_blank" class="file ext_link"><i class="fa fa-file-text fa-2x"></i></a>
               <% end %>
             </td>
             <td><%= cell[:mouse?] %></td>
@@ -98,7 +95,9 @@
       </tbody>
     </table>
     <% if cells.size > 1 %>
-      <a class="products_toggle">show/hide more ES cells</a>
+      <p class="textright">
+        <a class="products_toggle">show all <%= cells.size %> ES cells</a>
+      </p>
     <% end %>
     <div class="clear"></div>
   </div>

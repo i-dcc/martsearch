@@ -13,7 +13,7 @@
     <% if ENV['RACK_ENV'] == "production" or ENV['RACK_ENV'] == "staging" %>
       <%= stylesheet_link_tag "/css/martsearch-#{MartSearch::Server::VERSION}.css", :media => 'all', :charset => 'utf-8' %>
       <%= stylesheet_link_tag '/css/print.css', :media => 'print', :charset => 'utf-8' %>
-  <%= javascript_script_tag "/js/martsearch-head-#{MartSearch::Server::VERSION}.js", :charset => 'utf-8' %>
+      <%= javascript_script_tag "/js/martsearch-head-#{MartSearch::Server::VERSION}.js", :charset => 'utf-8' %>
     <% else %>
 
       <% MartSearch::Server::DEFAULT_CSS_FILES.each do |css_file| %>
@@ -60,40 +60,6 @@
         <a href="" title="International Knockout Mouse Consortium"><h1>International Knockout Mouse Consortium</h1></a>
       </div>
 
-<!-- REMOVE due to IMPC take over-->
-<!--
-      <div id="knockoutmouse_navigation">
-        <ul>
-          <li><a href="http://www.knockoutmouse.org/" title="International Knockout Mouse Consortium">Home</a></li>
-          <li><a href="http://www.knockoutmouse.org/aboutikmc">About IKMC</a></li>
-          <li><a href="http://www.knockoutmouse.org/martsearch">MartSearch</a></li>
-          <li><a href="http://www.knockoutmouse.org/download">Download</a></li>
-          <li><a href="http://www.knockoutmouse.org/startnominategene">Nominate Gene</a></li>
-          <li><a href="http://www.knockoutmouse.org/kb/2/">FAQ</a></li>
-          <li><a href="http://www.knockoutmouse.org/order-products">Order Products</a></li>
-          <li><a href="http://www.knockoutmouse.org/contact">Contact IKMC</a></li>
-        </ul>
-      </div>
-
-      <div id="navigation">
-        <% unless @hide_side_search_form %>
-          <span id="search">
-            <form id="martsearchr_nav" action="<%= url_for('/search') %>" method="get" accept-charset='utf-8'>
-              <input type="text" class="textinput" name="query" value="" />
-              <input type="submit" class="submit" value="search" />
-            </form>
-          </span>
-        <% end %>
-        <ul>
-          <li id="navigation_label">MartSearch</li>
-          <li<% if @current === "home" %> class="current"<% end %>><%= link_to 'Home', '/' %></li>
-          <li<% if @current === "browse" %> class="current"<% end %>><%= link_to 'Browse', '/browse' %></li>
-          <li<% if @current === "help" %> class="current"<% end %>><%= link_to 'Help', '/help' %></li>
-          <li<% if @current === "about" %> class="current"<% end %>><%= link_to 'About', '/about' %></li>
-        </ul>
-        <br style="clear: both;" />
-      </div>
--->
       <noscript>
         <div id="noscript_warning" class="messages serious_errors">
           <strong>WARNING:</strong> It appears that you do not have javascript
@@ -107,15 +73,11 @@
 
       <div id="browser_warnings" class="messages serious_errors" style="display:none;"></div>
 
-<!--
-      <div id="user_messages" class="messages">
-      </div>
--->
 
       <% if @errors[:index] and !@errors[:index].empty? %>
         <!-- search engine errors -->
         <div class="messages serious_errors">
-          <h5>Sorry, an error occurred whilst querying the search engine...</h5>
+          <h5>Sorry, an error occurred whilst viewing this page...</h5>
           <% @errors[:index].each do |error| %>
             <div id="serious_error_wrapper">
               <%= error[:text] %>&nbsp;&nbsp;
@@ -130,24 +92,26 @@
           <% end %>
         </div>
       <% end %>
-
-      <div id="content">
-        <%= yield %>
+      <div id="main">
+        <div id="content">
+          <%= yield %>
+        </div>
       </div>
-
-<!-- REMOVE due to IMPC take over
 
       <div id="footer">
-        <p>
-          <a href="http://www.knockoutmouse.org/disclaimer">Warranty Disclaimer and Copyright Notice</a><br />
-          This site is maintained by the <a href="http://www.knockoutmouse.org/about">I-DCC and the KOMP-DCC</a><br />
-          Supported by the European Union (Project number: 223592)<br />
-          and the National Institutes of Health (Grant number: NIH HG004074)
-        </p>
-        <p><%= MartSearch::Server::VERSION %></p>
+        <div class="centercontent">
+          <div class="region region-footer">
+            <div id="block-block-11" class="block block-block">
+              <div class="content">
+                <p>
+                  <img src="/sites/all/themes/impc_zen/images/logo/footerLogos.jpg">
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
--->
+
     <% if @config[:debug] %>
       <div id="debug-config">
         <h3>MartSearch::Server Config (Debug Info)</h3>
@@ -166,6 +130,6 @@
         <%= javascript_script_tag "/dataview-base-js/#{view.internal_name}.js", :charset => 'utf-8' %>
       <% end %>
     <% end %>
-
+    </div>
   </body>
 </html>

@@ -1,80 +1,27 @@
-<div class="larger">
- <div style="padding-bottom:60px; padding-left:200px">
-    <p style="font-size:x-large; padding-bottom:40px"> The web services of the International Knockout Mouse (IKMC) have been transferred </br></br> to the <a style="font-weight:bold" href= "https://www.mousephenotype.org/background">International Mouse Phenotyping Consortium (IMPC)</a>.</p>
-    <% if !@foward_to.blank? %>
-      <p style="font-size:medium; padding-left:20px">From your search we believe you want to <a style="font-weight:bold" href= "<%= @foward_to['http'] %>"> <%= @foward_to['description'] %></a>.</p>
-    <% end %></br>
-    <p style="font-size:medium; padding-left:20px"> You can continue on to:</p>
-    <ul style="font-size:medium; padding-left:20px">
-      <li><a href="https://www.mousephenotype.org/" target="_blank">The IMPC home page</a></li>
-      <li><a href="https://www.mousephenotype.org/mi/impc/phenotype-archive/search" target="_blank">Browse and search IMPC gene list</a></li>
-      <% if params.has_key?(:criteria) %>
-        <li><a href="https://www.mousephenotype.org/mi/impc/phenotype-archive/search#q=<%= params[:criteria]%>" target="_blank">View IMPC gene information for <%= params[:criteria]%></a></li>
-      <% end %>
-      <li><a href="https://www.mousephenotype.org/martsearch_ikmc_project/about" target="_blank">View project information about the IKMC, its targeting strategies and the contributing members</a></li>
-      <li><a href="http://www.i-dcc.org/kb/" target="_blank">View the IKMC FAQ website</a></li>
-    </ul>
-  </div>
-  <div style="padding-left:200px">
-    <div style="padding-left:25px">
-      <p>Other useful links:</p>
-    </div>
-    <table style="margin-bottom:5px; width:60%">
-      <tr>
-        <td width="20%">
-          <h2>The BioMarts</h2>
-          <p>
-            This portal integrates information on IKMC mouse knockout resources with numerous
-            other relevant datasets, including Ensembl, Europhenome, EurExpress and EMMA. If you wish to access any of these
-            BioMarts directly, click on the names of the datasets in the image below and you will be taken
-            to the standard MartView interface.
-          </p>
-          <div style="text-align:center">
-            <style type="text/css" media="screen">
-              img.image_map_img     {display:none;}
-              dl.image_map          {display:block; width:749px; height:410px; background:url("<%= url_for '/images/about-page/ikmc-biomarts.png' %>")  no-repeat; position:relative; margin:2px auto 2px auto;}
-              dl.image_map a        {display:block; width:191px; height:0; padding-top:34px; overflow:hidden; position:absolute; background:transparent;}
-              dl.image_map a:hover  {background:transparent; border:1px dashed #999; color:black;}
-              dl.image_map a:focus  {outline:none;}
-              a#ikmc_proj_alle_link {left:105px; top:35px;}
-              a#ikmc_targ_prod_link {left:105px; top:69px;}
-              a#ikmc_imits_link     {left:105px; top:103px;}
-              a#ikmc_omim_link      {left:105px; top:137px;}
-              a#mgi_features_link   {left:358px; top:43px;}
-              a#mgi_gxd_link        {left:358px; top:77px;}
-              a#ikmc_unitrap_link   {left:58px; top:224px;}
-              a#europhenome_link    {left:500px; top:155px;}
-              a#eurexpress_link     {left:535px; top:241px;}
-              a#mgp_phenotype_link  {left:27px; top:315px;}
-              a#wtsi_dna_clon_link  {left:27px; top:350px;}
-              a#ensembl_mouse_link  {left:266px; top:359px;}
-              a#emma_link           {left:500px; top:326px;}
-            </style>
+<h1> The web services of the <b>International Knockout Mouse</b> (IKMC) have been transferred to the <a href= "https://www.mousephenotype.org/background"><b>International Mouse Phenotyping Consortium</b> (IMPC)</a>.</h1>
+<p><a class="btn" href="https://www.mousephenotype.org"><i class="fa fa-caret-right"></i>www.mousephenotype.org</a></p>
+<p>&nbsp</p>
 
-            <img class="image_map_img" src="<%= url_for '/images/about-page/ikmc-biomarts.png' %>" alt="The BioMarts Linked into this Portal" />
-            <dl class="image_map">
-              <dd><a id="ikmc_proj_alle_link" title="IKMC Projects / Alleles" href="http://www.knockoutmouse.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=dcc.default.attributes.marker_symbol|dcc.default.attributes.mgi_accession_id|dcc.default.attributes.ikmc_project|dcc.default.attributes.ikmc_project_id|dcc.default.attributes.status|dcc.default.attributes.mouse_available|dcc.default.attributes.escell_available|dcc.default.attributes.vector_available&FILTERS=&VISIBLEPANEL=mainpanel" target="_blank"></a></dd>
-              <dd><a id="ikmc_targ_prod_link" title="IKMC Targeted Products" href="http://www.knockoutmouse.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=genes_targ_rep.default.attributes.pipeline|genes_targ_rep.default.attributes.ikmc_project_id|genes_targ_rep.default.attributes.mgi_accession_id|genes_targ_rep.default.attributes.targeting_vector|genes_targ_rep.default.attributes.escell_clone&FILTERS=&VISIBLEPANEL=mainpanel" target="_blank"></a></dd>
-              <dd><a id="ikmc_imits_link" title="IKMC Mouse Production (iMits)" href="http://www.knockoutmouse.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=imits2.default.attributes.marker_symbol|imits2.default.attributes.mgi_accession_id|imits2.default.attributes.escell_clone|imits2.default.attributes.allele_symbol_superscript|imits2.default.attributes.production_centre|imits2.default.attributes.microinjection_status&FILTERS=&VISIBLEPANEL=mainpanel" target="_blank"></a></dd>
-              <dd><a id="ikmc_omim_link" title="OMIM" href="http://www.knockoutmouse.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=omim.default.attributes.omim_id|omim.default.attributes.title|omim.default.attributes.human_gene_symbol|omim.default.attributes.mouse_gene_symbol|omim.default.attributes.mgi_accession_id|omim.default.attributes.location|omim.default.attributes.gene_status|omim.default.attributes.mapping_method|omim.default.attributes.disorder_name|omim.default.attributes.disorder_type|omim.default.attributes.tentative&FILTERS=&VISIBLEPANEL=mainpanel" target="_blank"></a></dd>
-              <dd><a id="mgi_features_link" title="Genes &amp; Geneome Features" href="http://biomart.informatics.jax.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=markers.default.markers_attributes.marker_symbol_107|markers.default.markers_attributes.marker_name_107&FILTERS=&VISIBLEPANEL=mainpanel" target="_blank"></a></dd>
-              <dd><a id="mgi_gxd_link" title="Gene Expression Data (GXD)" href="http://biomart.informatics.jax.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=result.default.naive_attributes.markersymbol|result.default.naive_attributes.assaymgiid|result.default.naive_attributes.assaytype|result.default.naive_attributes.mutantalleles|result.default.naive_attributes.age|result.default.naive_attributes.stagenumber|result.default.naive_attributes.printname|result.default.naive_attributes.strength|result.default.naive_attributes.pattern|result.default.naive_attributes.imagefigure&FILTERS=&VISIBLEPANEL=mainpanel" target="_blank"></a></dd>
-              <dd><a id="ikmc_unitrap_link" title="UniTrap" href="http://biomart.helmholtz-muenchen.de/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=unitrap.default.attributes.marker_symbol|unitrap.default.attributes.ensembl_gene_id|unitrap.default.attributes.unitrap_accession_id|unitrap.default.attributes.genbank_id|unitrap.default.attributes.genbank_accession_id|unitrap.default.attributes.project|unitrap.default.attributes.escell_clone&FILTERS=&VISIBLEPANEL=mainpanel" target="_blank"></a></dd>
-              <dd><a id="europhenome_link" title="Europhenome" href="http://www.europhenome.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=europhenome.default.naive_attributes.ensembl_gene_id|europhenome.default.naive_attributes.stocklist_id|europhenome.default.naive_attributes.sex|europhenome.default.naive_attributes.escell_clone|europhenome.default.naive_attributes.allele_name|europhenome.default.naive_attributes.marker_name|europhenome.default.naive_attributes.line_name|europhenome.default.naive_attributes.emma_id|europhenome.default.naive_attributes.effect_size|europhenome.default.naive_attributes.significance|europhenome.default.naive_attributes.mp_term_name|europhenome.default.naive_attributes.zygosity|europhenome.default.naive_attributes.europhenome_id|europhenome.default.naive_attributes.parameter_eslim_id|europhenome.default.naive_attributes.pipeline|europhenome.default.naive_attributes.mp_term|europhenome.default.naive_attributes.ikmc_project_id|europhenome.default.naive_attributes.marker_symbol|europhenome.default.naive_attributes.parameter_name|europhenome.default.naive_attributes.mgi_accession_id&FILTERS=europhenome.default.naive_filters.significance."0.05"&VISIBLEPANEL=mainpanel" target="_blank"></a></dd>
-              <dd><a id="eurexpress_link" title="Eurexpress" href="http://biomart.eurexpress.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=template.default.attributes.tmp_template_id_key|template.default.attributes.tmp_gene_symbol|template.default.attributes.tmp_gene_description|template.default.attributes.tmp_chromosone_location|template.default.attributes.tmp_aliases|template.default.attributes.ass_assay_id_key|template.default.attributes.assay_image|template.default.attributes.emap_term&FILTERS=&VISIBLEPANEL=mainpanel" target="_blank"></a></dd>
-              <dd><a id="mgp_phenotype_link" title="MGP Phenotyping" href="http://www.sanger.ac.uk/htgt/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=phenotyping.default.heatmap.allele_name|phenotyping.default.heatmap.colony_prefix|phenotyping.default.heatmap.strain_group|phenotyping.default.heatmap.adult_lac_z_expression|phenotyping.default.heatmap.auditory_brainstem_response|phenotyping.default.heatmap.body_composition_dexa|phenotyping.default.heatmap.brain_histopathology|phenotyping.default.heatmap.citrobacter_challenge|phenotyping.default.heatmap.dysmorphology|phenotyping.default.heatmap.embryo_lac_z_expression|phenotyping.default.heatmap.eye_histopathology|phenotyping.default.heatmap.eye_morphology|phenotyping.default.heatmap.fertility|phenotyping.default.heatmap.general_observations|phenotyping.default.heatmap.glucose_tolerance_ip|phenotyping.default.heatmap.grip_strength|phenotyping.default.heatmap.haematology_cbc|phenotyping.default.heatmap.heart_histology|phenotyping.default.heatmap.heart_weight|phenotyping.default.heatmap.hot_plate|phenotyping.default.heatmap.indirect_calorimetry|phenotyping.default.heatmap.micro_ct_and_quantitative_faxitron|phenotyping.default.heatmap.micronuclei|phenotyping.default.heatmap.modified_shirpa|phenotyping.default.heatmap.non_invasive_blood_pressure|phenotyping.default.heatmap.open_field|phenotyping.default.heatmap.peripheral_blood_lymphocytes|phenotyping.default.heatmap.plasma_chemistry|phenotyping.default.heatmap.plasma_immunoglobulins|phenotyping.default.heatmap.prepulse_inhibition|phenotyping.default.heatmap.recessive_lethal_study|phenotyping.default.heatmap.rotarod|phenotyping.default.heatmap.salmonella_challenge|phenotyping.default.heatmap.skin_histopathology|phenotyping.default.heatmap.stress_induced_hyperthermia|phenotyping.default.heatmap.tail_epidermis_wholemount|phenotyping.default.heatmap.tissue_biobank|phenotyping.default.heatmap.viability_at_weaning|phenotyping.default.heatmap.weight_curves|phenotyping.default.heatmap.x_ray_imaging&FILTERS=&VISIBLEPANEL=mainpanel" target="_blank"></a></dd>
-              <dd><a id="wtsi_dna_clon_link" title="WTSI DNA Clone Resources" href="http://www.sanger.ac.uk/htgt/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=bacs.default.attributes.marker_symbol|bacs.default.attributes.chromosome|bacs.default.attributes.start|bacs.default.attributes.num_products_per_gene|bacs.default.attributes.end|bacs.default.attributes.strand|bacs.default.attributes.library&FILTERS=&VISIBLEPANEL=mainpanel" target="_blank"></a></dd>
-              <dd><a id="ensembl_mouse_link" title="Ensembl Mouse (Gene)" href="http://www.ensembl.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=mmusculus_gene_ensembl.default.feature_page.ensembl_gene_id|mmusculus_gene_ensembl.default.feature_page.ensembl_transcript_id&FILTERS=&VISIBLEPANEL=mainpanel" target="_blank"></a></dd>
-              <dd><a id="emma_link" title="EMMA" href="http://www.emmanet.org/biomart/martview?VIRTUALSCHEMANAME=default&ATTRIBUTES=strains.default.naive_attributes.emma_id|strains.default.naive_attributes.international_strain_name|strains.default.naive_attributes.synonym|strains.default.naive_attributes.maintained_background|strains.default.naive_attributes.mutation_main_type|strains.default.naive_attributes.mutation_sub_type|strains.default.naive_attributes.gene_symbol|strains.default.naive_attributes.alls_form&FILTERS=&VISIBLEPANEL=mainpanel" target="_blank"></a></dd>
-            </dl>
-          </div>
+<% if !@foward_to.blank? %>
+ <div class="intro"><p>From your search we believe you want to <a href= "<%= @foward_to['http'] %>"> <%= @foward_to['description'] %></a>.</p></div>
+<% end %></br>
 
-          <hr />
-        </td>
-      </tr>
-    </table>
-  </div>
+<div class="node">
+<h3> You can continue on to:</h3>
+<ul>
+  <li>The <a href="https://www.mousephenotype.org/" target="_blank">IMPC home page</a></li>
+  <li>Browse and search <a href="https://www.mousephenotype.org/mi/impc/phenotype-archive/search" target="_blank">IMPC gene list</a></li>
+  <% if params.has_key?(:criteria) %>
+    <li>View IMPC gene information for <a href="https://www.mousephenotype.org/mi/impc/phenotype-archive/search#q=<%= params[:criteria]%>" target="_blank"><%= params[:criteria]%></a></li>
+  <% end %>
+  <li>View <a href="https://www.mousephenotype.org/martsearch_ikmc_project/about" target="_blank">project information about the IKMC</a>, its targeting strategies and the contributing members</li>
+  <li>View the <a href="http://www.i-dcc.org/kb/" target="_blank">IKMC FAQ website</a></li>
+</ul>
+<h3>Other useful links:</h3>
+<ul>
+  <li class="listheading">IKMC Genes and Products</li>
+   <li><a href="http://www.knockoutmouse.org/biomart/martview?VIRTUALSCHEMANAME=default&amp;ATTRIBUTES=genes_targ_rep.default.attributes.pipeline|genes_targ_rep.default.attributes.ikmc_project_id|genes_targ_rep.default.attributes.mgi_accession_id|genes_targ_rep.default.attributes.targeting_vector|genes_targ_rep.default.attributes.escell_clone&amp;FILTERS=&amp;VISIBLEPANEL=mainpanel">IKMC Targeted Products</a></li>
+   <li><a href="http://www.knockoutmouse.org/biomart/martview?VIRTUALSCHEMANAME=default&amp;ATTRIBUTES=imits2.default.attributes.marker_symbol|imits2.default.attributes.mgi_accession_id|imits2.default.attributes.escell_clone|imits2.default.attributes.allele_symbol_superscript|imits2.default.attributes.production_centre|imits2.default.attributes.microinjection_status&amp;FILTERS=&amp;VISIBLEPANEL=mainpanel">IKMC Mouse Production (iMits)</a></li>
+</ul>
 </div>
-<script type="text/javascript" charset="utf-8">
-  jQuery("#query").focus();
-</script>
+<div class="clear"></div>
