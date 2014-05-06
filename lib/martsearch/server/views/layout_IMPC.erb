@@ -187,7 +187,7 @@
         <pre><%= @config.to_yaml %></pre>
       </div>
     <% end %>
-
+    </div>
     <% if ENV['RACK_ENV'] == "production" or ENV['RACK_ENV'] == "staging" %>
       <%= javascript_script_tag "/js/martsearch-base-#{MartSearch::Server::VERSION}.js", :charset => 'utf-8' %>
     <% else %>
@@ -199,6 +199,6 @@
         <%= javascript_script_tag "/dataview-base-js/#{view.internal_name}.js", :charset => 'utf-8' %>
       <% end %>
     <% end %>
-    </div>
+
   </body>
 </html>

@@ -238,13 +238,13 @@
           </div>
         </div>
       </div>
-
    <% if @config[:debug] %>
       <div id="debug-config">
         <h3>MartSearch::Server Config (Debug Info)</h3>
         <pre><%= @config.to_yaml %></pre>
       </div>
     <% end %>
+    </div>
 
     <% if ENV['RACK_ENV'] == "production" or ENV['RACK_ENV'] == "staging" %>
       <%= javascript_script_tag "/js/martsearch-base-#{MartSearch::Server::VERSION}.js", :charset => 'utf-8' %>
@@ -257,6 +257,6 @@
         <%= javascript_script_tag "/dataview-base-js/#{view.internal_name}.js", :charset => 'utf-8' %>
       <% end %>
     <% end %>
-    </div>
+
   </body>
 </html>
