@@ -9,9 +9,9 @@
       <tbody>
         <% @data[:intermediate_vectors].each do |intvec| %>
           <tr>
-            <td style="text-align: center;"><a href="<%= htgt_design_url( intvec[:design_id] ) %>" target="_blank"><i class="fa fa-pencil-square-o fa-2x"></i></a></td>
-            <td><%= intvec[:design_type] %></td>
-            <td><%= intvec[:name] %></td>
+            <td style="text-align: center;border: 1px solid #999 !important;"><a href="<%= htgt_design_url( intvec[:design_id] ) %>" target="_blank"><i class="fa fa-pencil-square-o fa-2x"></i></a></td>
+            <td style="border: 1px solid #999 !important;"><%= intvec[:design_type] %></td>
+            <td style="border: 1px solid #999 !important;"><%= intvec[:name] %></td>
           </tr>
         <% end %>
       </tbody>
