@@ -52,8 +52,8 @@
   genome_browser_links.map! do |link|
     tag = "<a href=\"#{link[:url]}\" target=\"_blank\""
     tag << " class=\"#{link[:class]}\"" unless link[:class].nil?
-    tag << " title=\"#{link[:title]}\"" unless link[:title].nil?
-    tag << " rel=\"#{link[:rel]}\""     unless link[:rel].nil?
+  #  tag << " title=\"#{link[:title]}\"" unless link[:title].nil?
+  #  tag << " rel=\"#{link[:rel]}\""     unless link[:rel].nil?
     tag << '>' + link[:text] + '</a>'
   end
 
@@ -75,8 +75,8 @@
   tools_links.map! do |link|
     tag = "<a href=\"#{link[:url]}\" target=\"_blank\""
     tag << " class=\"#{link[:class]}\"" unless link[:class].nil?
-    tag << " title=\"#{link[:title]}\"" unless link[:title].nil?
-    tag << " rel=\"#{link[:rel]}\""     unless link[:rel].nil?
+  #  tag << " title=\"#{link[:title]}\"" unless link[:title].nil?
+  #  tag << " rel=\"#{link[:rel]}\""     unless link[:rel].nil?
     tag << '>' + link[:text] + '</a>'
   end
 %>
