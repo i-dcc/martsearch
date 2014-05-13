@@ -795,40 +795,40 @@ module MartSearch
 
       result  = { :data => {}, :error => {} }
 
-      message = "There was a problem retrieving mutagenesis predictions for this project.  As a result this data will not be available on the page.  Please try refreshing your browser or come back in 10 minutes to obtain this data."
-      begin
-        uri         = URI.parse( "http://www.sanger.ac.uk/htgt/tools/mutagenesis_prediction/project/#{project_id}/detail" )
-        http_client = build_http_client()
-        response    = nil
-
-        http_client.start( uri.host, uri.port ) do |http|
-          http.read_timeout = 10
-          http.open_timeout = 10
-          response          = http.request( Net::HTTP::Get.new(uri.request_uri) )
-        end
-
-        unless response.code.to_i == 200
-          raise Exception.new( "Mutagenesis prediction analysis unavailable." )
-        end
-
-        mutagenesis_data            = JSON.parse( response.body ).recursively_symbolize_keys!
-        result[:data][:transcripts] = mutagenesis_data
-        result[:data][:statistics]  = calculate_mutagenesis_prediction_stats( mutagenesis_data )
-      rescue JSON::ParserError => error
-        result[:error] = {
-          :text  => message,
-          :error => "Problem parsing the JSON returned.",
-          :type  => error.class
-        }
-      rescue Exception => error
-        result[:error] = {
-          :text  => message,
-          :error => error.to_s,
-          :type  => error.class
-        }
-      end
-
-      MartSearch::Controller.instance().logger.debug("[MartSearch::ProjectUtils] ::get_mutagenesis_predictions - running get_mutagenesis_predictions( '#{project_id}' ) - DONE")
+      #message = "There was a problem retrieving mutagenesis predictions for this project.  As a result this data will not be available on the page.  Please try refreshing your browser or come back in 10 minutes to obtain this data."
+      #begin
+      #  uri         = URI.parse( "http://www.sanger.ac.uk/htgt/htgt2/tools/mutagenesis_prediction/project/#{project_id}/detail" )
+      #  http_client = build_http_client()
+      #  response    = nil
+      #
+      #  http_client.start( uri.host, uri.port ) do |http|
+      #    http.read_timeout = 10
+      #    http.open_timeout = 10
+      #    response          = http.request( Net::HTTP::Get.new(uri.request_uri) )
+      #  end
+      #
+      #  unless response.code.to_i == 200
+      #    raise Exception.new( "Mutagenesis prediction analysis unavailable." )
+      #  end
+      #
+      #  mutagenesis_data            = JSON.parse( response.body ).recursively_symbolize_keys!
+      #  result[:data][:transcripts] = mutagenesis_data
+      #  result[:data][:statistics]  = calculate_mutagenesis_prediction_stats( mutagenesis_data )
+      #rescue JSON::ParserError => error
+      #  result[:error] = {
+      #    :text  => message,
+      #    :error => "Problem parsing the JSON returned.",
+      #    :type  => error.class
+      #  }
+      #rescue Exception => error
+      #  result[:error] = {
+      #    :text  => message,
+      #    :error => error.to_s,
+      #    :type  => error.class
+      #  }
+      #end
+      #
+      #MartSearch::Controller.instance().logger.debug("[MartSearch::ProjectUtils] ::get_mutagenesis_predictions - running get_mutagenesis_predictions( '#{project_id}' ) - DONE")
 
       return result
     end
@@ -883,9 +883,9 @@ module MartSearch
             raise Exception.new("Could not find design_id for project")
           end
           MartSearch::Controller.instance().logger.debug("[MartSearch::ProjectUtils] :: get_pcr_primer mirKO sponsor, design = #{design_id} ")
-          uri = URI.parse( "http://www.sanger.ac.uk/htgt/tools/genotypingprimers/mirko_primers/#{design_id}" )
+          uri = URI.parse( "http://www.sanger.ac.uk/htgt/htgt2/tools/genotypingprimers/mirko_primers/#{design_id}" )
         else
-          uri = URI.parse( "http://www.sanger.ac.uk/htgt/tools/genotypingprimers/#{project_id}" )
+          uri = URI.parse( "http://www.sanger.ac.uk/htgt/htgt2/tools/genotypingprimers/#{project_id}" )
         end
         http_client = build_http_client()
         response    = nil
