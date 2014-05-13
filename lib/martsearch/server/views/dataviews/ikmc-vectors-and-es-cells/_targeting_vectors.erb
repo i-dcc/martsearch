@@ -15,19 +15,19 @@
     <% targeting_vectors.each do |targ_vec| %>
       <tr>
         <td>
-          <a href="http://www.sanger.ac.uk/htgt/design/designedit/refresh_design?design_id=<%= design_id %>"><%= design_id %></a>
+          <a href="http://www.sanger.ac.uk/htgt/htgt2/design/designedit/refresh_design?design_id=<%= design_id %>"><%= design_id %></a>
           <%= this_design_type %>
         </td>
         <td>
           <% if targ_vec[:targeting_vector] and ( pipeline === 'EUCOMM' or pipeline === 'KOMP-CSD' ) %>
-            <a href="http://www.sanger.ac.uk/htgt/plate/view?plate_name=<%= targ_vec[:targeting_vector][0..-5] %>"><%= targ_vec[:targeting_vector] %></a>
+            <a href="http://www.sanger.ac.uk/htgt/htgt2/plate/view?plate_name=<%= targ_vec[:targeting_vector][0..-5] %>"><%= targ_vec[:targeting_vector] %></a>
           <% else %>
             <%= targ_vec[:targeting_vector] %>
           <% end %>
         </td>
         <td>
           <% if targ_vec[:intermediate_vector] and ( pipeline === 'EUCOMM' or pipeline === 'KOMP-CSD' ) %>
-            <a href="http://www.sanger.ac.uk/htgt/plate/view?plate_name=<%= targ_vec[:intermediate_vector][0..-5] %>"><%= targ_vec[:intermediate_vector] %></a>
+            <a href="http://www.sanger.ac.uk/htgt/htgt2/plate/view?plate_name=<%= targ_vec[:intermediate_vector][0..-5] %>"><%= targ_vec[:intermediate_vector] %></a>
           <% else %>
             <%= targ_vec[:intermediate_vector] %>
           <% end %>
