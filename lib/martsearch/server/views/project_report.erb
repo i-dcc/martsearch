@@ -43,7 +43,7 @@
 
       <!-- Mice -->
       <div class="accordion-group">
-        <div class="accordion-heading">Mice</div>
+        <div class="accordion-heading">&nbsp;Mice</div>
         <div class="accordion-body">
         <% if @data[:mice].blank? %>
           <%= partial("no_data", :locals => { :title => 'Mice' }) %>
@@ -55,7 +55,7 @@
 
       <!-- Mutagenesis Predictions -->
 <!--      <div class="accordion-group">
-        <div class="accordion-heading">Mutagenesis Predictions</div>
+        <div class="accordion-heading">&nbsp;Mutagenesis Predictions</div>
         <div class="accordion-body">
         <% if @data[:mutagenesis_predictions].blank? or @data[:mutagenesis_predictions][:transcripts].blank? %>
           <#%= partial("no_data", :locals => { :title => 'Mutagenesis Predictions' }) %>
@@ -69,7 +69,7 @@
 
       <% if @data[:es_cells].blank? or ( @data[:es_cells][:conditional][:cells].empty? and @data[:es_cells][:'targeted non-conditional'][:cells].empty? ) %>
         <div class="accordion-group">
-          <div class="accordion-heading">ES Cell Clones</div>
+          <div class="accordion-heading">&nbsp;ES Cell Clones</div>
           <div class="accordion-body">
             <%= partial("no_data", :locals => { :title => 'ES Cell Clones' }) %>
           </div>
@@ -78,7 +78,7 @@
         <!-- ES Cell Clones (Conditional) -->
         <% unless @data[:es_cells][:conditional][:cells].empty? %>
           <div class="accordion-group">
-            <div class="accordion-heading">ES Cell Clones With Knockout First Mutation (Reporter Tagged Insertion With Conditional Potential)</div>
+            <div class="accordion-heading">&nbsp;ES Cell Clones With Knockout First Mutation (Reporter Tagged Insertion With Conditional Potential)</div>
             <div class="accordion-body">
               <%= partial("project_report/es_cells", :locals => { :cond_vs_noncond => :conditional, :show_allele_and_vector_images => @show_allele_and_vector_images }) %>
             </div>
@@ -88,7 +88,7 @@
         <!-- ES Cell Clones (Non-Conditionals) -->
         <% unless @data[:es_cells][:'targeted non-conditional'][:cells].empty? %>
           <div class="accordion-group">
-            <div class="accordion-heading">ES Cell Clones Without Conditional Potential</div>
+            <div class="accordion-heading">&nbsp;ES Cell Clones Without Conditional Potential</div>
             <div class="accordion-body">
               <%= partial("project_report/es_cells", :locals => { :cond_vs_noncond => :'targeted non-conditional', :show_allele_and_vector_images => @show_allele_and_vector_images }) %>
             </div>
@@ -98,7 +98,7 @@
 
       <!-- Targeting Vectors -->
       <div class="accordion-group">
-        <div class="accordion-heading">Targeting Vectors</div>
+        <div class="accordion-heading">&nbsp;Targeting Vectors</div>
         <div class="accordion-body">
         <% if @data[:targeting_vectors].blank? %>
           <%= partial("no_data", :locals => { :title => 'Targeting Vectors' }) %>
@@ -110,7 +110,7 @@
 
       <!-- Intermediate Vectors -->
       <div class="accordion-group">
-        <div class="accordion-heading">Intermediate Vectors</div>
+        <div class="accordion-heading">&nbsp;Intermediate Vectors</div>
         <div class="accordion-body">
           <% if @data[:intermediate_vectors].blank? %>
             <%= partial("no_data", :locals => { :title => 'Intermediate Vectors' }) %>
@@ -155,4 +155,3 @@
   jQuery(".products_toggle").addClass("toggle-close");
   jQuery(".products_toggle").removeClass("toggle-up");
 </script>
-
