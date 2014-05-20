@@ -47,7 +47,7 @@ module MartSearch
           when nil          then ""
           when /Cre Knock In/i  then "Cre Knock In"
           when /Deletion/i  then "Reporter-Tagged Deletion"
-          else                   "Knockout First, Reporter-tagged insertion with conditional potential"
+          else                   ''
           end
 
          end
