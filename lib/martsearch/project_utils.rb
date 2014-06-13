@@ -692,10 +692,10 @@ module MartSearch
         end
 
         # Genbank files
-        if result['allele_gb_file'] == 'yes'
+        #if result['allele_gb_file'] == 'yes'
           data['es_cells'][push_to]['allele_img'] = "http://www.mousephenotype.org/imits/targ_rep/alleles/#{result['allele_id']}/allele-image"
           data['es_cells'][push_to]['allele_gb']  = "http://www.mousephenotype.org/imits/targ_rep/alleles/#{result['allele_id']}/escell-clone-genbank-file"
-        end
+        #end
 
         data['es_cells'][push_to]['cells'].push(
         {
