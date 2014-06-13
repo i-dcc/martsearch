@@ -20,7 +20,7 @@
     <a href="https://www.mousephenotype.org">Home</a> » <a href="https://www.mousephenotype.org/data/search">Search</a>&nbsp;» <a href="https://www.mousephenotype.org/data/search?q=*<%=@data[:marker_symbol]%>*&amp;core=gene">Genes</a> » <a href="https://www.mousephenotype.org/data/genes/<%=@data[:mgi_accession_id]%>"><%= @data[:marker_symbol] %></a> » Product <%= @data[:project_id] %>
   </div>
 
-  <h1 class="title" id="top">IKMC Project Report - <%= @data[:ikmc_project] %> (ID: <%= @data[:project_id] %>)</h1>
+  <h1 class="title" id="top"><%= @data[:marker_symbol] %> - IKMC Project: <%= @data[:project_id] %></h1>
 
   <div class="section">
     <div class="inner">
@@ -38,13 +38,10 @@
         Pipeline Progress: <%= @data[:status] %>
       </p>
 
-      <!-- Pipeline progress bar -->
-      <%= partial("project_report/progress_bar") %>
-
       <!-- Mice -->
-      <div class="accordion-group">
+      <div class="accordion-group open">
         <div class="accordion-heading">&nbsp;Mice</div>
-        <div class="accordion-body">
+        <div class="accordion-body" style="display:block">
         <% if @data[:mice].blank? %>
           <%= partial("no_data", :locals => { :title => 'Mice' }) %>
         <% else %>
@@ -68,18 +65,18 @@
       <% @show_allele_and_vector_images = true %>
 
       <% if @data[:es_cells].blank? or ( @data[:es_cells][:conditional][:cells].empty? and @data[:es_cells][:'targeted non-conditional'][:cells].empty? ) %>
-        <div class="accordion-group">
+        <div class="accordion-group open">
           <div class="accordion-heading">&nbsp;ES Cell Clones</div>
-          <div class="accordion-body">
+          <div class="accordion-body" style="display:block">
             <%= partial("no_data", :locals => { :title => 'ES Cell Clones' }) %>
           </div>
         </div>
       <% else %>
         <!-- ES Cell Clones (Conditional) -->
         <% unless @data[:es_cells][:conditional][:cells].empty? %>
-          <div class="accordion-group">
+          <div class="accordion-group open">
             <div class="accordion-heading">&nbsp;ES Cell Clones With Knockout First Mutation (Reporter Tagged Insertion With Conditional Potential)</div>
-            <div class="accordion-body">
+            <div class="accordion-body" style="display:block">
               <%= partial("project_report/es_cells", :locals => { :cond_vs_noncond => :conditional, :show_allele_and_vector_images => @show_allele_and_vector_images }) %>
             </div>
           </div>
@@ -87,9 +84,9 @@
 
         <!-- ES Cell Clones (Non-Conditionals) -->
         <% unless @data[:es_cells][:'targeted non-conditional'][:cells].empty? %>
-          <div class="accordion-group">
+          <div class="accordion-group open">
             <div class="accordion-heading">&nbsp;ES Cell Clones Without Conditional Potential</div>
-            <div class="accordion-body">
+            <div class="accordion-body" style="display:block">
               <%= partial("project_report/es_cells", :locals => { :cond_vs_noncond => :'targeted non-conditional', :show_allele_and_vector_images => @show_allele_and_vector_images }) %>
             </div>
           </div>
