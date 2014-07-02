@@ -418,6 +418,12 @@ module MartSearch
           erb :redirect_to_impc, :layout => :layout_IMPC
       end
 
+      get '/martsearch/pr1' do
+        send_file File.join(settings.public_folder, 'static', 'PR-20140601-EUCOMM-GW-Final.pdf'),
+          :type => 'application/pdf',
+          :filename => 'PR-20140601-EUCOMM-GW-Final.pdf'
+      end
+
       get '/martsearch/ikmc_project/:id/pcr_primers?' do
         project_id = params[:id]
 
