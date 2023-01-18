@@ -18,7 +18,7 @@ gem 'json',                               :require => false
 gem 'parallel',                           :require => false
 gem 'yui-compressor',                     :require => false
 gem 'closure-compiler',                   :require => false
-gem 'activesupport',          '~>3.0',    :require => false
+gem 'activesupport',          '~>3.2',    :require => false
 gem 'i18n',                               :require => false
 gem 'memcache-client',        '>=1.8',    :require => false
 gem 'mongo',                              :require => false
